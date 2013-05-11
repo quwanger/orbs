@@ -32,7 +32,13 @@ public class AIController : MonoBehaviour {
 				
 			}
 			if(Vector3.Distance(gobject.transform.position,this.transform.position) < Vector3.Distance(closestGameObject.transform.position,this.transform.position) && !this.waypointsCrossed.Contains(gobject.GetComponent<Waypoint>().index)) {
+				RaycastHit hit = new RaycastHit();	
+				if(!Physics.Raycast(gobject.transform.position,gobject.transform.position - gobject.GetComponent<Waypoint>().transform.position,out hit,100.0f)) {
 					closestGameObject = gobject;
+				}
+				
+				
+				
 			}
 			
 		}
@@ -49,6 +55,7 @@ public class AIController : MonoBehaviour {
 	public Vector3 doAISeek() {
 		GameObject target = findClosestGO(GameObject.FindGameObjectsWithTag("Waypoint"));
 	 	this.GetComponent<MainMovement>().Magnitude = 1000;
+		
 		return Vector3.RotateTowards(this.GetComponent<MainMovement>().RealForward,target.transform.position - this.transform.position,AI_STEERING_ABILITY,0.0f);	
 	}
 	
