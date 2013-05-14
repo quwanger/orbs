@@ -22,7 +22,7 @@ public class AIController : MonoBehaviour {
 		closestGameObject = objects[0];
 
 		foreach(GameObject gobject in objects) {
-			if(Vector3.Distance(gobject.transform.position,this.transform.position) < AI_ANTI_TRAP_DISTANCE && !this.waypointsCrossed.Contains(gobject.GetComponent<Waypoint>().index)) {
+			if(Vector3.Distance(gobject.transform.position,this.GetComponent<Racer>().body.transform.position) < AI_ANTI_TRAP_DISTANCE && !this.waypointsCrossed.Contains(gobject.GetComponent<Waypoint>().index)) {
 				
 				if(gobject.GetComponent<Waypoint>().isLastWaypoint) {
 					waypointsCrossed.Clear();
@@ -31,7 +31,7 @@ public class AIController : MonoBehaviour {
 				this.waypointsCrossed.Add(gobject.GetComponent<Waypoint>().index);
 				
 			}
-			if(Vector3.Distance(gobject.transform.position,this.transform.position) < Vector3.Distance(closestGameObject.transform.position,this.transform.position) && !this.waypointsCrossed.Contains(gobject.GetComponent<Waypoint>().index)) {
+			if(Vector3.Distance(gobject.transform.position,this.GetComponent<Racer>().body.transform.position) < Vector3.Distance(closestGameObject.transform.position,this.GetComponent<Racer>().body.transform.position) && !this.waypointsCrossed.Contains(gobject.GetComponent<Waypoint>().index)) {
 				RaycastHit hit = new RaycastHit();	
 				if(!Physics.Raycast(gobject.transform.position,gobject.transform.position - gobject.GetComponent<Waypoint>().transform.position,out hit,100.0f)) {
 					closestGameObject = gobject;
@@ -54,15 +54,15 @@ public class AIController : MonoBehaviour {
 	
 	public Vector3 doAISeek() {
 		GameObject target = findClosestGO(GameObject.FindGameObjectsWithTag("Waypoint"));
-	 	this.GetComponent<MainMovement>().Magnitude = 1000;
+	 	this.GetComponent<Racer>().Magnitude = this.GetComponent<Racer>().Acceleration;
 		
-		return Vector3.RotateTowards(this.GetComponent<MainMovement>().RealForward,target.transform.position - this.transform.position,AI_STEERING_ABILITY,0.0f);	
+		return Vector3.RotateTowards(this.GetComponent<Racer>().RealForward,target.transform.position - this.GetComponent<Racer>().body.transform.position,AI_STEERING_ABILITY,0.0f);	
 	}
 	
 	void OnDrawGizmos() {
 		if(closestGameObject != null) {
 			Gizmos.color = Color.cyan;
-			Gizmos.DrawLine(this.transform.position,closestGameObject.transform.position);
+			Gizmos.DrawLine(this.GetComponent<Racer>().body.transform.position,closestGameObject.transform.position);
 		}
 	}
 	
