@@ -13,7 +13,7 @@ public class SoundtrackManager : MonoBehaviour {
 	void Start () {
 		if(LOAD_RANDOM_TRACK || songToPlay == null) {
 			Object[] tracks = Resources.LoadAll("Soundtrack");
-			songToPlay = (AudioClip) tracks[0];
+			songToPlay = (AudioClip) tracks[Mathf.FloorToInt(Random.value * tracks.Length)];
 		}
 		
 		this.GetComponent<AudioSource>().clip = songToPlay;
