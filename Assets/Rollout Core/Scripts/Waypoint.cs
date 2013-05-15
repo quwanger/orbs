@@ -13,20 +13,12 @@ public class Waypoint : MonoBehaviour {
 	 * are to be followed.
 	 * 
 	 * */
-	
-	
+
 	public int index = 0;
 	public bool isLastWaypoint = false;
 	
-	
-	// Use this for initialization
 	void Start () {
 		
-		Debug.Log("Waypoint Script Initialized.");
-		
-		if(index == 0) {
-			Debug.LogError("Please set the index of your waypoints to a number greater than 0, in the order that they should be connected");
-		}
 	}
 	
 	void update() {
