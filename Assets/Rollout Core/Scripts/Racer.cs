@@ -4,7 +4,11 @@ using System.Collections.Generic;
 
 
 public class Racer: MonoBehaviour {
-
+	
+	
+	//TODO : Overhaul motion.....
+	
+	
 	public Vector3 RealForward = new Vector3(0,0,1);
 	public Vector3 FloorNormal = new Vector3(0,1,0);
 	public float Acceleration = 1000.0f;
@@ -39,11 +43,11 @@ public class Racer: MonoBehaviour {
 	
 	void LateUpdate () {
 		
-		  //Raycast to find the normal of the floor
-		  RaycastHit hit = new RaycastHit();
-	      if (Physics.Raycast (transform.position, -Vector3.up, out hit, 100.0f)) {
-	            FloorNormal = hit.normal; //Update the var
-	      }
+		//Raycast to find the normal of the floor
+		RaycastHit hit = new RaycastHit();
+	    if (Physics.Raycast (transform.position, -Vector3.up, out hit, 100.0f)) {
+	         FloorNormal = hit.normal; //Update the var
+	    }
 	
 		this.Magnitude = 0;
 		 //update magnitude if W is down.
@@ -68,37 +72,32 @@ public class Racer: MonoBehaviour {
 			 
 			  //calculate orientation of realforward, in a pre normalized way
 		 RealForward.Set(Mathf.Cos(Rotation),0,Mathf.Sin(Rotation));
+			
 		 }else{
 		 	RealForward = this.GetComponent<AIController>().doAISeek();
 		 	
 		 }
 		
-		  //Prefab animation update
-		  body.transform.position = physicsController.transform.position;
-		  body.transform.forward = RealForward;
+		 //Prefab animation update
+		 body.transform.position = physicsController.transform.position;
+		 body.transform.forward = RealForward;
 		 
 		 
-		  lights.transform.position = physicsController.transform.position;
-		  lights.transform.forward = RealForward;
+		 lights.transform.position = physicsController.transform.position;
+		 lights.transform.forward = RealForward;
 		
-		  //we calculate the angle and compare the cross product to find out if it is greater or less than the forward direction
-		
-		  bankingAngle = Vector2.Angle(new Vector2(RealForward.x,RealForward.z),new Vector2(physicsController.rigidbody.velocity.x,physicsController.rigidbody.velocity.z));
-		  Vector3 cross = Vector3.Cross(new Vector2(RealForward.x,RealForward.z),new Vector2(physicsController.rigidbody.velocity.x,physicsController.rigidbody.velocity.z));
+		 //we calculate the angle and compare the cross product to find out if it is greater or less than the forward direction
+		 bankingAngle = Vector2.Angle(new Vector2(RealForward.x,RealForward.z),new Vector2(physicsController.rigidbody.velocity.x,physicsController.rigidbody.velocity.z));
+		 Vector3 cross = Vector3.Cross(new Vector2(RealForward.x,RealForward.z),new Vector2(physicsController.rigidbody.velocity.x,physicsController.rigidbody.velocity.z));
  
-		  if (cross.z > 0)
+		 if (cross.z > 0)
    			 bankingAngle = 360 - bankingAngle;
-		
-		  bankingAngle = Mathf.Deg2Rad * bankingAngle;
-		  bankingAngle = MAXIMUM_BANK * Mathf.Sin(bankingAngle) * (physicsController.rigidbody.velocity.magnitude/VELOCITY_DIG_FACTOR);
-		  body.transform.Rotate(new Vector3(0,0,bankingAngle));
-		
-		  body.transform.RotateAround(body.transform.right,physicsController.transform.eulerAngles.x);
-		  lights.transform.right = body.transform.right;
-		  //lights.transform.Find("Left").transform.Rotate(body.transform.right);
-		  //lights.transform.Find("Right").transform.Rotate(-body.transform.right);		  
-		  
-			
+
+		 bankingAngle = Mathf.Deg2Rad * bankingAngle;
+		 bankingAngle = MAXIMUM_BANK * Mathf.Sin(bankingAngle) * (physicsController.rigidbody.velocity.magnitude/VELOCITY_DIG_FACTOR);
+		 body.transform.Rotate(new Vector3(0,0,bankingAngle));
+		 body.transform.RotateAround(body.transform.right,physicsController.transform.eulerAngles.x);
+		 lights.transform.right = body.transform.right;
 		  go();
 			
 	}
@@ -116,17 +115,9 @@ public class Racer: MonoBehaviour {
 		
 		//The vector to calculate
 		Vector3 torqueVector = new Vector3(0,0,0);
-			
-			
 		//Torque is perpendicular to the forward vector of the player and the normal of the floor
-		torqueVector = Vector3.Cross(RealForward,FloorNormal);
-			
-			
-			
+		torqueVector = Vector3.Cross(RealForward,FloorNormal);	
 		physicsController.rigidbody.AddTorque(-Vector3.Normalize(torqueVector) * Magnitude);
-
-	
-	
 	}
 	
 	void OnDrawGizmos() {
@@ -140,8 +131,7 @@ public class Racer: MonoBehaviour {
 	     Gizmos.DrawRay (physicsController.transform.position, Vector3.Cross(RealForward,FloorNormal)*Magnitude); 
 		 Gizmos.color = Color.white;
 		 Gizmos.DrawRay(body.transform.position,physicsController.rigidbody.velocity);
-
-		Gizmos.color = Color.green;
+		 Gizmos.color = Color.green;
 		 Gizmos.DrawRay(body.transform.position, body.transform.right*100);
 	}
 	
