@@ -17,7 +17,7 @@ public class Racer: MonoBehaviour {
 	public float rotationSpeed = 0.02f;
 	public float MaxAngularVelocity = 30.0f;
 	public bool isPC = true;
-	public bool onGround = true;
+	private bool onGround = true;
 	
 	public float bankingAngle = 0.0f;
 	public float MAXIMUM_BANK = 0.2f;
@@ -45,9 +45,12 @@ public class Racer: MonoBehaviour {
 		
 		//Raycast to find the normal of the floor
 		RaycastHit hit = new RaycastHit();
-	    if (Physics.Raycast (transform.position, -Vector3.up, out hit, 100.0f)) {
-	         FloorNormal = hit.normal; //Update the var
-	    }
+	    if (Physics.Raycast (body.transform.position, -Vector3.up, out hit, 2.0f)) {
+	         FloorNormal = hit.normal;
+			 onGround = true;
+	    }else{
+			 onGround = false;	
+		}
 	
 		this.Magnitude = 0;
 		 //update magnitude if W is down.
@@ -76,7 +79,7 @@ public class Racer: MonoBehaviour {
 		 }else{
 		 	RealForward = this.GetComponent<AIController>().doAISeek();
 		 	
-		 }
+		 }		
 		
 		 //Prefab animation update
 		 body.transform.position = physicsController.transform.position;
@@ -98,9 +101,11 @@ public class Racer: MonoBehaviour {
 		 body.transform.Rotate(new Vector3(0,0,bankingAngle));
 		 body.transform.RotateAround(body.transform.right,physicsController.transform.eulerAngles.x);
 		 lights.transform.right = body.transform.right;
-		  go();
+		 go();
 			
 	}
+	
+	
 	
 	void OnCollisionEnter(Collision collision) {
 		onGround = true;
@@ -111,13 +116,11 @@ public class Racer: MonoBehaviour {
 	}
 	
 	void go() {
-		
-		
-		//The vector to calculate
-		Vector3 torqueVector = new Vector3(0,0,0);
-		//Torque is perpendicular to the forward vector of the player and the normal of the floor
-		torqueVector = Vector3.Cross(RealForward,FloorNormal);	
-		physicsController.rigidbody.AddTorque(-Vector3.Normalize(torqueVector) * Magnitude);
+		if(onGround) {
+			Vector3 perpendicularVector = new Vector3(0,0,0);
+			perpendicularVector = Vector3.Cross(RealForward,FloorNormal);	
+			physicsController.rigidbody.AddForce(Vector3.Cross (FloorNormal, perpendicularVector)*Magnitude);
+		}
 	}
 	
 	void OnDrawGizmos() {
