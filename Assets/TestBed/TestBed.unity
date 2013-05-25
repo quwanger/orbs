@@ -1015,8 +1015,8 @@ MonoBehaviour:
   m_Name: 
   RealForward: {x: 0, y: 0, z: 1}
   FloorNormal: {x: 0, y: 1, z: 0}
-  Acceleration: 35
-  Magnitude: 35
+  ACCELERATION: 1
+  currentAcceleration: 10
   Rotation: 0
   rotationSpeed: .0199999996
   MaxAngularVelocity: 30
@@ -1027,7 +1027,7 @@ MonoBehaviour:
   physicsController: {fileID: 692138076}
   body: {fileID: 1472234025}
   lights: {fileID: 1223583177}
-  VELOCITY_DIG_FACTOR: 100
+  SPEED_BANKING_DAMPENING: 100
 --- !u!114 &106230236
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3766,8 +3766,8 @@ MonoBehaviour:
   m_Name: 
   RealForward: {x: 0, y: 0, z: 1}
   FloorNormal: {x: 0, y: 1, z: 0}
-  Acceleration: 35
-  Magnitude: 35
+  ACCELERATION: 1000
+  currentAcceleration: 10
   Rotation: 0
   rotationSpeed: .0199999996
   MaxAngularVelocity: 30
@@ -3778,7 +3778,7 @@ MonoBehaviour:
   physicsController: {fileID: 972942818}
   body: {fileID: 1118259798}
   lights: {fileID: 1277277785}
-  VELOCITY_DIG_FACTOR: 100
+  SPEED_BANKING_DAMPENING: 100
 --- !u!4 &441295152
 Transform:
   m_ObjectHideFlags: 0
@@ -6084,8 +6084,8 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1824007187}
   m_GameObject: {fileID: 692138076}
   serializedVersion: 2
-  m_Mass: 3
-  m_Drag: 0
+  m_Mass: 100
+  m_Drag: 1
   m_AngularDrag: .100000001
   m_UseGravity: 1
   m_IsKinematic: 0
@@ -6422,8 +6422,8 @@ MonoBehaviour:
   m_Name: 
   RealForward: {x: 0, y: 0, z: 1}
   FloorNormal: {x: 0, y: 1, z: 0}
-  Acceleration: 35
-  Magnitude: 35
+  ACCELERATION: 1000
+  currentAcceleration: 10
   Rotation: 0
   rotationSpeed: .0199999996
   MaxAngularVelocity: 30
@@ -6434,7 +6434,7 @@ MonoBehaviour:
   physicsController: {fileID: 1552338966}
   body: {fileID: 1277862466}
   lights: {fileID: 504680264}
-  VELOCITY_DIG_FACTOR: 100
+  SPEED_BANKING_DAMPENING: 100
 --- !u!4 &724991247
 Transform:
   m_ObjectHideFlags: 0
@@ -8761,8 +8761,8 @@ MonoBehaviour:
   m_Name: 
   RealForward: {x: 0, y: 0, z: 1}
   FloorNormal: {x: 0, y: 1, z: 0}
-  Acceleration: 35
-  Magnitude: 35
+  ACCELERATION: 1000
+  currentAcceleration: 10
   Rotation: 0
   rotationSpeed: .0199999996
   MaxAngularVelocity: 30
@@ -8773,7 +8773,7 @@ MonoBehaviour:
   physicsController: {fileID: 2104626621}
   body: {fileID: 1330801866}
   lights: {fileID: 369816026}
-  VELOCITY_DIG_FACTOR: 100
+  SPEED_BANKING_DAMPENING: 100
 --- !u!1 &938488329
 GameObject:
   m_ObjectHideFlags: 0
@@ -12366,8 +12366,8 @@ MonoBehaviour:
   m_Name: 
   RealForward: {x: 0, y: 0, z: 1}
   FloorNormal: {x: 0, y: 1, z: 0}
-  Acceleration: 35
-  Magnitude: 35
+  ACCELERATION: 1000
+  currentAcceleration: 10
   Rotation: 0
   rotationSpeed: .0199999996
   MaxAngularVelocity: 30
@@ -12378,7 +12378,7 @@ MonoBehaviour:
   physicsController: {fileID: 1010983748}
   body: {fileID: 234374880}
   lights: {fileID: 444997192}
-  VELOCITY_DIG_FACTOR: 100
+  SPEED_BANKING_DAMPENING: 100
 --- !u!1 &1250013183
 GameObject:
   m_ObjectHideFlags: 0
