@@ -54,7 +54,7 @@ public class AIController : MonoBehaviour {
 	
 	public Vector3 doAISeek() {
 		GameObject target = findClosestGO(GameObject.FindGameObjectsWithTag("Waypoint"));
-	 	this.GetComponent<Racer>().Magnitude = this.GetComponent<Racer>().Acceleration;
+	 	this.GetComponent<Racer>().currentAcceleration = this.GetComponent<Racer>().ACCELERATION;
 		
 		return Vector3.RotateTowards(this.GetComponent<Racer>().RealForward,target.transform.position - this.GetComponent<Racer>().body.transform.position,AI_STEERING_ABILITY,0.0f);	
 	}
