@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class SoundtrackManager : MonoBehaviour {
+public class TTSSoundtrackManager : MonoBehaviour {
 	
 	
 	//attach this to Main Camera

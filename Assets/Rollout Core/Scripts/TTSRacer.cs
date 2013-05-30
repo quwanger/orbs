@@ -29,7 +29,7 @@ using System.Collections.Generic;
  * 
  * */
 
-public class Racer: MonoBehaviour {
+public class TTSRacer: MonoBehaviour {
 	
 	public Vector3 RealForward = new Vector3(0,0,1); //The direction that force is applied to move the racer.
 	public Vector3 FloorNormal = new Vector3(0,1,0); //The normal vector of the floor that the object is over.
@@ -64,7 +64,7 @@ public class Racer: MonoBehaviour {
 		
 		RealForward = this.transform.forward; //Quickly set up forward vector
 		physicsController.rigidbody.maxAngularVelocity = MaxAngularVelocity; //Set the angular velocity.
-		physicsController.AddComponent<CollisionHandler>();
+		physicsController.AddComponent<TTSCollisionHandler>();
 		
 	}
 	
@@ -108,7 +108,7 @@ public class Racer: MonoBehaviour {
 			
 		}else{
 			//Use the AI controller to seek a waypoint
-			RealForward = this.GetComponent<AIController>().doAISeek();
+			RealForward = this.GetComponent<TTSAIController>().doAISeek();
 		 	
 		}
 		
@@ -154,7 +154,7 @@ public class Racer: MonoBehaviour {
 	}
 	
 	void FixedUpdate() {
-		onGround = physicsController.GetComponent<CollisionHandler>().colliding;
+		onGround = physicsController.GetComponent<TTSCollisionHandler>().colliding;
 		
 		if(onGround) {
 			go ();

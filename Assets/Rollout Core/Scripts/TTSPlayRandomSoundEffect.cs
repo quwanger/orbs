@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class PlayRandomSoundEffect : MonoBehaviour {
+public class TTSPlayRandomSoundEffect : MonoBehaviour {
 	
 	public AudioClip[] sounds;
 	private AudioSource audioSource;
