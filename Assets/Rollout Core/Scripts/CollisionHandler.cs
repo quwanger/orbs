@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class TTSCollisionHandler : MonoBehaviour {
+public class CollisionHandler : MonoBehaviour {
 	
 	
 	public bool colliding = false;

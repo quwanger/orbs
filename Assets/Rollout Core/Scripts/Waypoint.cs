@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class TTSWaypoint : MonoBehaviour {
+public class Waypoint : MonoBehaviour {
 	
 	/* Waypoint.cs
 	 * Jake Cataford

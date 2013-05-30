@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 
 
-public class TTSCameraController : MonoBehaviour {
+public class CameraController : MonoBehaviour {
 
 	public float distance = 10.0f;
 	
@@ -23,7 +23,7 @@ public class TTSCameraController : MonoBehaviour {
 	    x = angles.y;
 	    y = angles.x;
 	    
-	    target = GameObject.FindGameObjectWithTag("Player").GetComponent<TTSRacer>().body.transform;
+	    target = GameObject.FindGameObjectWithTag("Player").GetComponent<Racer>().body.transform;
 	   
 	
 		// Make the rigid body not change rotation
