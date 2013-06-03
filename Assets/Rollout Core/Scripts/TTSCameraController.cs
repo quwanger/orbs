@@ -18,7 +18,7 @@ public class TTSCameraController : MonoBehaviour {
 	private float y = 0.0f;
 	
 	
-	void Start () {
+	void Start() {
 	    Vector3 angles = transform.eulerAngles;
 	    x = angles.y;
 	    y = angles.x;
@@ -31,7 +31,7 @@ public class TTSCameraController : MonoBehaviour {
 			rigidbody.freezeRotation = true;
 	}
 	
-	void LateUpdate () {
+	void LateUpdate() {
 	    if (target) {
 	        x += Input.GetAxis("Mouse X") * xSpeed * 0.02f;
 	        y -= Input.GetAxis("Mouse Y") * ySpeed * 0.02f;

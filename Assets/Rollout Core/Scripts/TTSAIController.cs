@@ -8,12 +8,12 @@ public class TTSAIController : MonoBehaviour {
 	public List<int> waypointsCrossed = new List<int>();
 	GameObject closestGameObject;	// Use this for initialization
 	
-	void Start () {
+	void Start() {
 	
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update() {
 	
 	}
 	
@@ -21,19 +21,19 @@ public class TTSAIController : MonoBehaviour {
 	
 		closestGameObject = objects[0];
 
-		foreach(GameObject gobject in objects) {
-			if(Vector3.Distance(gobject.transform.position,this.GetComponent<TTSRacer>().body.transform.position) < AI_ANTI_TRAP_DISTANCE && !this.waypointsCrossed.Contains(gobject.GetComponent<TTSWaypoint>().index)) {
+		foreach (GameObject gobject in objects) {
+			if (Vector3.Distance(gobject.transform.position,GetComponent<TTSRacer>().body.transform.position) < AI_ANTI_TRAP_DISTANCE && !waypointsCrossed.Contains(gobject.GetComponent<TTSWaypoint>().index)) {
 				
-				if(gobject.GetComponent<TTSWaypoint>().isLastWaypoint) {
+				if (gobject.GetComponent<TTSWaypoint>().isLastWaypoint) {
 					waypointsCrossed.Clear();
 				}
 				
-				this.waypointsCrossed.Add(gobject.GetComponent<TTSWaypoint>().index);
+				waypointsCrossed.Add(gobject.GetComponent<TTSWaypoint>().index);
 				
 			}
-			if(Vector3.Distance(gobject.transform.position,this.GetComponent<TTSRacer>().body.transform.position) < Vector3.Distance(closestGameObject.transform.position,this.GetComponent<TTSRacer>().body.transform.position) && !this.waypointsCrossed.Contains(gobject.GetComponent<TTSWaypoint>().index)) {
+			if (Vector3.Distance(gobject.transform.position,GetComponent<TTSRacer>().body.transform.position) < Vector3.Distance(closestGameObject.transform.position,GetComponent<TTSRacer>().body.transform.position) && !waypointsCrossed.Contains(gobject.GetComponent<TTSWaypoint>().index)) {
 				RaycastHit hit = new RaycastHit();	
-				if(!Physics.Raycast(gobject.transform.position,gobject.transform.position - gobject.GetComponent<TTSWaypoint>().transform.position,out hit,100.0f)) {
+				if (!Physics.Raycast(gobject.transform.position,gobject.transform.position - gobject.GetComponent<TTSWaypoint>().transform.position,out hit,100.0f)) {
 					closestGameObject = gobject;
 				}
 				
@@ -43,8 +43,8 @@ public class TTSAIController : MonoBehaviour {
 			
 		}
 		
-		if(waypointsCrossed.Count > 10) {
-			this.waypointsCrossed.RemoveAt(0);
+		if (waypointsCrossed.Count > 10) {
+			waypointsCrossed.RemoveAt(0);
 		}
 		
 		
@@ -54,15 +54,15 @@ public class TTSAIController : MonoBehaviour {
 	
 	public Vector3 doAISeek() {
 		GameObject target = findClosestGO(GameObject.FindGameObjectsWithTag("Waypoint"));
-	 	this.GetComponent<TTSRacer>().currentAcceleration = this.GetComponent<TTSRacer>().ACCELERATION;
+	 	GetComponent<TTSRacer>().currentAcceleration = GetComponent<TTSRacer>().ACCELERATION;
 		
-		return Vector3.RotateTowards(this.GetComponent<TTSRacer>().RealForward,target.transform.position - this.GetComponent<TTSRacer>().body.transform.position,AI_STEERING_ABILITY,0.0f);	
+		return Vector3.RotateTowards(GetComponent<TTSRacer>().RealForward,target.transform.position - GetComponent<TTSRacer>().body.transform.position,AI_STEERING_ABILITY,0.0f);	
 	}
 	
 	void OnDrawGizmos() {
-		if(closestGameObject != null) {
+		if (closestGameObject != null) {
 			Gizmos.color = Color.cyan;
-			Gizmos.DrawLine(this.GetComponent<TTSRacer>().body.transform.position,closestGameObject.transform.position);
+			Gizmos.DrawLine(GetComponent<TTSRacer>().body.transform.position,closestGameObject.transform.position);
 		}
 	}
 	

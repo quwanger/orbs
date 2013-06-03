@@ -17,7 +17,7 @@ public class TTSWaypoint : MonoBehaviour {
 	public int index = 0;
 	public bool isLastWaypoint = false;
 	
-	void Start () {
+	void Start() {
 		
 	}
 	
@@ -28,7 +28,7 @@ public class TTSWaypoint : MonoBehaviour {
 	void OnDrawGizmos() {
 		
 		Gizmos.color = Color.black;
-		Gizmos.DrawIcon(this.transform.position,"waypoint-icon.png");
+		Gizmos.DrawIcon(transform.position,"waypoint-icon.png");
 		
 	}
 }

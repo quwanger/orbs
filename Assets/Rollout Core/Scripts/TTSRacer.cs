@@ -56,19 +56,19 @@ public class TTSRacer: MonoBehaviour {
 	
 	public float TOP_SPEED = 40.0f;
 	
-	void Start () {
+	void Start() {
 		
-		if(!physicsController || !body) {
+		if (!physicsController || !body) {
 			Debug.LogError("Please define a body and pc for the racer prefab."); //If these objects are not linked, throw an error	
 		}
 		
-		RealForward = this.transform.forward; //Quickly set up forward vector
+		RealForward = transform.forward; //Quickly set up forward vector
 		physicsController.rigidbody.maxAngularVelocity = MaxAngularVelocity; //Set the angular velocity.
 		physicsController.AddComponent<TTSCollisionHandler>();
 		
 	}
 	
-	void LateUpdate () {
+	void LateUpdate() {
 		
 		//We use late update to avoid jittering mesh
 		
@@ -81,34 +81,34 @@ public class TTSRacer: MonoBehaviour {
 	    }
 		
 		//Always reset to zero before handling input or AI
-		this.currentAcceleration = 0;
+		currentAcceleration = 0;
 			
-		if(isPC) {
+		if (isPC) {
 			
 			//Add a force if input is forward or back
-			if(Input.GetAxis("Vertical") > 0) {
-			 	this.currentAcceleration = this.ACCELERATION;
+			if (Input.GetAxis("Vertical") > 0) {
+			 	currentAcceleration = ACCELERATION;
 			}
 			 
-			if(Input.GetAxis("Vertical") < 0) {
-			 	this.currentAcceleration = -this.ACCELERATION; 
+			if (Input.GetAxis("Vertical") < 0) {
+			 	currentAcceleration = -ACCELERATION; 
 			}
 			
 			//Update Rotation if D or A is down.
-			if(Input.GetAxis("Horizontal") > 0) {
-			 	this.Rotation += rotationSpeed;
+			if (Input.GetAxis("Horizontal") > 0) {
+			 	Rotation += rotationSpeed;
 			}
 			 
-			if(Input.GetAxis("Horizontal") < 0) {
-			 	this.Rotation -= rotationSpeed;
+			if (Input.GetAxis("Horizontal") < 0) {
+			 	Rotation -= rotationSpeed;
 			}
 			 
 			//calculate orientation of realforward, in a pre normalized way
 		 	RealForward.Set(Mathf.Cos(Rotation),0,Mathf.Sin(Rotation));
 			
-		}else{
+		}else {
 			//Use the AI controller to seek a waypoint
-			RealForward = this.GetComponent<TTSAIController>().doAISeek();
+			RealForward = GetComponent<TTSAIController>().doAISeek();
 		 	
 		}
 		
@@ -147,22 +147,18 @@ public class TTSRacer: MonoBehaviour {
 		
 		//Now the tilt of the Realforward to conform with the floor...
 		RealForward = Vector3.Cross(FloorNormal,body.transform.right);
-		
-		
-		
-			
 	}
 	
 	void FixedUpdate() {
 		onGround = physicsController.GetComponent<TTSCollisionHandler>().colliding;
 		
-		if(onGround) {
+		if (onGround) {
 			go ();
 		}
 	}
 	
 	void go() {
-		if(physicsController.rigidbody.velocity.magnitude < TOP_SPEED) {
+		if (physicsController.rigidbody.velocity.magnitude < TOP_SPEED) {
 			physicsController.rigidbody.AddForce(Vector3.Normalize(RealForward) * currentAcceleration);
 		}
 	}
@@ -176,7 +172,6 @@ public class TTSRacer: MonoBehaviour {
 		Gizmos.color = Color.white;
 		Gizmos.DrawRay(body.transform.position,physicsController.rigidbody.velocity);
 	}
-	
 }
 
 	

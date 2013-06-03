@@ -10,18 +10,18 @@ public class TTSSoundtrackManager : MonoBehaviour {
 	public AudioClip songToPlay;
 	
 	
-	void Start () {
-		if(LOAD_RANDOM_TRACK || songToPlay == null) {
+	void Start() {
+		if (LOAD_RANDOM_TRACK || songToPlay == null) {
 			Object[] tracks = Resources.LoadAll("Soundtrack");
 			songToPlay = (AudioClip) tracks[Mathf.FloorToInt(Random.value * tracks.Length)];
 		}
 		
-		this.GetComponent<AudioSource>().clip = songToPlay;
-		this.GetComponent<AudioSource>().Play();
+		GetComponent<AudioSource>().clip = songToPlay;
+		GetComponent<AudioSource>().Play();
 	}
 	
 	
-	void Update () {
+	void Update() {
 	
 	}
 }
