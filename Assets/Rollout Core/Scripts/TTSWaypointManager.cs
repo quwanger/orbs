@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class WaypointManager : MonoBehaviour {
+public class TTSWaypointManager : MonoBehaviour {
 	
 	
 	private List<GameObject> waypoints = new List<GameObject>();
@@ -20,7 +20,7 @@ public class WaypointManager : MonoBehaviour {
 		//Assign unique indexes
 		int lastIndex = 0;
 		foreach(GameObject waypoint in tempWaypoints) {
-			waypoint.GetComponent<Waypoint>().index = lastIndex;
+			waypoint.GetComponent<TTSWaypoint>().index = lastIndex;
 			lastIndex++;
 		}
 		
