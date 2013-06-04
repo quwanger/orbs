@@ -42,7 +42,7 @@ public class TTSRacer: MonoBehaviour {
 	
 	public float MaxAngularVelocity = 30.0f; //The maximum rolling speed of the rigid body, change it if the rigid body is misbehaving (skidding)
 	
-	public bool isPC = true; //Is it using the controller or is it AI controlled?
+	public bool isPC = false; //Is it using the controller or is it AI controlled?
 	public bool onGround = true; //Is it on the ground? TODO: needs implementation
 	
 	public float bankingAngle = 0.0f; //The andgle to 'bank' the body when cornering
@@ -107,9 +107,8 @@ public class TTSRacer: MonoBehaviour {
 		 	RealForward.Set(Mathf.Cos(Rotation),0,Mathf.Sin(Rotation));
 			
 		}else{
-			//Use the AI controller to seek a waypoint
+			currentAcceleration = 100.0f;
 			RealForward = this.GetComponent<TTSAIController>().doAISeek();
-		 	
 		}
 		
 		//Update the mesh...
@@ -163,7 +162,7 @@ public class TTSRacer: MonoBehaviour {
 	
 	void go() {
 		if(physicsController.rigidbody.velocity.magnitude < TOP_SPEED) {
-			physicsController.rigidbody.AddForce(Vector3.Normalize(RealForward) * currentAcceleration);
+			physicsController.rigidbody.AddForce(-Vector3.Normalize(RealForward) * currentAcceleration);
 		}
 	}
 	

@@ -4,9 +4,10 @@ using System.Collections.Generic;
 public class TTSAIController : MonoBehaviour {
 	
 	public float AI_STEERING_ABILITY = 0.02f;
-	public int AI_ANTI_TRAP_DISTANCE = 10;
+	public int AI_ANTI_TRAP_DISTANCE = 20;
 	public List<int> waypointsCrossed = new List<int>();
 	GameObject closestGameObject;	// Use this for initialization
+	public GameObject UnitySteerComponent;
 	
 	void Start () {
 	
@@ -53,10 +54,8 @@ public class TTSAIController : MonoBehaviour {
 	}
 	
 	public Vector3 doAISeek() {
-		GameObject target = findClosestGO(GameObject.FindGameObjectsWithTag("Waypoint"));
-	 	this.GetComponent<TTSRacer>().currentAcceleration = this.GetComponent<TTSRacer>().ACCELERATION;
-		
-		return Vector3.RotateTowards(this.GetComponent<TTSRacer>().RealForward,target.transform.position - this.GetComponent<TTSRacer>().body.transform.position,AI_STEERING_ABILITY,0.0f);	
+		UnitySteerComponent.GetComponent<SteerForPoint>().TargetPoint = findClosestGO(GameObject.FindGameObjectsWithTag("Waypoint")).transform.position;
+		return UnitySteerComponent.transform.forward;
 	}
 	
 	void OnDrawGizmos() {
