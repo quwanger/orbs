@@ -108,7 +108,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 400012}
-  - 114: {fileID: 11400008}
   - 114: {fileID: 11400012}
   - 114: {fileID: 11400014}
   - 114: {fileID: 11400016}
@@ -118,6 +117,7 @@ GameObject:
   - 114: {fileID: 11400006}
   - 114: {fileID: 11400010}
   - 135: {fileID: 13500002}
+  - 114: {fileID: 11400008}
   m_Layer: 8
   m_Name: UnitySteerComponent
   m_TagString: Untagged
@@ -131,8 +131,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_LocalRotation: {x: .00157235644, y: .744389653, z: -.00124055566, w: .66774255}
-  m_LocalPosition: {x: 524.567871, y: 7.6216464, z: 1306.90662}
+  m_LocalRotation: {x: 0, y: -.125656188, z: 0, w: .992073894}
+  m_LocalPosition: {x: -42.6125488, y: -28.2165031, z: -.583091736}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400010}
@@ -373,9 +373,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e595e9937de9cd74fa0d0f882187e39d, type: 3}
   m_Name: 
-  AI_STEERING_ABILITY: .0199999996
-  AI_ANTI_TRAP_DISTANCE: 10
-  waypointsCrossed: 
+  waypointsCrossed: []
   UnitySteerComponent: {fileID: 100012}
 --- !u!114 &11400006
 MonoBehaviour:
@@ -387,9 +385,9 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a2fadd96e71d04da1849fa0f42d60409, type: 3}
   m_Name: 
-  _weight: 1
+  _weight: .200000003
   _targetPoint: {x: 0, y: 0, z: 0}
-  _considerVelocity: 1
+  _considerVelocity: 0
 --- !u!114 &11400008
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -400,20 +398,20 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cdaa54b947d9546e3bc45d706993c55c, type: 3}
   m_Name: 
-  _drawGizmos: 1
+  _drawGizmos: 0
   _center: {x: 0, y: 0, z: 0}
   _scaledCenter: {x: 0, y: 0, z: 0}
   _scaledRadius: 1
   _radius: 1
   _minSpeedForTurning: .100000001
   _movementPriority: 0
-  _turnTime: .25
+  _turnTime: 1
   _internalMass: 1
   _overrideRigidbodyMass: 0
   _isPlanar: 0
   _arrivalRadius: 1
-  _maxSpeed: 10
-  _maxForce: 10
+  _maxSpeed: 500
+  _maxForce: 100
   _canMove: 1
   _accelerationSmoothRate: .400000006
   _queueName: Steering

@@ -23,7 +23,7 @@ public class TTSCameraController : MonoBehaviour {
 	    x = angles.y;
 	    y = angles.x;
 	    
-	    target = GameObject.FindGameObjectWithTag("Player").GetComponent<TTSRacer>().body.transform;
+	    target = GameObject.FindGameObjectWithTag("Player").transform;
 	   
 	
 		// Make the rigid body not change rotation
