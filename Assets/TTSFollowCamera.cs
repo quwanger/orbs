@@ -21,11 +21,11 @@ public class TTSFollowCamera : MonoBehaviour {
 			return;
 		
 		// Calculate the current rotation angles
-		var wantedRotationAngle = target.eulerAngles.y;
-		var wantedHeight = target.position.y + height;
+		float wantedRotationAngle = target.eulerAngles.y;
+		float wantedHeight = target.position.y + height;
 			
-		var currentRotationAngle = transform.eulerAngles.y;
-		var currentHeight = transform.position.y;
+		float currentRotationAngle = transform.eulerAngles.y;
+		float currentHeight = transform.position.y;
 		
 		// Damp the rotation around the y-axis
 		currentRotationAngle = Mathf.LerpAngle (currentRotationAngle, wantedRotationAngle, rotationDamping * Time.deltaTime);
@@ -39,13 +39,19 @@ public class TTSFollowCamera : MonoBehaviour {
 		// Set the position of the camera on the x-z plane to:
 		// distance meters behind the target
 		transform.position = target.position;
+		
 		transform.position -= currentRotation * Vector3.forward * distance;
+		
 	
 		
 		
 		
 		// Always look at the target
 		transform.LookAt (target);
+		
+		if(Input.GetKey(KeyCode.LeftShift)) {
+			transform.RotateAround(Vector3.up,180);
+		} 
 		
 		// Set the height of the camera
 		transform.position.Set(transform.position.x,currentHeight,transform.position.z);
@@ -56,6 +62,15 @@ public class TTSFollowCamera : MonoBehaviour {
 		
 		if(target.parent.GetComponent<TTSRacer>().rigidbody.velocity.sqrMagnitude > 3000) {
 			transform.position += Random.insideUnitSphere * 0.06f;	
-		} 
+		}
+		
+		if(GetComponent<Vignetting>().chromaticAberration > 0.0f) {
+			GetComponent<Vignetting>().chromaticAberration = Mathf.Lerp(GetComponent<Vignetting>().chromaticAberration, 0.0f, 0.07f);	
+		}
+	}
+	
+	public void DoDamageEffect() {
+		GetComponent<Vignetting>().chromaticAberration = 100;
+		transform.position += Random.onUnitSphere * 2;
 	}
 }

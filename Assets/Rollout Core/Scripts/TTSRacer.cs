@@ -34,6 +34,7 @@ using System.Collections.Generic;
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
+[RequireComponent(typeof(AudioSource))]
 public class TTSRacer: MonoBehaviour {
 	
 	
@@ -52,6 +53,7 @@ public class TTSRacer: MonoBehaviour {
 	public bool onGround = true;
 	private float TiltRecoverySpeed = 0.1f;
 	private float TiltAngle = 0.0f;
+	public AudioClip[] DamageSounds;
 	#endregion
 	
 	
@@ -65,6 +67,8 @@ public class TTSRacer: MonoBehaviour {
 	public float Acceleration = 50.0f;
 	public float Handling = 50.0f;
 	#endregion
+	
+	 
 	
 	void Awake() {
 		
@@ -96,6 +100,8 @@ public class TTSRacer: MonoBehaviour {
 		
 		if(IsPlayerControlled) {
 			CalculateInputForces();	
+		} else {
+			CalculateAiForces();	
 		}
 		
 		CalculateBodyOrientation();
@@ -121,12 +127,21 @@ public class TTSRacer: MonoBehaviour {
 		
 	}
 	
-	void OnEnterCollision(Collider other) {
-		onGround = false;	
+	void OnCollisionEnter(Collision collision) {
+		Debug.Log("collision found");
+		onGround = true;
+		if(collision.relativeVelocity.magnitude > 10) {
+			GameObject.FindGameObjectWithTag("MainCamera").GetComponent<TTSFollowCamera>().DoDamageEffect();
+			GetComponent<AudioSource>().PlayOneShot(DamageSounds[Mathf.FloorToInt(Random.value * DamageSounds.Length)]);
+		}
 	}
 	
-	void OnExitCollision(Collider other) {
+	void OnCollisionStay(Collision collision) {
 		onGround = true;	
+	}
+	
+	void OnCollisionExit(Collision collision) {
+		onGround = false;	
 	}
 	
 	void CalculateBodyOrientation () {
@@ -148,6 +163,10 @@ public class TTSRacer: MonoBehaviour {
 		
 		PreviousVelocity = rigidbody.velocity;
 		
+		//sound
+		GetComponent<AudioSource>().pitch = TTSUtils.Remap(rigidbody.velocity.magnitude, 0f, TopSpeed, 0.5f, 1.3f);
+		GetComponent<AudioSource>().volume = TTSUtils.Remap(rigidbody.velocity.magnitude, 0f, TopSpeed, 0.5f, 1f);
+		
 		
 	}
 	
@@ -157,6 +176,12 @@ public class TTSRacer: MonoBehaviour {
 	
 	public float GetTiltAngle() {
 		return TiltAngle;
+	}
+	
+	private void CalculateAiForces() {
+		GetComponent<Biped>().MaxSpeed = TopSpeed;
+		GetComponent<Biped>().MaxForce = Acceleration;
+		GetComponent<TTSAIController>().seekWaypoint();
 	}
 	
 	
