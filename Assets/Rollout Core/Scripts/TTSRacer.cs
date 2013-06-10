@@ -29,149 +29,163 @@ using System.Collections.Generic;
  * 
  * */
 
+[RequireComponent(typeof(TTSAIController))]
+//[RequireComponent(typeof(TTSInputController))]
+[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(MeshFilter))]
+[RequireComponent(typeof(MeshRenderer))]
+[RequireComponent(typeof(AudioSource))]
 public class TTSRacer: MonoBehaviour {
 	
-	public Vector3 RealForward = new Vector3(0,0,1); //The direction that force is applied to move the racer.
-	public Vector3 FloorNormal = new Vector3(0,1,0); //The normal vector of the floor that the object is over.
 	
-	public float ACCELERATION = 100.0f; //The constant force to apply to the rigidbody over every frame when moving forward.
-	public float currentAcceleration = 0.0f; //The actual force being applied, is 0 if no button is pressed.
+	#region serialized settings
+	public bool IsPlayerControlled = true;
+	#endregion
 	
-	public float Rotation = 0.0f; //The current y axis rotation of RealForward 
-	public float rotationSpeed = 0.02f; //The speed at which to adjust rotation when the control is invoked
+	#region Internal Component
+	private Transform displayMeshComponent;
+	#endregion
 	
-	public float MaxAngularVelocity = 30.0f; //The maximum rolling speed of the rigid body, change it if the rigid body is misbehaving (skidding)
 	
-	public bool isPC = true; //Is it using the controller or is it AI controlled?
-	public bool onGround = true; //Is it on the ground? TODO: needs implementation
+	#region internal operators
+	private Vector3 IdleForwardVector;
+	private Vector3 PreviousVelocity = new Vector3(1,0,0);
+	public bool onGround = true;
+	private float TiltRecoverySpeed = 0.1f;
+	private float TiltAngle = 0.0f;
+	public AudioClip[] DamageSounds;
+	#endregion
 	
-	public float bankingAngle = 0.0f; //The andgle to 'bank' the body when cornering
-	public float MAXIMUM_BANK = 0.2f; //The maximum bank [TODO: implement clamp on banking angle]
 	
-	public GameObject physicsController; //The rigidbody to control movement
-	public GameObject body; //The displayed mesh
-	public GameObject lights; //Lights prefab
+	#region NEEDS EDITOR
+	private float MinimumVelocityToAnimateSteering = 1.0f;
+	#endregion
 	
-	public float SPEED_BANKING_DAMPENING = 100; //The damper for the banking based on speed.
 	
-	public float TOP_SPEED = 40.0f;
+	#region gameplay vars
+	public float TopSpeed = 100.0f;
+	public float Acceleration = 50.0f;
+	public float Handling = 50.0f;
+	#endregion
 	
-	void Start() {
+	 
+	
+	void Awake() {
 		
-		if (!physicsController || !body) {
-			Debug.LogError("Please define a body and pc for the racer prefab."); //If these objects are not linked, throw an error	
+		//Get the body via tag.
+		foreach(Transform child in transform){
+    		if(child.gameObject.tag == "RacerDisplayMesh"){
+        		displayMeshComponent = child;
+    		}
 		}
 		
-		RealForward = transform.forward; //Quickly set up forward vector
-		physicsController.rigidbody.maxAngularVelocity = MaxAngularVelocity; //Set the angular velocity.
-		physicsController.AddComponent<TTSCollisionHandler>();
+		if(displayMeshComponent == null) {
+			Debug.LogException(new UnassignedReferenceException());	
+		}
+		
+		IdleForwardVector = transform.forward;
 		
 	}
 	
-	void LateUpdate() {
+	
+	void Start () {
 		
-		//We use late update to avoid jittering mesh
 		
 		
-		//Raycast to find the normal of the floor
-		RaycastHit hit = new RaycastHit();
-	    if (Physics.Raycast (physicsController.transform.position, -Vector3.up, out hit)) {
-	        FloorNormal = hit.normal; //Update the var
-			
-	    }
-		
-		//Always reset to zero before handling input or AI
-		currentAcceleration = 0;
-			
-		if (isPC) {
-			
-			//Add a force if input is forward or back
-			if (Input.GetAxis("Vertical") > 0) {
-			 	currentAcceleration = ACCELERATION;
-			}
-			 
-			if (Input.GetAxis("Vertical") < 0) {
-			 	currentAcceleration = -ACCELERATION; 
-			}
-			
-			//Update Rotation if D or A is down.
-			if (Input.GetAxis("Horizontal") > 0) {
-			 	Rotation += rotationSpeed;
-			}
-			 
-			if (Input.GetAxis("Horizontal") < 0) {
-			 	Rotation -= rotationSpeed;
-			}
-			 
-			//calculate orientation of realforward, in a pre normalized way
-		 	RealForward.Set(Mathf.Cos(Rotation),0,Mathf.Sin(Rotation));
-			
-		}else {
-			//Use the AI controller to seek a waypoint
-			RealForward = GetComponent<TTSAIController>().doAISeek();
-		 	
-		}
-		
-		//Update the mesh...
-		body.transform.position = physicsController.transform.position;
-		body.transform.forward = RealForward;
-		
-		//Update the lights...
-		lights.transform.position = physicsController.transform.position;
-		lights.transform.forward = RealForward;
-		
-		//This next part is banking... its a little weird.
-		
-		//Trick to get negative angles instead of just the smallest (or what Vector2.angle() would give you...)
-		bankingAngle = Vector2.Angle(new Vector2(RealForward.x,RealForward.z),new Vector2(physicsController.rigidbody.velocity.x,physicsController.rigidbody.velocity.z));
-		Vector3 cross = Vector3.Cross(new Vector2(RealForward.x,RealForward.z),new Vector2(physicsController.rigidbody.velocity.x,physicsController.rigidbody.velocity.z));
- 
-		if (cross.z > 0)
-   			bankingAngle = 360 - bankingAngle;
-			
-		//now that we have the angle, we need it in radians...
-		bankingAngle = Mathf.Deg2Rad * bankingAngle;
-		 
-		//Adjust our bank...
-		bankingAngle = MAXIMUM_BANK * Mathf.Sin(bankingAngle) * (physicsController.rigidbody.velocity.magnitude/SPEED_BANKING_DAMPENING);
-		
-		//Update the meshes...
-		body.transform.Rotate(new Vector3(0,0,bankingAngle));
-		
-		 
-		//Get the roll... (this is wrong atm)
-		body.transform.RotateAround(body.transform.right,physicsController.transform.eulerAngles.x);
-		 
-		//lights...
-		lights.transform.right = body.transform.right;
-		
-		//Now the tilt of the Realforward to conform with the floor...
-		RealForward = Vector3.Cross(FloorNormal,body.transform.right);
 	}
 	
-	void FixedUpdate() {
-		onGround = physicsController.GetComponent<TTSCollisionHandler>().colliding;
+	void FixedUpdate () {
 		
-		if (onGround) {
-			go ();
+		
+		
+		if(IsPlayerControlled) {
+			CalculateInputForces();	
+		} else {
+			CalculateAiForces();	
+		}
+		
+		CalculateBodyOrientation();
+		
+		PreviousVelocity = rigidbody.velocity;
+	}
+	
+	
+	void CalculateInputForces() {
+		
+		
+		
+		//add acceleration forces...
+		if(onGround && rigidbody.velocity.magnitude < TopSpeed) {
+			this.rigidbody.AddForce(displayMeshComponent.forward * Input.GetAxis("Vertical") * Time.deltaTime * Acceleration);
+			this.rigidbody.AddForce(displayMeshComponent.right * Input.GetAxis("Horizontal") * Time.deltaTime * Acceleration);
+		}
+		
+		
+	
+		
+		
+		
+	}
+	
+	void OnCollisionEnter(Collision collision) {
+		Debug.Log("collision found");
+		onGround = true;
+		if(collision.relativeVelocity.magnitude > 10) {
+			GameObject.FindGameObjectWithTag("MainCamera").GetComponent<TTSFollowCamera>().DoDamageEffect();
+			GetComponent<AudioSource>().PlayOneShot(DamageSounds[Mathf.FloorToInt(Random.value * DamageSounds.Length)]);
 		}
 	}
 	
-	void go() {
-		if (physicsController.rigidbody.velocity.magnitude < TOP_SPEED) {
-			physicsController.rigidbody.AddForce(Vector3.Normalize(RealForward) * currentAcceleration);
+	void OnCollisionStay(Collision collision) {
+		onGround = true;	
+	}
+	
+	void OnCollisionExit(Collision collision) {
+		onGround = false;	
+	}
+	
+	void CalculateBodyOrientation () {
+
+		//Facing Direction...
+		if(new Vector2(rigidbody.velocity.x,rigidbody.velocity.z).magnitude > MinimumVelocityToAnimateSteering) {
+			//based on rigidbody velocity.
+			displayMeshComponent.forward = rigidbody.velocity;
+			//set the idle vec, so it doesnt get janky.
+			IdleForwardVector = displayMeshComponent.forward;
+		}else{
+			displayMeshComponent.forward = IdleForwardVector;	
 		}
+		
+		//low priority movement first...
+		TiltAngle = Mathf.Lerp (TiltAngle, TTSUtils.GetRelativeAngle(rigidbody.velocity,PreviousVelocity)/2, TiltRecoverySpeed);
+		
+		displayMeshComponent.RotateAround(displayMeshComponent.forward,TiltAngle);
+		
+		PreviousVelocity = rigidbody.velocity;
+		
+		//sound
+		GetComponent<AudioSource>().pitch = TTSUtils.Remap(rigidbody.velocity.magnitude, 0f, TopSpeed, 0.5f, 1.3f);
+		GetComponent<AudioSource>().volume = TTSUtils.Remap(rigidbody.velocity.magnitude, 0f, TopSpeed, 0.5f, 1f);
+		
+		
 	}
 	
 	void OnDrawGizmos() {
-		//Debuggin
-		Gizmos.color = Color.red;
-	    Gizmos.DrawRay (physicsController.transform.position, RealForward*5);
-	    Gizmos.color = Color.blue;
-	    Gizmos.DrawRay (physicsController.transform.position, FloorNormal*5);
-		Gizmos.color = Color.white;
-		Gizmos.DrawRay(body.transform.position,physicsController.rigidbody.velocity);
+	
 	}
+	
+	public float GetTiltAngle() {
+		return TiltAngle;
+	}
+	
+	private void CalculateAiForces() {
+		GetComponent<Biped>().MaxSpeed = TopSpeed;
+		GetComponent<Biped>().MaxForce = Acceleration;
+		GetComponent<TTSAIController>().seekWaypoint();
+	}
+	
+	
 }
 
 	
+ 

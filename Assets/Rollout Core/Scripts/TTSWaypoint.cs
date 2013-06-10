@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
+[RequireComponent (typeof (BoxCollider))]
 public class TTSWaypoint : MonoBehaviour {
 	
 	/* Waypoint.cs
@@ -16,19 +17,23 @@ public class TTSWaypoint : MonoBehaviour {
 
 	public int index = 0;
 	public bool isLastWaypoint = false;
+	public bool isActive = true;
+	private BoxCollider boxCollider;
 	
-	void Start() {
-		
-	}
 	
-	void update() {
-		
+	void Start () {
+		boxCollider = GetComponent<BoxCollider>();
+		boxCollider.isTrigger = true;
 	}
 	
 	void OnDrawGizmos() {
 		
 		Gizmos.color = Color.black;
-		Gizmos.DrawIcon(transform.position,"waypoint-icon.png");
+		Gizmos.DrawIcon(this.transform.position,"waypoint-icon.png");
 		
+	}
+	
+	void OnTriggerEnter(Collider other) {
+		this.isActive = false;	
 	}
 }
