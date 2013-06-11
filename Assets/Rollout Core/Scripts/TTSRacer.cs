@@ -30,7 +30,6 @@ using System.Collections.Generic;
  * */
 
 [RequireComponent(typeof(TTSAIController))]
-//[RequireComponent(typeof(TTSInputController))]
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
@@ -54,7 +53,7 @@ public class TTSRacer: MonoBehaviour {
 	private float TiltRecoverySpeed = 0.1f;
 	private float TiltAngle = 0.0f;
 	public AudioClip[] DamageSounds;
-	public Transform SparksParticleSystem;
+	public GameObject SparksEmitter;
 	#endregion
 	
 	
@@ -64,9 +63,9 @@ public class TTSRacer: MonoBehaviour {
 	
 	
 	#region gameplay vars
-	public float TopSpeed = 100.0f;
-	public float Acceleration = 50.0f;
-	public float Handling = 50.0f;
+	public float TopSpeed = 50.0f;
+	public float Acceleration = 2000.0f;
+	public float Handling = 3000.0f;
 	#endregion
 	
 	 
@@ -85,6 +84,7 @@ public class TTSRacer: MonoBehaviour {
 		}
 		
 		IdleForwardVector = transform.forward;
+		//SparksParticleSystem = GameObject.Find("SparksEmitter");
 		
 	}
 	
@@ -96,9 +96,6 @@ public class TTSRacer: MonoBehaviour {
 	}
 	
 	void FixedUpdate () {
-		
-		
-		
 		if(IsPlayerControlled) {
 			CalculateInputForces();	
 		} else {
@@ -108,44 +105,41 @@ public class TTSRacer: MonoBehaviour {
 		CalculateBodyOrientation();
 		
 		PreviousVelocity = rigidbody.velocity;
+		
+		
 	}
 	
 	
 	void CalculateInputForces() {
-		
-		
-		
 		//add acceleration forces...
 		if(onGround && rigidbody.velocity.magnitude < TopSpeed) {
 			this.rigidbody.AddForce(displayMeshComponent.forward * Input.GetAxis("Vertical") * Time.deltaTime * Acceleration);
-			this.rigidbody.AddForce(displayMeshComponent.right * Input.GetAxis("Horizontal") * Time.deltaTime * Acceleration);
+			this.rigidbody.AddForce(displayMeshComponent.right * Input.GetAxis("Horizontal") * Time.deltaTime * Handling);
 		}
-		
-		
-	
-		
-		
-		
 	}
 	
 	void OnCollisionEnter(Collision collision) {
-		Debug.Log("collision found");
+
 		onGround = true;
 		if(collision.relativeVelocity.magnitude > 10) {
 			GameObject.FindGameObjectWithTag("MainCamera").GetComponent<TTSFollowCamera>().DoDamageEffect();
 			GetComponent<AudioSource>().PlayOneShot(DamageSounds[Mathf.FloorToInt(Random.value * DamageSounds.Length)]);
 		}
-		SparksParticleSystem.position = collision.contacts[0].point * SparksParticleSystem.worldToLocalMatrix;
-		SparksParticleSystem.particleEmitter.emit = true;
+		
+	
+		GameObject sparkClone = (GameObject) Instantiate(SparksEmitter);
+		sparkClone.transform.position = collision.contacts[0].point;
+		sparkClone.particleEmitter.emit = true;
+		sparkClone.transform.forward = displayMeshComponent.forward;
+
 	}
 	
 	void OnCollisionStay(Collision collision) {
-		onGround = true;	
+		onGround = true;
 	}
 	
 	void OnCollisionExit(Collision collision) {
 		onGround = false;
-		SparksParticleSystem.particleEmitter.emit = false;
 	}
 	
 	void CalculateBodyOrientation () {
@@ -160,12 +154,9 @@ public class TTSRacer: MonoBehaviour {
 			displayMeshComponent.forward = IdleForwardVector;	
 		}
 		
-		//low priority movement first...
 		TiltAngle = Mathf.Lerp (TiltAngle, TTSUtils.GetRelativeAngle(rigidbody.velocity,PreviousVelocity)/2, TiltRecoverySpeed);
 		
 		displayMeshComponent.RotateAround(displayMeshComponent.forward,TiltAngle);
-		
-		PreviousVelocity = rigidbody.velocity;
 		
 		//sound
 		GetComponent<AudioSource>().pitch = TTSUtils.Remap(rigidbody.velocity.magnitude, 0f, TopSpeed, 0.5f, 1.3f);
