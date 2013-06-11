@@ -54,6 +54,7 @@ public class TTSRacer: MonoBehaviour {
 	private float TiltRecoverySpeed = 0.1f;
 	private float TiltAngle = 0.0f;
 	public AudioClip[] DamageSounds;
+	public Transform SparksParticleSystem;
 	#endregion
 	
 	
@@ -134,6 +135,8 @@ public class TTSRacer: MonoBehaviour {
 			GameObject.FindGameObjectWithTag("MainCamera").GetComponent<TTSFollowCamera>().DoDamageEffect();
 			GetComponent<AudioSource>().PlayOneShot(DamageSounds[Mathf.FloorToInt(Random.value * DamageSounds.Length)]);
 		}
+		SparksParticleSystem.position = collision.contacts[0].point * SparksParticleSystem.worldToLocalMatrix;
+		SparksParticleSystem.particleEmitter.emit = true;
 	}
 	
 	void OnCollisionStay(Collision collision) {
@@ -141,7 +144,8 @@ public class TTSRacer: MonoBehaviour {
 	}
 	
 	void OnCollisionExit(Collision collision) {
-		onGround = false;	
+		onGround = false;
+		SparksParticleSystem.particleEmitter.emit = false;
 	}
 	
 	void CalculateBodyOrientation () {

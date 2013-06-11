@@ -6281,7 +6281,7 @@ AudioSource:
   serializedVersion: 3
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: .488000005
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -10518,7 +10518,7 @@ AudioSource:
   serializedVersion: 3
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: .488000005
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -10692,7 +10692,7 @@ AudioSource:
   serializedVersion: 3
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: .488000005
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -12225,7 +12225,7 @@ AudioSource:
   serializedVersion: 3
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: .488000005
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -15729,7 +15729,7 @@ MonoBehaviour:
   _turnTime: .25
   _internalMass: 1
   _overrideRigidbodyMass: 0
-  _isPlanar: 0
+  _isPlanar: 1
   _arrivalRadius: 1
   _maxSpeed: 1
   _maxForce: 10
@@ -15886,7 +15886,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b629f60444f4a4742bc16852f5ea3a55, type: 3}
   m_Name: 
-  _weight: 1
+  _weight: 1.20000005
   _minRadius: 3
   _maxRadius: 7.5
   _angleCos: .699999988
@@ -15904,7 +15904,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9bb541a7bf4d841a8a655dc685b730bc, type: 3}
   m_Name: 
-  _weight: 1
+  _weight: 1.20000005
   _minRadius: 10
   _maxRadius: 20
   _angleCos: .699999988
@@ -15925,7 +15925,7 @@ MonoBehaviour:
   _maxQueueProcessedPerUpdate: 20
   _tickLength: .5
   _detectionRadius: 5
-  _detectDisabledVehicles: 0
+  _detectDisabledVehicles: 1
   _layersChecked:
     serializedVersion: 2
     m_Bits: 256
@@ -16176,7 +16176,7 @@ AudioSource:
   serializedVersion: 3
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: .488000005
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -17318,7 +17318,7 @@ AudioSource:
   serializedVersion: 3
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: .488000005
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -19679,7 +19679,7 @@ AudioSource:
   serializedVersion: 3
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: .488000005
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -20586,6 +20586,10 @@ Prefab:
     - target: {fileID: 400000, guid: 71edf9454d261ca4aa4f4131019a94c9, type: 2}
       propertyPath: m_LocalRotation.w
       value: .663443923
+      objectReference: {fileID: 0}
+    - target: {fileID: 8200000, guid: 71edf9454d261ca4aa4f4131019a94c9, type: 2}
+      propertyPath: m_Volume
+      value: .488000005
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 71edf9454d261ca4aa4f4131019a94c9, type: 2}
@@ -21560,7 +21564,7 @@ AudioSource:
   m_Pitch: 1
   Loop: 1
   Mute: 0
-  Priority: 188
+  Priority: 255
   DopplerLevel: 0
   MinDistance: 1
   MaxDistance: 500
@@ -23729,7 +23733,7 @@ AudioSource:
   serializedVersion: 3
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: .488000005
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -29020,6 +29024,7 @@ GameObject:
   - 114: {fileID: 1903928550}
   - 114: {fileID: 1903928552}
   - 82: {fileID: 1903928554}
+  - 114: {fileID: 1903928555}
   m_Layer: 8
   m_Name: Racer 2.0
   m_TagString: Player
@@ -29105,7 +29110,7 @@ AudioSource:
   serializedVersion: 3
   m_audioClip: {fileID: 8300000, guid: 65c0c59eca098834fae1ea43d9544327, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: .799000025
+  m_Volume: .685000002
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -29151,6 +29156,31 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
+--- !u!114 &1903928555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1903928548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f86df318fbb4417da58246c806afd20, type: 3}
+  m_Name: 
+  _drawGizmos: 0
+  _center: {x: 0, y: 0, z: 0}
+  _scaledCenter: {x: 0, y: 0, z: 0}
+  _scaledRadius: 1
+  _radius: 1
+  _minSpeedForTurning: .100000001
+  _movementPriority: 0
+  _turnTime: .25
+  _internalMass: 1
+  _overrideRigidbodyMass: 0
+  _isPlanar: 0
+  _arrivalRadius: 1
+  _maxSpeed: 1
+  _maxForce: 10
+  _canMove: 1
 --- !u!1 &1910804642
 GameObject:
   m_ObjectHideFlags: 0
@@ -29264,7 +29294,7 @@ AudioSource:
   serializedVersion: 3
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: .488000005
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -31635,7 +31665,7 @@ AudioSource:
   serializedVersion: 3
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: .488000005
   m_Pitch: 1
   Loop: 0
   Mute: 0

@@ -5,6 +5,7 @@ public class TTSPlayRandomSoundEffect : MonoBehaviour {
 	
 	public AudioClip[] sounds;
 	private AudioSource audioSource;
+	private float MAX_VOLUME = 0.6f;
 	
 	void Start() {
 		if (sounds.Length < 1) {
@@ -22,9 +23,9 @@ public class TTSPlayRandomSoundEffect : MonoBehaviour {
 	void OnCollisionEnter(Collision collision) {
 		
 		if (collision != null) {
-			audioSource.volume = 1*Mathf.Abs(collision.relativeVelocity.magnitude);
+			audioSource.volume = TTSUtils.Remap(collision.relativeVelocity.magnitude,0f,10,0f,MAX_VOLUME);
 		}else {
-			audioSource.volume = 1;
+			audioSource.volume = MAX_VOLUME;
 		}
 		audioSource.PlayOneShot(sounds[Mathf.FloorToInt(Random.value * sounds.Length)]);
 	}
