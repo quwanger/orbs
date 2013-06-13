@@ -6,8 +6,8 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: basin-wall
-  m_Shader: {fileID: 2, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: ground
+  m_Shader: {fileID: 4, guid: 0000000000000000e000000000000000, type: 0}
   m_SavedProperties:
     serializedVersion: 2
     m_TexEnvs:
@@ -15,21 +15,21 @@ Material:
         first:
           name: _MainTex
         second:
-          m_Texture: {fileID: 2800000, guid: 6b14d1ad0fcbdc541b7633c08b28c80c, type: 3}
+          m_Texture: {fileID: 2800000, guid: f00609df31a8d894d84cdd106e4c48d5, type: 3}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
       data:
         first:
           name: _BumpMap
         second:
-          m_Texture: {fileID: 2800000, guid: bef6174978d3bd84393a2e068d4846cb, type: 3}
+          m_Texture: {fileID: 2800000, guid: 70efc525744ff2141bd072c2d68664aa, type: 3}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
     m_Floats:
       data:
         first:
           name: _Shininess
-        second: .0609552003
+        second: .760182023
     m_Colors:
       data:
         first:
@@ -38,4 +38,4 @@ Material:
       data:
         first:
           name: _SpecColor
-        second: {r: .5, g: .5, b: .5, a: 1}
+        second: {r: 0, g: .496503592, b: 1, a: 1}
