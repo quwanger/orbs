@@ -15,7 +15,7 @@ public class TTSFollowCamera : MonoBehaviour {
 	
 	private float tiltAngle = 0.0f;
 
-	void Update () {
+	void FixedUpdate () {
 		// Early out if we don't have a target
 		if (!target)
 			return;
