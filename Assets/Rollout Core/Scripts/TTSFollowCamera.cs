@@ -15,7 +15,7 @@ public class TTSFollowCamera : MonoBehaviour {
 	
 	private float tiltAngle = 0.0f;
 
-	void Update () {
+	void FixedUpdate () {
 		// Early out if we don't have a target
 		if (!target)
 			return;
@@ -41,10 +41,9 @@ public class TTSFollowCamera : MonoBehaviour {
 		transform.position = target.position;
 		
 		transform.position -= currentRotation * Vector3.forward * distance;
-		
-	
-		
-		
+
+		// Set the height of the camera
+		transform.position = new Vector3(transform.position.x,currentHeight,transform.position.z);
 		
 		// Always look at the target
 		transform.LookAt (target);
@@ -53,8 +52,7 @@ public class TTSFollowCamera : MonoBehaviour {
 			transform.RotateAround(Vector3.up,180);
 		} 
 		
-		// Set the height of the camera
-		transform.position.Set(transform.position.x,currentHeight,transform.position.z);
+		
 		
 		tiltAngle = Mathf.Lerp (tiltAngle, target.parent.GetComponent<TTSRacer>().GetTiltAngle(),0.05f);
 		
