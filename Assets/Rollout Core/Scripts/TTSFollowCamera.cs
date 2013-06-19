@@ -2,7 +2,11 @@ using UnityEngine;
 using System.Collections.Generic;
 
 public class TTSFollowCamera : MonoBehaviour {
-
+	
+	public enum cameraModes {THIRD_PERSON, FIRST_PERSON};
+	
+	public cameraModes CameraMode;
+	
 	// The target we are following
 	public Transform target;
 	// The distance in the x-z plane to the target
@@ -15,7 +19,26 @@ public class TTSFollowCamera : MonoBehaviour {
 	
 	private float tiltAngle = 0.0f;
 
-	void Update () {
+	void FixedUpdate () {
+		if(CameraMode == cameraModes.THIRD_PERSON) {
+			ThirdPerson ();	
+		}
+		if(CameraMode == cameraModes.FIRST_PERSON)
+		{
+			this.transform.position = target.transform.position + transform.forward*2;
+			this.transform.rotation = target.transform.rotation;
+			
+			if(target.parent.GetComponent<TTSRacer>().rigidbody.velocity.sqrMagnitude > 3000) {
+				transform.position += Random.insideUnitSphere * 0.06f;	
+			}
+		
+			if(GetComponent<Vignetting>().chromaticAberration > 0.0f) {
+				GetComponent<Vignetting>().chromaticAberration = Mathf.Lerp(GetComponent<Vignetting>().chromaticAberration, 0.0f, 0.07f);	
+			}
+		}
+	}
+	
+	void ThirdPerson() {
 		// Early out if we don't have a target
 		if (!target)
 			return;
@@ -42,7 +65,7 @@ public class TTSFollowCamera : MonoBehaviour {
 		
 		transform.position -= currentRotation * Vector3.forward * distance;
 		
-	
+		
 		
 		
 		
