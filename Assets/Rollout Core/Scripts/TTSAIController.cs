@@ -31,7 +31,7 @@ public class TTSAIController : MonoBehaviour {
 			waypointsCrossed.RemoveAt(0);	
 		}
 		
-		GetComponent<SteerForPoint>().TargetPoint = closestPoint.transform.position;
+		//GetComponent<SteerForPoint>().TargetPoint = closestPoint.transform.position;
 	}
 }
 
