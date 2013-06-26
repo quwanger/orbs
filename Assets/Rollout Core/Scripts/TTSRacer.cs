@@ -63,7 +63,7 @@ public class TTSRacer: MonoBehaviour {
 	
 	
 	#region gameplay vars
-	public float TopSpeed = 50.0f;
+	public float TopSpeed = 100.0f;
 	public float Acceleration = 2000.0f;
 	public float Handling = 3000.0f;
 	#endregion
