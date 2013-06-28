@@ -27,6 +27,5 @@ You can also tag stories in commits with the number in the commit message, forma
 
 `[#1238492] Fixes some problem`
 
-Lastly you can tag them in PR's the same way as above by putting it in the title
+We should have a pivotal story for every branch. If you are doing something that does not have a pivotal story associated with it, create one! 
 
-*[#123456] Adds Every Feature*
