@@ -6,8 +6,12 @@ IMD Senior Project.
 Notes:
 Please check back for PR's and Issues regularily, (once every two days). Check out and import the project with Unity.
 
-Commit notes:
-Try not to stage files that have a plib extension. or anything that definetly isnt related to what you were changing. WE WILL KNOW. see me @JakeCataford to resolve merge conflicts and stuff.
+
+Decal System Tutorials
+-------
+
+We are using a free tool from that asset store named Decal System. Please watch www.youtube.com/watch?v=C87xkHj8jHM‎to get a hang of it.
+Also, we should credit Eidelweiss Interactive in our credits. They released a super powerful tool for free. 
 
 
 Testing Scene Transitions and game flow
