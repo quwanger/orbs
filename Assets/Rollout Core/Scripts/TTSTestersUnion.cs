@@ -51,10 +51,16 @@ public class TTSTestersUnion : MonoBehaviour {
 		Debug.Log("Testers Union: Logged Event -> " + eventTitle);
 	}
 	
-	public IEnumerator OnApplicationQuit() {
+	public void OnApplicationQuit() {
+		Application.CancelQuit();
+		StartCoroutine(postQuit());
+	}
+	
+	public IEnumerator postQuit() {
 		Debug.Log("Testers Union: Sending Quit Log");
 		yield return StartCoroutine(logEvent("SESSION_END", "Play_Time=" + Time.timeSinceLevelLoad.ToString() + " Level=" + Application.loadedLevelName));	
-		Debug.Log("Done.");
+		Debug.Log ("done.");
+		Application.Quit();
 	}
 	
 }
