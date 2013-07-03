@@ -678,9 +678,9 @@ Transform:
   m_LocalPosition: {x: 6.67832422, y: 0, z: 12.4752884}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 1264011717}
   - {fileID: 677616903}
   - {fileID: 1146245048}
-  - {fileID: 1264011717}
   m_Father: {fileID: 0}
 --- !u!1 &29082822
 GameObject:
@@ -14194,7 +14194,7 @@ MonoBehaviour:
   affectOtherDecals: 0
   cullingAngle: 180
   meshOffset: 0
-  uv1RectangleIndex: 1
+  uv1RectangleIndex: 0
   uv2RectangleIndex: 0
   affectMeshes: 1
   affectTerrains: 1
@@ -15916,6 +15916,46 @@ MeshFilter:
   m_PrefabInternal: {fileID: 2075215453}
   m_GameObject: {fileID: 704295621}
   m_Mesh: {fileID: 4300000, guid: 7d406a0697b22334794db43c93ddae2e, type: 3}
+--- !u!1001 &704641937
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 400000, guid: 029cd434f1405f14fac67168c06173df, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 705.430969
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 029cd434f1405f14fac67168c06173df, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 339.847595
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 029cd434f1405f14fac67168c06173df, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 1104.01819
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 029cd434f1405f14fac67168c06173df, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 029cd434f1405f14fac67168c06173df, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 029cd434f1405f14fac67168c06173df, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 029cd434f1405f14fac67168c06173df, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 029cd434f1405f14fac67168c06173df, type: 2}
+  m_RootGameObject: {fileID: 1034916733}
+  m_IsPrefabParent: 0
+  m_IsExploded: 1
 --- !u!1 &704783851
 GameObject:
   m_ObjectHideFlags: 0
@@ -16701,7 +16741,7 @@ MonoBehaviour:
   affectOtherDecals: 0
   cullingAngle: 180
   meshOffset: 0
-  uv1RectangleIndex: 3
+  uv1RectangleIndex: 0
   uv2RectangleIndex: 0
   affectMeshes: 1
   affectTerrains: 1
@@ -18019,40 +18059,16 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9226db5f616c97041a741d6a06c860af, type: 3}
   m_Name: 
-  m_Material: {fileID: 2100000, guid: 6abf971823c3e53409bf9200d6b95975, type: 2}
-  m_ProjectionMode: 1
+  m_Material: {fileID: 0}
+  m_ProjectionMode: 0
   m_UVMode: 0
   m_UV2Mode: 0
   m_NormalsMode: 1
-  m_TangentsMode: 1
+  m_TangentsMode: 0
   m_AffectSameLODOnly: 0
   m_LightmapUpdateMode: 0
-  uvRectangles:
-  - name: Trash
-    lowerLeftUV: {x: 0, y: 0}
-    upperRightUV: {x: .0830078125, y: .249023438}
-  - name: Grafiti
-    lowerLeftUV: {x: .0009765625, y: .243164062}
-    upperRightUV: {x: .245117188, y: .4296875}
-  - name: Exit
-    lowerLeftUV: {x: .874023438, y: .76953125}
-    upperRightUV: {x: 1, y: .821289062}
-  - name: UVRectangle
-    lowerLeftUV: {x: .23828125, y: .875976562}
-    upperRightUV: {x: .48046875, y: 1}
-  uv2Rectangles:
-  - name: Trash
-    lowerLeftUV: {x: 0, y: 0}
-    upperRightUV: {x: 1, y: 1}
-  - name: Grafiti
-    lowerLeftUV: {x: 0, y: 0}
-    upperRightUV: {x: 1, y: 1}
-  - name: Exit
-    lowerLeftUV: {x: 0, y: 0}
-    upperRightUV: {x: 1, y: 1}
-  - name: UVRectangle
-    lowerLeftUV: {x: 0, y: 0}
-    upperRightUV: {x: 1, y: 1}
+  uvRectangles: []
+  uv2Rectangles: []
   m_AreDecalsMeshesOptimized: 0
   m_MeshAssetFolder: Assets
 --- !u!1 &807190962
@@ -23195,7 +23211,7 @@ MonoBehaviour:
   affectOtherDecals: 0
   cullingAngle: 180
   meshOffset: 0
-  uv1RectangleIndex: 2
+  uv1RectangleIndex: 0
   uv2RectangleIndex: 0
   affectMeshes: 1
   affectTerrains: 1
@@ -23903,6 +23919,48 @@ MeshFilter:
   m_PrefabInternal: {fileID: 486903848}
   m_GameObject: {fileID: 1030716040}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1034916733
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 100000, guid: 029cd434f1405f14fac67168c06173df, type: 2}
+  m_PrefabInternal: {fileID: 704641937}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1034916734}
+  - 114: {fileID: 1034916735}
+  m_Layer: 0
+  m_Name: Logger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1034916734
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 400000, guid: 029cd434f1405f14fac67168c06173df, type: 2}
+  m_PrefabInternal: {fileID: 704641937}
+  m_GameObject: {fileID: 1034916733}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 705.430969, y: 339.847595, z: 1104.01819}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+--- !u!114 &1034916735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400000, guid: 029cd434f1405f14fac67168c06173df,
+    type: 2}
+  m_PrefabInternal: {fileID: 704641937}
+  m_GameObject: {fileID: 1034916733}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9da50221de0d0244fb0c5eb8f2146cf1, type: 3}
+  m_Name: 
+  name: 
+  age: 
+  sex: 
+  token: 
 --- !u!1 &1035716109
 GameObject:
   m_ObjectHideFlags: 0
@@ -27497,8 +27555,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 360b8681c3ed236468f4eacc8c5d1b56, type: 3}
   m_Name: 
   anchorMode: 5
-  padding: {x: 1, y: 1.89999998}
-  depth: 3
+  padding: {x: 1, y: 1}
+  depth: 0
   frustrumDimentions: {x: 0, y: 0}
 --- !u!114 &1264011719
 MonoBehaviour:
@@ -33374,8 +33432,8 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4b5c1c49d0200344baea57044bec5987, type: 3}
   m_Name: 
-  m_MeshFilter: {fileID: 1390617563}
-  m_MeshRenderer: {fileID: 1390617562}
+  m_MeshFilter: {fileID: 0}
+  m_MeshRenderer: {fileID: 0}
 --- !u!23 &1390617562
 Renderer:
   m_ObjectHideFlags: 8
@@ -37473,7 +37531,7 @@ MonoBehaviour:
   affectOtherDecals: 0
   cullingAngle: 180
   meshOffset: 0
-  uv1RectangleIndex: 2
+  uv1RectangleIndex: 0
   uv2RectangleIndex: 0
   affectMeshes: 1
   affectTerrains: 1
@@ -42411,7 +42469,7 @@ MonoBehaviour:
   affectOtherDecals: 0
   cullingAngle: 180
   meshOffset: 0
-  uv1RectangleIndex: 1
+  uv1RectangleIndex: 0
   uv2RectangleIndex: 0
   affectMeshes: 1
   affectTerrains: 1
@@ -44784,7 +44842,7 @@ MonoBehaviour:
   affectOtherDecals: 0
   cullingAngle: 180
   meshOffset: 0
-  uv1RectangleIndex: 3
+  uv1RectangleIndex: 0
   uv2RectangleIndex: 0
   affectMeshes: 1
   affectTerrains: 1
@@ -49136,7 +49194,7 @@ MonoBehaviour:
   affectOtherDecals: 0
   cullingAngle: 180
   meshOffset: 0
-  uv1RectangleIndex: 1
+  uv1RectangleIndex: 0
   uv2RectangleIndex: 0
   affectMeshes: 1
   affectTerrains: 1

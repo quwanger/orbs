@@ -10,7 +10,7 @@ public class TTSTimeManager : MonoBehaviour {
 	private bool running = false;
 	
 	void Start () {
-	
+		
 	}
 	
 	void Update () {
