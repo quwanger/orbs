@@ -11,24 +11,29 @@ public class TTSFollowCamera : MonoBehaviour {
 	public Transform target;
 
 	// The distance in the x-z plane to the target
-    private float baseDistance = 4.0f;
-	public float distance = 10.0f;
+	public float distance = 5.0f;
+
 	// the height we want the camera to be above the target
-	public float baseHeight = 4.0f;
-    private float height = 4.0f;
+	private float height = 4.0f;
 	// How much we 
 	public float heightDamping = 2.0f;
 	public float rotationDamping = 3.0f;
 
-    // Camera tilt
-    private float tiltAngle = 0.0f;
+	// Camera tilt
+	private float tiltAngle = 0.0f;
 
-    // FOV of the camera with it's set limits
-    private float Base_FOV = 72.9f;
-    private float Max_FOV = 95.0f;
+	// Shakiness factor
+	public float shakiness = 0.3f;
 
-    // Shakiness factor
-    public float shakiness = 5.0f;
+    // Camera Effects handles
+    public float baseDistance = 4.0f;
+    public float maxDistance = 8.0f;
+
+    public float baseHeight = 4.0f;
+    public float minHeight = 0.5f;
+
+    public float Base_FOV = 72.9f;
+    public float Max_FOV = 85.0f;
 
 	void FixedUpdate () {
 		if(CameraMode == cameraModes.THIRD_PERSON) {
@@ -52,20 +57,20 @@ public class TTSFollowCamera : MonoBehaviour {
 	void ThirdPerson() {
 		// Early out if we don't have a target
 		if (!target)
-            return;
+			return;
 
-        // Speed squared magnitude
-        float speedSqrMag = target.parent.GetComponent<TTSRacer>().rigidbody.velocity.sqrMagnitude;
+		// Speed squared magnitude
+        float speed = target.parent.GetComponent<TTSRacer>().rigidbody.velocity.magnitude;
 		
 		// Calculate the current rotation angles
 		float currentRotationAngle = transform.eulerAngles.y;
-        float currentHeight = transform.position.y;
+		float currentHeight = transform.position.y;
 
-        // Change the height that the camera should be above the ball
-        height = Mathf.Lerp(height, baseHeight - (Mathf.Clamp((speedSqrMag - 1300) / 300, 0, baseHeight-0.5f)), 0.03f);
+		// Change the height that the camera should be above the ball
+        height = Mathf.Lerp(height, baseHeight - TTSUtils.Remap(speed, 35, 50, 0, baseHeight - minHeight, true), 0.03f);
 
-        float wantedRotationAngle = target.eulerAngles.y;
-        float wantedHeight = target.position.y + height;
+		float wantedRotationAngle = target.eulerAngles.y;
+		float wantedHeight = target.position.y + height;
 		
 		// Damp the rotation around the y-axis
 		currentRotationAngle = Mathf.LerpAngle (currentRotationAngle, wantedRotationAngle, rotationDamping * Time.deltaTime);
@@ -91,33 +96,31 @@ public class TTSFollowCamera : MonoBehaviour {
 		} 
 		
 		// Set the height of the camera
-        //transform.position.Set(transform.position.x, currentHeight, transform.position.z);
-        transform.position = new Vector3(transform.position.x, currentHeight, transform.position.z);
-        transform.position -= currentRotation * Vector3.forward * distance;
-        //transform.position += Vector3.up * 3;
+		transform.position = new Vector3(transform.position.x, currentHeight, transform.position.z);
+		transform.position -= currentRotation * Vector3.forward * distance;
+        
+        // Camera Distance according to speed
+        distance = Mathf.Lerp(distance, TTSUtils.Remap(speed, 30, 70, baseDistance, maxDistance, true), 0.02f);
 
-		tiltAngle = Mathf.Lerp (tiltAngle, target.parent.GetComponent<TTSRacer>().GetTiltAngle(),0.05f);
+        // Camera FOV according to speed
+        camera.fov = Mathf.Lerp(camera.fov, TTSUtils.Remap(speed, 40, 80, Base_FOV, Max_FOV, true), 0.05f);
+
+        // Camera Shake. (Note: If statement can be removed)
+		if (speed > 35) {
+
+            transform.position += Random.insideUnitSphere * TTSUtils.Remap(speed, 35, 70, 0, shakiness, true);
+
+			transform.LookAt(target);
+
+            transform.position += Random.insideUnitSphere * TTSUtils.Remap(speed, 35, 70, 0, shakiness/2, true);
+		}
+		else {
+            transform.LookAt(target);
+        }
+
+        tiltAngle = Mathf.Lerp(tiltAngle, target.parent.GetComponent<TTSRacer>().GetTiltAngle(), 0.05f);
 
         transform.RotateAround(transform.forward, tiltAngle);
-
-        distance = Mathf.Lerp(distance, baseDistance + Mathf.Max(0, speedSqrMag - 1000) / 800, 0.008f);
-
-        camera.fov = Mathf.Lerp(camera.fov, Base_FOV + Mathf.Max(0, speedSqrMag - 1500) / 50, 0.05f);
-
-        if (speedSqrMag > 1500) {
-
-            transform.position += Random.insideUnitSphere * 0.02f * shakiness * (Mathf.Max(0, speedSqrMag - 1500) / 1000);
-
-            // Always look at the target
-            transform.LookAt(target);
-
-            transform.position += Random.insideUnitSphere * 0.01f * shakiness * (Mathf.Max(0, speedSqrMag - 1500) / 1000);
-        }
-        else {
-
-            // Always look at the target
-            transform.LookAt(target);
-        }
 		
 		if(GetComponent<Vignetting>().chromaticAberration > 0.0f) {
 			GetComponent<Vignetting>().chromaticAberration = Mathf.Lerp(GetComponent<Vignetting>().chromaticAberration, 0.0f, 0.07f);	

@@ -23,7 +23,7 @@ public class TTSPlayRandomSoundEffect : MonoBehaviour {
 	void OnCollisionEnter(Collision collision) {
 		
 		if (collision != null) {
-			audioSource.volume = TTSUtils.Remap(collision.relativeVelocity.magnitude,0f,10,0f,MAX_VOLUME);
+			audioSource.volume = TTSUtils.Remap(collision.relativeVelocity.magnitude,0f,10,0f,MAX_VOLUME, true);
 		}else {
 			audioSource.volume = MAX_VOLUME;
 		}
