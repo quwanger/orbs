@@ -174,8 +174,8 @@ public class TTSRacer: MonoBehaviour {
 	}
 	
 	private void CalculateAiForces() {
-		GetComponent<Biped>().MaxSpeed = TopSpeed;
-		GetComponent<Biped>().MaxForce = Acceleration;
+		//GetComponent<Biped>().MaxSpeed = TopSpeed;
+		//GetComponent<Biped>().MaxForce = Acceleration;
 		GetComponent<TTSAIController>().seekWaypoint();
 	}
 	
