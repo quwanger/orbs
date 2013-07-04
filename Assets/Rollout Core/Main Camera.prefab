@@ -35,7 +35,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -187.435715, y: 101.505493, z: -34.4590454}
+  m_LocalPosition: {x: 616.663879, y: 328.39563, z: 973.193665}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -55,8 +55,8 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: .300000012
-  far clip plane: 1000
+  near clip plane: .699999988
+  far clip plane: 500
   field of view: 72.9000015
   orthographic: 0
   orthographic size: 100
@@ -192,9 +192,10 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 105410cefd4c4114cb6ad61953f89162, type: 3}
   m_Name: 
+  CameraMode: 0
   target: {fileID: 0}
   distance: 10
-  height: 5
+  height: 2
   heightDamping: 2
   rotationDamping: 3
 --- !u!114 &11400002
@@ -203,7 +204,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f7db9ec1392f34265817a55853e6ab07, type: 3}
   m_Name: 
@@ -212,15 +213,15 @@ MonoBehaviour:
   previewScale: {x: 1, y: 1, z: 1}
   movementScale: 0
   rotationScale: 1
-  maxVelocity: 2
+  maxVelocity: 30
   maxNumSamples: 17
   minVelocity: 1
   velocityScale: .100000001
   softZDistance: .00499999989
-  velocityDownsample: 10
+  velocityDownsample: 5
   excludeLayers:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 0
   shader: {fileID: 4800000, guid: 85a88efa8c871af4a9d17c64791b6f4f, type: 3}
   dx11MotionBlurShader: {fileID: 4800000, guid: f1b13d7a80660504a858ea24cfa418c6,
     type: 3}
@@ -244,7 +245,7 @@ MonoBehaviour:
   sepBlurSpread: 1.37
   quality: 1
   bloomIntensity: .5
-  bloomThreshhold: .270000011
+  bloomThreshhold: .170000002
   bloomThreshholdColor: {r: .178937405, g: .531019151, b: .888059676, a: 1}
   bloomBlurIterations: 1
   hollywoodFlareBlurIterations: 1
@@ -252,8 +253,8 @@ MonoBehaviour:
   lensflareMode: 2
   hollyStretchWidth: 2.5
   lensflareIntensity: 2
-  lensflareThreshhold: .519999981
-  lensFlareSaturation: 1
+  lensflareThreshhold: .600000024
+  lensFlareSaturation: 2
   flareColorA: {r: .400000006, g: .400000006, b: .800000012, a: .75}
   flareColorB: {r: .400000006, g: .800000012, b: .800000012, a: .75}
   flareColorC: {r: .800000012, g: .400000006, b: .800000012, a: .75}
@@ -392,7 +393,7 @@ MonoBehaviour:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-  saturation: 1.19000006
+  saturation: 1.13999999
   selectiveCc: 0
   selectiveFromColor: {r: 1, g: 1, b: 1, a: 1}
   selectiveToColor: {r: 1, g: 1, b: 1, a: 1}
@@ -415,13 +416,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1dad87ba4f1e04d6eb7f287e1f2e08fe, type: 3}
   m_Name: 
   resolution: 0
-  screenBlendMode: 1
+  screenBlendMode: 0
   sunTransform: {fileID: 0}
-  radialBlurIterations: 2
+  radialBlurIterations: 1
   sunColor: {r: .931858242, g: .940298498, b: .638560891, a: 1}
-  sunShaftBlurRadius: 2.5
-  sunShaftIntensity: 2
-  useSkyBoxAlpha: .75
+  sunShaftBlurRadius: 1.75999999
+  sunShaftIntensity: 1
+  useSkyBoxAlpha: .808000028
   maxRadius: .899999976
   useDepthTexture: 1
   sunShaftsShader: {fileID: 4800000, guid: d3b1c8c1036784176946f5cfbfb7fe4c, type: 3}
@@ -449,11 +450,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bef3d242a13c447ac90c2d2dc213b1ea, type: 3}
   m_Name: 
   mode: 0
-  intensity: .375
+  intensity: .540000021
   chromaticAberration: 0
   axialAberration: .5
-  blur: 0
-  blurSpread: .75
+  blur: .140000001
+  blurSpread: .99000001
   luminanceDependency: .25
   vignetteShader: {fileID: 4800000, guid: 627943dc7a9a74286b70a4f694a0acd5, type: 3}
   separableBlurShader: {fileID: 4800000, guid: e97c14fbb5ea04c3a902cc533d7fc5d1, type: 3}
