@@ -63,7 +63,7 @@ public class TTSRacer: MonoBehaviour {
 	
 	
 	#region gameplay vars
-	public float TopSpeed = 50.0f;
+	public float TopSpeed = 100.0f;
 	public float Acceleration = 2000.0f;
 	public float Handling = 3000.0f;
 	#endregion
@@ -159,8 +159,8 @@ public class TTSRacer: MonoBehaviour {
 		displayMeshComponent.RotateAround(displayMeshComponent.forward,TiltAngle);
 		
 		//sound
-		GetComponent<AudioSource>().pitch = TTSUtils.Remap(rigidbody.velocity.magnitude, 0f, TopSpeed, 0.5f, 1.3f);
-		GetComponent<AudioSource>().volume = TTSUtils.Remap(rigidbody.velocity.magnitude, 0f, TopSpeed, 0.5f, 1f);
+		GetComponent<AudioSource>().pitch = TTSUtils.Remap(rigidbody.velocity.magnitude, 0f, TopSpeed, 0.5f, 1.3f, false);
+		GetComponent<AudioSource>().volume = TTSUtils.Remap(rigidbody.velocity.magnitude, 0f, TopSpeed, 0.5f, 1f, false);
 		
 		
 	}
