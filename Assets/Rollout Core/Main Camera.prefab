@@ -195,9 +195,19 @@ MonoBehaviour:
   CameraMode: 0
   target: {fileID: 0}
   distance: 10
-  height: 2
   heightDamping: 2
   rotationDamping: 3
+  shakiness: .0299999993
+  baseDistance: 4
+  maxDistance: 6
+  baseHeight: 4
+  minHeight: .5
+  Base_FOV: 72.9000015
+  Max_FOV: 77
+  distanceStartEffect: 0
+  heightStartEffect: .600000024
+  fovStartEffect: .600000024
+  shakeStartEffect: .699999988
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -253,7 +263,7 @@ MonoBehaviour:
   lensflareMode: 2
   hollyStretchWidth: 2.5
   lensflareIntensity: 2
-  lensflareThreshhold: .600000024
+  lensflareThreshhold: .670000017
   lensFlareSaturation: 2
   flareColorA: {r: .400000006, g: .400000006, b: .800000012, a: .75}
   flareColorB: {r: .400000006, g: .800000012, b: .800000012, a: .75}
@@ -437,7 +447,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4b46f3f7b30265e49bd919bacfa89ed7, type: 3}
   m_Name: 
-  LOAD_RANDOM_TRACK: 0
+  LOAD_RANDOM_TRACK: 1
   songToPlay: {fileID: 8300000, guid: 76c085d0d1a01374da511566c595d2ba, type: 3}
 --- !u!114 &11400012
 MonoBehaviour:
