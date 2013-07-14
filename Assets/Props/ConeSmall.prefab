@@ -11,8 +11,8 @@ GameObject:
   - 33: {fileID: 3300000}
   - 23: {fileID: 2300000}
   - 95: {fileID: 9500000}
-  - 64: {fileID: 6400000}
   - 54: {fileID: 5400000}
+  - 64: {fileID: 6400000}
   m_Layer: 0
   m_Name: ConeSmall
   m_TagString: Untagged
@@ -27,7 +27,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 691.88446, y: 340.065094, z: 1104.35278}
+  m_LocalPosition: {x: 700.792725, y: 340.832886, z: 1108.64453}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -43,7 +43,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: a9e25e0a76107564d9267725b3221ae7, type: 2}
+  - {fileID: 2100000, guid: 02962f6d63f4c2448a3440592b98ef73, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -55,7 +55,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_Mesh: {fileID: 4300000, guid: 9bfddbfc316f2414da3608c0bbb68c1e, type: 3}
+  m_Mesh: {fileID: 4300000, guid: cab32423acdf72748b1557f9fd73bdd5, type: 3}
 --- !u!54 &5400000
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -63,7 +63,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   serializedVersion: 2
-  m_Mass: .25
+  m_Mass: .100000001
   m_Drag: 0
   m_AngularDrag: .0500000007
   m_UseGravity: 1
@@ -83,15 +83,15 @@ MeshCollider:
   serializedVersion: 2
   m_SmoothSphereCollisions: 0
   m_Convex: 1
-  m_Mesh: {fileID: 4300000, guid: 9bfddbfc316f2414da3608c0bbb68c1e, type: 3}
+  m_Mesh: {fileID: 4300000, guid: cab32423acdf72748b1557f9fd73bdd5, type: 3}
 --- !u!95 &9500000
 Animator:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_Enabled: 0
-  m_Avatar: {fileID: 9000000, guid: 9bfddbfc316f2414da3608c0bbb68c1e, type: 3}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: cab32423acdf72748b1557f9fd73bdd5, type: 3}
   m_Controller: {fileID: 0}
   m_CullingMode: 1
   m_ApplyRootMotion: 1
