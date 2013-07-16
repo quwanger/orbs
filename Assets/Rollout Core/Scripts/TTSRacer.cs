@@ -54,6 +54,7 @@ public class TTSRacer: MonoBehaviour {
 	private float TiltAngle = 0.0f;
 	public AudioClip[] DamageSounds;
 	public GameObject SparksEmitter;
+	public bool canMove = false;
 	#endregion
 	
 	
@@ -112,7 +113,7 @@ public class TTSRacer: MonoBehaviour {
 	
 	void CalculateInputForces() {
 		//add acceleration forces...
-		if(onGround && rigidbody.velocity.magnitude < TopSpeed) {
+		if(onGround && rigidbody.velocity.magnitude < TopSpeed && canMove) {
 			this.rigidbody.AddForce(displayMeshComponent.forward * Input.GetAxis("Vertical") * Time.deltaTime * Acceleration);
 			this.rigidbody.AddForce(displayMeshComponent.right * Input.GetAxis("Horizontal") * Time.deltaTime * Handling);
 		}
@@ -148,15 +149,16 @@ public class TTSRacer: MonoBehaviour {
 		if(new Vector2(rigidbody.velocity.x,rigidbody.velocity.z).magnitude > MinimumVelocityToAnimateSteering) {
 			//based on rigidbody velocity.
 			displayMeshComponent.forward = rigidbody.velocity;
+			TiltAngle = Mathf.Lerp (TiltAngle, TTSUtils.GetRelativeAngle(rigidbody.velocity,PreviousVelocity)/2, TiltRecoverySpeed);
+		
+			displayMeshComponent.RotateAround(displayMeshComponent.forward,TiltAngle);
 			//set the idle vec, so it doesnt get janky.
 			IdleForwardVector = displayMeshComponent.forward;
 		}else{
 			displayMeshComponent.forward = IdleForwardVector;	
 		}
 		
-		TiltAngle = Mathf.Lerp (TiltAngle, TTSUtils.GetRelativeAngle(rigidbody.velocity,PreviousVelocity)/2, TiltRecoverySpeed);
 		
-		displayMeshComponent.RotateAround(displayMeshComponent.forward,TiltAngle);
 		
 		//sound
 		GetComponent<AudioSource>().pitch = TTSUtils.Remap(rigidbody.velocity.magnitude, 0f, TopSpeed, 0.5f, 1.3f, false);

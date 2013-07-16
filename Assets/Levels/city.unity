@@ -1556,7 +1556,7 @@ GameObject:
   - 33: {fileID: 87887411}
   - 23: {fileID: 87887410}
   m_Layer: 0
-  m_Name: Tree 3
+  m_Name: Summer Tree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2262,7 +2262,7 @@ GameObject:
   - 33: {fileID: 141609244}
   - 23: {fileID: 141609243}
   m_Layer: 0
-  m_Name: Tree 3
+  m_Name: Summer Tree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11708,7 +11708,7 @@ GameObject:
   - 33: {fileID: 519279832}
   - 23: {fileID: 519279831}
   m_Layer: 0
-  m_Name: Tree 3
+  m_Name: Summer Tree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14685,9 +14685,19 @@ MonoBehaviour:
   CameraMode: 0
   target: {fileID: 769848694}
   distance: 10
-  height: 2
   heightDamping: 2
   rotationDamping: 3
+  shakiness: .0299999993
+  baseDistance: 4
+  maxDistance: 6
+  baseHeight: 4
+  minHeight: .5
+  Base_FOV: 72.9000015
+  Max_FOV: 77
+  distanceStartEffect: 0
+  heightStartEffect: .600000024
+  fovStartEffect: .600000024
+  shakeStartEffect: .699999988
 --- !u!82 &679516213
 AudioSource:
   m_ObjectHideFlags: 0
@@ -14801,7 +14811,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4b46f3f7b30265e49bd919bacfa89ed7, type: 3}
   m_Name: 
-  LOAD_RANDOM_TRACK: 0
+  LOAD_RANDOM_TRACK: 1
   songToPlay: {fileID: 8300000, guid: 76c085d0d1a01374da511566c595d2ba, type: 3}
 --- !u!114 &679516215
 MonoBehaviour:
@@ -14982,15 +14992,15 @@ MonoBehaviour:
   sepBlurSpread: 1.37
   quality: 1
   bloomIntensity: .5
-  bloomThreshhold: .170000002
+  bloomThreshhold: .310000002
   bloomThreshholdColor: {r: .178937405, g: .531019151, b: .888059676, a: 1}
   bloomBlurIterations: 1
   hollywoodFlareBlurIterations: 1
   flareRotation: 0
   lensflareMode: 2
-  hollyStretchWidth: 2.5
-  lensflareIntensity: 2
-  lensflareThreshhold: .600000024
+  hollyStretchWidth: 1.77999997
+  lensflareIntensity: 1.5
+  lensflareThreshhold: .899999976
   lensFlareSaturation: 2
   flareColorA: {r: .400000006, g: .400000006, b: .800000012, a: .75}
   flareColorB: {r: .400000006, g: .800000012, b: .800000012, a: .75}
@@ -17964,7 +17974,7 @@ GameObject:
   - 33: {fileID: 789118951}
   - 23: {fileID: 789118950}
   m_Layer: 0
-  m_Name: Tree 3
+  m_Name: Summer Tree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -21221,7 +21231,7 @@ GameObject:
   - 33: {fileID: 865720592}
   - 23: {fileID: 865720591}
   m_Layer: 0
-  m_Name: Tree 3
+  m_Name: Summer Tree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -23698,7 +23708,7 @@ GameObject:
   - 33: {fileID: 1027535825}
   - 23: {fileID: 1027535824}
   m_Layer: 0
-  m_Name: Tree 3
+  m_Name: Summer Tree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24470,7 +24480,7 @@ GameObject:
   - 33: {fileID: 1102696118}
   - 23: {fileID: 1102696117}
   m_Layer: 0
-  m_Name: Tree 3
+  m_Name: Summer Tree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25246,6 +25256,47 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 95f80dd621eb87a48b1768f56c477aa0, type: 2}
   m_RootGameObject: {fileID: 299009617}
+  m_IsPrefabParent: 0
+  m_IsExploded: 1
+--- !u!1001 &1160603300
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 400000, guid: 9bfddbfc316f2414da3608c0bbb68c1e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1054.526
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 9bfddbfc316f2414da3608c0bbb68c1e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 283.238464
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 9bfddbfc316f2414da3608c0bbb68c1e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1044.67126
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 9bfddbfc316f2414da3608c0bbb68c1e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 9bfddbfc316f2414da3608c0bbb68c1e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 9bfddbfc316f2414da3608c0bbb68c1e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 9bfddbfc316f2414da3608c0bbb68c1e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 9500000, guid: 9bfddbfc316f2414da3608c0bbb68c1e, type: 3}
+  m_ParentPrefab: {fileID: 100100000, guid: 9bfddbfc316f2414da3608c0bbb68c1e, type: 3}
+  m_RootGameObject: {fileID: 1788255519}
   m_IsPrefabParent: 0
   m_IsExploded: 1
 --- !u!1 &1164915444
@@ -33620,7 +33671,7 @@ GameObject:
   - 33: {fileID: 1412795490}
   - 23: {fileID: 1412795489}
   m_Layer: 0
-  m_Name: Tree 3
+  m_Name: Summer Tree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -35426,7 +35477,7 @@ GameObject:
   - 33: {fileID: 1505961616}
   - 23: {fileID: 1505961615}
   m_Layer: 0
-  m_Name: Tree 3
+  m_Name: Summer Tree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -35491,7 +35542,7 @@ GameObject:
   - 33: {fileID: 1506847415}
   - 23: {fileID: 1506847414}
   m_Layer: 0
-  m_Name: Tree 3
+  m_Name: Summer Tree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -35556,7 +35607,7 @@ GameObject:
   - 33: {fileID: 1508219190}
   - 23: {fileID: 1508219189}
   m_Layer: 0
-  m_Name: Tree 3
+  m_Name: Summer Tree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -35855,7 +35906,7 @@ GameObject:
   - 33: {fileID: 1517683333}
   - 23: {fileID: 1517683332}
   m_Layer: 0
-  m_Name: Tree 3
+  m_Name: Summer Tree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -37980,7 +38031,7 @@ GameObject:
   - 33: {fileID: 1593503944}
   - 23: {fileID: 1593503943}
   m_Layer: 0
-  m_Name: Tree 3
+  m_Name: Summer Tree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -41203,7 +41254,7 @@ GameObject:
   - 33: {fileID: 1717966860}
   - 23: {fileID: 1717966859}
   m_Layer: 0
-  m_Name: Tree 3
+  m_Name: Summer Tree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -42425,6 +42476,75 @@ Transform:
   m_LocalScale: {x: 2.07721329, y: 2.98398852, z: .261911988}
   m_Children: []
   m_Father: {fileID: 1331157051}
+--- !u!1 &1788255519
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 100000, guid: 9bfddbfc316f2414da3608c0bbb68c1e, type: 3}
+  m_PrefabInternal: {fileID: 1160603300}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1788255523}
+  - 33: {fileID: 1788255522}
+  - 23: {fileID: 1788255521}
+  - 64: {fileID: 1788255520}
+  m_Layer: 0
+  m_Name: ConeSmall
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!64 &1788255520
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1788255519}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_SmoothSphereCollisions: 0
+  m_Convex: 1
+  m_Mesh: {fileID: 4300000, guid: 9bfddbfc316f2414da3608c0bbb68c1e, type: 3}
+--- !u!23 &1788255521
+Renderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 2300000, guid: 9bfddbfc316f2414da3608c0bbb68c1e,
+    type: 3}
+  m_PrefabInternal: {fileID: 1160603300}
+  m_GameObject: {fileID: 1788255519}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_LightmapIndex: 255
+  m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
+  m_Materials:
+  - {fileID: 2100000, guid: a9e25e0a76107564d9267725b3221ae7, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 0
+  m_LightProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+--- !u!33 &1788255522
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 3300000, guid: 9bfddbfc316f2414da3608c0bbb68c1e,
+    type: 3}
+  m_PrefabInternal: {fileID: 1160603300}
+  m_GameObject: {fileID: 1788255519}
+  m_Mesh: {fileID: 4300000, guid: 9bfddbfc316f2414da3608c0bbb68c1e, type: 3}
+--- !u!4 &1788255523
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 400000, guid: 9bfddbfc316f2414da3608c0bbb68c1e, type: 3}
+  m_PrefabInternal: {fileID: 1160603300}
+  m_GameObject: {fileID: 1788255519}
+  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 1054.526, y: 283.238464, z: 1044.67126}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
 --- !u!1 &1792246905
 GameObject:
   m_ObjectHideFlags: 0
@@ -43212,7 +43332,7 @@ GameObject:
   - 33: {fileID: 1868079131}
   - 23: {fileID: 1868079130}
   m_Layer: 0
-  m_Name: Tree 3
+  m_Name: Summer Tree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -43840,7 +43960,7 @@ GameObject:
   - 33: {fileID: 1893768329}
   - 23: {fileID: 1893768328}
   m_Layer: 0
-  m_Name: Tree 3
+  m_Name: Summer Tree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44181,7 +44301,7 @@ GameObject:
   - 33: {fileID: 1907652909}
   - 23: {fileID: 1907652908}
   m_Layer: 0
-  m_Name: Tree 3
+  m_Name: Summer Tree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44437,7 +44557,7 @@ GameObject:
   - 33: {fileID: 1928052770}
   - 23: {fileID: 1928052769}
   m_Layer: 0
-  m_Name: Tree 3
+  m_Name: Summer Tree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44676,7 +44796,7 @@ GameObject:
   - 33: {fileID: 1931724446}
   - 23: {fileID: 1931724445}
   m_Layer: 0
-  m_Name: Tree 3
+  m_Name: Summer Tree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -48343,7 +48463,7 @@ GameObject:
   - 33: {fileID: 2097290188}
   - 23: {fileID: 2097290187}
   m_Layer: 0
-  m_Name: Tree 3
+  m_Name: Summer Tree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
