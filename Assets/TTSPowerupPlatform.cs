@@ -7,6 +7,8 @@ public class TTSPowerupPlatform : MonoBehaviour {
 	
 	public Powerup currentPowerup;
 	
+	public float puInterval = 5.0f;
+	
 	private bool taken = false;
 	private bool isVisible = true;
 	private float timeTaken = 0.0f;
@@ -40,7 +42,7 @@ public class TTSPowerupPlatform : MonoBehaviour {
     				Destroy(childTransform.gameObject);
 				}
 			}
-			if(Time.time > timeTaken + 5.0f){
+			if(Time.time > timeTaken + puInterval){
 				//set new powerup
 				currentPowerup = getPowerup();
 				displayPowerup();
@@ -79,23 +81,23 @@ public class TTSPowerupPlatform : MonoBehaviour {
 		//display the current powerup as a child of the platform
 		switch (currentPowerup){
     	case (Powerup.boost):
-			GameObject w1 = Instantiate(powerupBoost, transform.position, transform.rotation) as GameObject;
+			GameObject w1 = Instantiate(powerupBoost, new Vector3(transform.position.x,transform.position.y+2.0f, transform.position.z), transform.rotation) as GameObject;
 			w1.transform.parent = this.transform;
 			break;
 	    case (Powerup.missiles):
-			GameObject w2 = Instantiate(powerupMissiles, transform.position, transform.rotation) as GameObject;
+			GameObject w2 = Instantiate(powerupMissiles, new Vector3(transform.position.x,transform.position.y+2.0f, transform.position.z), transform.rotation) as GameObject;
 			w2.transform.parent = this.transform;
 			break;
 	    case (Powerup.shield):
-			GameObject w3 = Instantiate(powerupShield, transform.position, transform.rotation) as GameObject;
+			GameObject w3 = Instantiate(powerupShield, new Vector3(transform.position.x,transform.position.y+2.0f, transform.position.z), transform.rotation) as GameObject;
 			w3.transform.parent = this.transform;
 			break;
 	    case (Powerup.shockwave):
-			GameObject w4 = Instantiate(powerupShockwave, transform.position, transform.rotation) as GameObject;
+			GameObject w4 = Instantiate(powerupShockwave, new Vector3(transform.position.x,transform.position.y+2.0f, transform.position.z), transform.rotation) as GameObject;
 			w4.transform.parent = this.transform;
 			break;
 	    case (Powerup.moretime):
-			GameObject w5 = Instantiate(powerupMoreTime, transform.position, transform.rotation) as GameObject;
+			GameObject w5 = Instantiate(powerupMoreTime, new Vector3(transform.position.x,transform.position.y+2.0f, transform.position.z), transform.rotation) as GameObject;
 			w5.transform.parent = this.transform;
 			break;
 		}
