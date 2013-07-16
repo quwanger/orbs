@@ -12,7 +12,8 @@ GameObject:
   - 23: {fileID: 2300000}
   - 95: {fileID: 9500000}
   - 114: {fileID: 11400000}
-  - 64: {fileID: 6400000}
+  - 136: {fileID: 13600000}
+  - 82: {fileID: 8200000}
   m_Layer: 0
   m_Name: PowerupPlatform
   m_TagString: Untagged
@@ -56,19 +57,62 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_Mesh: {fileID: 4300000, guid: 27955d77016c9ae43a9d9530b2b5ac87, type: 3}
---- !u!64 &6400000
-MeshCollider:
+--- !u!82 &8200000
+AudioSource:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_SmoothSphereCollisions: 0
-  m_Convex: 1
-  m_Mesh: {fileID: 4300000, guid: 27955d77016c9ae43a9d9530b2b5ac87, type: 3}
+  serializedVersion: 3
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
 --- !u!95 &9500000
 Animator:
   m_ObjectHideFlags: 1
@@ -92,12 +136,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd3dced3becc8334c886dd1833d5be6c, type: 3}
   m_Name: 
   currentPowerup: 0
-  puInterval: 5
+  respawnTime: 5
+  clip: {fileID: 8300000, guid: b29d83db0b1d1e34b88b7b8eb07430c8, type: 3}
   powerupBoost: {fileID: 100000, guid: 593354a40d43f4741a60c2c2993bdf3e, type: 2}
   powerupShield: {fileID: 100000, guid: bb826080f8293434c9e77e097059c88c, type: 2}
   powerupShockwave: {fileID: 100000, guid: 9e007af1c5882cc4f92c9c9708f25785, type: 2}
   powerupMoreTime: {fileID: 100000, guid: e0f2938395566ca4286a882fc8d68c51, type: 2}
   powerupMissiles: {fileID: 100000, guid: 1d4bfe230fb793e448e0e083e2798beb, type: 2}
+--- !u!136 &13600000
+CapsuleCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 1.25
+  m_Height: 3.25
+  m_Direction: 1
+  m_Center: {x: 2.38418579e-07, y: .0405476242, z: -2.98023224e-07}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

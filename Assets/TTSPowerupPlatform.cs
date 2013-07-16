@@ -6,12 +6,9 @@ public class TTSPowerupPlatform : MonoBehaviour {
 	public enum Powerup {boost, missiles, shield, shockwave, moretime};
 	
 	public Powerup currentPowerup;
-	
-	public float puInterval = 5.0f;
-	
-	private bool taken = false;
-	private bool isVisible = true;
-	private float timeTaken = 0.0f;
+	public float respawnTime = 5.0f;
+	public AudioClip clip;
+	private float rotationSpeed = 50.0f;
 	
 	//weights for each of the powerups (to chance their chances of appearing)
 	private float weightBoost = 100.0f;
@@ -28,40 +25,36 @@ public class TTSPowerupPlatform : MonoBehaviour {
 	
 	void Start () {
 		//set an initial powerup for the platform
-		currentPowerup = getPowerup();
+		currentPowerup = getRandomPowerup();
 		displayPowerup();
 	}
 	
 	void Update () {
-		if(taken == true){
-			if(isVisible == true){
-				timeTaken = Time.time;
-				isVisible = false;
-				//remove powerup
-				foreach (Transform childTransform in this.transform) {
-    				Destroy(childTransform.gameObject);
-				}
-			}
-			if(Time.time > timeTaken + puInterval){
-				//set new powerup
-				currentPowerup = getPowerup();
-				displayPowerup();
-				taken = false;
-				isVisible = true;
-			}
-		}else{	
-			//animate (spin)
-			foreach (Transform childTransform in this.transform) {
-				childTransform.Rotate(Vector3.up, 50f * Time.deltaTime);
-			}
+		//rotate the powerup
+		foreach (Transform childTransform in this.transform) {
+				childTransform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
 		}
 	}
 	
-	void OnCollisionEnter(Collision collision){
-		taken = true;
+	void OnTriggerEnter(){	
+		StartCoroutine(handlePickup());
 	}
 	
-	Powerup getPowerup () {
+	private IEnumerator handlePickup(){
+		//play sound
+		 audio.PlayOneShot(clip);
+		//remove powerup
+		foreach (Transform childTransform in this.transform) {
+    		Destroy(childTransform.gameObject);
+		}
+		//wait 5 second for respawn
+		yield return new WaitForSeconds(respawnTime);
+		//set new powerup
+		currentPowerup = getRandomPowerup();
+		displayPowerup();			
+	}
+	
+	private Powerup getRandomPowerup () {
 		float temp = Random.Range(0.0f, 1.0f);
 		float total = weightBoost + weightMissiles + weightMoreTime + weightShield + weightShockwave;
 		
@@ -77,7 +70,7 @@ public class TTSPowerupPlatform : MonoBehaviour {
 		return tempPowerup;
 	}
 	
-	void displayPowerup(){
+	private void displayPowerup(){
 		//display the current powerup as a child of the platform
 		switch (currentPowerup){
     	case (Powerup.boost):
