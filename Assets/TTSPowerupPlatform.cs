@@ -9,6 +9,8 @@ public class TTSPowerupPlatform : MonoBehaviour {
 	public float respawnTime = 5.0f;
 	public AudioClip clip;
 	private float rotationSpeed = 50.0f;
+	private bool pickedUp = false;
+	private Collider collidedRacer;
 	
 	//weights for each of the powerups (to chance their chances of appearing)
 	private float weightBoost = 100.0f;
@@ -36,11 +38,17 @@ public class TTSPowerupPlatform : MonoBehaviour {
 		}
 	}
 	
-	void OnTriggerEnter(){	
-		StartCoroutine(handlePickup());
+	void OnTriggerEnter(Collider collider){	
+		if(pickedUp==false){
+			if(collider.name == "Racer 2.0"){
+				StartCoroutine(handlePickup());
+				collidedRacer = collider;
+			}
+		}
 	}
 	
 	private IEnumerator handlePickup(){
+		pickedUp = true;
 		//play sound
 		 audio.PlayOneShot(clip);
 		//remove powerup
@@ -51,7 +59,8 @@ public class TTSPowerupPlatform : MonoBehaviour {
 		yield return new WaitForSeconds(respawnTime);
 		//set new powerup
 		currentPowerup = getRandomPowerup();
-		displayPowerup();			
+		displayPowerup();
+		pickedUp = false;
 	}
 	
 	private Powerup getRandomPowerup () {
