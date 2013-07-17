@@ -14,7 +14,8 @@ public class TTSTimeManager : MonoBehaviour {
 	}
 	
 	void Update () {
-		timeInMillis = Time.time - startTime;
+		if(running)
+			timeInMillis = Time.time - startTime;
 	}
 	
 	public string GetCurrentTimeString(){
