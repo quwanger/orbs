@@ -17,11 +17,15 @@ public class TTSSoundtrackManager : MonoBehaviour {
 		}
 		
 		this.GetComponent<AudioSource>().clip = songToPlay;
-		this.GetComponent<AudioSource>().Play();
+
 	}
 	
 	
 	void Update () {
 	
+	}
+	
+	public void StartSoundtrack() {
+		this.GetComponent<AudioSource>().Play();
 	}
 }
