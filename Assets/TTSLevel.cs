@@ -22,5 +22,7 @@ public class TTSLevel : MonoBehaviour {
 		foreach(GameObject racer in racers) {
 			racer.GetComponent<TTSRacer>().canMove = true;
 		}
+		
+		GetComponent<TTSTimeManager>().StartTimer();
 	}
 }
