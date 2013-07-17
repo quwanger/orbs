@@ -3,43 +3,51 @@ using System.Collections;
 
 public class TTSEntropyCannonProjectile : MonoBehaviour {
 	
-	
+#region internal fields
 	private float birth;
+#endregion
+
+#region configuration fields
 	public GameObject explosion;
 	public AudioClip fire;
-	private int numberOfBounces = 0;
+	public float Timeout = 5.0f;
+	public float ProjectileAccleration = 10.0f;
+	public float ProjectileStartVelocity = 100.0f;
+#endregion
+
 	
-	// Use this for initialization
+#region unity functions
 	void Start () {
 		birth = Time.time;
 		audio.PlayOneShot(fire);
+		
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
-		if(Time.time - birth > 5) {
-			foreach(Transform child in transform) {
-				Destroy(child.gameObject);
-			}
-			this.rigidbody.velocity = new Vector3(0f,0f,0f);
-			this.GetComponent<SphereCollider>().enabled = false;
+		if(Time.time - birth > Timeout) {
+			Explode(false);
 		}
 	}
-	
-	void FixedUpdate() {
-		this.rigidbody.AddForce(this.transform.forward.normalized*10f);
-	}
+
 	
 	void OnCollisionEnter(Collision other) {
+		Explode(true);
+	}
+#endregion
 
-		GameObject go = (GameObject) Instantiate(explosion);
-		go.transform.position = this.transform.position;
+	private void Explode(bool actually) {
+		if(actually) {
+			 GameObject go = (GameObject) Instantiate(explosion,this.transform.position,this.transform.rotation);
+		}
+			
+			
 		foreach(Transform child in transform) {
 				Destroy(child.gameObject);
-		}
+			}
+		//stop motion so the trail can end and destroy the parent GO.
 		this.GetComponent<SphereCollider>().enabled = false;
 		this.rigidbody.velocity = new Vector3(0f,0f,0f);
-		
 	}
+
 }

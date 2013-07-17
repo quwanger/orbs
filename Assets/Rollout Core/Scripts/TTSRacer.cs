@@ -189,10 +189,12 @@ public class TTSRacer: MonoBehaviour {
 	#region powerup functions
 	public void EntropyCannon(int tier){
 		if (tier == 1) {
+			SphereCollider sphereCollider = (SphereCollider) this.collider;
             GameObject go = (GameObject) Instantiate(entropyCannonDebug);
             go.transform.rotation = displayMeshComponent.transform.rotation;
             go.transform.position = this.transform.position + displayMeshComponent.forward * 3.5f;
-			go.rigidbody.velocity = this.rigidbody.velocity.normalized * 100f;
+            go.rigidbody.velocity = this.rigidbody.velocity.normalized * go.GetComponent<TTSEntropyCannonProjectile>().ProjectileStartVelocity;
+            
 		}
    }
    
