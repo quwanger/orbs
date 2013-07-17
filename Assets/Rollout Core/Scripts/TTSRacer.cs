@@ -54,6 +54,7 @@ public class TTSRacer: MonoBehaviour {
 	private float TiltAngle = 0.0f;
 	public AudioClip[] DamageSounds;
 	public GameObject SparksEmitter;
+	public GameObject entropyCannonDebug;
 	#endregion
 	
 	
@@ -116,7 +117,13 @@ public class TTSRacer: MonoBehaviour {
 			this.rigidbody.AddForce(displayMeshComponent.forward * Input.GetAxis("Vertical") * Time.deltaTime * Acceleration);
 			this.rigidbody.AddForce(displayMeshComponent.right * Input.GetAxis("Horizontal") * Time.deltaTime * Handling);
 		}
+		
+		if (Input.GetKeyDown ("space")) {
+			EntropyCannon(1);
+		}
+		
 	}
+	
 	
 	void OnCollisionEnter(Collision collision) {
 
@@ -126,7 +133,7 @@ public class TTSRacer: MonoBehaviour {
 			GetComponent<AudioSource>().PlayOneShot(DamageSounds[Mathf.FloorToInt(Random.value * DamageSounds.Length)]);
 		}
 		
-	
+		
 		GameObject sparkClone = (GameObject) Instantiate(SparksEmitter);
 		sparkClone.transform.position = collision.contacts[0].point;
 		sparkClone.particleEmitter.emit = true;
@@ -178,6 +185,18 @@ public class TTSRacer: MonoBehaviour {
 		//GetComponent<Biped>().MaxForce = Acceleration;
 		GetComponent<TTSAIController>().seekWaypoint();
 	}
+	
+	#region powerup functions
+	public void EntropyCannon(int tier){
+		if (tier == 1) {
+            GameObject go = (GameObject) Instantiate(entropyCannonDebug);
+            go.transform.rotation = displayMeshComponent.transform.rotation;
+            go.transform.position = this.transform.position + displayMeshComponent.forward * 3.5f;
+			go.rigidbody.velocity = this.rigidbody.velocity.normalized * 100f;
+		}
+   }
+   
+   #endregion
 	
 	
 }
