@@ -1,5 +1,5 @@
 using UnityEngine;
-using System.Collections.Generic;
+using System.Collections;
 
 /***********************
  * Racer.cs - Racer Prefab Builder and Motion Handler
@@ -67,6 +67,11 @@ public class TTSRacer: MonoBehaviour {
 	public float TopSpeed = 100.0f;
 	public float Acceleration = 2000.0f;
 	public float Handling = 3000.0f;
+	
+	public float Boost = 50.0f;
+	public GameObject SmokeEmitterTrail;
+	public GameObject SmokeEmitterPuff;
+	public AudioClip boostClip;
 	#endregion
 	
 	 
@@ -87,6 +92,8 @@ public class TTSRacer: MonoBehaviour {
 		IdleForwardVector = transform.forward;
 		//SparksParticleSystem = GameObject.Find("SparksEmitter");
 		
+		SmokeEmitterTrail = (GameObject) Instantiate(SmokeEmitterTrail);
+		SmokeEmitterPuff = (GameObject) Instantiate(SmokeEmitterPuff);
 	}
 	
 	
@@ -107,14 +114,38 @@ public class TTSRacer: MonoBehaviour {
 		
 		PreviousVelocity = rigidbody.velocity;
 		
-		
+		//boost when space is hit
+		if (Input.GetKeyDown("space") && onGround){
+            StartCoroutine(racerBoost());
+		}
 	}
 	
-	
+	private IEnumerator racerBoost(){
+		if(canMove) {
+			this.rigidbody.AddForce(displayMeshComponent.forward * Time.deltaTime * Acceleration * Boost);
+			
+			audio.PlayOneShot(boostClip);
+			
+			SmokeEmitterTrail.transform.parent = this.transform;
+			SmokeEmitterTrail.transform.position = transform.position;
+			SmokeEmitterTrail.transform.forward = displayMeshComponent.forward;
+			SmokeEmitterTrail.particleEmitter.emit = true;
+			
+			SmokeEmitterPuff.transform.position = transform.position;
+			SmokeEmitterPuff.particleSystem.Play();
+		}
+		
+		yield return new WaitForSeconds(1.5f);
+		
+		SmokeEmitterTrail.particleEmitter.emit = false;
+	}
+		
 	void CalculateInputForces() {
 		//add acceleration forces...
 		if(onGround && rigidbody.velocity.magnitude < TopSpeed && canMove) {
 			this.rigidbody.AddForce(displayMeshComponent.forward * Input.GetAxis("Vertical") * Time.deltaTime * Acceleration);
+		}
+		if(onGround && canMove){
 			this.rigidbody.AddForce(displayMeshComponent.right * Input.GetAxis("Horizontal") * Time.deltaTime * Handling);
 		}
 	}
