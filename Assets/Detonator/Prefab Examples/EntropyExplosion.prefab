@@ -11,7 +11,6 @@ GameObject:
   - 114: {fileID: 11400000}
   - 114: {fileID: 11400002}
   - 82: {fileID: 8200000}
-  - 169: {fileID: 16900000}
   - 114: {fileID: 11400004}
   m_Layer: 0
   m_Name: EntropyExplosion
@@ -205,36 +204,6 @@ MonoBehaviour:
   power: 500
   fireObject: {fileID: 0}
   fireObjectLife: 0
---- !u!169 &16900000
-AudioLowPassFilter:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_CutoffFrequency: 19964.3848
-  m_LowpassResonanceQ: 1
-  lowpassLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    - time: .751415014
-      value: .354094297
-      inSlope: 1.44809484
-      outSlope: 1.44809484
-      tangentMode: 0
-    - time: .997590363
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

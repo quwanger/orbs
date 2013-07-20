@@ -18,11 +18,18 @@ public class TTSDrezzStone : MonoBehaviour {
 	
 	void OnTriggerExit(Collider other) {
 		if(!other.gameObject.isStatic) {
-			foreach(GameObject go in Emitters) {
-				if(go != null && other.gameObject == go.GetComponent<LightningBolt>().target.gameObject) {
+		
+			List<GameObject> EmittersClone = Emitters;
+			foreach(GameObject go in EmittersClone.ToArray()) {
+				if(go != null && go.GetComponent<LightningBolt>() != null && go.GetComponent<LightningBolt>().target != null) {
+					if(other.gameObject == go.GetComponent<LightningBolt>().target.gameObject) {
+						Emitters.Remove(go);
+						Destroy(go);
+						break;
+					}
+				}else{
 					Emitters.Remove(go);
-					Destroy(go);
-					break;
+				
 				}
 			}
 		}

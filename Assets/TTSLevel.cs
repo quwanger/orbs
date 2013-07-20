@@ -5,8 +5,8 @@ using System.Collections.Generic;
 
 public class TTSLevel : MonoBehaviour {
 
-	public List<GameObject> _racers;
-	public List<Camera> _cameras;
+	public List<GameObject> _racers = new List<GameObject>();
+	public List<Camera> _cameras = new List<Camera>();
 	
 	
 	public GameObject countdown;
