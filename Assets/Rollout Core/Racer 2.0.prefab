@@ -29,7 +29,7 @@ GameObject:
   - 135: {fileID: 13500000}
   - 114: {fileID: 11400002}
   - 114: {fileID: 11400004}
-  - 82: {fileID: 8200000}
+  - 114: {fileID: 11400006}
   m_Layer: 8
   m_Name: Racer 2.0
   m_TagString: Player
@@ -157,62 +157,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!82 &8200000
-AudioSource:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100002}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_audioClip: {fileID: 8300000, guid: 65c0c59eca098834fae1ea43d9544327, type: 3}
-  m_PlayOnAwake: 1
-  m_Volume: .685000002
-  m_Pitch: 1
-  Loop: 1
-  Mute: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 10
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    - time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
 --- !u!95 &9500000
 Animator:
   m_ObjectHideFlags: 1
@@ -247,12 +191,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46aae1e125f0a8941abd8b4c37f0ee97, type: 3}
   m_Name: 
   IsPlayerControlled: 1
+  displayMeshComponent: {fileID: 0}
+  RollingSound: {fileID: 8300000, guid: 65c0c59eca098834fae1ea43d9544327, type: 3}
   onGround: 1
   DamageSounds:
   - {fileID: 8300000, guid: b29d83db0b1d1e34b88b7b8eb07430c8, type: 3}
   - {fileID: 8300000, guid: 07185902a679f8a45a62fb7954bf000e, type: 3}
   SparksEmitter: {fileID: 100000, guid: 87c7b3f1a056e5d4fb78ff71783a1593, type: 2}
-  entropyCannonDebug: {fileID: 100004, guid: ffa3df054cf855b40b77a94e33b9cab4, type: 2}
+  canMove: 0
   TopSpeed: 50
   Acceleration: 2000
   Handling: 2000
@@ -267,6 +213,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e595e9937de9cd74fa0d0f882187e39d, type: 3}
   m_Name: 
   waypointsCrossed: []
+--- !u!114 &11400006
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5cc97ae1a10dff4eb6810de005a3d16, type: 3}
+  m_Name: 
+  debug: 1
+  DebugTier: 1
+  DrezzStonePrefab: {fileID: 100000, guid: 0a8a8e54eac559c4eb9eaf21597dc517, type: 2}
+  EntropyCannonPrefab: {fileID: 100004, guid: ffa3df054cf855b40b77a94e33b9cab4, type: 2}
 --- !u!135 &13500000
 SphereCollider:
   m_ObjectHideFlags: 1

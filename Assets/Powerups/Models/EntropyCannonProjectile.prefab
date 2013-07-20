@@ -353,8 +353,11 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 996e31cee05c9064dbc64f6dac9b3acb, type: 3}
   m_Name: 
-  explosion: {fileID: 100000, guid: 8e02e06584f51ab42986fd44c73d976e, type: 2}
+  explosion: {fileID: 100000, guid: 75a6c37640dffe34187054edfc9a0a72, type: 2}
   fire: {fileID: 8300000, guid: 50dcf1f8cc98d334d953d96ded8fa742, type: 3}
+  Timeout: 5
+  ProjectileAccleration: 10
+  ProjectileStartVelocity: 100
 --- !u!135 &13500000
 SphereCollider:
   m_ObjectHideFlags: 1
