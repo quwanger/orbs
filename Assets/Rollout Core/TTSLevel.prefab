@@ -49,9 +49,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c572749314cba874386ddfa15af5dd68, type: 3}
   m_Name: 
   _racers: []
-  _cameras: []
+  _maincameras: []
+  _otherCameras: []
+  raceHasStarted: 0
   countdown: {fileID: 0}
   DebugMode: 1
+  fonts:
+  - {fileID: 12800000, guid: f9929be8a43d15b408cb23dd53efaaa4, type: 3}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

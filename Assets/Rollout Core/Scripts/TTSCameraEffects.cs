@@ -3,11 +3,10 @@ using System.Collections;
 
 public class TTSCameraEffects : TTSBehaviour {
 	public void DamageEffect(float intensity) {
-		if(gameObject.GetComponent<TTSDamageEffect>() != null) {
-			gameObject.AddComponent<TTSDamageEffect>();
-		} else {
-			Destroy(gameObject.GetComponent<TTSDamageEffect>());
-			gameObject.AddComponent<TTSDamageEffect>();
+		TTSDamageEffect[] des = (TTSDamageEffect[]) gameObject.GetComponents<TTSDamageEffect>().Clone();
+		foreach(TTSDamageEffect de in des) {
+			Destroy(de);
 		}
+		gameObject.AddComponent<TTSDamageEffect>();
 	}
 }

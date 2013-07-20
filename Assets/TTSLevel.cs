@@ -6,11 +6,16 @@ using System.Collections.Generic;
 public class TTSLevel : MonoBehaviour {
 
 	public List<GameObject> _racers = new List<GameObject>();
-	public List<Camera> _cameras = new List<Camera>();
+	public List<Camera> _maincameras = new List<Camera>();
+	public List<Camera> _otherCameras = new List<Camera>();
 	
 	
+	public bool raceHasStarted = false;
 	public GameObject countdown;
 	public bool DebugMode = true;
+	
+	
+	public Font[] fonts;
 	
 	public static TTSLevel instance { get; private set;}
 	
@@ -23,7 +28,7 @@ public class TTSLevel : MonoBehaviour {
 	
 	void Start() {
 		if(!DebugMode) {
-			StartCountdown();
+			//StartCountdown();
 		} else {
 			foreach(GameObject racer in _racers) {
 				racer.GetComponent<TTSRacer>().canMove = true;
@@ -45,7 +50,7 @@ public class TTSLevel : MonoBehaviour {
 	public Camera[] cameras {
 		get {
 			//Return an immutable array.
-			return _cameras.ToArray();
+			return _maincameras.ToArray();
 		}
 		set {
 			ThrowSetException("cameras");
@@ -64,6 +69,7 @@ public class TTSLevel : MonoBehaviour {
 	private void ThrowSetException(string source) {
 		Debug.LogError("Tried to set a readonly property: " + source);
 	}
+	
 	#endregion
 	
 	
@@ -73,17 +79,26 @@ public class TTSLevel : MonoBehaviour {
 		_racers.Add(go);
 	}
 	
-	public void RegisterCamera(Camera cam) {
-		_cameras.Add(cam);
+	public void RegisterCamera(Camera cam, bool isAuxillary) {
+		if(isAuxillary) {
+			_otherCameras.Add(cam);
+		} else {
+			_maincameras.Add(cam);
+		}
 	}
 	#endregion
 	
 	#region Game Event Methods
 	public void StartCountdown() {
-		countdown.GetComponent<Animation>().Play();
+		if(countdown != null) {
+			countdown.GetComponent<Animation>().Play();
+		} else {
+			Debug.LogWarning("Countdown not assigned.");
+		}
 	}
 	
 	public void StartRace() {
+		raceHasStarted = true;
 		GameObject.Find("Soundtrack").GetComponent<TTSSoundtrackManager>().StartSoundtrack();
 		
 		foreach(GameObject racer in racers) {
@@ -92,6 +107,39 @@ public class TTSLevel : MonoBehaviour {
 		
 		GetComponent<TTSTimeManager>().StartTimer();
 	}
-	#endregion
 	
+	public void SwitchToAuxCamera(string cameraname) {
+		//Disable all cameras
+		Camera[] cams = Camera.allCameras;
+		foreach(Camera cam in cams) {
+			cam.enabled = false;
+		}
+		
+		foreach(Camera cam in _otherCameras) {
+			if(cam.name == cameraname) {
+				cam.enabled = true;
+				break;
+			}
+		}
+		
+		//sanity
+		if(Camera.main == null) {
+			Debug.LogError("Auxillary Camera \"" + cameraname + "\" Not found.");
+		}
+		
+	}
+	
+	public void SwitchToGameCameras() {
+		Camera[] cams = Camera.allCameras;
+		foreach(Camera cam in cams) {
+			cam.enabled = false;
+		}
+		
+		foreach(Camera cam in _maincameras) {
+			cam.enabled = true;
+		}
+	}
+	
+	
+	#endregion
 }

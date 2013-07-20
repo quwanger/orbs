@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class TTSFollowCamera : MonoBehaviour
+public class TTSFollowCamera : TTSBehaviour
 {
 
 	public enum cameraModes
@@ -47,7 +47,7 @@ public class TTSFollowCamera : MonoBehaviour
 
 	void Start ()
 	{
-		
+		level.RegisterCamera(this.camera, false);
 	}
 
 	void FixedUpdate ()
