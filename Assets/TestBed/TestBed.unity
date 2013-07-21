@@ -7453,6 +7453,72 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14aa049a27b5b6c4197420a0e39e29dd, type: 3}
   m_Name: 
   target: {fileID: 0}
+--- !u!1 &399347975
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 399347976}
+  - 96: {fileID: 399347977}
+  m_Layer: 0
+  m_Name: Right Trail
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &399347976
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 399347975}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -.5, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2129323532}
+--- !u!96 &399347977
+TrailRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 399347975}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_LightmapIndex: 255
+  m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
+  m_Materials:
+  - {fileID: 2100000, guid: 7b496feaeabf75c488aa453603e554e2, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 0
+  m_LightProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_Time: 5
+  m_StartWidth: 1
+  m_EndWidth: 0
+  m_Colors:
+    m_Color[0]:
+      serializedVersion: 2
+      rgba: 2499789206
+    m_Color[1]:
+      serializedVersion: 2
+      rgba: 1776226560
+    m_Color[2]:
+      serializedVersion: 2
+      rgba: 832990720
+    m_Color[3]:
+      serializedVersion: 2
+      rgba: 4294967295
+    m_Color[4]:
+      serializedVersion: 2
+      rgba: 16777215
+  m_MinVertexDistance: .100000001
+  m_Autodestruct: 0
 --- !u!1001 &424009527
 Prefab:
   m_ObjectHideFlags: 0
@@ -13437,7 +13503,7 @@ MonoBehaviour:
   m_Name: 
   currentPowerup: 1
   respawnTime: 5
-  clip: {fileID: 8300000, guid: b23b8b3021510e549b777a4c731748a6, type: 3}
+  clip: {fileID: 8300000, guid: b29d83db0b1d1e34b88b7b8eb07430c8, type: 3}
   powerupBoost: {fileID: 100000, guid: 593354a40d43f4741a60c2c2993bdf3e, type: 2}
   powerupShield: {fileID: 100000, guid: bb826080f8293434c9e77e097059c88c, type: 2}
   powerupShockwave: {fileID: 100000, guid: 9e007af1c5882cc4f92c9c9708f25785, type: 2}
@@ -17275,6 +17341,72 @@ Transform:
   m_LocalScale: {x: .941715717, y: .941715717, z: .941715717}
   m_Children: []
   m_Father: {fileID: 606297165}
+--- !u!1 &945164356
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 945164357}
+  - 96: {fileID: 945164358}
+  m_Layer: 0
+  m_Name: left Trail
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &945164357
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 945164356}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: .5, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2129323532}
+--- !u!96 &945164358
+TrailRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 945164356}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_LightmapIndex: 255
+  m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
+  m_Materials:
+  - {fileID: 2100000, guid: 7b496feaeabf75c488aa453603e554e2, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 0
+  m_LightProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_Time: 5
+  m_StartWidth: 1
+  m_EndWidth: 0
+  m_Colors:
+    m_Color[0]:
+      serializedVersion: 2
+      rgba: 2499789206
+    m_Color[1]:
+      serializedVersion: 2
+      rgba: 1776226560
+    m_Color[2]:
+      serializedVersion: 2
+      rgba: 832990720
+    m_Color[3]:
+      serializedVersion: 2
+      rgba: 4294967295
+    m_Color[4]:
+      serializedVersion: 2
+      rgba: 16777215
+  m_MinVertexDistance: .100000001
+  m_Autodestruct: 0
 --- !u!1 &948513148
 GameObject:
   m_ObjectHideFlags: 0
@@ -18852,7 +18984,7 @@ MonoBehaviour:
   m_Name: 
   currentPowerup: 1
   respawnTime: 5
-  clip: {fileID: 8300000, guid: b23b8b3021510e549b777a4c731748a6, type: 3}
+  clip: {fileID: 8300000, guid: b29d83db0b1d1e34b88b7b8eb07430c8, type: 3}
   powerupBoost: {fileID: 100000, guid: 593354a40d43f4741a60c2c2993bdf3e, type: 2}
   powerupShield: {fileID: 100000, guid: bb826080f8293434c9e77e097059c88c, type: 2}
   powerupShockwave: {fileID: 100000, guid: 9e007af1c5882cc4f92c9c9708f25785, type: 2}
@@ -21255,7 +21387,7 @@ MonoBehaviour:
   m_Name: 
   currentPowerup: 1
   respawnTime: 5
-  clip: {fileID: 8300000, guid: b23b8b3021510e549b777a4c731748a6, type: 3}
+  clip: {fileID: 8300000, guid: b29d83db0b1d1e34b88b7b8eb07430c8, type: 3}
   powerupBoost: {fileID: 100000, guid: 593354a40d43f4741a60c2c2993bdf3e, type: 2}
   powerupShield: {fileID: 100000, guid: bb826080f8293434c9e77e097059c88c, type: 2}
   powerupShockwave: {fileID: 100000, guid: 9e007af1c5882cc4f92c9c9708f25785, type: 2}
@@ -37226,7 +37358,7 @@ MonoBehaviour:
   m_Name: 
   currentPowerup: 1
   respawnTime: 5
-  clip: {fileID: 8300000, guid: b23b8b3021510e549b777a4c731748a6, type: 3}
+  clip: {fileID: 8300000, guid: b29d83db0b1d1e34b88b7b8eb07430c8, type: 3}
   powerupBoost: {fileID: 100000, guid: 593354a40d43f4741a60c2c2993bdf3e, type: 2}
   powerupShield: {fileID: 100000, guid: bb826080f8293434c9e77e097059c88c, type: 2}
   powerupShockwave: {fileID: 100000, guid: 9e007af1c5882cc4f92c9c9708f25785, type: 2}
@@ -40113,7 +40245,7 @@ MonoBehaviour:
   m_Name: 
   currentPowerup: 1
   respawnTime: 5
-  clip: {fileID: 8300000, guid: b23b8b3021510e549b777a4c731748a6, type: 3}
+  clip: {fileID: 8300000, guid: b29d83db0b1d1e34b88b7b8eb07430c8, type: 3}
   powerupBoost: {fileID: 100000, guid: 593354a40d43f4741a60c2c2993bdf3e, type: 2}
   powerupShield: {fileID: 100000, guid: bb826080f8293434c9e77e097059c88c, type: 2}
   powerupShockwave: {fileID: 100000, guid: 9e007af1c5882cc4f92c9c9708f25785, type: 2}
@@ -40272,6 +40404,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 747850832}
+  - {fileID: 2129323532}
   m_Father: {fileID: 0}
 --- !u!114 &1903928550
 MonoBehaviour:
@@ -40645,7 +40778,7 @@ MonoBehaviour:
   m_Name: 
   currentPowerup: 1
   respawnTime: 5
-  clip: {fileID: 8300000, guid: b23b8b3021510e549b777a4c731748a6, type: 3}
+  clip: {fileID: 8300000, guid: b29d83db0b1d1e34b88b7b8eb07430c8, type: 3}
   powerupBoost: {fileID: 100000, guid: 593354a40d43f4741a60c2c2993bdf3e, type: 2}
   powerupShield: {fileID: 100000, guid: bb826080f8293434c9e77e097059c88c, type: 2}
   powerupShockwave: {fileID: 100000, guid: 9e007af1c5882cc4f92c9c9708f25785, type: 2}
@@ -47638,6 +47771,34 @@ Prefab:
   m_RootGameObject: {fileID: 2011854583}
   m_IsPrefabParent: 0
   m_IsExploded: 1
+--- !u!1 &2129323531
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 2129323532}
+  m_Layer: 0
+  m_Name: SuperCBooster
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2129323532
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2129323531}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 399347976}
+  - {fileID: 945164357}
+  m_Father: {fileID: 1903928549}
 --- !u!1001 &2139154478
 Prefab:
   m_ObjectHideFlags: 0
