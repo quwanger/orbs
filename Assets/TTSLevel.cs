@@ -28,7 +28,7 @@ public class TTSLevel : MonoBehaviour {
 	
 	void Start() {
 		if(!DebugMode) {
-			//StartCountdown();
+			StartRace();
 		} else {
 			foreach(GameObject racer in _racers) {
 				racer.GetComponent<TTSRacer>().canMove = true;
@@ -90,10 +90,12 @@ public class TTSLevel : MonoBehaviour {
 	
 	#region Game Event Methods
 	public void StartCountdown() {
-		if(countdown != null) {
-			countdown.GetComponent<Animation>().Play();
-		} else {
-			Debug.LogWarning("Countdown not assigned.");
+		if(!DebugMode) {
+			if(countdown != null) {
+				countdown.GetComponent<Animation>().Play();
+			} else {
+				Debug.LogWarning("Countdown not assigned.");
+			}
 		}
 	}
 	

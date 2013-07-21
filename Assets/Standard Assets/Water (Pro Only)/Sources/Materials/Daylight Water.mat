@@ -88,20 +88,12 @@ Material:
         second: {r: 1, g: 1, b: 0, a: 0}
       data:
         first:
-          name: _RefractionTex_ST
-        second: {r: 1, g: 1, b: 0, a: 0}
-      data:
-        first:
           name: WaveSpeed
         second: {r: 9, g: 4.5, b: -8, a: -3.5}
       data:
         first:
           name: _RefrColor
         second: {r: .937254906, g: .937254906, b: .937254906, a: 1}
-      data:
-        first:
-          name: _HorizonColor
-        second: {r: .135759518, g: .228107125, b: .381078809, a: 0}
       data:
         first:
           name: _Fresnel_ST
@@ -113,6 +105,14 @@ Material:
       data:
         first:
           name: _ReflectiveColorCube_ST
+        second: {r: 1, g: 1, b: 0, a: 0}
+      data:
+        first:
+          name: _HorizonColor
+        second: {r: .135759518, g: .228107125, b: .381078809, a: 0}
+      data:
+        first:
+          name: _RefractionTex_ST
         second: {r: 1, g: 1, b: 0, a: 0}
 --- !u!1002 &2100001
 EditorExtensionImpl:
