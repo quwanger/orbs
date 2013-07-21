@@ -16643,6 +16643,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 360b8681c3ed236468f4eacc8c5d1b56, type: 3}
   m_Name: 
   anchorMode: 3
+  hideOffset: 10
   padding: {x: 2, y: 2}
   depth: 0
   frustrumDimentions: {x: 0, y: 0}
@@ -16957,6 +16958,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 360b8681c3ed236468f4eacc8c5d1b56, type: 3}
   m_Name: 
   anchorMode: 2
+  hideOffset: 10
   padding: {x: 3.9000001, y: 1.39999998}
   depth: 0
   frustrumDimentions: {x: 0, y: 0}
@@ -21363,6 +21365,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 360b8681c3ed236468f4eacc8c5d1b56, type: 3}
   m_Name: 
   anchorMode: 2
+  hideOffset: 10
   padding: {x: 2, y: 2}
   depth: 0
   frustrumDimentions: {x: 0, y: 0}
@@ -23198,9 +23201,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c572749314cba874386ddfa15af5dd68, type: 3}
   m_Name: 
   _racers: []
-  _cameras: []
+  _maincameras: []
+  _otherCameras: []
+  raceHasStarted: 0
   countdown: {fileID: 0}
   DebugMode: 1
+  fonts:
+  - {fileID: 12800000, guid: f9929be8a43d15b408cb23dd53efaaa4, type: 3}
 --- !u!114 &1590866097
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27637,6 +27644,7 @@ GameObject:
   - 114: {fileID: 1769841863}
   - 65: {fileID: 1769841872}
   - 114: {fileID: 1769841877}
+  - 114: {fileID: 1769841878}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -28013,7 +28021,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f7db9ec1392f34265817a55853e6ab07, type: 3}
   m_Name: 
-  filterType: 2
+  filterType: 1
   preview: 0
   previewScale: {x: 1, y: 1, z: 1}
   movementScale: 0
@@ -28114,6 +28122,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53696d39b2616fa459958ac8a656c08d, type: 3}
+  m_Name: 
+--- !u!114 &1769841878
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400018, guid: 87349ab19ab52c240b853ddb4c5e795d,
+    type: 2}
+  m_PrefabInternal: {fileID: 380791774}
+  m_GameObject: {fileID: 1769841862}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a76573c10807f164a96bc6349ffba554, type: 3}
   m_Name: 
 --- !u!1001 &1782446256
 Prefab:
@@ -29877,6 +29896,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 360b8681c3ed236468f4eacc8c5d1b56, type: 3}
   m_Name: 
   anchorMode: 0
+  hideOffset: 10
   padding: {x: 0, y: 1.5}
   depth: 2
   frustrumDimentions: {x: 0, y: 0}
@@ -30112,6 +30132,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 360b8681c3ed236468f4eacc8c5d1b56, type: 3}
   m_Name: 
   anchorMode: 0
+  hideOffset: 10
   padding: {x: 0, y: 2}
   depth: 0
   frustrumDimentions: {x: 0, y: 0}

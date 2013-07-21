@@ -38,13 +38,13 @@ public class TTSEntropyCannonProjectile : MonoBehaviour {
 
 	private void Explode(bool actually) {
 		if(actually) {
-			 GameObject go = (GameObject) Instantiate(explosion,this.transform.position,this.transform.rotation);
+			 Instantiate(explosion,this.transform.position,this.transform.rotation);
 		}
 			
 			
 		foreach(Transform child in transform) {
 				Destroy(child.gameObject);
-			}
+		}
 		//stop motion so the trail can end and destroy the parent GO.
 		this.GetComponent<SphereCollider>().enabled = false;
 		this.rigidbody.velocity = new Vector3(0f,0f,0f);

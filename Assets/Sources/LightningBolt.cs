@@ -14,6 +14,9 @@ public class LightningBolt : MonoBehaviour
 	public GameObject startLight;
 	public GameObject endLight;
 	
+	public LineRenderer linerenderer;
+	private Vector3[] positions;
+	
 	Perlin noise;
 	float oneOverZigs;
 	
@@ -21,11 +24,10 @@ public class LightningBolt : MonoBehaviour
 	
 	void Start()
 	{
+		positions = new Vector3[zigs];
 		oneOverZigs = 1f / (float)zigs;
-		particleEmitter.emit = false;
-
-		particleEmitter.Emit(zigs);
-		particles = particleEmitter.particles;
+		linerenderer = GetComponent<LineRenderer>();
+		linerenderer.SetVertexCount(zigs);
 	}
 	
 	void Update ()
@@ -38,28 +40,23 @@ public class LightningBolt : MonoBehaviour
 			float timey = Time.time * speed * 1.21688f;
 			float timez = Time.time * speed * 2.5564f;
 			
-			for (int i=0; i < particles.Length; i++)
+			for (int i=0; i < zigs; i++)
 			{
 				Vector3 position = Vector3.Lerp(transform.position, target.position, oneOverZigs * (float)i);
 				Vector3 offset = new Vector3(noise.Noise(timex + position.x, timex + position.y, timex + position.z),
 											noise.Noise(timey + position.x, timey + position.y, timey + position.z),
 											noise.Noise(timez + position.x, timez + position.y, timez + position.z));
 				position += (offset * scale * ((float)i * oneOverZigs));
-				
-				particles[i].position = position;
-				particles[i].color = Color.white;
-				particles[i].energy = 1f;
+				positions[i] = position;
+				linerenderer.SetPosition(i, position);
+
 			}
 			
-			particleEmitter.particles = particles;
-			
-			if (particleEmitter.particleCount >= 2)
-			{
-				if (startLight)
-					startLight.transform.position = particles[0].position;
-				if (endLight)
-					endLight.transform.position = particles[particles.Length - 1].position;
-			}
+			if (startLight)
+				startLight.transform.position = positions[0];
+			if (endLight)
+				endLight.transform.position = positions[positions.Length - 1];		
+
 		}
 	}	
 }
