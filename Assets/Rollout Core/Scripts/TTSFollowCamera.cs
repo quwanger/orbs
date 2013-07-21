@@ -62,10 +62,6 @@ public class TTSFollowCamera : MonoBehaviour
 			if (target.parent.GetComponent<TTSRacer> ().rigidbody.velocity.sqrMagnitude > 3000) {
 				transform.position += Random.insideUnitSphere * 0.06f;
 			}
-
-			if (GetComponent<Vignetting> ().chromaticAberration > 0.0f) {
-				GetComponent<Vignetting> ().chromaticAberration = Mathf.Lerp (GetComponent<Vignetting> ().chromaticAberration, 0.0f, 0.07f);
-			}
 		}
 	}
 

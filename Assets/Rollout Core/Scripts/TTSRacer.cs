@@ -29,24 +29,26 @@ using System.Collections.Generic;
  * 
  * */
 
-[RequireComponent(typeof(TTSAIController))]
+
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
-[RequireComponent(typeof(AudioSource))]
-public class TTSRacer: MonoBehaviour {
+public class TTSRacer: TTSBehaviour {
 	
 	
 	#region serialized settings
 	public bool IsPlayerControlled = true;
 	#endregion
 	
-	#region Internal Component
-	private Transform displayMeshComponent;
+	#region Internal Components
+	public Transform displayMeshComponent;
+	private AudioSource RacerSounds;
+	private AudioSource RacerSfx;
+	public AudioClip RollingSound;
 	#endregion
 	
 	
-	#region internal operators
+	#region Internal Movement Operators
 	private Vector3 IdleForwardVector;
 	private Vector3 PreviousVelocity = new Vector3(1,0,0);
 	public bool onGround = true;
@@ -55,24 +57,21 @@ public class TTSRacer: MonoBehaviour {
 	public AudioClip[] DamageSounds;
 	public GameObject SparksEmitter;
 	public bool canMove = false;
-	#endregion
-	
-	
-	#region NEEDS EDITOR
 	private float MinimumVelocityToAnimateSteering = 1.0f;
 	#endregion
-	
-	
+
 	#region gameplay vars
 	public float TopSpeed = 100.0f;
 	public float Acceleration = 2000.0f;
 	public float Handling = 3000.0f;
 	#endregion
 	
+	
+	
 	 
 	
 	void Awake() {
-		
+		level.RegisterRacer(gameObject);
 		//Get the body via tag.
 		foreach(Transform child in transform){
     		if(child.gameObject.tag == "RacerDisplayMesh"){
@@ -83,24 +82,24 @@ public class TTSRacer: MonoBehaviour {
 		if(displayMeshComponent == null) {
 			Debug.LogException(new UnassignedReferenceException());	
 		}
-		
 		IdleForwardVector = transform.forward;
-		//SparksParticleSystem = GameObject.Find("SparksEmitter");
-		
-	}
-	
-	
-	void Start () {
 		
 		
+		//Setup Audio Channel for Pitched Racer Sounds
+		RacerSounds = gameObject.AddComponent<AudioSource>();
+		RacerSounds.clip = RollingSound;
+		RacerSounds.loop = true;
+		RacerSounds.rolloffMode = AudioRolloffMode.Linear;
+		RacerSounds.Play();
 		
+		//Setup Audio Channel for SFX
+		RacerSfx = gameObject.AddComponent<AudioSource>();
+		RacerSfx.rolloffMode = AudioRolloffMode.Linear;
 	}
 	
 	void FixedUpdate () {
 		if(IsPlayerControlled) {
 			CalculateInputForces();	
-		} else {
-			CalculateAiForces();	
 		}
 		
 		CalculateBodyOrientation();
@@ -114,8 +113,8 @@ public class TTSRacer: MonoBehaviour {
 	void CalculateInputForces() {
 		//add acceleration forces...
 		if(onGround && rigidbody.velocity.magnitude < TopSpeed && canMove) {
-			this.rigidbody.AddForce(displayMeshComponent.forward * Input.GetAxis("Vertical") * Time.deltaTime * Acceleration);
-			this.rigidbody.AddForce(displayMeshComponent.right * Input.GetAxis("Horizontal") * Time.deltaTime * Handling);
+			rigidbody.AddForce(displayMeshComponent.forward * Input.GetAxis("Vertical") * Time.deltaTime * Acceleration);
+			rigidbody.AddForce(displayMeshComponent.right * Input.GetAxis("Horizontal") * Time.deltaTime * Handling);
 		}
 	}
 	
@@ -123,11 +122,11 @@ public class TTSRacer: MonoBehaviour {
 
 		onGround = true;
 		if(collision.relativeVelocity.magnitude > 10) {
-			GameObject.FindGameObjectWithTag("MainCamera").GetComponent<TTSFollowCamera>().DoDamageEffect();
-			GetComponent<AudioSource>().PlayOneShot(DamageSounds[Mathf.FloorToInt(Random.value * DamageSounds.Length)]);
+			vfx.DamageEffect(100.0f);
+			RacerSfx.PlayOneShot(DamageSounds[Mathf.FloorToInt(Random.value * DamageSounds.Length)]);
 		}
 		
-	
+		//spawn sparks (TODO: move this to a component script)
 		GameObject sparkClone = (GameObject) Instantiate(SparksEmitter);
 		sparkClone.transform.position = collision.contacts[0].point;
 		sparkClone.particleEmitter.emit = true;
@@ -158,30 +157,16 @@ public class TTSRacer: MonoBehaviour {
 			displayMeshComponent.forward = IdleForwardVector;	
 		}
 		
-		
-		
 		//sound
-		GetComponent<AudioSource>().pitch = TTSUtils.Remap(rigidbody.velocity.magnitude, 0f, TopSpeed, 0.5f, 1.3f, false);
-		GetComponent<AudioSource>().volume = TTSUtils.Remap(rigidbody.velocity.magnitude, 0f, TopSpeed, 0.5f, 1f, false);
+		RacerSounds.pitch = TTSUtils.Remap(rigidbody.velocity.magnitude, 0f, TopSpeed, 0.5f, 1.3f, false);
+		RacerSounds.volume = TTSUtils.Remap(rigidbody.velocity.magnitude, 0f, TopSpeed, 0.5f, 1f, false);
 		
 		
-	}
-	
-	void OnDrawGizmos() {
-	
 	}
 	
 	public float GetTiltAngle() {
 		return TiltAngle;
 	}
-	
-	private void CalculateAiForces() {
-		//GetComponent<Biped>().MaxSpeed = TopSpeed;
-		//GetComponent<Biped>().MaxForce = Acceleration;
-		GetComponent<TTSAIController>().seekWaypoint();
-	}
-	
-	
 }
 
 	
