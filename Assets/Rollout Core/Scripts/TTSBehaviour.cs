@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 public class TTSBehaviour : MonoBehaviour {
 	
-	public enum Powerup {None, EntropyCannon, DrezzStones};
+	public enum Powerup {None, EntropyCannon, DrezzStones, TimeBonus};
 	
 	public TTSLevel level {
 		 get { 

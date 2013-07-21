@@ -34,4 +34,8 @@ public class TTSTimeManager : MonoBehaviour {
 	public void StopTimer() {
 		running = false;
 	}
+	
+	public void GiveTimeBonus(float amount) {
+		startTime += amount;
+	}
 }

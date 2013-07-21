@@ -8,14 +8,7 @@ public class TTSPowerupPlatform : TTSBehaviour {
 	private float rotationSpeed = 50.0f;
 	private bool pickedUp = false;
 	private Collider collidedRacer;
-	
-	//weights for each of the powerups (to chance their chances of appearing)
-	private float weightBoost = 100.0f;
-	private float weightMissiles = 100.0f;
-	private float weightShield = 100.0f;
-	private float weightShockwave = 100.0f;
-	private float weightMoreTime = 100.0f;
-	
+
 	public GameObject powerupBoost;
 	public GameObject powerupShield;
 	public GameObject powerupShockwave;
@@ -24,6 +17,7 @@ public class TTSPowerupPlatform : TTSBehaviour {
 	
 	public ParticleSystem EntropyParticleSystem;
 	public ParticleSystem DrezzStoneParticleSystem;
+	public ParticleSystem TimeBonusParticleSystem;
 	
 	public int numParticlesToEmitOnPickup = 1000;
 	
@@ -55,6 +49,10 @@ public class TTSPowerupPlatform : TTSBehaviour {
 						
 						case Powerup.DrezzStones:
 						DrezzStoneParticleSystem.Emit(numParticlesToEmitOnPickup);
+						break;
+						
+						case Powerup.TimeBonus:
+						TimeBonusParticleSystem.Emit(numParticlesToEmitOnPickup);
 						break;
 						
 						default:
@@ -100,6 +98,11 @@ public class TTSPowerupPlatform : TTSBehaviour {
 			break;
 	    case (Powerup.EntropyCannon):
 			powerupMesh = Instantiate(powerupMissiles, new Vector3(transform.position.x,transform.position.y+2.0f, transform.position.z), transform.rotation) as GameObject;
+			powerupMesh.transform.parent = this.transform;
+			break;
+			
+		case (Powerup.TimeBonus):
+			powerupMesh = Instantiate(powerupMoreTime, new Vector3(transform.position.x,transform.position.y+2.0f, transform.position.z), transform.rotation) as GameObject;
 			powerupMesh.transform.parent = this.transform;
 			break;
 			
