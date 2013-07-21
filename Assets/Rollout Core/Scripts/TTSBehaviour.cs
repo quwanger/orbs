@@ -9,6 +9,8 @@ using System.Collections.Generic;
 
 public class TTSBehaviour : MonoBehaviour {
 	
+	public enum Powerup {None, EntropyCannon, DrezzStones};
+	
 	public TTSLevel level {
 		 get { 
 			if(TTSLevel.instance != null) {
@@ -36,6 +38,13 @@ public class TTSBehaviour : MonoBehaviour {
 		get {
 			return Camera.main.GetComponent<TTSCameraEffects>();
 		}
+	}
+	
+	public static T GetRandomEnum<T>()
+	{
+		System.Array A = System.Enum.GetValues(typeof(T));
+		T V = (T)A.GetValue(UnityEngine.Random.Range(0,A.Length));
+		return V;
 	}
 	
 }

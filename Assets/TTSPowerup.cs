@@ -1,10 +1,13 @@
 using UnityEngine;
 using System.Collections;
 
-public class TTSPowerup : MonoBehaviour {
+public class TTSPowerup : TTSBehaviour {
 	
 	public bool debug = false;
 	public int DebugTier = 2;
+	
+	public Powerup AvailablePowerup;
+	public int tier = 1;
 	
 	#region Prefab Assignment
 	public GameObject DrezzStonePrefab;
@@ -15,21 +18,58 @@ public class TTSPowerup : MonoBehaviour {
 	void Update() {
 		if(Input.GetKeyDown("1")) DrezzStone(DebugTier);
 		if(Input.GetKeyDown("2")) EntropyCannon(DebugTier);
+		
+		if(Input.GetKeyDown(KeyCode.Space)) ConsumePowerup();
+	
 	}
+	#endregion
+	
+	#region donation methods
+	public void GivePowerup(Powerup powerup) {
+		if(powerup == AvailablePowerup && tier < 3) {
+			tier++;
+		} else {
+			AvailablePowerup = powerup;
+			tier = 1;
+		}
+	}   
+	
+	public void ConsumePowerup() {
+		
+		switch(AvailablePowerup) {
+			case Powerup.EntropyCannon:
+			EntropyCannon(tier);
+			break;
+			
+			case Powerup.DrezzStones:
+			DrezzStone(tier);
+			break;
+			
+			default:
+			//Play a sound?
+			break;
+		}
+		
+		this.AvailablePowerup = Powerup.None;
+		this.tier = 1;
+		
+		
+	}
+	
 	#endregion
 	
 	
 	#region public methods
-	public void DrezzStone(int tier) {
-		if(tier == 1) {
+	public void DrezzStone(int _tier) {
+		if(_tier == 1) {
 			DropDrezzStone();
 		}
 		
-		if(tier == 2) {
+		if(_tier == 2) {
 			DropDrezzStone();
 			Invoke("DropDrezzStone", 0.5f);
 		}
-		if(tier == 3) {
+		if(_tier == 3) {
 			for(int i = 0; i < 5; i++) {
 				Invoke("DropDrezzStone", i * 0.5f);
 			}
@@ -37,17 +77,17 @@ public class TTSPowerup : MonoBehaviour {
 		
 	}
 	
-	public void EntropyCannon(int tier) {
-		if(tier == 1) {
+	public void EntropyCannon(int _tier) {
+		if(_tier == 1) {
 			FireEntropyCannon();
 		}
 		
-		if(tier == 2) {
+		if(_tier == 2) {
 			for(int i = 0; i < 5; i++) {
 				Invoke("FireEntropyCannon", i * 0.1f);
 			}
 		}
-		if(tier == 3) {
+		if(_tier == 3) {
 			for(int i = 0; i < 10; i++) {
 				Invoke("FireEntropyCannon", i * 0.1f);
 			}
