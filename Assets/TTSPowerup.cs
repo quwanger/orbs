@@ -12,12 +12,14 @@ public class TTSPowerup : TTSBehaviour {
 	#region Prefab Assignment
 	public GameObject DrezzStonePrefab;
 	public GameObject EntropyCannonPrefab;
+	public GameObject TimeBonusPrefab;
 	#endregion
 	
 	#region monobehaviour methods
 	void Update() {
 		if(Input.GetKeyDown("1")) DrezzStone(DebugTier);
 		if(Input.GetKeyDown("2")) EntropyCannon(DebugTier);
+		if(Input.GetKeyDown("4")) TimeBonus();
 		
 		if(Input.GetKeyDown(KeyCode.Space)) ConsumePowerup();
 	
@@ -28,6 +30,8 @@ public class TTSPowerup : TTSBehaviour {
 	public void GivePowerup(Powerup powerup) {
 		if(powerup == AvailablePowerup && tier < 3) {
 			tier++;
+		} else if(powerup == Powerup.TimeBonus) {
+			TimeBonus();
 		} else {
 			AvailablePowerup = powerup;
 			tier = 1;
@@ -44,6 +48,7 @@ public class TTSPowerup : TTSBehaviour {
 			case Powerup.DrezzStones:
 			DrezzStone(tier);
 			break;
+			
 			
 			default:
 			//Play a sound?
@@ -94,6 +99,10 @@ public class TTSPowerup : TTSBehaviour {
 		}
 	}
 	
+	public void TimeBonus() {
+		GiveTimeBonus();
+	}
+	
 	
 	#endregion
 	
@@ -108,6 +117,12 @@ public class TTSPowerup : TTSBehaviour {
 		go.transform.rotation = GetComponent<TTSRacer>().displayMeshComponent.transform.rotation;
 		go.transform.position = this.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
 		go.rigidbody.velocity = this.rigidbody.velocity.normalized * go.GetComponent<TTSEntropyCannonProjectile>().ProjectileStartVelocity;
+	}
+	
+	private void GiveTimeBonus() {
+		level.time.GiveTimeBonus(1.0f);
+		GameObject go = (GameObject) Instantiate(TimeBonusPrefab, this.transform.position, this.transform.rotation);
+		go.GetComponent<TTSTimeBonusPrefab>().target = this.GetComponent<TTSRacer>().displayMeshComponent.gameObject;
 	}
 	#endregion
 	
