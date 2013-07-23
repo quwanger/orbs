@@ -10,13 +10,11 @@ public class TTSTimeBonusPrefab : TTSPerishingBehaviour {
 	
 	public AudioClip[] audio;
 	
-	// Use this for initialization
 	void Awake () {
 		this.duration = 2.0f;
 		this.useKillFunctionWhenComplete = true;
-		system.Emit(1000);
-		
 		sfx.PlayOneShot(audio[Random.Range(0,audio.Length)]);
+		hud.FlashTimeForBonus();
 	}
 	
 	protected override void OnPerishingUpdate (float progress){

@@ -9,13 +9,15 @@ public class TTSTimeManager : MonoBehaviour {
 	
 	private bool running = false;
 	
+	public float bonusTime {get; private set;}
+	
 	void Start () {
-		
+		bonusTime = 1.0f;
 	}
 	
 	void Update () {
 		if(running)
-			timeInMillis = Time.time - startTime;
+			timeInMillis = Time.time - startTime - bonusTime;
 	}
 	
 	public string GetCurrentTimeString(){
@@ -36,6 +38,6 @@ public class TTSTimeManager : MonoBehaviour {
 	}
 	
 	public void GiveTimeBonus(float amount) {
-		startTime += amount;
+		bonusTime += amount;
 	}
 }
