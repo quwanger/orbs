@@ -12,6 +12,7 @@ public class TTSPowerup : TTSBehaviour {
 	#region Projectile Prefab Assignment
 	public GameObject DrezzStonePrefab;
 	public GameObject EntropyCannonPrefab;
+	public GameObject BoostPrefab;
 	#endregion
 	
 	
@@ -98,6 +99,7 @@ public class TTSPowerup : TTSBehaviour {
 	
 	public void SuperCBooster(int _tier) {
 		TTSRacerSpeedBoost boost = gameObject.AddComponent<TTSRacerSpeedBoost>();
+		boost.FireBoost(BoostPrefab);
 		
 		if(_tier == 1) {
 			boost.duration = 1.0f;
