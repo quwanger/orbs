@@ -10,9 +10,6 @@ public class TTSRacerSpeedBoost : TTSPerishingBehaviour {
 	protected override void OnPerishingUpdate(float progress) {
 		rigidbody.AddForce(GetComponent<TTSRacer>().displayMeshComponent.forward * Mathf.Lerp (TargetForce, 0.0f, progress));
 		
-		foreach(TrailRenderer tr in trailRenderers.ToArray()){
-			tr.time = Mathf.Lerp(tr.time, 0.0f, progress/5.0f);
-		}
 	}
 	
 	public void FireBoost(GameObject booster){
@@ -28,6 +25,19 @@ public class TTSRacerSpeedBoost : TTSPerishingBehaviour {
 	}
 	
 	protected override void Kill(){
-		Destroy(this.go);
+		foreach(Transform child in go.transform) {
+			if(child.GetComponent<ParticleSystem>()) {
+				child.GetComponent<ParticleSystem>().Stop();
+			}
+		}
+		go.transform.parent = null;
+		go.transform.position = this.transform.position;
+		Invoke("Cleanup", 5.0f);
+		
+	}
+	
+	void Cleanup() {
+		Destroy (this.go);
+		Destroy (this);
 	}
 }
