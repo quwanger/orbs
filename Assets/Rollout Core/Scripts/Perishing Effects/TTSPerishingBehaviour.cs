@@ -35,6 +35,7 @@ public class TTSPerishingBehaviour : TTSBehaviour {
 		
 		if((Time.time - birth)/duration > 1.0f) {
 			if(destroyWhenLifecycleComplete) {
+				Kill();
 				Destroy(this);
 			}
 			

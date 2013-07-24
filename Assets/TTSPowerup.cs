@@ -9,17 +9,21 @@ public class TTSPowerup : TTSBehaviour {
 	public Powerup AvailablePowerup;
 	public int tier = 1;
 	
-	#region Prefab Assignment
+	#region Projectile Prefab Assignment
 	public GameObject DrezzStonePrefab;
 	public GameObject EntropyCannonPrefab;
+	public GameObject BoostPrefab;
 	public GameObject TimeBonusPrefab;
 	#endregion
+	
 	
 	#region monobehaviour methods
 	void Update() {
 		if(Input.GetKeyDown("1")) DrezzStone(DebugTier);
 		if(Input.GetKeyDown("2")) EntropyCannon(DebugTier);
+		if(Input.GetKeyDown("3")) SuperCBooster(DebugTier);
 		if(Input.GetKeyDown("4")) TimeBonus();
+
 		
 		if(Input.GetKeyDown(KeyCode.Space)) ConsumePowerup();
 	
@@ -99,11 +103,34 @@ public class TTSPowerup : TTSBehaviour {
 		}
 	}
 	
+
+	public void SuperCBooster(int _tier) {
+		TTSRacerSpeedBoost boost = gameObject.AddComponent<TTSRacerSpeedBoost>();
+		boost.FireBoost(BoostPrefab);
+		
+		if(_tier == 1) {
+			boost.duration = 1.0f;
+			boost.TargetForce = 80.0f;
+			vfx.BoostEffect(1.0f);
+		}
+		if(_tier == 2) {
+			boost.duration = 1.5f;
+			boost.TargetForce = 80.0f;
+			vfx.BoostEffect(1.0f);
+		}
+		if(_tier == 3) {
+			boost.duration = 3.0f;
+			boost.TargetForce = 100.0f;
+			vfx.BoostEffect(1.0f);
+		}
+	}
+
 	public void TimeBonus() {
 		GiveTimeBonus();
 	}
 	
 	
+
 	#endregion
 	
 	#region internal methods
