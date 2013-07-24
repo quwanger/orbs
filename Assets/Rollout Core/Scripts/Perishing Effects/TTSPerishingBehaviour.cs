@@ -38,6 +38,10 @@ public class TTSPerishingBehaviour : TTSBehaviour {
 				Kill();
 				Destroy(this);
 			}
+			
+			if(useKillFunctionWhenComplete) {
+				Kill ();
+			}
 		}
 	}
 	

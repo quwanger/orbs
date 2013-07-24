@@ -27,7 +27,7 @@ public class TTSLevel : MonoBehaviour {
 	}
 	
 	void Start() {
-		if(!DebugMode) {
+		if(DebugMode) {
 			StartRace();
 		} else {
 			foreach(GameObject racer in _racers) {
@@ -44,6 +44,12 @@ public class TTSLevel : MonoBehaviour {
 		}
 		set {
 			ThrowSetException("level");
+		}
+	}
+	
+	public TTSTimeManager time {
+		get {
+			return this.GetComponent<TTSTimeManager>();
 		}
 	}
 	

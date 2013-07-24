@@ -9,7 +9,9 @@ using System.Collections.Generic;
 
 public class TTSBehaviour : MonoBehaviour {
 	
-	public enum Powerup {None, EntropyCannon, DrezzStones, SuperC};
+
+
+	public enum Powerup {None, EntropyCannon, DrezzStones, TimeBonus, SuperC};
 	
 	public TTSLevel level {
 		 get { 
@@ -40,11 +42,24 @@ public class TTSBehaviour : MonoBehaviour {
 		}
 	}
 	
+	public TTSTimeManager time {
+		get {
+			return level.GetComponent<TTSTimeManager>();
+		}
+	}
+	
 	public static T GetRandomEnum<T>()
 	{
 		System.Array A = System.Enum.GetValues(typeof(T));
 		T V = (T)A.GetValue(UnityEngine.Random.Range(0,A.Length));
 		return V;
+	}
+	
+	public TTSFloatHud hud {
+		get {
+			//GGHHEETTOO
+			return GameObject.Find("hud").GetComponent<TTSFloatHud>();
+		}
 	}
 	
 }
