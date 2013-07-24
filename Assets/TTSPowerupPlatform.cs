@@ -12,6 +12,8 @@ public class TTSPowerupPlatform : MonoBehaviour {
 	private bool pickedUp = false;
 	private Collider collidedRacer;
 	
+	public bool isRandom = false;
+	
 	//weights for each of the powerups (to chance their chances of appearing)
 	private float weightBoost = 100.0f;
 	private float weightMissiles = 100.0f;
@@ -27,7 +29,8 @@ public class TTSPowerupPlatform : MonoBehaviour {
 	
 	void Start () {
 		//set an initial powerup for the platform
-		currentPowerup = getRandomPowerup();
+		if(isRandom)
+			currentPowerup = getRandomPowerup();
 		displayPowerup();
 	}
 	
@@ -58,7 +61,8 @@ public class TTSPowerupPlatform : MonoBehaviour {
 		//wait 5 second for respawn
 		yield return new WaitForSeconds(respawnTime);
 		//set new powerup
-		currentPowerup = getRandomPowerup();
+		if(isRandom)
+			currentPowerup = getRandomPowerup();
 		displayPowerup();
 		pickedUp = false;
 	}
