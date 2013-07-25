@@ -8,7 +8,7 @@ public class TTSPowerupPlatform : TTSBehaviour {
 	private float rotationSpeed = 50.0f;
 	private bool pickedUp = false;
 	private Collider collidedRacer;
-
+	public bool isRandom = false;
 	public GameObject powerupBoost;
 	public GameObject powerupShield;
 	public GameObject powerupShockwave;
@@ -26,7 +26,8 @@ public class TTSPowerupPlatform : TTSBehaviour {
 	
 	void Start () {
 		//set an initial powerup for the platform
-		currentPowerup = getRandomPowerup();
+		if(isRandom)
+			currentPowerup = getRandomPowerup();
 		displayPowerup();
 	}
 	
@@ -74,7 +75,8 @@ public class TTSPowerupPlatform : TTSBehaviour {
 		//wait 5 second for respawn
 		yield return new WaitForSeconds(respawnTime);
 		//set new powerup
-		currentPowerup = getRandomPowerup();
+		if(isRandom)
+			currentPowerup = getRandomPowerup();
 		displayPowerup();
 		pickedUp = false;
 	}
