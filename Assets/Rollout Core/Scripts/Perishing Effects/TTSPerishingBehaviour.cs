@@ -35,7 +35,12 @@ public class TTSPerishingBehaviour : TTSBehaviour {
 		
 		if((Time.time - birth)/duration > 1.0f) {
 			if(destroyWhenLifecycleComplete) {
+				Kill();
 				Destroy(this);
+			}
+			
+			if(useKillFunctionWhenComplete) {
+				Kill ();
 			}
 		}
 	}
@@ -45,7 +50,7 @@ public class TTSPerishingBehaviour : TTSBehaviour {
 	}
 	
 	
-	protected void Kill() {
+	protected virtual void Kill() {
 		//Override this function to handle destruction by yourself. Such as letting particle systems bleed out.
 	}
 }

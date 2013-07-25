@@ -9,4 +9,9 @@ public class TTSCameraEffects : TTSBehaviour {
 		}
 		gameObject.AddComponent<TTSDamageEffect>();
 	}
+	
+	public void BoostEffect(float duration) {
+		TTSCameraBoostEffect bo = gameObject.AddComponent<TTSCameraBoostEffect>();
+		bo.duration = 1.0f;
+	}
 }

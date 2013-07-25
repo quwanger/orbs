@@ -113,7 +113,10 @@ public class TTSRacer: TTSBehaviour {
 	void CalculateInputForces() {
 		//add acceleration forces...
 		if(onGround && rigidbody.velocity.magnitude < TopSpeed && canMove) {
-			rigidbody.AddForce(displayMeshComponent.forward * Input.GetAxis("Vertical") * Time.deltaTime * Acceleration);
+			rigidbody.AddForce(displayMeshComponent.forward * Input.GetAxis("Vertical") * Time.deltaTime * Acceleration);	
+		}
+		
+		if(canMove) {
 			rigidbody.AddForce(displayMeshComponent.right * Input.GetAxis("Horizontal") * Time.deltaTime * Handling);
 		}
 	}

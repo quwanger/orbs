@@ -12,7 +12,7 @@ GameObject:
   - 23: {fileID: 2300000}
   - 114: {fileID: 11400002}
   m_Layer: 9
-  m_Name: TimerDisplay
+  m_Name: BonusTime
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -107,13 +107,31 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &100012
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 400012}
+  - 102: {fileID: 10200008}
+  - 23: {fileID: 2300010}
+  - 114: {fileID: 11400012}
+  m_Layer: 9
+  m_Name: TimerDisplay
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!4 &400000
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_LocalRotation: {x: -.325337648, y: -.000339924649, z: -.00117895589, w: .945597112}
+  m_LocalRotation: {x: -.325338006, y: -.000339999999, z: -.00117900001, w: .945596993}
   m_LocalPosition: {x: 0, y: 6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -125,14 +143,15 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100002}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -47.2286835, y: -27.4055405, z: 8.26996422}
+  m_LocalPosition: {x: 720.4245, y: 340.406067, z: 1113.89685}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 400000}
+  - {fileID: 400012}
   - {fileID: 400004}
   - {fileID: 400006}
   - {fileID: 400008}
   - {fileID: 400010}
+  - {fileID: 400000}
   m_Father: {fileID: 0}
 --- !u!4 &400004
 Transform:
@@ -175,6 +194,17 @@ Transform:
   m_GameObject: {fileID: 100010}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -8, y: -5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 400002}
+--- !u!4 &400012
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100012}
+  m_LocalRotation: {x: -.325337648, y: -.000339924649, z: -.00117895589, w: .945597112}
+  m_LocalPosition: {x: 0, y: 6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400002}
@@ -268,6 +298,24 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+--- !u!23 &2300010
+Renderer:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100012}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_LightmapIndex: 255
+  m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
+  m_Materials:
+  - {fileID: 2100000, guid: f9929be8a43d15b408cb23dd53efaaa4, type: 3}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 0
+  m_LightProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
 --- !u!33 &3300000
 MeshFilter:
   m_ObjectHideFlags: 1
@@ -295,14 +343,14 @@ TextMesh:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_Text: 00:00.00
+  m_Text: +0
   m_OffsetZ: 0
   m_CharacterSize: .300000012
   m_LineSpacing: 1
-  m_Anchor: 1
+  m_Anchor: 0
   m_Alignment: 0
   m_TabSize: 4
-  m_FontSize: 50
+  m_FontSize: 30
   m_FontStyle: 0
   m_RichText: 1
   m_Font: {fileID: 12800000, guid: f9929be8a43d15b408cb23dd53efaaa4, type: 3}
@@ -360,6 +408,24 @@ TextMesh:
   m_FontStyle: 0
   m_RichText: 1
   m_Font: {fileID: 12800000, guid: f9929be8a43d15b408cb23dd53efaaa4, type: 3}
+--- !u!102 &10200008
+TextMesh:
+  serializedVersion: 3
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100012}
+  m_Text: 00:00.00
+  m_OffsetZ: 0
+  m_CharacterSize: .300000012
+  m_LineSpacing: 1
+  m_Anchor: 1
+  m_Alignment: 0
+  m_TabSize: 4
+  m_FontSize: 50
+  m_FontStyle: 0
+  m_RichText: 1
+  m_Font: {fileID: 12800000, guid: f9929be8a43d15b408cb23dd53efaaa4, type: 3}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -370,8 +436,11 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4dca59e980c4c154bb8293f3325b56b2, type: 3}
   m_Name: 
-  timeDisplay: {fileID: 10200000}
+  timeDisplay: {fileID: 10200008}
   boundCamera: {fileID: 0}
+  flashColor: {r: 1, g: .818181753, b: 0, a: 1}
+  displayBacking: {fileID: 100004}
+  bonusTime: {fileID: 100000}
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -383,8 +452,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 360b8681c3ed236468f4eacc8c5d1b56, type: 3}
   m_Name: 
   anchorMode: 0
-  padding: {x: 0, y: 2}
-  depth: 0
+  hideOffset: 10
+  padding: {x: 3.5, y: .600000024}
+  depth: 2
   frustrumDimentions: {x: 0, y: 0}
 --- !u!114 &11400004
 MonoBehaviour:
@@ -397,8 +467,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 360b8681c3ed236468f4eacc8c5d1b56, type: 3}
   m_Name: 
   anchorMode: 0
-  padding: {x: 0, y: 1.5}
-  depth: 2
+  hideOffset: 10
+  padding: {x: 0, y: .200000003}
+  depth: 4
   frustrumDimentions: {x: 0, y: 0}
 --- !u!114 &11400006
 MonoBehaviour:
@@ -411,6 +482,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 360b8681c3ed236468f4eacc8c5d1b56, type: 3}
   m_Name: 
   anchorMode: 3
+  hideOffset: 10
   padding: {x: 2, y: 2}
   depth: 0
   frustrumDimentions: {x: 0, y: 0}
@@ -425,6 +497,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 360b8681c3ed236468f4eacc8c5d1b56, type: 3}
   m_Name: 
   anchorMode: 2
+  hideOffset: 10
   padding: {x: 3.9000001, y: 1.39999998}
   depth: 0
   frustrumDimentions: {x: 0, y: 0}
@@ -439,8 +512,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 360b8681c3ed236468f4eacc8c5d1b56, type: 3}
   m_Name: 
   anchorMode: 2
+  hideOffset: 10
   padding: {x: 2, y: 2}
   depth: 0
+  frustrumDimentions: {x: 0, y: 0}
+--- !u!114 &11400012
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 360b8681c3ed236468f4eacc8c5d1b56, type: 3}
+  m_Name: 
+  anchorMode: 0
+  hideOffset: 10
+  padding: {x: 0, y: .600000024}
+  depth: 2
   frustrumDimentions: {x: 0, y: 0}
 --- !u!1001 &100100000
 Prefab:
