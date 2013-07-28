@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: Water4ExampleSimple
-  m_Shader: {fileID: 4800000, guid: 8aaff0751054e4a9cb4642d01eaf5be9, type: 3}
+  m_Shader: {fileID: 4800000, guid: 475c4a4e617a8401b84ca7b32c7cc460, type: 3}
   m_SavedProperties:
     serializedVersion: 2
     m_TexEnvs:
@@ -89,7 +89,7 @@ Material:
       data:
         first:
           name: _FresnelScale
-        second: .833945096
+        second: .38971433
       data:
         first:
           name: _HeightDisplacement
@@ -98,6 +98,10 @@ Material:
         first:
           name: _NormalsDisplacement
         second: 72.7272797
+      data:
+        first:
+          name: _GerstnerIntensity
+        second: 1
     m_Colors:
       data:
         first:
@@ -106,7 +110,7 @@ Material:
       data:
         first:
           name: _DistortParams
-        second: {r: 0, g: .109999999, b: 3.31999993, a: .0399999991}
+        second: {r: 2, g: .100000001, b: 3.31999993, a: .0399999991}
       data:
         first:
           name: _InvFadeParemeter
@@ -130,11 +134,11 @@ Material:
       data:
         first:
           name: _BaseColor
-        second: {r: .0190465599, g: .0472623594, b: .134328365, a: 0}
+        second: {r: .0760164186, g: .104477584, b: .0343060754, a: 1}
       data:
         first:
           name: _ReflectionColor
-        second: {r: .0240588151, g: .201492548, b: .0898209587, a: .470588237}
+        second: {r: .0180440936, g: .481449604, b: .604477644, a: .470588237}
       data:
         first:
           name: _SpecularColor
@@ -146,7 +150,7 @@ Material:
       data:
         first:
           name: _GAmplitude
-        second: {r: 0, g: 0, b: 0, a: 0}
+        second: {r: .0299999993, g: 0, b: 0, a: 0}
       data:
         first:
           name: _GFrequency
