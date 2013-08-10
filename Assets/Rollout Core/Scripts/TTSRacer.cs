@@ -160,11 +160,15 @@ public class TTSRacer: TTSBehaviour {
 			displayMeshComponent.forward = IdleForwardVector;	
 		}
 		
+		
+		
+		
+	}
+	
+	void LateUpdate() {
 		//sound
-		RacerSounds.pitch = TTSUtils.Remap(rigidbody.velocity.magnitude, 0f, TopSpeed, 0.5f, 1.3f, false);
-		RacerSounds.volume = TTSUtils.Remap(rigidbody.velocity.magnitude, 0f, TopSpeed, 0.5f, 1f, false);
-		
-		
+		RacerSounds.pitch = Mathf.Lerp(RacerSounds.pitch,TTSUtils.Remap(rigidbody.velocity.magnitude, 0f, TopSpeed, 0.5f, 1.0f, false),0.04f);
+		RacerSounds.volume = Mathf.Lerp(RacerSounds.volume,TTSUtils.Remap(rigidbody.velocity.magnitude, 0f, TopSpeed, 0.5f, 1f, false),0.04f);
 	}
 	
 	public float GetTiltAngle() {
