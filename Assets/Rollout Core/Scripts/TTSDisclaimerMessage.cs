@@ -14,18 +14,28 @@ public class TTSDisclaimerMessage : TTSBehaviour {
 		
 	}
 	
-	void OnGUI () {
+	void OnGUI () {		
 		GUI.color = new Color(0f,0f,0f,alpha*0.8f);
 		GUI.skin.box.normal.background = texture;
 		GUI.Box(new Rect(0,0, Screen.width, Screen.height), "");
 		GUI.color = new Color(1F,1F,1F,alpha);
-		GUI.skin.label.fontSize = 18;
-		GUI.Label (new Rect (10,10,Screen.width/2,Screen.height), 
-		" Welcome To the Pre-Alpha Release of Studio236's Codename Rollout. This is an extremely early release so please keep in mind that about 10% of the game is implemented at the moment." +
-		" You will be trying out a short level in a game mode called 'Sprint'. The Goal of sprint is to make it to the end as fast as possible, utilizing boosts and time bonus powerups as you go." +
-		" Please, leave us feedback at the end of the game to anything that you though was cool or implemented wrong. We will also be logging some anonymous info about the way you play this game to our servers" + 
-		" Thank you for playing!" 
-		);
+		GUI.skin.label.alignment = TextAnchor.UpperCenter;
+		GUI.skin.label.fontSize = 25;
+		GUI.skin.label.fontStyle = FontStyle.Bold;
+
+		var message = " Welcome To the Pre-Alpha Release of Studio236's Project Rollout." +
+			"\n\n" +
+			" This is an extremely early release so please keep in mind that about 10% of the game is implemented at the moment." +
+			" You will be trying out a short level in a game mode called 'Sprint'. The goal of Sprint is to make it to the end as fast as possible, utilizing boosts and time bonus powerups as you go." +
+			"\n\n" +
+			" Please, leave us feedback at the end of the game to anything that you though was cool or implemented wrong. We will also be logging some anonymous info about the way you play this game to our servers." +
+			"\n\n" +
+			" Thank you for playing!" +
+			"\n\n" +
+			" Use an XBOX controller or the keyboard using WASD to control your GREYHND.";		
+		message.ToUpper ();
+		
+		GUI.Label (new Rect(Screen.width/4,Screen.height/6,Screen.width/2,Screen.height), message);
 	}
 	
 	void Update() {
