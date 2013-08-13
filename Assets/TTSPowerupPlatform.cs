@@ -16,7 +16,7 @@ public class TTSPowerupPlatform : TTSBehaviour {
 	public GameObject powerupMissiles;
 	
 	public ParticleSystem EntropyParticleSystem;
-	public ParticleSystem DrezzStoneParticleSystem;
+	public ParticleSystem SuperCParticleSystem;
 	public ParticleSystem TimeBonusParticleSystem;
 	
 	public int numParticlesToEmitOnPickup = 1000;
@@ -48,8 +48,8 @@ public class TTSPowerupPlatform : TTSBehaviour {
 						EntropyParticleSystem.Emit(numParticlesToEmitOnPickup);
 						break;
 						
-						case Powerup.DrezzStones:
-						DrezzStoneParticleSystem.Emit(numParticlesToEmitOnPickup);
+						case Powerup.SuperC:
+						SuperCParticleSystem.Emit(numParticlesToEmitOnPickup);
 						break;
 						
 						case Powerup.TimeBonus:
@@ -94,7 +94,7 @@ public class TTSPowerupPlatform : TTSBehaviour {
 	private void displayPowerup(){
 		//display the current powerup as a child of the platform
 		switch (currentPowerup){
-    	case (Powerup.DrezzStones):
+    	case (Powerup.SuperC):
 			powerupMesh = Instantiate(powerupBoost, new Vector3(transform.position.x,transform.position.y+2.0f, transform.position.z), transform.rotation) as GameObject;
 			powerupMesh.transform.parent = this.transform;
 			break;

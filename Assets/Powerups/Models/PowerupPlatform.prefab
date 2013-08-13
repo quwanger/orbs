@@ -32,7 +32,7 @@ GameObject:
   - 198: {fileID: 19800000}
   - 199: {fileID: 19900000}
   m_Layer: 0
-  m_Name: DrezzStoneEmitter
+  m_Name: SuperCEmitter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -94,9 +94,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_LocalRotation: {x: -.0598575547, y: -.314652562, z: -.0231026337, w: .947036028}
-  m_LocalPosition: {x: 1225.66284, y: 249.268997, z: 817.8573}
-  m_LocalScale: {x: 1, y: 1.85611427, z: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400006}
   - {fileID: 400002}
@@ -110,7 +110,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100002}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400000}
@@ -121,7 +121,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100004}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400000}
@@ -132,7 +132,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100006}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400000}
@@ -171,7 +171,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_Mesh: {fileID: 4300000, guid: 93f039709848ec1448917e4ea32557bf, type: 3}
+  m_Mesh: {fileID: 4300000, guid: 27955d77016c9ae43a9d9530b2b5ac87, type: 3}
 --- !u!82 &8200000
 AudioSource:
   m_ObjectHideFlags: 1
@@ -285,7 +285,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dd3dced3becc8334c886dd1833d5be6c, type: 3}
   m_Name: 
-  currentPowerup: 4
+  currentPowerup: 0
   respawnTime: 5
   clip: {fileID: 8300000, guid: 5196e9f5655d57e4da1ba784341c313e, type: 3}
   isRandom: 0
@@ -295,7 +295,7 @@ MonoBehaviour:
   powerupMoreTime: {fileID: 100000, guid: e0f2938395566ca4286a882fc8d68c51, type: 2}
   powerupMissiles: {fileID: 100000, guid: 1d4bfe230fb793e448e0e083e2798beb, type: 2}
   EntropyParticleSystem: {fileID: 19800004}
-  DrezzStoneParticleSystem: {fileID: 19800000}
+  SuperCParticleSystem: {fileID: 19800000}
   TimeBonusParticleSystem: {fileID: 19800002}
   numParticlesToEmitOnPickup: 1000
   powerupMesh: {fileID: 0}
