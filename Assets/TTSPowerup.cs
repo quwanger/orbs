@@ -53,6 +53,9 @@ public class TTSPowerup : TTSBehaviour {
 			DrezzStone(tier);
 			break;
 			
+			case Powerup.SuperC:
+			SuperCBooster(tier);
+			break;
 			
 			default:
 			//Play a sound?

@@ -30,9 +30,9 @@ public class TTSLevel : MonoBehaviour {
 		if(DebugMode) {
 			StartRace();
 		} else {
-			foreach(GameObject racer in _racers) {
+			/*foreach(GameObject racer in _racers) {
 				racer.GetComponent<TTSRacer>().canMove = true;
-			}
+			}*/
 		}
 	}
 	#endregion
