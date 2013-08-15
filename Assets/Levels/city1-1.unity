@@ -4761,7 +4761,8 @@ MonoBehaviour:
   powerupMoreTime: {fileID: 100000, guid: e0f2938395566ca4286a882fc8d68c51, type: 2}
   powerupMissiles: {fileID: 100000, guid: 1d4bfe230fb793e448e0e083e2798beb, type: 2}
   EntropyParticleSystem: {fileID: 1755822092}
-  SuperCParticleSystem: {fileID: 1712506152}
+  SuperCParticleSystem: {fileID: 19800000, guid: fc2a9d202441842a7b6920cf517c0393,
+    type: 2}
   TimeBonusParticleSystem: {fileID: 233946540}
   numParticlesToEmitOnPickup: 1000
   powerupMesh: {fileID: 0}
@@ -8741,7 +8742,6 @@ Transform:
   - {fileID: 1863170146}
   - {fileID: 1578895977}
   - {fileID: 1151157455}
-  - {fileID: 1888073333}
   - {fileID: 1481914815}
   - {fileID: 1590518966}
   - {fileID: 621018602}
@@ -20864,6 +20864,10 @@ Prefab:
       propertyPath: m_PlayOnAwake
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11400012, guid: 87349ab19ab52c240b853ddb4c5e795d, type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 87349ab19ab52c240b853ddb4c5e795d, type: 2}
   m_RootGameObject: {fileID: 2053526370}
@@ -25007,7 +25011,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &524036840
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26543,7 +26547,8 @@ MonoBehaviour:
   powerupMoreTime: {fileID: 100000, guid: e0f2938395566ca4286a882fc8d68c51, type: 2}
   powerupMissiles: {fileID: 100000, guid: 1d4bfe230fb793e448e0e083e2798beb, type: 2}
   EntropyParticleSystem: {fileID: 1529697924}
-  SuperCParticleSystem: {fileID: 16124649}
+  SuperCParticleSystem: {fileID: 19800000, guid: fc2a9d202441842a7b6920cf517c0393,
+    type: 2}
   TimeBonusParticleSystem: {fileID: 1971389889}
   numParticlesToEmitOnPickup: 1000
   powerupMesh: {fileID: 0}
@@ -28606,46 +28611,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 127076177}
---- !u!1001 &579305074
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 127076177}
-    m_Modifications:
-    - target: {fileID: 400000, guid: b19a8a7822bebca44917a43abb5a4735, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 625.443787
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: b19a8a7822bebca44917a43abb5a4735, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 7.41740417
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: b19a8a7822bebca44917a43abb5a4735, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 505.536743
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: b19a8a7822bebca44917a43abb5a4735, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: .0575128272
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: b19a8a7822bebca44917a43abb5a4735, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: -.439222932
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: b19a8a7822bebca44917a43abb5a4735, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: -.0911539793
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: b19a8a7822bebca44917a43abb5a4735, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: .891889274
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: b19a8a7822bebca44917a43abb5a4735, type: 2}
-  m_RootGameObject: {fileID: 1888073329}
-  m_IsPrefabParent: 0
-  m_IsExploded: 1
 --- !u!1 &584095213
 GameObject:
   m_ObjectHideFlags: 0
@@ -45198,7 +45163,8 @@ MonoBehaviour:
   powerupMoreTime: {fileID: 100000, guid: e0f2938395566ca4286a882fc8d68c51, type: 2}
   powerupMissiles: {fileID: 100000, guid: 1d4bfe230fb793e448e0e083e2798beb, type: 2}
   EntropyParticleSystem: {fileID: 1424309952}
-  SuperCParticleSystem: {fileID: 1750509996}
+  SuperCParticleSystem: {fileID: 19800000, guid: fc2a9d202441842a7b6920cf517c0393,
+    type: 2}
   TimeBonusParticleSystem: {fileID: 1234681254}
   numParticlesToEmitOnPickup: 1000
   powerupMesh: {fileID: 0}
@@ -52226,19 +52192,19 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: b2d490a6561051640b605392f5d098a1, type: 2}
       propertyPath: m_LocalRotation.x
-      value: -.017020911
+      value: -.0170209091
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: b2d490a6561051640b605392f5d098a1, type: 2}
       propertyPath: m_LocalRotation.y
-      value: -.780580521
+      value: -.780580401
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: b2d490a6561051640b605392f5d098a1, type: 2}
       propertyPath: m_LocalRotation.z
-      value: -.0022274754
+      value: -.00222747517
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: b2d490a6561051640b605392f5d098a1, type: 2}
       propertyPath: m_LocalRotation.w
-      value: .624819577
+      value: .624819517
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b2d490a6561051640b605392f5d098a1, type: 2}
@@ -57105,7 +57071,8 @@ MonoBehaviour:
   powerupMoreTime: {fileID: 100000, guid: e0f2938395566ca4286a882fc8d68c51, type: 2}
   powerupMissiles: {fileID: 100000, guid: 1d4bfe230fb793e448e0e083e2798beb, type: 2}
   EntropyParticleSystem: {fileID: 10705194}
-  SuperCParticleSystem: {fileID: 1207047287}
+  SuperCParticleSystem: {fileID: 19800000, guid: fc2a9d202441842a7b6920cf517c0393,
+    type: 2}
   TimeBonusParticleSystem: {fileID: 1912268210}
   numParticlesToEmitOnPickup: 1000
   powerupMesh: {fileID: 0}
@@ -57847,19 +57814,19 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: b2d490a6561051640b605392f5d098a1, type: 2}
       propertyPath: m_LocalRotation.x
-      value: .0600444376
+      value: .0600444302
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: b2d490a6561051640b605392f5d098a1, type: 2}
       propertyPath: m_LocalRotation.y
-      value: .15034689
+      value: .150346875
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: b2d490a6561051640b605392f5d098a1, type: 2}
       propertyPath: m_LocalRotation.z
-      value: -.139434725
+      value: -.13943471
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: b2d490a6561051640b605392f5d098a1, type: 2}
       propertyPath: m_LocalRotation.w
-      value: .97690767
+      value: .976907551
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b2d490a6561051640b605392f5d098a1, type: 2}
@@ -58314,7 +58281,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1282298777
 Transform:
   m_ObjectHideFlags: 0
@@ -62230,7 +62197,8 @@ MonoBehaviour:
   powerupMoreTime: {fileID: 100000, guid: e0f2938395566ca4286a882fc8d68c51, type: 2}
   powerupMissiles: {fileID: 100000, guid: 1d4bfe230fb793e448e0e083e2798beb, type: 2}
   EntropyParticleSystem: {fileID: 1693530461}
-  SuperCParticleSystem: {fileID: 120483685}
+  SuperCParticleSystem: {fileID: 19800000, guid: fc2a9d202441842a7b6920cf517c0393,
+    type: 2}
   TimeBonusParticleSystem: {fileID: 2005414326}
   numParticlesToEmitOnPickup: 1000
   powerupMesh: {fileID: 0}
@@ -64426,7 +64394,8 @@ MonoBehaviour:
   powerupMoreTime: {fileID: 100000, guid: e0f2938395566ca4286a882fc8d68c51, type: 2}
   powerupMissiles: {fileID: 100000, guid: 1d4bfe230fb793e448e0e083e2798beb, type: 2}
   EntropyParticleSystem: {fileID: 1621140785}
-  SuperCParticleSystem: {fileID: 733389628}
+  SuperCParticleSystem: {fileID: 19800000, guid: fc2a9d202441842a7b6920cf517c0393,
+    type: 2}
   TimeBonusParticleSystem: {fileID: 527719019}
   numParticlesToEmitOnPickup: 1000
   powerupMesh: {fileID: 0}
@@ -70767,7 +70736,8 @@ MonoBehaviour:
   powerupMoreTime: {fileID: 100000, guid: e0f2938395566ca4286a882fc8d68c51, type: 2}
   powerupMissiles: {fileID: 100000, guid: 1d4bfe230fb793e448e0e083e2798beb, type: 2}
   EntropyParticleSystem: {fileID: 1227478223}
-  SuperCParticleSystem: {fileID: 2044860845}
+  SuperCParticleSystem: {fileID: 19800000, guid: fc2a9d202441842a7b6920cf517c0393,
+    type: 2}
   TimeBonusParticleSystem: {fileID: 1538088534}
   numParticlesToEmitOnPickup: 1000
   powerupMesh: {fileID: 0}
@@ -80847,7 +80817,8 @@ MonoBehaviour:
   powerupMoreTime: {fileID: 100000, guid: e0f2938395566ca4286a882fc8d68c51, type: 2}
   powerupMissiles: {fileID: 100000, guid: 1d4bfe230fb793e448e0e083e2798beb, type: 2}
   EntropyParticleSystem: {fileID: 414640280}
-  SuperCParticleSystem: {fileID: 258020496}
+  SuperCParticleSystem: {fileID: 19800000, guid: fc2a9d202441842a7b6920cf517c0393,
+    type: 2}
   TimeBonusParticleSystem: {fileID: 238698481}
   numParticlesToEmitOnPickup: 1000
   powerupMesh: {fileID: 0}
@@ -84067,7 +84038,8 @@ MonoBehaviour:
   powerupMoreTime: {fileID: 100000, guid: e0f2938395566ca4286a882fc8d68c51, type: 2}
   powerupMissiles: {fileID: 100000, guid: 1d4bfe230fb793e448e0e083e2798beb, type: 2}
   EntropyParticleSystem: {fileID: 1915146138}
-  SuperCParticleSystem: {fileID: 557848251}
+  SuperCParticleSystem: {fileID: 19800000, guid: fc2a9d202441842a7b6920cf517c0393,
+    type: 2}
   TimeBonusParticleSystem: {fileID: 584947349}
   numParticlesToEmitOnPickup: 1000
   powerupMesh: {fileID: 0}
@@ -89893,71 +89865,6 @@ Prefab:
   m_RootGameObject: {fileID: 1095424827}
   m_IsPrefabParent: 0
   m_IsExploded: 1
---- !u!1 &1888073329
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 100000, guid: b19a8a7822bebca44917a43abb5a4735, type: 2}
-  m_PrefabInternal: {fileID: 579305074}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 1888073333}
-  - 193: {fileID: 1888073332}
-  - 33: {fileID: 1888073331}
-  - 23: {fileID: 1888073330}
-  m_Layer: 0
-  m_Name: Summer Tree
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!23 &1888073330
-Renderer:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 2300000, guid: b19a8a7822bebca44917a43abb5a4735,
-    type: 2}
-  m_PrefabInternal: {fileID: 579305074}
-  m_GameObject: {fileID: 1888073329}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_LightmapIndex: 255
-  m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
-  m_Materials:
-  - {fileID: 2100000, guid: b19a8a7822bebca44917a43abb5a4735, type: 2}
-  - {fileID: 2100002, guid: b19a8a7822bebca44917a43abb5a4735, type: 2}
-  m_SubsetIndices: 
-  m_StaticBatchRoot: {fileID: 0}
-  m_UseLightProbes: 0
-  m_LightProbeAnchor: {fileID: 0}
-  m_ScaleInLightmap: 1
---- !u!33 &1888073331
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 3300000, guid: b19a8a7822bebca44917a43abb5a4735,
-    type: 2}
-  m_PrefabInternal: {fileID: 579305074}
-  m_GameObject: {fileID: 1888073329}
-  m_Mesh: {fileID: 4300000, guid: b19a8a7822bebca44917a43abb5a4735, type: 2}
---- !u!193 &1888073332
-Tree:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 19300000, guid: b19a8a7822bebca44917a43abb5a4735,
-    type: 2}
-  m_PrefabInternal: {fileID: 579305074}
-  m_GameObject: {fileID: 1888073329}
-  m_TreeData: {fileID: 11400000, guid: b19a8a7822bebca44917a43abb5a4735, type: 2}
---- !u!4 &1888073333
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 400000, guid: b19a8a7822bebca44917a43abb5a4735, type: 2}
-  m_PrefabInternal: {fileID: 579305074}
-  m_GameObject: {fileID: 1888073329}
-  m_LocalRotation: {x: .0575128272, y: -.439222932, z: -.0911539793, w: .891889274}
-  m_LocalPosition: {x: 625.443787, y: 7.41740417, z: 505.536743}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 127076177}
 --- !u!1 &1889833041
 GameObject:
   m_ObjectHideFlags: 0
@@ -96384,7 +96291,8 @@ MonoBehaviour:
   powerupMoreTime: {fileID: 100000, guid: e0f2938395566ca4286a882fc8d68c51, type: 2}
   powerupMissiles: {fileID: 100000, guid: 1d4bfe230fb793e448e0e083e2798beb, type: 2}
   EntropyParticleSystem: {fileID: 1968886898}
-  SuperCParticleSystem: {fileID: 1930727382}
+  SuperCParticleSystem: {fileID: 19800000, guid: fc2a9d202441842a7b6920cf517c0393,
+    type: 2}
   TimeBonusParticleSystem: {fileID: 1534861992}
   numParticlesToEmitOnPickup: 1000
   powerupMesh: {fileID: 0}
@@ -97922,7 +97830,8 @@ MonoBehaviour:
   powerupMoreTime: {fileID: 100000, guid: e0f2938395566ca4286a882fc8d68c51, type: 2}
   powerupMissiles: {fileID: 100000, guid: 1d4bfe230fb793e448e0e083e2798beb, type: 2}
   EntropyParticleSystem: {fileID: 1906738765}
-  SuperCParticleSystem: {fileID: 149734108}
+  SuperCParticleSystem: {fileID: 19800000, guid: fc2a9d202441842a7b6920cf517c0393,
+    type: 2}
   TimeBonusParticleSystem: {fileID: 1630592399}
   numParticlesToEmitOnPickup: 1000
   powerupMesh: {fileID: 0}
@@ -99341,7 +99250,8 @@ MonoBehaviour:
   powerupMoreTime: {fileID: 100000, guid: e0f2938395566ca4286a882fc8d68c51, type: 2}
   powerupMissiles: {fileID: 100000, guid: 1d4bfe230fb793e448e0e083e2798beb, type: 2}
   EntropyParticleSystem: {fileID: 598304975}
-  SuperCParticleSystem: {fileID: 288652984}
+  SuperCParticleSystem: {fileID: 19800000, guid: fc2a9d202441842a7b6920cf517c0393,
+    type: 2}
   TimeBonusParticleSystem: {fileID: 808635114}
   numParticlesToEmitOnPickup: 1000
   powerupMesh: {fileID: 0}
@@ -105117,7 +105027,7 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 402410389}
   m_GameObject: {fileID: 2053526370}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bef3d242a13c447ac90c2d2dc213b1ea, type: 3}
   m_Name: 
@@ -105747,7 +105657,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2059316067
 Transform:
   m_ObjectHideFlags: 0
@@ -105941,7 +105851,8 @@ MonoBehaviour:
   powerupMoreTime: {fileID: 100000, guid: e0f2938395566ca4286a882fc8d68c51, type: 2}
   powerupMissiles: {fileID: 100000, guid: 1d4bfe230fb793e448e0e083e2798beb, type: 2}
   EntropyParticleSystem: {fileID: 1997854221}
-  SuperCParticleSystem: {fileID: 123672628}
+  SuperCParticleSystem: {fileID: 19800000, guid: fc2a9d202441842a7b6920cf517c0393,
+    type: 2}
   TimeBonusParticleSystem: {fileID: 739111335}
   numParticlesToEmitOnPickup: 1000
   powerupMesh: {fileID: 0}
@@ -107321,6 +107232,22 @@ Prefab:
     - target: {fileID: 11400002, guid: bf46875515a25a247a2a558437133fc4, type: 2}
       propertyPath: padding.y
       value: .600000024
+      objectReference: {fileID: 0}
+    - target: {fileID: 100010, guid: bf46875515a25a247a2a558437133fc4, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 100006, guid: bf46875515a25a247a2a558437133fc4, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 100008, guid: bf46875515a25a247a2a558437133fc4, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 100004, guid: bf46875515a25a247a2a558437133fc4, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bf46875515a25a247a2a558437133fc4, type: 2}
