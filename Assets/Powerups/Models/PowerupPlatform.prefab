@@ -295,11 +295,11 @@ MonoBehaviour:
   powerupMoreTime: {fileID: 100000, guid: e0f2938395566ca4286a882fc8d68c51, type: 2}
   powerupMissiles: {fileID: 100000, guid: 1d4bfe230fb793e448e0e083e2798beb, type: 2}
   EntropyParticleSystem: {fileID: 19800004}
-  SuperCParticleSystem: {fileID: 19800000, guid: fc2a9d202441842a7b6920cf517c0393,
-    type: 2}
+  SuperCParticleSystem: {fileID: 19800000}
   TimeBonusParticleSystem: {fileID: 19800002}
   numParticlesToEmitOnPickup: 1000
   powerupMesh: {fileID: 0}
+  pickupParticleSystem: {fileID: 0}
 --- !u!136 &13600000
 CapsuleCollider:
   m_ObjectHideFlags: 1
