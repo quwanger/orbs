@@ -148,6 +148,9 @@ public class TTSLevel : MonoBehaviour {
 		}
 	}
 	
+	public void FinishLevel() {
+		GetComponent<TTSTimeManager>().StopTimer();
+	}
 	
 	#endregion
 }
