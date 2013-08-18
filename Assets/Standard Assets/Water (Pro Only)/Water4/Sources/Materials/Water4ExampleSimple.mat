@@ -34,16 +34,16 @@ Material:
           m_Offset: {x: 0, y: 0}
       data:
         first:
-          name: _RefractionTex
+          name: _ShoreTex
         second:
-          m_Texture: {fileID: 0}
+          m_Texture: {fileID: 2800000, guid: 36dd0b22da8874ed38075789055ca664, type: 3}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
       data:
         first:
-          name: _ShoreTex
+          name: _RefractionTex
         second:
-          m_Texture: {fileID: 2800000, guid: 36dd0b22da8874ed38075789055ca664, type: 3}
+          m_Texture: {fileID: 0}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
       data:
@@ -92,21 +92,25 @@ Material:
         second: .38971433
       data:
         first:
+          name: _GerstnerIntensity
+        second: 1
+      data:
+        first:
           name: _HeightDisplacement
         second: 2.33703184
       data:
         first:
           name: _NormalsDisplacement
         second: 72.7272797
-      data:
-        first:
-          name: _GerstnerIntensity
-        second: 1
     m_Colors:
       data:
         first:
           name: _Color
         second: {r: 1, g: 1, b: 1, a: 1}
+      data:
+        first:
+          name: _SpecularColor
+        second: {r: .820895553, g: .805815935, b: .771886885, a: .309803933}
       data:
         first:
           name: _DistortParams
@@ -138,11 +142,7 @@ Material:
       data:
         first:
           name: _ReflectionColor
-        second: {r: .0180440936, g: .481449604, b: .604477644, a: .470588237}
-      data:
-        first:
-          name: _SpecularColor
-        second: {r: .820895553, g: .805815935, b: .771886885, a: .309803933}
+        second: {r: .274509817, g: .333333343, b: .380392164, a: .470588237}
       data:
         first:
           name: _WorldLightDir
