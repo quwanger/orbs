@@ -46,17 +46,17 @@ public class TTSPowerupPlatform : TTSBehaviour {
 					collider.gameObject.GetComponent<TTSPowerup>().GivePowerup(this.currentPowerup);
 					switch(currentPowerup) {
 						case Powerup.EntropyCannon:
-						pickupParticleSystem = Instantiate(EntropyParticleSystem, new Vector3(transform.position.x,transform.position.y+2.0f, transform.position.z), transform.rotation) as ParticleSystem;
+						pickupParticleSystem = Instantiate(EntropyParticleSystem, new Vector3(transform.position.x,transform.position.y+2.0f, transform.position.z), powerupMesh.transform.rotation) as ParticleSystem;
 						pickupParticleSystem.Emit(numParticlesToEmitOnPickup);
 						break;
 						
 						case Powerup.SuperC:
-						pickupParticleSystem = Instantiate(SuperCParticleSystem, new Vector3(transform.position.x,transform.position.y+2.0f, transform.position.z), transform.rotation) as ParticleSystem;
+						pickupParticleSystem = Instantiate(SuperCParticleSystem, new Vector3(transform.position.x,transform.position.y+2.0f, transform.position.z), powerupMesh.transform.rotation) as ParticleSystem;
 						pickupParticleSystem.Emit(numParticlesToEmitOnPickup);
 						break;
 						
 						case Powerup.TimeBonus:
-						pickupParticleSystem = Instantiate(TimeBonusParticleSystem, new Vector3(transform.position.x,transform.position.y+2.0f, transform.position.z), transform.rotation) as ParticleSystem;
+						pickupParticleSystem = Instantiate(TimeBonusParticleSystem, new Vector3(transform.position.x,transform.position.y+2.0f, transform.position.z), powerupMesh.transform.rotation) as ParticleSystem;
 						pickupParticleSystem.Emit(numParticlesToEmitOnPickup);
 						break;
 						

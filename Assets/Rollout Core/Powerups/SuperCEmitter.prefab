@@ -41,7 +41,7 @@ ParticleSystem:
   looping: 0
   prewarm: 0
   playOnAwake: 0
-  moveWithTransform: 0
+  moveWithTransform: 1
   InitialModule:
     enabled: 1
     startLifetime:
@@ -283,7 +283,7 @@ ParticleSystem:
     boxX: 1
     boxY: 1
     boxZ: 1
-    placementMode: 2
+    placementMode: 0
     m_Mesh: {fileID: 4300000, guid: 32bd493b9b1ab88458d1785cd3fc04b4, type: 3}
     randomDirection: 0
   EmissionModule:
@@ -723,29 +723,19 @@ ParticleSystem:
       minCurve:
         serializedVersion: 2
         m_Curve:
-        - time: 0
-          value: -1
-          inSlope: 0
-          outSlope: 0
-          tangentMode: 0
-        - time: .599134207
-          value: 1
-          inSlope: 1.44928694
-          outSlope: 1.44928694
-          tangentMode: 0
-        - time: .985981286
-          value: -1
+        - time: .0799999982
+          value: -.703703701
           inSlope: 0
           outSlope: 0
           tangentMode: 0
         m_PreInfinity: 2
         m_PostInfinity: 2
       minMaxState: 2
-    inWorldSpace: 1
+    inWorldSpace: 0
     randomizePerFrame: 0
   ExternalForcesModule:
-    enabled: 1
-    multiplier: 2.71000004
+    enabled: 0
+    multiplier: .0700000003
   ClampVelocityModule:
     enabled: 0
     x:

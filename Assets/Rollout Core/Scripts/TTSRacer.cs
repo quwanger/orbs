@@ -109,7 +109,6 @@ public class TTSRacer: TTSBehaviour {
 		
 	}
 	
-	
 	void CalculateInputForces() {
 		//add acceleration forces...
 		if(onGround && rigidbody.velocity.magnitude < TopSpeed && canMove) {
