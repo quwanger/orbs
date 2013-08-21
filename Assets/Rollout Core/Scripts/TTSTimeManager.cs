@@ -12,7 +12,7 @@ public class TTSTimeManager : MonoBehaviour {
 	public float bonusTime {get; private set;}
 	
 	void Start () {
-		bonusTime = 1.0f;
+		bonusTime = 0.0f;
 	}
 	
 	void Update () {
@@ -24,8 +24,8 @@ public class TTSTimeManager : MonoBehaviour {
 		int d = (int)(timeInMillis * 100.0f);
     	int minutes = d / (60 * 100);
     	int seconds = (d % (60 * 100)) / 100;
-    	int hundredths = (d % 10);
-    	return string.Format("{0:00}:{1:00}", minutes, seconds);
+    	int hundredths = (d % 100);
+    	return string.Format("{0:00}:{1:00}:{2:00}", minutes, seconds, hundredths);
 	}
 	
 	public void StartTimer() {
