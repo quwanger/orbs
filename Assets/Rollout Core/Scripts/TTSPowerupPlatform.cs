@@ -26,6 +26,8 @@ public class TTSPowerupPlatform : TTSBehaviour {
 	
 	
 	void Start () {
+		audio.volume = 0.75f;
+
 		//set an initial powerup for the platform
 		if(isRandom)
 			currentPowerup = getRandomPowerup();
