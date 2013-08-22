@@ -11,14 +11,15 @@ public class TTSLevel : MonoBehaviour {
 	
 	
 	public bool raceHasStarted = false;
+	public bool raceHasFinished = false;
 	public GameObject countdown;
 	public bool DebugMode = true;
 	
+	private TTSScoreboard scoreboard;
 	
 	public Font[] fonts;
 	
 	public static TTSLevel instance { get; private set;}
-	
 	
 	#region MonoBehaviour Methods
 	void Awake() {
@@ -107,6 +108,7 @@ public class TTSLevel : MonoBehaviour {
 	
 	public void StartRace() {
 		raceHasStarted = true;
+		
 		GameObject.Find("Soundtrack").GetComponent<TTSSoundtrackManager>().StartSoundtrack();
 		
 		foreach(GameObject racer in racers) {
@@ -149,7 +151,15 @@ public class TTSLevel : MonoBehaviour {
 	}
 	
 	public void FinishLevel() {
+		
+		/*foreach(GameObject racer in racers) {
+			racer.GetComponent<TTSRacer>().SlowToStop();
+		}*/
+		
+		raceHasFinished = true;
+		
 		GetComponent<TTSTimeManager>().StopTimer();
+		scoreboard = this.gameObject.AddComponent<TTSScoreboard>();
 	}
 	
 	#endregion

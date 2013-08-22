@@ -23,19 +23,19 @@ public class TTSDisclaimerMessage : TTSBehaviour {
 		GUI.skin.label.fontSize = 25;
 		GUI.skin.label.fontStyle = FontStyle.Bold;
 
-		var message = " Welcome To the Pre-Alpha Release of Studio236's Project Rollout." +
+		var message = " Welcome to the 0.1.0 Alpha release of Studio236's ORBS." +
 			"\n\n" +
-			" This is an extremely early release so please keep in mind that about 10% of the game is implemented at the moment." +
+			" This is an extremely early release so please keep in mind that only about 5% of the game is implemented at the moment." +
 			" You will be trying out a short level in a game mode called 'Sprint'. The goal of Sprint is to make it to the end as fast as possible, utilizing boosts and time bonus powerups as you go." +
 			"\n\n" +
-			" Please, leave us feedback at the end of the game to anything that you though was cool or implemented wrong. We will also be logging some anonymous info about the way you play this game to our servers." +
+			" Please fill out the feedback form that will appear at the end of your experience. All feedback is greatly appreciated and will help us to develop a fun and exciting game for gamers alike." +
 			"\n\n" +
 			" Thank you for playing!" +
 			"\n\n" +
-			" Use an XBOX controller or the keyboard using WASD to control your GREYHND.";		
+			" Use an Xbox controller or the keyboard using WASD or the arrow keys to control your GREYHND, and the 'space' bar or the 'a' button on the Xbox controller to activate your boost powerup.";		
 		message.ToUpper ();
 		
-		GUI.Label (new Rect(Screen.width/4,Screen.height/6,Screen.width/2,Screen.height), message);
+		GUI.Label (new Rect(Screen.width/4,Screen.height/9,Screen.width/2,Screen.height), message);
 	}
 	
 	void Update() {
