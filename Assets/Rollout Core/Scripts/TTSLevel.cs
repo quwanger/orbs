@@ -152,6 +152,11 @@ public class TTSLevel : MonoBehaviour {
 	}
 	
 	public void FinishLevel() {
+		
+		foreach(GameObject racer in racers) {
+			racer.GetComponent<TTSRacer>().SlowToStop();
+		}
+		
 		GetComponent<TTSTimeManager>().StopTimer();
 		scoreboard = this.gameObject.AddComponent<TTSScoreboard>();
 	}

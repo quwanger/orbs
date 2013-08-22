@@ -67,7 +67,7 @@ public class TTSRacer: TTSBehaviour {
 	#endregion
 	
 	
-	
+	private float smooth;
 	 
 	
 	void Awake() {
@@ -118,6 +118,10 @@ public class TTSRacer: TTSBehaviour {
 		if(canMove) {
 			rigidbody.AddForce(displayMeshComponent.right * Input.GetAxis("Horizontal") * Time.deltaTime * Handling);
 		}
+	}
+	
+	public void SlowToStop(){
+		rigidbody.velocity = Vector3.Lerp(rigidbody.velocity, new Vector3(0, 0, 0), Time.deltaTime*smooth);
 	}
 	
 	void OnCollisionEnter(Collision collision) {
