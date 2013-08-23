@@ -24,8 +24,8 @@ public class TTSPowerup : TTSBehaviour {
 		if(Input.GetKeyDown("3")) SuperCBooster(DebugTier);
 		if(Input.GetKeyDown("4")) TimeBonus();
 
-		
-		if(Input.GetKeyDown(KeyCode.Space)) ConsumePowerup();
+		//if you hit space or the 'a' button on an Xbox controller
+		if(Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown("joystick button 0")) ConsumePowerup();
 	
 	}
 	#endregion
@@ -118,11 +118,11 @@ public class TTSPowerup : TTSBehaviour {
 		}
 		if(_tier == 2) {
 			boost.duration = 1.5f;
-			boost.TargetForce = 80.0f;
+			boost.TargetForce = 90.0f;
 			vfx.BoostEffect(1.0f);
 		}
 		if(_tier == 3) {
-			boost.duration = 3.0f;
+			boost.duration = 2.0f;
 			boost.TargetForce = 100.0f;
 			vfx.BoostEffect(1.0f);
 		}
