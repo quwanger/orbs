@@ -22,17 +22,19 @@ public class TTSScoreboardContent : TTSBehaviour {
 		GUI.Box(new Rect(0,0, Screen.width, Screen.height), "");
 		GUI.color = new Color(1F,1F,1F,alpha);
 		GUI.skin.label.alignment = TextAnchor.UpperCenter;
-		GUI.skin.label.fontSize = 25;
+		GUI.skin.label.fontSize = 35;
 		GUI.skin.label.fontStyle = FontStyle.Bold;
 		
 		var message = "Your time was: " + 
 			GameObject.Find("TTSLevel").GetComponent<TTSTimeManager>().GetCurrentTimeString() +
 			"\n\n" + 
+			"Pressing any key will take you to our feedback form!" +
+			"\n\n" +
 			"Press the 'r' key to play again!";
 					
 		message.ToUpper ();
 		
-		GUI.Label (new Rect(Screen.width/4,Screen.height/6,Screen.width/2,Screen.height), message);
+		GUI.Label (new Rect(Screen.width/4,Screen.height/4,Screen.width/2,Screen.height), message);
 		
 		//GUI.color = Color.yellow;
 		// only used for placing "labelRectangle"
