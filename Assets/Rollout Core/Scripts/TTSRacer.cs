@@ -67,7 +67,8 @@ public class TTSRacer: TTSBehaviour {
 	#endregion
 	
 	
-	
+	private float smooth;
+	private float stopSpeed = 0.05f;
 	 
 	
 	void Awake() {
@@ -99,8 +100,10 @@ public class TTSRacer: TTSBehaviour {
 	}
 	
 	void FixedUpdate () {
-		if(IsPlayerControlled) {
+		if(IsPlayerControlled && !level.raceHasFinished) {
 			CalculateInputForces();	
+		}else{
+			SlowToStop();
 		}
 		
 		CalculateBodyOrientation();
@@ -119,6 +122,10 @@ public class TTSRacer: TTSBehaviour {
 		if(canMove) {
 			rigidbody.AddForce(displayMeshComponent.right * Input.GetAxis("Horizontal") * Time.deltaTime * Handling);
 		}
+	}
+	
+	public void SlowToStop(){
+		rigidbody.velocity = Vector3.Lerp(rigidbody.velocity, new Vector3(0, 0, 0), stopSpeed);
 	}
 	
 	void OnCollisionEnter(Collision collision) {
