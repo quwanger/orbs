@@ -180,6 +180,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d93680be1655194ea97164dd24e94ca, type: 3}
   m_Name: 
   turnSpeed: 0
+  rigAcceleration: 0
+  rigSpeed: 0
+  rigHandling: 0
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -198,10 +201,11 @@ MonoBehaviour:
   - {fileID: 8300000, guid: b29d83db0b1d1e34b88b7b8eb07430c8, type: 3}
   - {fileID: 8300000, guid: 07185902a679f8a45a62fb7954bf000e, type: 3}
   SparksEmitter: {fileID: 100000, guid: 87c7b3f1a056e5d4fb78ff71783a1593, type: 2}
+  CurrentRig: {fileID: 100000, guid: 4222a4c25048c4676885fb09d185cfcc, type: 2}
   canMove: 0
-  TopSpeed: 50
+  TopSpeed: 100
   Acceleration: 2000
-  Handling: 2000
+  Handling: 3000
 --- !u!114 &11400004
 MonoBehaviour:
   m_ObjectHideFlags: 1
