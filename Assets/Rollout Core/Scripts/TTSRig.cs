@@ -5,6 +5,11 @@ public class TTSRig : MonoBehaviour {
 
 	public float turnSpeed;
 	
+	//attributes
+	public float rigAcceleration;
+	public float rigSpeed;
+	public float rigHandling;
+	
 	void Update () {
 		
 		//this rig is nested under display mesh so that it keeps the same position
