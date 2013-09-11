@@ -56,20 +56,19 @@ public class TTSRacer: TTSBehaviour {
 	private float TiltAngle = 0.0f;
 	public AudioClip[] DamageSounds;
 	public GameObject SparksEmitter;
+	public GameObject CurrentRig;
 	public bool canMove = false;
 	private float MinimumVelocityToAnimateSteering = 1.0f;
 	#endregion
 
 	#region gameplay vars
-	public float TopSpeed = 100.0f;
-	public float Acceleration = 2000.0f;
-	public float Handling = 3000.0f;
+	public float TopSpeed = 250.0f;
+	public float Acceleration = 8000.0f;
+	public float Handling = 11000.0f;
 	#endregion
-	
 	
 	private float smooth;
 	private float stopSpeed = 0.05f;
-	 
 	
 	void Awake() {
 		level.RegisterRacer(gameObject);
@@ -97,6 +96,11 @@ public class TTSRacer: TTSBehaviour {
 		RacerSfx = gameObject.AddComponent<AudioSource>();
 		RacerSfx.rolloffMode = AudioRolloffMode.Linear;
 		RacerSfx.volume = 0.5f;
+		
+		//Apply Attributes
+		TopSpeed = TopSpeed + (100.0f * CurrentRig.GetComponent<TTSRig>().rigSpeed);
+		Acceleration = Acceleration + (100.0f * CurrentRig.GetComponent<TTSRig>().rigAcceleration);
+		Handling = Handling + (100.0f * CurrentRig.GetComponent<TTSRig>().rigHandling);
 	}
 	
 	void FixedUpdate () {
