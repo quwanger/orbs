@@ -4,12 +4,25 @@ using System.Collections.Generic;
 public class TTSRacerSpeedBoost : TTSPerishingBehaviour {
 
 	public float TargetForce = 100.0f;
+	public float duration = 5.0f;
+	public float boostDuration = -1.0f;
 	private GameObject go;
 	private List<TrailRenderer> trailRenderers = new List<TrailRenderer>();
 	
+	private bool generateParticles = true;
+	
+	void Awake () {
+		this.useKillFunctionWhenComplete = true;
+	}
 	protected override void OnPerishingUpdate(float progress) {
-		rigidbody.AddForce(GetComponent<TTSRacer>().displayMeshComponent.forward * Mathf.Lerp (TargetForce, 0.0f, progress));
-		
+		if(progressSinceBirth < boostDuration){
+			Debug.Log("boosting " + progress);
+			rigidbody.AddForce(GetComponent<TTSRacer>().displayMeshComponent.forward * Mathf.Lerp (TargetForce, 0.0f, progress));
+		}
+		else if(generateParticles == true){
+			stopParticles();
+			generateParticles = false;
+		}
 	}
 	
 	public void FireBoost(GameObject booster){
@@ -24,7 +37,7 @@ public class TTSRacerSpeedBoost : TTSPerishingBehaviour {
 		}
 	}
 	
-	protected override void Kill(){
+	private void stopParticles(){
 		foreach(Transform child in go.transform) {
 			if(child.GetComponent<ParticleSystem>()) {
 				child.GetComponent<ParticleSystem>().Stop();
@@ -33,7 +46,11 @@ public class TTSRacerSpeedBoost : TTSPerishingBehaviour {
 		go.transform.parent = null;
 		go.transform.position = this.transform.position;
 		Invoke("Cleanup", 5.0f);
+	}
+	
+	protected override void Kill(){
 		
+		Destroy(go);
 	}
 	
 	void Cleanup() {

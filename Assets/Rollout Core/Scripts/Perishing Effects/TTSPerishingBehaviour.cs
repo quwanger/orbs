@@ -7,6 +7,7 @@ public class TTSPerishingBehaviour : TTSBehaviour {
 	public bool destroyWhenLifecycleComplete = true;
 	public bool useKillFunctionWhenComplete = false;
 	public bool useFixedUpdate = true;
+	public float progressSinceBirth = 0.0f;
 	
 	private float birth;
 	private float _progress = 0.0f;
@@ -29,14 +30,15 @@ public class TTSPerishingBehaviour : TTSBehaviour {
 	
 	private void Tick() {
 		
-		_progress = Mathf.Lerp(0,1.0f,(Time.time - birth)/duration);
+		progressSinceBirth = Time.time - birth;
+		_progress = Mathf.Lerp(0,1.0f, progressSinceBirth/duration);
 		
 		OnPerishingUpdate(_progress);
 		
-		if((Time.time - birth)/duration > 1.0f) {
+		if(progressSinceBirth/duration > 1.0f) {
 			if(destroyWhenLifecycleComplete) {
 				Kill();
-				Destroy(this);
+				Destroy(this);				
 			}
 			
 			if(useKillFunctionWhenComplete) {
