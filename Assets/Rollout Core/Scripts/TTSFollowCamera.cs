@@ -16,12 +16,12 @@ public class TTSFollowCamera : TTSBehaviour
 	public Transform target;
 
 	// The distance in the x-z plane to the target
-	public float distance = 5.0f;
+	public float distance = 5.0f; 
 
 	// the height we want the camera to be above the target
-	private float height = 4.0f;
-	public float heightDamping = 2.0f;
-	public float rotationDamping = 3.0f;
+	private float height = 4.0f;  			
+	public float heightDamping = 2.0f;			
+	public float rotationDamping = 3.0f;		
 	
 	private float racerTopSpeed = -1.0f;
 
@@ -32,10 +32,10 @@ public class TTSFollowCamera : TTSBehaviour
 	public float shakiness = 0.15f;
 
 	// Camera Effects handles
-	public float baseDistance = 4.0f;
-	public float maxDistance = 6.0f;
-	public float baseHeight = 4.0f;
-	public float minHeight = 0.5f;
+	public float baseDistance = 5.0f; // 							
+	public float maxDistance = 7.0f; //							
+ 	public float baseHeight = 3.5f; //								
+	public float minHeight = 2.0f;
 	public float Base_FOV = 72.9f;
 	public float Max_FOV = 77.0f;
 
