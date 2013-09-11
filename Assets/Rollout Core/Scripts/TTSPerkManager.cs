@@ -5,7 +5,6 @@ public class TTSPerkManager : TTSBehaviour {
 	
 	public float distance;
 	public GameObject finishlineObject;
-	public GameObject playerObject;
 	public bool hasBoosted = false;
 	public GameObject BoostPrefab;
 	
@@ -21,7 +20,7 @@ public class TTSPerkManager : TTSBehaviour {
 			HotStart();
 		}
 		
-		distance = Vector3.Distance(playerObject.transform.position, finishlineObject.transform.position);
+		distance = Vector3.Distance(this.transform.position, finishlineObject.transform.position);
 		
 		if(distance < 170 && !hasBoosted){
 			hasBoosted = true;

@@ -16,7 +16,6 @@ public class TTSRacerSpeedBoost : TTSPerishingBehaviour {
 	}
 	protected override void OnPerishingUpdate(float progress) {
 		if(progressSinceBirth < boostDuration){
-			Debug.Log("boosting " + progress);
 			rigidbody.AddForce(GetComponent<TTSRacer>().displayMeshComponent.forward * Mathf.Lerp (TargetForce, 0.0f, progress));
 		}
 		else if(generateParticles == true){

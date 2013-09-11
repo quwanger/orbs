@@ -18,7 +18,7 @@ public class TTSBehaviour : MonoBehaviour {
 			if(TTSLevel.instance != null) {
 				return TTSLevel.instance; 
 			} else {
-				Debug.LogError("FATAL: You need to have a TTSLevel object in the scene to use level.");
+				//Debug.LogError("FATAL: You need to have a TTSLevel object in the scene to use level.");
 				return new TTSLevel();
 			}
 		}

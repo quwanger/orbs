@@ -23,6 +23,7 @@ public class TTSLevel : MonoBehaviour {
 	
 	#region MonoBehaviour Methods
 	void Awake() {
+		Debug.Log("LEVEL");
 		instance = this;
 		
 	}
