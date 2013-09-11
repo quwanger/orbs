@@ -8,10 +8,10 @@ using System.Collections.Generic;
 
 
 public class TTSBehaviour : MonoBehaviour {
-	
-
 
 	public enum Powerup {None, EntropyCannon, DrezzStones, TimeBonus, SuperC};
+	
+	public enum Perks {None, PhotoFinish, HotStart};
 	
 	public TTSLevel level {
 		 get { 
