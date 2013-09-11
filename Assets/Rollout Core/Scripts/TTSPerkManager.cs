@@ -28,7 +28,7 @@ public class TTSPerkManager : TTSBehaviour {
 			PhotoFinish();		
 		}
 		
-		IncreasedAcceleration();
+		//IncreasedAcceleration();
 	}
 	
 	public void PhotoFinish() {
@@ -65,9 +65,9 @@ public class TTSPerkManager : TTSBehaviour {
 		}
 	}
 	
-	public void IncreasedAcceleration() {
+	/*public void IncreasedAcceleration() {
 		this.GetComponent<TTSRacer>().Acceleration = 3000.0f;
-	}
+	}*/
 	
 }
 
