@@ -4,7 +4,6 @@ using System.Collections.Generic;
 public class TTSRacerSpeedBoost : TTSPerishingBehaviour {
 
 	public float TargetForce = 100.0f;
-	public float duration = 5.0f;
 	public float boostDuration = -1.0f;
 	private GameObject go;
 	private List<TrailRenderer> trailRenderers = new List<TrailRenderer>();

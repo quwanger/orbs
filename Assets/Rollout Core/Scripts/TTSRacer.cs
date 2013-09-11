@@ -137,7 +137,8 @@ public class TTSRacer: TTSBehaviour {
 		onGround = true;
 		if(collision.relativeVelocity.magnitude > 10) {
 			vfx.DamageEffect(100.0f);
-			RacerSfx.volume = collision.relativeVelocity.magnitude / TopSpeed / 1.5f;
+			//RacerSfx.volume = collision.relativeVelocity.magnitude / TopSpeed / 1.5f;
+			RacerSfx.volume = collision.relativeVelocity.magnitude / 100.0f / 1.5f;
 			RacerSfx.PlayOneShot(DamageSounds[Mathf.FloorToInt(Random.value * DamageSounds.Length)]);
 		}
 		
@@ -179,8 +180,8 @@ public class TTSRacer: TTSBehaviour {
 	
 	void LateUpdate() {
 		//sound
-		RacerSounds.pitch = Mathf.Lerp(RacerSounds.pitch,TTSUtils.Remap(rigidbody.velocity.magnitude, 0f, TopSpeed, 0.5f, 1.0f, false),0.04f);
-		RacerSounds.volume = Mathf.Lerp(RacerSounds.volume,TTSUtils.Remap(rigidbody.velocity.magnitude, 0f, TopSpeed, 0.5f, 1f, false),0.04f) * 1.5f;
+		RacerSounds.pitch = Mathf.Lerp(RacerSounds.pitch,TTSUtils.Remap(rigidbody.velocity.magnitude, 0f, 100.0f, 0.5f, 1.0f, false),0.04f);
+		RacerSounds.volume = Mathf.Lerp(RacerSounds.volume,TTSUtils.Remap(rigidbody.velocity.magnitude, 0f, 100.0f, 0.5f, 1f, false),0.04f) * 1.5f;
 	}
 	
 	public float GetTiltAngle() {
