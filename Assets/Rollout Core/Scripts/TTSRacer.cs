@@ -79,6 +79,10 @@ public class TTSRacer: TTSBehaviour {
     		}
 		}
 		
+		if(!level.PerksEnabled){
+			this.GetComponent<TTSPerkManager>().enabled = false;
+		}
+		
 		if(displayMeshComponent == null) {
 			Debug.LogException(new UnassignedReferenceException());	
 		}
