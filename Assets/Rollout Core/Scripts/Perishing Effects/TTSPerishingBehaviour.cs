@@ -13,11 +13,12 @@ using System.Collections;
  */
 
 public class TTSPerishingBehaviour : TTSBehaviour {
-	
+
 	public float duration = 5.0f; // Override this with your own values
 	public bool destroyWhenLifecycleComplete = true; // Once duration has passed, the class will stop running and self-destruct
 	public bool useKillFunctionWhenComplete = false; // Execute the kill function once complete
 	public bool useFixedUpdate = true; // Set this to true if you want to use FixedUpdate() instead of Update()
+	public float progressSinceBirth = 0.0f;
 	
 	private float birth;
 	private float _progress = 0.0f;
@@ -40,17 +41,19 @@ public class TTSPerishingBehaviour : TTSBehaviour {
 	
 	private void Tick() {
 		
-		_progress = Mathf.Lerp(0,1.0f,(Time.time - birth)/duration);
+		progressSinceBirth = Time.time - birth;
+		_progress = Mathf.Lerp(0,1.0f, progressSinceBirth/duration);
 		
 		OnPerishingUpdate(_progress);
-
-        if ((Time.time - birth) / duration > 1.0f) {
-            if (destroyWhenLifecycleComplete) {
-                Kill();
-                Destroy(this);
-            }
-            if (useKillFunctionWhenComplete)
-                Kill();
+		if(progressSinceBirth/duration > 1.0f) {
+			if(destroyWhenLifecycleComplete) {
+				Kill();
+				Destroy(this);				
+			}
+			
+			if(useKillFunctionWhenComplete) {
+				Kill ();
+			}
 		}
 	}
 	

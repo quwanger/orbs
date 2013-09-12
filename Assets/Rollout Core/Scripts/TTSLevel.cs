@@ -24,7 +24,6 @@ public class TTSLevel : MonoBehaviour {
 	#region MonoBehaviour Methods
 	void Awake() {
 		instance = this;
-		
 	}
 	
 	void Start() {
@@ -112,6 +111,7 @@ public class TTSLevel : MonoBehaviour {
 		GameObject.Find("Soundtrack").GetComponent<TTSSoundtrackManager>().StartSoundtrack();
 		
 		foreach(GameObject racer in racers) {
+			racer.GetComponent<Rigidbody>().useGravity = true;
 			racer.GetComponent<TTSRacer>().canMove = true;
 		}
 		
