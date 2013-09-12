@@ -19,10 +19,12 @@ public class TTSPowerup : TTSBehaviour {
 	
 	#region monobehaviour methods
 	void Update() {
-		if(Input.GetKeyDown("1")) DrezzStone(DebugTier);
-		if(Input.GetKeyDown("2")) EntropyCannon(DebugTier);
-		if(Input.GetKeyDown("3")) SuperCBooster(DebugTier);
-		if(Input.GetKeyDown("4")) TimeBonus();
+		if(level.DebugMode){
+			if(Input.GetKeyDown("1")) DrezzStone(DebugTier);
+			if(Input.GetKeyDown("2")) EntropyCannon(DebugTier);
+			if(Input.GetKeyDown("3")) SuperCBooster(DebugTier);
+			if(Input.GetKeyDown("4")) TimeBonus();
+		}
 
 		//if you hit space or the 'a' button on an Xbox controller
 		if(Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown("joystick button 0")) ConsumePowerup();
