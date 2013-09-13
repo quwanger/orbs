@@ -30,6 +30,8 @@ public class TTSLevel : MonoBehaviour {
 	void Start() {	
 		if(DebugMode) {
 			StartRace();
+		}else{
+			StartCountdown();
 		}
 	}
 	#endregion
