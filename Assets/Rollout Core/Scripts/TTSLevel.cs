@@ -14,6 +14,7 @@ public class TTSLevel : MonoBehaviour {
 	public bool raceHasFinished = false;
 	public GameObject countdown;
 	public bool DebugMode = true;
+	public bool PerksEnabled = true;
 	
 	private TTSScoreboard scoreboard;
 	
@@ -26,13 +27,11 @@ public class TTSLevel : MonoBehaviour {
 		instance = this;
 	}
 	
-	void Start() {
+	void Start() {	
 		if(DebugMode) {
 			StartRace();
-		} else {
-			/*foreach(GameObject racer in _racers) {
-				racer.GetComponent<TTSRacer>().canMove = true;
-			}*/
+		}else{
+			StartCountdown();
 		}
 	}
 	#endregion

@@ -243,8 +243,10 @@ public class CameraMotionBlur extends PostEffectsBase
 			// exclude certain layers (e.g. skinned objects as we cant really support that atm)
 
 			var cam : Camera = null;
-			if (excludeLayers.value)// || dynamicLayers.value)
-				cam = GetTmpCam ();
+			if (excludeLayers.value){// || dynamicLayers.value)
+				//this creates the temp cam
+				//cam = GetTmpCam ();
+			}
 	
 			if (cam && excludeLayers.value != 0 && replacementClear && replacementClear.isSupported) {
 				cam.targetTexture = velBuffer;				
