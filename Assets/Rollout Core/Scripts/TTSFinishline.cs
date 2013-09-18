@@ -15,13 +15,15 @@ public class TTSFinishline : TTSBehaviour {
 	}
 
 	void OnTriggerEnter(Collider collision) {
-		foreach(GameObject racer in racers) {
-			if(collision.gameObject == racer) {
-				racer.GetComponent<TTSRacer>().canMove=false;
-				level.FinishLevel();
-				break;
+		if(!level.DebugMode){
+			foreach(GameObject racer in racers) {
+				if(collision.gameObject == racer) {
+					racer.GetComponent<TTSRacer>().canMove=false;
+					level.FinishLevel();
+					break;
+				}
+					
 			}
-				
-		}
+		}	
 	}
 }
