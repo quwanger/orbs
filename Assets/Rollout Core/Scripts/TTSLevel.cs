@@ -118,6 +118,10 @@ public class TTSLevel : MonoBehaviour {
 		GetComponent<TTSTimeManager>().StartTimer();
 	}
 	
+	/// <summary>
+	/// Switch to any spectator cameras
+	/// </summary>
+	/// <param name="cameraname"></param>
 	public void SwitchToAuxCamera(string cameraname) {
 		//Disable all cameras
 		Camera[] cams = Camera.allCameras;
@@ -138,7 +142,10 @@ public class TTSLevel : MonoBehaviour {
 		}
 		
 	}
-	
+
+	/// <summary>
+	/// Switch back from spectator cameras
+	/// </summary>
 	public void SwitchToGameCameras() {
 		Camera[] cams = Camera.allCameras;
 		foreach(Camera cam in cams) {

@@ -1,6 +1,9 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+/// <summary>
+/// Basic framework for AIController. Not functional yet.
+/// </summary>
 public class TTSAIController : MonoBehaviour {
 	
 	public List<GameObject> waypointsCrossed = new List<GameObject>();

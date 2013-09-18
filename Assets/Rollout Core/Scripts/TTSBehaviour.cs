@@ -1,12 +1,9 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-
-/*****************************************
- * Helper extension to reduce GetComponent and Find calls in code base.
- **/
-
-
+/// <summary>
+/// Helper extension to reduce GetComponent and Find calls in code base.
+/// </summary>
 public class TTSBehaviour : MonoBehaviour {
 
 	public enum Powerup {None, EntropyCannon, DrezzStones, TimeBonus, SuperC};
@@ -23,31 +20,48 @@ public class TTSBehaviour : MonoBehaviour {
 			}
 		}
 	}
-	
+
+	/// <summary>
+	/// List of all racers in the scene
+	/// </summary>
 	public GameObject[] racers {
 		get {
 			return level.racers;
 		}
 	}
 	
+	/// <summary>
+	/// Audio directly attached to main camera
+	/// </summary>
 	public AudioSource sfx {
 		get {
 			return Camera.main.audio;
 		}
 	}
 	
+	/// <summary>
+	/// Visual effects such as boost/damage effects
+	/// </summary>
 	public TTSCameraEffects vfx {
 		get {
 			return Camera.main.GetComponent<TTSCameraEffects>();
 		}
 	}
 	
+	/// <summary>
+	/// Time since game started
+	/// </summary>
 	public TTSTimeManager time {
 		get {
 			return level.GetComponent<TTSTimeManager>();
 		}
 	}
 	
+	/// <summary>
+	/// Get random value of an enum type
+	/// </summary>
+	/// <typeparam name="T">Whatever enum you want a random val of</typeparam>
+	/// <returns>Random enum value of type T</returns>
 	public static T GetRandomEnum<T>()
 	{
 		System.Array A = System.Enum.GetValues(typeof(T));
@@ -55,6 +69,9 @@ public class TTSBehaviour : MonoBehaviour {
 		return V;
 	}
 	
+	/// <summary>
+	/// Get the hud
+	/// </summary>
 	public TTSFloatHud hud {
 		get {
 			//GGHHEETTOO

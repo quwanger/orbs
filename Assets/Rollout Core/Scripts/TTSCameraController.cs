@@ -1,7 +1,9 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-
+/// <summary>
+/// Basic camera to be centered on a target
+/// </summary>
 public class TTSCameraController : MonoBehaviour {
 
 	public float distance = 10.0f;

@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
+// Not sure if this is being used...
 public class TTSCollisionHandler : MonoBehaviour {
 	
 	
