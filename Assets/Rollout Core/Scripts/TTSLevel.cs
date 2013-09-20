@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class TTSLevel : MonoBehaviour {
 
 	public List<GameObject> _racers = new List<GameObject>();
-	public List<Camera> _maincameras = new List<Camera>();
+	public List<GameObject> _waypoints = new List<GameObject>();
 	public List<Camera> _otherCameras = new List<Camera>();
 	
 	
@@ -49,6 +49,12 @@ public class TTSLevel : MonoBehaviour {
 	public TTSTimeManager time {
 		get {
 			return this.GetComponent<TTSTimeManager>();
+		}
+	}
+	
+	public TTSWaypointManager waypointManager {
+		get {
+			return this.GetComponent<TTSWaypointManager>();
 		}
 	}
 	
@@ -115,6 +121,8 @@ public class TTSLevel : MonoBehaviour {
 		}
 		
 		GetComponent<TTSTimeManager>().StartTimer();
+		
+		//Debug.Log(waypointManager);
 	}
 	
 	public void SwitchToAuxCamera(string cameraname) {
