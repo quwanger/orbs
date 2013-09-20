@@ -1,5 +1,5 @@
 using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 [RequireComponent (typeof (BoxCollider))]
 public class TTSWaypoint : MonoBehaviour {
@@ -19,9 +19,14 @@ public class TTSWaypoint : MonoBehaviour {
 	public bool isActive = true;
 	private BoxCollider boxCollider;
 	
+	public bool hasSibling = false;
+	private List<GameObject> siblings = new List<GameObject>();
+	public Transform transform;
+	
 	void Start () {
 		boxCollider = GetComponent<BoxCollider>();
 		boxCollider.isTrigger = true;
+		transform = GetComponent<Transform>();
 	}
 	
 	void OnDrawGizmos() {
@@ -31,5 +36,9 @@ public class TTSWaypoint : MonoBehaviour {
 	
 	void OnTriggerEnter(Collider other) {
 		this.isActive = false;	
+	}
+	
+	public void AddSibling(GameObject sibling){
+		siblings.Add(sibling);
 	}
 }
