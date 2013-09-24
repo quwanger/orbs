@@ -31,7 +31,7 @@ public class TTSWaypoint : MonoBehaviour {
 	
 	void OnDrawGizmos() {
 		Gizmos.color = Color.black;
-		Gizmos.DrawIcon(this.transform.position,"Rollout Core/Waypoints/waypoint-icon.png");
+		//Gizmos.DrawIcon(this.transform.position,"Rollout Core/Waypoints/waypoint-icon.png");
 	}
 	
 	void OnTriggerEnter(Collider other) {

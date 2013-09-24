@@ -121,8 +121,6 @@ public class TTSLevel : MonoBehaviour {
 		}
 		
 		GetComponent<TTSTimeManager>().StartTimer();
-		
-		Debug.Log (waypointManager.waypoints[0].GetComponent<TTSWaypoint>().hasSibling);
 	}
 	
 	public void SwitchToAuxCamera(string cameraname) {
