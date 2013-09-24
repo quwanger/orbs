@@ -42,9 +42,9 @@ public class TTSRacer: TTSBehaviour {
 	
 	#region Internal Components
 	public Transform displayMeshComponent;
+	public AudioClip RollingSound;
 	private AudioSource RacerSounds;
 	private AudioSource RacerSfx;
-	public AudioClip RollingSound;
 	#endregion
 	
 	

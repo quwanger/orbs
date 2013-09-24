@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
+// Not sure if this class is being used anywhere
 [ExecuteInEditMode]
 public class TTSSFloatingGui : MonoBehaviour {
 	

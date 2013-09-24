@@ -11,7 +11,9 @@ public class TTSDisclaimerCamera : TTSBehaviour {
 	private TTSDisclaimerMessage message;
 	
 	
-	// Use this for initialization
+	/// <summary>
+	/// Use this for initialization
+	/// </summary>
 	void Start () {
 		blur = this.gameObject.AddComponent<TTSBlur>();
 		message = this.gameObject.AddComponent<TTSDisclaimerMessage>();

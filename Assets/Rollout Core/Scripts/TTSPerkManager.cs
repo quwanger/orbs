@@ -9,14 +9,14 @@ public class TTSPerkManager : TTSBehaviour {
 	public GameObject BoostPrefab;
 	
 	public Perks EquiptPerks;
-	
-	public bool hot = false;
+
+	public bool isStarted = false;
 	
 	// Update is called once per frame
 	void Update ()
 	{
-		if(!hot) { 
-			hot = true;
+        if (!isStarted) {
+            isStarted = true;
 			HotStart();
 		}
 		
