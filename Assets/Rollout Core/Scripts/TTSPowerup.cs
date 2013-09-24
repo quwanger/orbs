@@ -114,17 +114,17 @@ public class TTSPowerup : TTSBehaviour {
 		boost.FireBoost(BoostPrefab);
 		
 		if(_tier == 1) {
-			boost.boostDuration = 1.0f;
+			boost.duration = 1.0f;
 			boost.TargetForce = 80.0f;
 			vfx.BoostEffect(1.0f);
 		}
 		if(_tier == 2) {
-			boost.boostDuration = 1.5f;
+			boost.duration = 1.5f;
 			boost.TargetForce = 90.0f;
 			vfx.BoostEffect(1.0f);
 		}
 		if(_tier == 3) {
-			boost.boostDuration = 2.0f;
+			boost.duration = 2.0f;
 			boost.TargetForce = 100.0f;
 			vfx.BoostEffect(1.0f);
 		}
