@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections;
 
+// Is this being used anywhere? (Check gizmos)
+
 public class TTSDrawForward : MonoBehaviour {
 
 	// Use this for initialization

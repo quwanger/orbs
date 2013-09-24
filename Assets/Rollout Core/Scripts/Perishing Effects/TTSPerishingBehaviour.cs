@@ -1,13 +1,23 @@
 using UnityEngine;
 using System.Collections;
 
+/*
+ * ============= TTSPerishingBehaviour, extends TTSBehaviour =================
+ * This class is used for any effect/object that will only last a set duration
+ * 
+ * Any class that extends this class will implement either/or
+ *  - OnPerishingUpdate(float progress)
+ *  - Kill()
+ *  
+ * You can use the public values to set how the update/kill functions will run
+ */
+
 public class TTSPerishingBehaviour : TTSBehaviour {
-	
-	public float duration = 5.0f;
-	public bool destroyWhenLifecycleComplete = true;
-	public bool useKillFunctionWhenComplete = false;
-	public bool useFixedUpdate = true;
 	public float progressSinceBirth = 0.0f;
+	public float duration = 5.0f; // Override this with your own values
+	public bool destroyWhenLifecycleComplete = true; // Once duration has passed, the class will stop running and self-destruct
+	public bool useKillFunctionWhenComplete = false; // Execute the kill function once complete
+	public bool useFixedUpdate = true; // Set this to true if you want to use FixedUpdate() instead of Update()
 	
 	private float birth;
 	private float _progress = 0.0f;
@@ -49,6 +59,7 @@ public class TTSPerishingBehaviour : TTSBehaviour {
 	
 	//override this method to do your stuff.
 	protected virtual void OnPerishingUpdate(float progress) {
+        // Any code you want to run every frame
 	}
 	
 	
