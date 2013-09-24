@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class TTSWaypointManager : MonoBehaviour {
 	
 	
-	private List<GameObject> waypoints = new List<GameObject>();
+	public List<GameObject> waypoints = new List<GameObject>();
 	
 	// Use this for initialization
 	void Start() {
@@ -12,10 +12,15 @@ public class TTSWaypointManager : MonoBehaviour {
 		GameObject[] tempWaypoints = GameObject.FindGameObjectsWithTag("Waypoint");
 		
 		foreach (GameObject waypoint in tempWaypoints) {
-			
 			waypoints.Add(waypoint);
+			foreach(GameObject wp in waypoints){
+				if(wp.GetComponent<TTSWaypoint>().index == waypoint.GetComponent<TTSWaypoint>().index){
+					wp.GetComponent<TTSWaypoint>().hasSibling = waypoint.GetComponent<TTSWaypoint>().hasSibling = true;
+					waypoint.GetComponent<TTSWaypoint>().AddSibling(wp);
+					wp.GetComponent<TTSWaypoint>().AddSibling(waypoint);
+				}
+			}
 		}
-		
 		//Assign unique indexes
 		int lastIndex = 0;
 		foreach (GameObject waypoint in tempWaypoints) {
