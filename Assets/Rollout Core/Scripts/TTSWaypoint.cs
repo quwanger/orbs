@@ -1,11 +1,10 @@
 using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 [RequireComponent (typeof (BoxCollider))]
 public class TTSWaypoint : MonoBehaviour {
 	
 	/* Waypoint.cs
-	 * Jake Cataford
 	 * 
 	 * This class generates a waypoint and displays it properly.
 	 * The prefab of this object is flagged as a waypoint and the 
@@ -20,20 +19,26 @@ public class TTSWaypoint : MonoBehaviour {
 	public bool isActive = true;
 	private BoxCollider boxCollider;
 	
+	public bool hasSibling = false;
+	private List<GameObject> siblings = new List<GameObject>();
+	public Transform transform;
 	
 	void Start () {
 		boxCollider = GetComponent<BoxCollider>();
 		boxCollider.isTrigger = true;
+		transform = GetComponent<Transform>();
 	}
 	
 	void OnDrawGizmos() {
-		
 		Gizmos.color = Color.black;
-		Gizmos.DrawIcon(this.transform.position,"waypoint-icon.png");
-		
+		Gizmos.DrawIcon(this.transform.position,"Rollout Core/Waypoints/waypoint-icon.png");
 	}
 	
 	void OnTriggerEnter(Collider other) {
 		this.isActive = false;	
+	}
+	
+	public void AddSibling(GameObject sibling){
+		siblings.Add(sibling);
 	}
 }

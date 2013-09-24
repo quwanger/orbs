@@ -52,6 +52,12 @@ public class TTSLevel : MonoBehaviour {
 		}
 	}
 	
+	public TTSWaypointManager waypointManager {
+		get {
+			return this.GetComponent<TTSWaypointManager>();
+		}
+	}
+	
 	public Camera[] cameras {
 		get {
 			//Return an immutable array.
@@ -115,6 +121,8 @@ public class TTSLevel : MonoBehaviour {
 		}
 		
 		GetComponent<TTSTimeManager>().StartTimer();
+		
+		Debug.Log (waypointManager.waypoints[0].GetComponent<TTSWaypoint>().hasSibling);
 	}
 	
 	public void SwitchToAuxCamera(string cameraname) {
