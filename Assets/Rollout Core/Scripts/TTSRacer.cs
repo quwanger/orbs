@@ -69,8 +69,8 @@ public class TTSRacer: TTSBehaviour {
 	
 	private float smooth;
 	private float stopSpeed = 0.05f;
-	public int currentWaypoint = 0;
-	public int previousWaypoint = -1;
+	public GameObject currentWaypoint;
+	public GameObject previousWaypoint;
 	public bool goingWrongWay = false;
 	
 	void Awake() {

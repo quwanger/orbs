@@ -11054,7 +11054,7 @@ GameObject:
   - 114: {fileID: 263304635}
   m_Layer: 0
   m_Name: invisible_wall
-  m_TagString: Untagged
+  m_TagString: Barrier
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11078,7 +11078,7 @@ MeshCollider:
   m_PrefabInternal: {fileID: 915468745}
   m_GameObject: {fileID: 263304630}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_SmoothSphereCollisions: 0
@@ -36436,6 +36436,14 @@ Prefab:
       propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6400100, guid: c428b509d5c060d418b29d16f4cb639b, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 100144, guid: c428b509d5c060d418b29d16f4cb639b, type: 3}
+      propertyPath: m_TagString
+      value: Barrier
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c428b509d5c060d418b29d16f4cb639b, type: 3}
   m_RootGameObject: {fileID: 1205730897}
@@ -50386,8 +50394,8 @@ MonoBehaviour:
   TopSpeed: 250
   Acceleration: 8000
   Handling: 11000
-  currentWaypoint: 0
-  previousWaypoint: -1
+  currentWaypoint: {fileID: 0}
+  previousWaypoint: {fileID: 0}
   goingWrongWay: 0
 --- !u!135 &1257816266
 SphereCollider:
