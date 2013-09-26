@@ -33,24 +33,25 @@ using System.Collections.Generic;
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
-public class TTSRacer: TTSBehaviour {
-	
-	
+public class TTSRacer : TTSBehaviour
+{
+
+
 	#region serialized settings
 	public bool IsPlayerControlled = true;
 	#endregion
-	
+
 	#region Internal Components
 	public Transform displayMeshComponent;
 	private AudioSource RacerSounds;
 	private AudioSource RacerSfx;
 	public AudioClip RollingSound;
 	#endregion
-	
-	
+
+
 	#region Internal Movement Operators
 	private Vector3 IdleForwardVector;
-	private Vector3 PreviousVelocity = new Vector3(1,0,0);
+	private Vector3 PreviousVelocity = new Vector3(1, 0, 0);
 	public bool onGround = true;
 	private float TiltRecoverySpeed = 0.1f;
 	private float TiltAngle = 0.0f;
@@ -66,132 +67,159 @@ public class TTSRacer: TTSBehaviour {
 	public float Acceleration = 8000.0f;
 	public float Handling = 11000.0f;
 	#endregion
-	
+
 	private float smooth;
 	private float stopSpeed = 0.05f;
-	
+
 	void Awake() {
 		level.RegisterRacer(gameObject);
 		//Get the body via tag.
-		foreach(Transform child in transform){
-    		if(child.gameObject.tag == "RacerDisplayMesh"){
-        		displayMeshComponent = child;
-    		}
+		foreach (Transform child in transform) {
+			if (child.gameObject.tag == "RacerDisplayMesh") {
+				displayMeshComponent = child;
+			}
 		}
-		
-		if(!level.PerksEnabled){
+
+		if (!level.PerksEnabled) {
 			this.GetComponent<TTSPerkManager>().enabled = false;
 		}
-		
-		if(displayMeshComponent == null) {
-			Debug.LogException(new UnassignedReferenceException());	
+
+		if (displayMeshComponent == null) {
+			Debug.LogException(new UnassignedReferenceException());
 		}
 		IdleForwardVector = transform.forward;
-		
-		
+
+
 		//Setup Audio Channel for Pitched Racer Sounds
 		RacerSounds = gameObject.AddComponent<AudioSource>();
 		RacerSounds.clip = RollingSound;
 		RacerSounds.loop = true;
 		RacerSounds.rolloffMode = AudioRolloffMode.Linear;
 		RacerSounds.Play();
-		
+
 		//Setup Audio Channel for SFX
 		RacerSfx = gameObject.AddComponent<AudioSource>();
 		RacerSfx.rolloffMode = AudioRolloffMode.Linear;
 		RacerSfx.volume = 0.5f;
-		
+
 		//Apply Attributes
 		TopSpeed = TopSpeed + (100.0f * CurrentRig.GetComponent<TTSRig>().rigSpeed);
 		Acceleration = Acceleration + (100.0f * CurrentRig.GetComponent<TTSRig>().rigAcceleration);
 		Handling = Handling + (100.0f * CurrentRig.GetComponent<TTSRig>().rigHandling);
 	}
-	
-	void FixedUpdate () {
-		if(IsPlayerControlled && !level.raceHasFinished) {
-			CalculateInputForces();	
-		}else{
+
+	void FixedUpdate() {
+		if (IsPlayerControlled && !level.raceHasFinished) {
+			CalculateInputForces();
+		}
+		else {
 			SlowToStop();
 		}
-		
+
 		CalculateBodyOrientation();
-		
+
 		PreviousVelocity = rigidbody.velocity;
-		
-		
+
+
 	}
-	
+
 	void CalculateInputForces() {
 		//add acceleration forces...
-		if(onGround && rigidbody.velocity.magnitude < TopSpeed && canMove) {
-			rigidbody.AddForce(displayMeshComponent.forward * Input.GetAxis("Vertical") * Time.deltaTime * Acceleration);	
+		if (onGround && rigidbody.velocity.magnitude < TopSpeed && canMove) {
+			OnVerticalInput(Input.GetAxis("Vertical"));
 		}
-		
-		if(canMove) {
-			rigidbody.AddForce(displayMeshComponent.right * Input.GetAxis("Horizontal") * Time.deltaTime * Handling);
+		else if (!onGround) {
+			float gravity = -30;
+			rigidbody.AddForce(displayMeshComponent.up * gravity);
+		}
+
+		if (canMove) {
+			OnHorizontalInput(Input.GetAxis("Horizontal"));
 		}
 	}
-	
-	public void SlowToStop(){
+
+	public void OnVerticalInput(float amount) {
+		rigidbody.AddForce(displayMeshComponent.forward * amount * Time.deltaTime * Acceleration);
+	}
+
+	public void OnHorizontalInput(float amount) {
+		rigidbody.AddForce(displayMeshComponent.right * amount * Time.deltaTime * Acceleration);
+	}
+
+	public void SlowToStop() {
 		rigidbody.velocity = Vector3.Lerp(rigidbody.velocity, new Vector3(0, 0, 0), stopSpeed);
 	}
-	
+
 	void OnCollisionEnter(Collision collision) {
 
 		onGround = true;
-		if(collision.relativeVelocity.magnitude > 10) {
+		if (collision.relativeVelocity.magnitude > 10) {
 			vfx.DamageEffect(100.0f);
 			//RacerSfx.volume = collision.relativeVelocity.magnitude / TopSpeed / 1.5f;
 			RacerSfx.volume = collision.relativeVelocity.magnitude / 100.0f / 1.5f;
 			RacerSfx.PlayOneShot(DamageSounds[Mathf.FloorToInt(Random.value * DamageSounds.Length)]);
 		}
-		
+
 		//spawn sparks (TODO: move this to a component script)
-		GameObject sparkClone = (GameObject) Instantiate(SparksEmitter);
+		GameObject sparkClone = (GameObject)Instantiate(SparksEmitter);
 		sparkClone.transform.position = collision.contacts[0].point;
 		sparkClone.particleEmitter.emit = true;
 		sparkClone.transform.forward = displayMeshComponent.forward;
 
 	}
-	
+
 	void OnCollisionStay(Collision collision) {
 		onGround = true;
 	}
-	
+
 	void OnCollisionExit(Collision collision) {
 		onGround = false;
 	}
-	
-	void CalculateBodyOrientation () {
+
+	void CalculateBodyOrientation() {
 
 		//Facing Direction...
-		if(new Vector2(rigidbody.velocity.x,rigidbody.velocity.z).magnitude > MinimumVelocityToAnimateSteering) {
+		if (new Vector2(rigidbody.velocity.x, rigidbody.velocity.z).magnitude > MinimumVelocityToAnimateSteering) {
 			//based on rigidbody velocity.
 			displayMeshComponent.forward = rigidbody.velocity;
-			TiltAngle = Mathf.Lerp (TiltAngle, TTSUtils.GetRelativeAngle(rigidbody.velocity,PreviousVelocity)/2, TiltRecoverySpeed);
-		
-			displayMeshComponent.RotateAround(displayMeshComponent.forward,TiltAngle);
+			TiltAngle = Mathf.Lerp(TiltAngle, TTSUtils.GetRelativeAngle(rigidbody.velocity, PreviousVelocity) / 2, TiltRecoverySpeed);
+
+			displayMeshComponent.RotateAround(displayMeshComponent.forward, TiltAngle);
 			//set the idle vec, so it doesnt get janky.
 			IdleForwardVector = displayMeshComponent.forward;
-		}else{
-			displayMeshComponent.forward = IdleForwardVector;	
 		}
-		
-		
-		
-		
+		else {
+			displayMeshComponent.forward = IdleForwardVector;
+		}
+
+
+
+
 	}
-	
+
 	void LateUpdate() {
 		//sound
-		RacerSounds.pitch = Mathf.Lerp(RacerSounds.pitch,TTSUtils.Remap(rigidbody.velocity.magnitude, 0f, 100.0f, 0.5f, 1.0f, false),0.04f);
-		RacerSounds.volume = Mathf.Lerp(RacerSounds.volume,TTSUtils.Remap(rigidbody.velocity.magnitude, 0f, 100.0f, 0.5f, 1f, false),0.04f) * 1.5f;
+		RacerSounds.pitch = Mathf.Lerp(RacerSounds.pitch, TTSUtils.Remap(rigidbody.velocity.magnitude, 0f, 100.0f, 0.5f, 1.0f, false), 0.04f);
+		RacerSounds.volume = Mathf.Lerp(RacerSounds.volume, TTSUtils.Remap(rigidbody.velocity.magnitude, 0f, 100.0f, 0.5f, 1f, false), 0.04f) * 1.5f;
 	}
-	
+
 	public float GetTiltAngle() {
 		return TiltAngle;
 	}
+
+	public void OnDrawGizmos() {
+		Gizmos.color = Color.red;
+		Gizmos.DrawRay(transform.position, IdleForwardVector * 10);
+
+		Gizmos.color = Color.yellow;
+		Gizmos.DrawRay(transform.position, displayMeshComponent.forward * 10);
+
+		Gizmos.color = Color.green;
+		Gizmos.DrawRay(transform.position, rigidbody.velocity * 5);
+
+		Gizmos.color = Color.cyan;
+		Gizmos.DrawRay(transform.position, PreviousVelocity * 5);
+	}
 }
 
-	
- 
+

@@ -22,5 +22,11 @@ public static class TTSUtils {
 
 	}
 
+	public static Vector3 LerpVector(Vector3 from, Vector3 to, float t) {
+		float x = Mathf.Lerp(from.x, to.x, t);
+		float y = Mathf.Lerp(from.y, to.y, t);
+		float z = Mathf.Lerp(from.z, to.z, t);
 
+		return new Vector3(x, y, z);
+	}
 }
