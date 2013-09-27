@@ -19,6 +19,8 @@ public class TTSWaypoint : TTSBehaviour {
 	public bool isActive = true;
 	private BoxCollider boxCollider;
 	
+	public GameObject nextWaypoint;
+	
 	public bool hasSibling = false;
 	private List<GameObject> siblings = new List<GameObject>();
 	public Transform transform;

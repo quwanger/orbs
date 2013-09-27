@@ -21,12 +21,16 @@ public class TTSWaypointManager : MonoBehaviour {
 				}
 			}
 		}
-		//Assign unique indexes
-		/*int lastIndex = 0;
-		foreach (GameObject waypoint in tempWaypoints) {
-			waypoint.GetComponent<TTSWaypoint>().index = lastIndex;
-			lastIndex++;
-		}*/
+		
+		//gets the next waypoint gameobject for each waypoint in the scene
+		foreach (GameObject wp in waypoints){
+			foreach(GameObject wp2 in waypoints){
+				if(wp2.GetComponent<TTSWaypoint>().index == (wp.GetComponent<TTSWaypoint>().index + 1)){
+					wp.GetComponent<TTSWaypoint>().nextWaypoint = wp2;
+					break;
+				}
+			}
+		}
 	}
 	
 	void OnDrawGizmos() {
