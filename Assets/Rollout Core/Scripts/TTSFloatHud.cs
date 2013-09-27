@@ -35,7 +35,7 @@ public class TTSFloatHud : TTSBehaviour {
 #region vfx
 	public void FlashTimeForBonus() {
 		displayBacking.renderer.material.color = flashColor;
-		bonusTime.GetComponent<TextMesh>().text = "+" + time.bonusTime.ToString();
+		bonusTime.GetComponent<TextMesh>().text = "-" + time.bonusTime.ToString();
 	}
 #endregion
 }
