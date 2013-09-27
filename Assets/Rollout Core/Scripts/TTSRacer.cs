@@ -29,7 +29,6 @@ using System.Collections.Generic;
  * 
  * */
 
-
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
@@ -60,12 +59,17 @@ public class TTSRacer : TTSBehaviour
 	public GameObject CurrentRig;
 	public bool canMove = false;
 	private float MinimumVelocityToAnimateSteering = 1.0f;
+
+	private float resultAccel = 0.0f; // For sound calculation
+	public float rpm = 0;
 	#endregion
 
 	#region gameplay vars
 	public float TopSpeed = 250.0f;
 	public float Acceleration = 8000.0f;
 	public float Handling = 11000.0f;
+	public enum PlayerType { Player, AI, Multiplayer };
+	public PlayerType player = PlayerType.Player;
 	#endregion
 
 	private float smooth;
@@ -118,32 +122,36 @@ public class TTSRacer : TTSBehaviour
 
 		CalculateBodyOrientation();
 
+		resultAccel = Mathf.Lerp(resultAccel, rigidbody.velocity.magnitude -PreviousVelocity.magnitude, 0.01f);
 		PreviousVelocity = rigidbody.velocity;
 
 
 	}
 
 	void CalculateInputForces() {
-		//add acceleration forces...
+		float vAmount = 0.0f, hAmount = 0.0f;
+
+		if (player == PlayerType.Player) {
+			vAmount = Input.GetAxis("Vertical");
+			hAmount = Input.GetAxis("Horizontal");
+		}
+
+		// Vertical Input
+		rpm = Mathf.Lerp(rpm, rpm + vAmount, 0.1f);
+		rpm = Mathf.Clamp(rpm + ((vAmount == 0) ? -1 : 0), 0, 100);
+
 		if (onGround && rigidbody.velocity.magnitude < TopSpeed && canMove) {
-			OnVerticalInput(Input.GetAxis("Vertical"));
+			rigidbody.AddForce(displayMeshComponent.forward * vAmount * Time.deltaTime * Acceleration);
 		}
 		else if (!onGround) {
 			float gravity = -30;
 			rigidbody.AddForce(displayMeshComponent.up * gravity);
 		}
 
+		// Horizontal Input
 		if (canMove) {
-			OnHorizontalInput(Input.GetAxis("Horizontal"));
+			rigidbody.AddForce(displayMeshComponent.right * hAmount * Time.deltaTime * Acceleration);
 		}
-	}
-
-	public void OnVerticalInput(float amount) {
-		rigidbody.AddForce(displayMeshComponent.forward * amount * Time.deltaTime * Acceleration);
-	}
-
-	public void OnHorizontalInput(float amount) {
-		rigidbody.AddForce(displayMeshComponent.right * amount * Time.deltaTime * Acceleration);
 	}
 
 	public void SlowToStop() {
@@ -198,9 +206,11 @@ public class TTSRacer : TTSBehaviour
 	}
 
 	void LateUpdate() {
+		int offset = (resultAccel <=0) ? -10 : 15;
+
 		//sound
-		RacerSounds.pitch = Mathf.Lerp(RacerSounds.pitch, TTSUtils.Remap(rigidbody.velocity.magnitude, 0f, 100.0f, 0.5f, 1.0f, false), 0.04f);
-		RacerSounds.volume = Mathf.Lerp(RacerSounds.volume, TTSUtils.Remap(rigidbody.velocity.magnitude, 0f, 100.0f, 0.5f, 1f, false), 0.04f) * 1.5f;
+		RacerSounds.pitch = Mathf.Max(Mathf.Lerp(RacerSounds.pitch, TTSUtils.Remap(rigidbody.velocity.magnitude + offset, 0f, 100.0f, 0.5f, 1.0f, false), 0.1f), 0);
+		RacerSounds.volume = Mathf.Max(Mathf.Lerp(RacerSounds.volume, TTSUtils.Remap(rigidbody.velocity.magnitude + offset, 0f, 100.0f, 0.5f, 1f, false), 0.1f) * 1.5f, 0);
 	}
 
 	public float GetTiltAngle() {
