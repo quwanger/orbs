@@ -30,6 +30,11 @@ public class TTSLevel : MonoBehaviour {
 	void Start() {	
 		if(DebugMode) {
 			StartRace();
+			foreach(GameObject racer in _racers){
+				if(racer.GetComponent<TTSRacer>().startingWaypoint){
+					racer.transform.position = racer.GetComponent<TTSRacer>().startingWaypoint.transform.position;
+				}
+			}
 		}else{
 			StartCountdown();
 		}

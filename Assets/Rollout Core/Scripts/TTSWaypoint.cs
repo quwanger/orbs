@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 
 [RequireComponent (typeof (BoxCollider))]
-public class TTSWaypoint : MonoBehaviour {
+public class TTSWaypoint : TTSBehaviour {
 	
 	/* Waypoint.cs
 	 * 
@@ -18,6 +18,8 @@ public class TTSWaypoint : MonoBehaviour {
 	public bool isLastWaypoint = false;
 	public bool isActive = true;
 	private BoxCollider boxCollider;
+	
+	public GameObject nextWaypoint;
 	
 	public bool hasSibling = false;
 	private List<GameObject> siblings = new List<GameObject>();
@@ -36,6 +38,22 @@ public class TTSWaypoint : MonoBehaviour {
 	
 	void OnTriggerEnter(Collider other) {
 		this.isActive = false;	
+		
+		foreach(GameObject racer in racers) {
+			if(other.gameObject == racer) {
+				racer.GetComponent<TTSRacer>().previousWaypoint = racer.GetComponent<TTSRacer>().currentWaypoint;
+				racer.GetComponent<TTSRacer>().currentWaypoint = this.gameObject;
+				if(racer.GetComponent<TTSRacer>().previousWaypoint == racer.GetComponent<TTSRacer>().currentWaypoint){
+					if(racer.GetComponent<TTSRacer>().goingWrongWay == true){
+						racer.GetComponent<TTSRacer>().goingWrongWay = false;
+						racer.GetComponent<TTSRacer>().WrongWay();
+					}else{
+						racer.GetComponent<TTSRacer>().goingWrongWay = true;
+						racer.GetComponent<TTSRacer>().WrongWay();
+					}
+				}
+			}
+		}
 	}
 	
 	public void AddSibling(GameObject sibling){

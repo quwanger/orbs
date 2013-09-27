@@ -36,6 +36,12 @@ public class TTSBehaviour : MonoBehaviour {
 		}
 	}
 	
+	public List<GameObject> waypoints{
+		get {
+			return level.waypointManager.waypoints;
+		}
+	}
+	
 	public TTSCameraEffects vfx {
 		get {
 			return Camera.main.GetComponent<TTSCameraEffects>();
