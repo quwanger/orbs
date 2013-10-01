@@ -29,4 +29,8 @@ public static class TTSUtils {
 
 		return new Vector3(x, y, z);
 	}
+
+	public static Vector3 FlattenVector(Vector3 vec) {
+		return new Vector3(vec.x, 0.0f, vec.z);
+	}
 }
