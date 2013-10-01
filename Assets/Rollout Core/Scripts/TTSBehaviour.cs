@@ -11,8 +11,8 @@ public class TTSBehaviour : MonoBehaviour {
 
 	public enum Powerup {None, EntropyCannon, DrezzStones, TimeBonus, SuperC};
 	
-	public enum Perks {None, PhotoFinish, HotStart};
-	
+	public enum Perks {Acceleration, PhotoFinish, HotStart, Speed, Handling, tbd};
+
 	public TTSLevel level {
 		 get { 
 			if(TTSLevel.instance != null) {
