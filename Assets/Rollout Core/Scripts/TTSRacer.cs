@@ -62,6 +62,8 @@ public class TTSRacer : TTSBehaviour
 
 	private float resultAccel = 0.0f; // For sound calculation
 	public float rpm = 0;
+	private float vInput = 0.0f, hInput = 0.0f;
+	private Vector3 lastForward;
 	#endregion
 
 	#region gameplay vars
@@ -83,6 +85,8 @@ public class TTSRacer : TTSBehaviour
 				displayMeshComponent = child;
 			}
 		}
+
+		lastForward = TTSUtils.FlattenVector(displayMeshComponent.forward).normalized;
 
 		if (!level.PerksEnabled) {
 			this.GetComponent<TTSPerkManager>().enabled = false;
@@ -129,11 +133,10 @@ public class TTSRacer : TTSBehaviour
 	}
 
 	private void CalculateInputForces() {
-		float vAmount = 0.0f, hAmount = 0.0f;
 
 		if (player == PlayerType.Player) {
-			vAmount = Input.GetAxis("Vertical");
-			hAmount = Input.GetAxis("Horizontal");
+			vInput = Input.GetAxis("Vertical");
+			hInput = Input.GetAxis("Horizontal");
 		}
 		else if (player == PlayerType.Multiplayer) {
 
@@ -146,23 +149,18 @@ public class TTSRacer : TTSBehaviour
 		}
 
 		// Vertical Input
-
-
-		// For when racer is in the air
-		rpm = Mathf.Lerp(rpm, rpm + vAmount * 20, 0.1f);
-		rpm = Mathf.Clamp(rpm + ((vAmount == 0) ? -20 : 0), 0, 100);
-
 		if (onGround && rigidbody.velocity.magnitude < TopSpeed && canMove) {
-			rigidbody.AddForce(displayMeshComponent.forward * vAmount * Time.deltaTime * Acceleration);
+			rigidbody.AddForce(displayMeshComponent.forward * vInput * Time.deltaTime * Acceleration);
 		}
 		else if (!onGround) {
 			float gravity = -30;
 			rigidbody.AddForce(displayMeshComponent.up * gravity);
+			rpm = Mathf.Clamp(rpm + vInput, -100.0f, 100.0f);
 		}
 
 		// Horizontal Input
 		if (canMove) {
-			rigidbody.AddForce(displayMeshComponent.right * hAmount * Time.deltaTime * Handling);
+			rigidbody.AddForce(displayMeshComponent.right * hInput * Time.deltaTime * Handling);
 		}
 	}
 
@@ -186,6 +184,12 @@ public class TTSRacer : TTSBehaviour
 		sparkClone.particleEmitter.emit = true;
 		sparkClone.transform.forward = displayMeshComponent.forward;
 
+		// Add rpm force stored inside racer during air time
+		if (Mathf.Abs(rpm) > 15.0f) {
+			rigidbody.AddForce(TTSUtils.FlattenVector(lastForward * rpm / 5.0f * Time.deltaTime * Acceleration));
+			RacerSounds.pitch -= 0.1f;
+		}
+		rpm = 0.0f;
 	}
 
 	void OnCollisionStay(Collision collision) {
@@ -211,21 +215,23 @@ public class TTSRacer : TTSBehaviour
 		else {
 			displayMeshComponent.forward = IdleForwardVector;
 		}
+
+		Debug.Log(TTSUtils.FlattenVector(displayMeshComponent.forward).magnitude);
+		if (TTSUtils.FlattenVector(displayMeshComponent.forward).magnitude > 0.2f) {
+			lastForward = TTSUtils.FlattenVector(displayMeshComponent.forward).normalized;
+		}
 	}
 
 	void LateUpdate() {
 		int offset = (resultAccel <= 0) ? -10 : 15;
 
-		//sound
 		if (onGround) {
 			RacerSounds.pitch = Mathf.Max(Mathf.Lerp(RacerSounds.pitch, TTSUtils.Remap(rigidbody.velocity.magnitude + offset, 0f, 100.0f, 0.5f, 1.0f, false), 0.1f), 0);
-			RacerSounds.volume = Mathf.Max(Mathf.Lerp(RacerSounds.volume, TTSUtils.Remap(rigidbody.velocity.magnitude + offset, 0f, 100.0f, 0.5f, 1f, false), 0.1f) * 1.5f, 0);
+			RacerSounds.volume = Mathf.Max(Mathf.Lerp(RacerSounds.volume, TTSUtils.Remap(rigidbody.velocity.magnitude + offset, 0f, 100.0f, 0.5f, 1f, false), 0.1f) * 1.5f, 0); // Needs Cleaning
 		}
 		else {
-			//	RacerSounds.pitch = Mathf.Max(Mathf.Lerp(RacerSounds.pitch, RacerSounds.pitch * rpm / 200.0f + 0.5f, 0.1f), 0);
-			//	RacerSounds.volume = Mathf.Max(Mathf.Lerp(RacerSounds.volume, RacerSounds.pitch * rpm / 200.0f + 0.5f, 0.1f) * 1.5f, 0);
-			RacerSounds.pitch = Mathf.Max(Mathf.Lerp(RacerSounds.pitch, TTSUtils.Remap(rigidbody.velocity.magnitude + offset, 0f, 100.0f, 0.5f, 1.0f, false), 0.1f), 0);
-			RacerSounds.volume = Mathf.Max(Mathf.Lerp(RacerSounds.volume, TTSUtils.Remap(rigidbody.velocity.magnitude + offset, 0f, 100.0f, 0.5f, 1f, false), 0.1f) * 1.5f, 0);
+			RacerSounds.pitch = Mathf.Max(Mathf.Lerp(RacerSounds.pitch, TTSUtils.Remap(Mathf.Abs(vInput), 0.0f, 1.0f, 0.5f, 1.0f, false), 0.1f), 0);
+			RacerSounds.volume = Mathf.Max(Mathf.Lerp(RacerSounds.volume, TTSUtils.Remap(Mathf.Abs(vInput), 0.0f, 1.0f, 0.5f, 1.0f, false) * 1.5f, 0), 0); // Needs cleaning
 		}
 	}
 
@@ -244,7 +250,7 @@ public class TTSRacer : TTSBehaviour
 		Gizmos.DrawRay(transform.position, rigidbody.velocity * 5);
 
 		Gizmos.color = Color.cyan;
-		Gizmos.DrawRay(transform.position, PreviousVelocity * 5);
+		Gizmos.DrawRay(transform.position, lastForward * 5);
 	}
 }
 
