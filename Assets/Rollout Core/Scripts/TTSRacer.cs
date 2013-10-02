@@ -69,6 +69,9 @@ public class TTSRacer: TTSBehaviour {
 	
 	private float smooth;
 	private float stopSpeed = 0.05f;
+	public int currentWaypoint = 0;
+	public int previousWaypoint = -1;
+	public bool goingWrongWay = false;
 	
 	void Awake() {
 		level.RegisterRacer(gameObject);
@@ -117,8 +120,11 @@ public class TTSRacer: TTSBehaviour {
 		CalculateBodyOrientation();
 		
 		PreviousVelocity = rigidbody.velocity;
-		
-		
+	}
+	
+	public void WrongWay(){
+		if(goingWrongWay == true) Debug.Log("WRONG WAY");
+		else Debug.Log("RIGHT WAY");
 	}
 	
 	void CalculateInputForces() {

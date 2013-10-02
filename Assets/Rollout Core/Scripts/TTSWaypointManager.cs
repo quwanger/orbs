@@ -22,11 +22,11 @@ public class TTSWaypointManager : MonoBehaviour {
 			}
 		}
 		//Assign unique indexes
-		int lastIndex = 0;
+		/*int lastIndex = 0;
 		foreach (GameObject waypoint in tempWaypoints) {
 			waypoint.GetComponent<TTSWaypoint>().index = lastIndex;
 			lastIndex++;
-		}
+		}*/
 	}
 	
 	void OnDrawGizmos() {
