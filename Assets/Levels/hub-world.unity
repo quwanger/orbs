@@ -299,7 +299,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: fec42cd44b1594029bfdc1fe0fcad44c, type: 2}
+  - {fileID: 2100000, guid: 8ad56245c0dbc43ab940d14451566e6c, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -1259,7 +1259,7 @@ Prefab:
     - target: {fileID: 2300004, guid: b7d7bcadb636449d6b98b11e1e5f865c, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: fec42cd44b1594029bfdc1fe0fcad44c, type: 2}
+      objectReference: {fileID: 2100000, guid: 8ad56245c0dbc43ab940d14451566e6c, type: 2}
     - target: {fileID: 6400004, guid: b7d7bcadb636449d6b98b11e1e5f865c, type: 3}
       propertyPath: m_IsTrigger
       value: 1
@@ -1549,6 +1549,10 @@ MonoBehaviour:
   TopSpeed: 250
   Acceleration: 8000
   Handling: 11000
+  currentWaypoint: {fileID: 0}
+  previousWaypoint: {fileID: 0}
+  startingWaypoint: {fileID: 0}
+  goingWrongWay: 0
 --- !u!135 &1778131400
 SphereCollider:
   m_ObjectHideFlags: 0
