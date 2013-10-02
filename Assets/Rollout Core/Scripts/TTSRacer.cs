@@ -151,11 +151,25 @@ public class TTSRacer : TTSBehaviour
 		// Vertical Input
 		if (onGround && rigidbody.velocity.magnitude < TopSpeed && canMove) {
 			rigidbody.AddForce(displayMeshComponent.forward * vInput * Time.deltaTime * Acceleration);
+
+			if (Mathf.Abs(rpm) > 15.0f) {
+				rigidbody.AddForce(TTSUtils.FlattenVector(lastForward * rpm / 20.0f * Time.deltaTime * Acceleration));
+				RacerSounds.pitch -= 0.05f;
+				rpm *= 0.8f;
+			}
+			else rpm = 0.0f;
 		}
 		else if (!onGround) {
 			float gravity = -30;
 			rigidbody.AddForce(displayMeshComponent.up * gravity);
-			rpm = Mathf.Clamp(rpm + vInput, -100.0f, 100.0f);
+
+			if (Mathf.Abs(vInput) > 0.1f) {
+				rpm = Mathf.Clamp(rpm +
+					TTSUtils.Remap(rpm, -100.0f, 100.0f, 1.0f, 0, true) * vInput + ((vInput > 0) ? 0 : -1),
+					-100.0f, 100.0f);
+			}
+			else
+				rpm *= 0.99f;
 		}
 
 		// Horizontal Input
@@ -183,13 +197,6 @@ public class TTSRacer : TTSBehaviour
 		sparkClone.transform.position = collision.contacts[0].point;
 		sparkClone.particleEmitter.emit = true;
 		sparkClone.transform.forward = displayMeshComponent.forward;
-
-		// Add rpm force stored inside racer during air time
-		if (Mathf.Abs(rpm) > 15.0f) {
-			rigidbody.AddForce(TTSUtils.FlattenVector(lastForward * rpm / 5.0f * Time.deltaTime * Acceleration));
-			RacerSounds.pitch -= 0.1f;
-		}
-		rpm = 0.0f;
 	}
 
 	void OnCollisionStay(Collision collision) {
@@ -206,6 +213,7 @@ public class TTSRacer : TTSBehaviour
 		if (new Vector2(rigidbody.velocity.x, rigidbody.velocity.z).magnitude > MinimumVelocityToAnimateSteering) {
 			//based on rigidbody velocity.
 			displayMeshComponent.forward = rigidbody.velocity;
+
 			TiltAngle = Mathf.Lerp(TiltAngle, TTSUtils.GetRelativeAngle(rigidbody.velocity, PreviousVelocity) / 2, TiltRecoverySpeed);
 
 			displayMeshComponent.RotateAround(displayMeshComponent.forward, TiltAngle);
@@ -216,7 +224,7 @@ public class TTSRacer : TTSBehaviour
 			displayMeshComponent.forward = IdleForwardVector;
 		}
 
-		Debug.Log(TTSUtils.FlattenVector(displayMeshComponent.forward).magnitude);
+		//Debug.Log(TTSUtils.FlattenVector(displayMeshComponent.forward).magnitude);
 		if (TTSUtils.FlattenVector(displayMeshComponent.forward).magnitude > 0.2f) {
 			lastForward = TTSUtils.FlattenVector(displayMeshComponent.forward).normalized;
 		}
@@ -246,7 +254,7 @@ public class TTSRacer : TTSBehaviour
 		Gizmos.color = Color.yellow;
 		Gizmos.DrawRay(transform.position, displayMeshComponent.forward * 10);
 
-		Gizmos.color = Color.green;
+		Gizmos.color = Color.magenta;
 		Gizmos.DrawRay(transform.position, rigidbody.velocity * 5);
 
 		Gizmos.color = Color.cyan;
