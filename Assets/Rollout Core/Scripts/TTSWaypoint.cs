@@ -40,7 +40,7 @@ public class TTSWaypoint : TTSBehaviour {
 		foreach(GameObject racer in racers) {
 			if(other.gameObject == racer) {
 				racer.GetComponent<TTSRacer>().previousWaypoint = racer.GetComponent<TTSRacer>().currentWaypoint;
-				racer.GetComponent<TTSRacer>().currentWaypoint = this.index;
+				racer.GetComponent<TTSRacer>().currentWaypoint = this.gameObject;
 				if(racer.GetComponent<TTSRacer>().previousWaypoint == racer.GetComponent<TTSRacer>().currentWaypoint){
 					if(racer.GetComponent<TTSRacer>().goingWrongWay == true){
 						racer.GetComponent<TTSRacer>().goingWrongWay = false;
