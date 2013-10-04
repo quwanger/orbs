@@ -126,7 +126,7 @@ public class TTSRacer : TTSBehaviour
 
 		CalculateBodyOrientation();
 
-		resultAccel = Mathf.Lerp(resultAccel, rigidbody.velocity.magnitude -PreviousVelocity.magnitude, 0.01f);
+		resultAccel = Mathf.Lerp(resultAccel, rigidbody.velocity.magnitude - PreviousVelocity.magnitude, 0.01f);
 		PreviousVelocity = rigidbody.velocity;
 	}
 	
@@ -135,17 +135,29 @@ public class TTSRacer : TTSBehaviour
 		else Debug.Log("RIGHT WAY");
 	}
 
-	void CalculateInputForces() {
+	private void CalculateInputForces() {
 		float vAmount = 0.0f, hAmount = 0.0f;
 
 		if (player == PlayerType.Player) {
 			vAmount = Input.GetAxis("Vertical");
 			hAmount = Input.GetAxis("Horizontal");
 		}
+		else if (player == PlayerType.Multiplayer) {
+
+		}
+		else if (player == PlayerType.AI) {
+
+		}
+		else {
+			Debug.LogError("PLAYER TYPE NOT SET");
+		}
 
 		// Vertical Input
-		rpm = Mathf.Lerp(rpm, rpm + vAmount, 0.1f);
-		rpm = Mathf.Clamp(rpm + ((vAmount == 0) ? -1 : 0), 0, 100);
+
+
+		// For when racer is in the air
+		rpm = Mathf.Lerp(rpm, rpm + vAmount * 20, 0.1f);
+		rpm = Mathf.Clamp(rpm + ((vAmount == 0) ? -20 : 0), 0, 100);
 
 		if (onGround && rigidbody.velocity.magnitude < TopSpeed && canMove) {
 			rigidbody.AddForce(displayMeshComponent.forward * vAmount * Time.deltaTime * Acceleration);
@@ -157,7 +169,7 @@ public class TTSRacer : TTSBehaviour
 
 		// Horizontal Input
 		if (canMove) {
-			rigidbody.AddForce(displayMeshComponent.right * hAmount * Time.deltaTime * Acceleration);
+			rigidbody.AddForce(displayMeshComponent.right * hAmount * Time.deltaTime * Handling);
 		}
 	}
 
@@ -210,18 +222,22 @@ public class TTSRacer : TTSBehaviour
 		else {
 			displayMeshComponent.forward = IdleForwardVector;
 		}
-
-
-
-
 	}
 
 	void LateUpdate() {
-		int offset = (resultAccel <=0) ? -10 : 15;
+		int offset = (resultAccel <= 0) ? -10 : 15;
 
 		//sound
-		RacerSounds.pitch = Mathf.Max(Mathf.Lerp(RacerSounds.pitch, TTSUtils.Remap(rigidbody.velocity.magnitude + offset, 0f, 100.0f, 0.5f, 1.0f, false), 0.1f), 0);
-		RacerSounds.volume = Mathf.Max(Mathf.Lerp(RacerSounds.volume, TTSUtils.Remap(rigidbody.velocity.magnitude + offset, 0f, 100.0f, 0.5f, 1f, false), 0.1f) * 1.5f, 0);
+		if (onGround) {
+			RacerSounds.pitch = Mathf.Max(Mathf.Lerp(RacerSounds.pitch, TTSUtils.Remap(rigidbody.velocity.magnitude + offset, 0f, 100.0f, 0.5f, 1.0f, false), 0.1f), 0);
+			RacerSounds.volume = Mathf.Max(Mathf.Lerp(RacerSounds.volume, TTSUtils.Remap(rigidbody.velocity.magnitude + offset, 0f, 100.0f, 0.5f, 1f, false), 0.1f) * 1.5f, 0);
+		}
+		else {
+			//	RacerSounds.pitch = Mathf.Max(Mathf.Lerp(RacerSounds.pitch, RacerSounds.pitch * rpm / 200.0f + 0.5f, 0.1f), 0);
+			//	RacerSounds.volume = Mathf.Max(Mathf.Lerp(RacerSounds.volume, RacerSounds.pitch * rpm / 200.0f + 0.5f, 0.1f) * 1.5f, 0);
+			RacerSounds.pitch = Mathf.Max(Mathf.Lerp(RacerSounds.pitch, TTSUtils.Remap(rigidbody.velocity.magnitude + offset, 0f, 100.0f, 0.5f, 1.0f, false), 0.1f), 0);
+			RacerSounds.volume = Mathf.Max(Mathf.Lerp(RacerSounds.volume, TTSUtils.Remap(rigidbody.velocity.magnitude + offset, 0f, 100.0f, 0.5f, 1f, false), 0.1f) * 1.5f, 0);
+		}
 	}
 
 	public float GetTiltAngle() {
