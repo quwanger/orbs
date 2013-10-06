@@ -8314,6 +8314,22 @@ Prefab:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: edfd818c65e951642b84833e9897a7a6, type: 2}
+      propertyPath: count1
+      value: 
+      objectReference: {fileID: 8300000, guid: f01c3f757dbd7417cade7dbacedf717c, type: 3}
+    - target: {fileID: 11400000, guid: edfd818c65e951642b84833e9897a7a6, type: 2}
+      propertyPath: count2
+      value: 
+      objectReference: {fileID: 8300000, guid: 862221931745e494d97a30f2136caab4, type: 3}
+    - target: {fileID: 11400000, guid: edfd818c65e951642b84833e9897a7a6, type: 2}
+      propertyPath: count3
+      value: 
+      objectReference: {fileID: 8300000, guid: 1663bb590078c4929b13bce1fc5b7af1, type: 3}
+    - target: {fileID: 11400000, guid: edfd818c65e951642b84833e9897a7a6, type: 2}
+      propertyPath: countGO
+      value: 
+      objectReference: {fileID: 8300000, guid: e936fa455e4794535924c972ab266ddc, type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: edfd818c65e951642b84833e9897a7a6, type: 2}
   m_RootGameObject: {fileID: 2071354940}
@@ -11447,6 +11463,7 @@ GameObject:
   - 4: {fileID: 282126870}
   - 114: {fileID: 282126869}
   - 114: {fileID: 282126868}
+  - 114: {fileID: 282126871}
   m_Layer: 0
   m_Name: TTSLevel
   m_TagString: Untagged
@@ -11471,7 +11488,7 @@ MonoBehaviour:
   raceHasStarted: 0
   raceHasFinished: 0
   countdown: {fileID: 2071354940}
-  DebugMode: 1
+  DebugMode: 0
   PerksEnabled: 1
   fonts:
   - {fileID: 12800000, guid: f9929be8a43d15b408cb23dd53efaaa4, type: 3}
@@ -11497,6 +11514,18 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
+--- !u!114 &282126871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400004, guid: 66b1082218c3fc643bf095d7cf975069,
+    type: 2}
+  m_PrefabInternal: {fileID: 943002577}
+  m_GameObject: {fileID: 282126867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98427cc437fc53f40ab0947178818ee2, type: 3}
+  m_Name: 
+  waypoints: []
 --- !u!1 &282888415
 GameObject:
   m_ObjectHideFlags: 0
@@ -27286,7 +27315,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 966d3cc32a2da437bb40e50b059cb851, type: 2}
+  - {fileID: 2100000, guid: d931a4f1e3cce40ab9b250de314c31ea, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -36951,7 +36980,7 @@ Prefab:
       objectReference: {fileID: 2071354940}
     - target: {fileID: 11400002, guid: 66b1082218c3fc643bf095d7cf975069, type: 2}
       propertyPath: DebugMode
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 66b1082218c3fc643bf095d7cf975069, type: 2}
@@ -85207,8 +85236,10 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b3a22d80fb2bd3749b83730de71268a0, type: 3}
   m_Name: 
-  LowBeep: {fileID: 8300000, guid: 1fe43ef2ae03df44cbebfb111de1055a, type: 3}
-  HighBeep: {fileID: 8300000, guid: 3ef19b19e00b62246adbf77e1c41a5ce, type: 3}
+  countGO: {fileID: 8300000, guid: e936fa455e4794535924c972ab266ddc, type: 3}
+  count3: {fileID: 8300000, guid: 1663bb590078c4929b13bce1fc5b7af1, type: 3}
+  count2: {fileID: 8300000, guid: 862221931745e494d97a30f2136caab4, type: 3}
+  count1: {fileID: 8300000, guid: f01c3f757dbd7417cade7dbacedf717c, type: 3}
 --- !u!82 &2071354944
 AudioSource:
   m_ObjectHideFlags: 0
