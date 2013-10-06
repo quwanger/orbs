@@ -12,7 +12,7 @@ GameObject:
   - 199: {fileID: 19900000}
   - 114: {fileID: 11400000}
   m_Layer: 0
-  m_Name: SuperCEmitter
+  m_Name: ShockwaveEmitter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25,7 +25,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 854.848511, y: 294.161194, z: 999.087646}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -52,7 +52,7 @@ ParticleSystem:
   looping: 0
   prewarm: 0
   playOnAwake: 1
-  moveWithTransform: 1
+  moveWithTransform: 0
   InitialModule:
     enabled: 1
     startLifetime:
@@ -213,7 +213,7 @@ ParticleSystem:
         rgba: 4294967295
       maxColor:
         serializedVersion: 2
-        rgba: 4294280192
+        rgba: 3330289510
       minMaxState: 0
     startSize:
       scalar: .200000003
@@ -294,8 +294,8 @@ ParticleSystem:
     boxX: 1
     boxY: 1
     boxZ: 1
-    placementMode: 0
-    m_Mesh: {fileID: 4300000, guid: e240d65d8f4da468b85168c0275394ac, type: 3}
+    placementMode: 2
+    m_Mesh: {fileID: 4300000, guid: e022b226992234395a02475e8921cb01, type: 3}
     randomDirection: 0
   EmissionModule:
     enabled: 1
@@ -734,19 +734,29 @@ ParticleSystem:
       minCurve:
         serializedVersion: 2
         m_Curve:
-        - time: .0799999982
-          value: -.703703701
+        - time: 0
+          value: -1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+        - time: .599134207
+          value: 1
+          inSlope: 1.44928694
+          outSlope: 1.44928694
+          tangentMode: 0
+        - time: .985981286
+          value: -1
           inSlope: 0
           outSlope: 0
           tangentMode: 0
         m_PreInfinity: 2
         m_PostInfinity: 2
       minMaxState: 2
-    inWorldSpace: 0
+    inWorldSpace: 1
     randomizePerFrame: 0
   ExternalForcesModule:
     enabled: 0
-    multiplier: .0700000003
+    multiplier: 2.71000004
   ClampVelocityModule:
     enabled: 0
     x:
