@@ -81,6 +81,9 @@ public class TTSRacer : TTSBehaviour
 	public GameObject startingWaypoint;
 	public bool goingWrongWay = false;
 
+	// AI
+	private TTSRacerAI AIControl;
+
 	void Awake() {
 		level.RegisterRacer(gameObject);
 		//Get the body via tag.
@@ -88,6 +91,11 @@ public class TTSRacer : TTSBehaviour
 			if (child.gameObject.tag == "RacerDisplayMesh") {
 				displayMeshComponent = child;
 			}
+		}
+
+		player = PlayerType.AI;
+		if (player == PlayerType.AI) {
+			AIControl = new TTSRacerAI(waypoints, rigidbody.velocity);
 		}
 
 		lastForward = TTSUtils.FlattenVector(displayMeshComponent.forward).normalized;
@@ -149,7 +157,9 @@ public class TTSRacer : TTSBehaviour
 
 		}
 		else if (player == PlayerType.AI) {
-
+			AIControl.update(rigidbody.position, lastForward);
+			vInput = AIControl.vInput;
+			hInput = AIControl.hInput;
 		}
 		else {
 			Debug.LogError("PLAYER TYPE NOT SET");
@@ -270,7 +280,64 @@ public class TTSRacer : TTSBehaviour
 
 		Gizmos.color = Color.cyan;
 		Gizmos.DrawRay(transform.position, lastForward * 5);
+
+		if (AIControl != null)
+			AIControl.drawGizmos();
 	}
 }
 
 
+public class TTSRacerAI {
+	// Waypoints
+	private List<GameObject> waypoints;
+	public int nextWaypoint = 0;
+
+	// Racer Vars
+	private Vector3 rForward;
+	private Vector3 rSpeed;
+	private Vector3 rPosition;
+
+	// Movement Vars
+	private Vector3 nextWaypointDir = new Vector3();
+
+	// Input
+	public float vInput = 0.0f;
+	public float hInput = 0.0f;
+
+	/// <summary> 
+	/// 
+	/// </summary> 
+	/// <param name="waypointList">List of waypoints needed</param> 
+	/// <param name="rSpeed">Reference to racer speed</param> 
+	public TTSRacerAI(List<GameObject> waypointList, Vector3 racerSpeed)
+	{
+		waypoints = waypointList;
+		rSpeed = racerSpeed;
+	}
+
+	public void update(Vector3 position, Vector3 forward) {
+		rPosition = position;
+		rForward = forward;
+		update();
+	}
+
+	public void update() {
+		//vInput = 1.0f;
+		//hInput = Mathf.Sin(Time.time*2)/4.0f;
+
+		//vInput = Input.GetAxis("Vertical");
+		//hInput = Input.GetAxis("Horizontal");
+
+		nextWaypointDir = TTSUtils.FlattenVector( waypoints[nextWaypoint].transform.position - rPosition);
+
+		Debug.Log(TTSUtils.GetRelativeAngle(rForward, nextWaypointDir));
+
+		vInput = 0.2f;
+		hInput = TTSUtils.Remap(TTSUtils.GetRelativeAngle(rForward, nextWaypointDir), -90.0f, 90.0f, -1.0f, 1.0f, true);
+	}
+
+	public void drawGizmos() {
+		Gizmos.color = Color.white;
+		Gizmos.DrawLine(rPosition, waypoints[nextWaypoint].transform.position);
+	}
+}
