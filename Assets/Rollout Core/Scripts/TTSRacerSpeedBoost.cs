@@ -8,8 +8,12 @@ public class TTSRacerSpeedBoost : TTSPerishingBehaviour {
 	private List<TrailRenderer> trailRenderers = new List<TrailRenderer>();
 	private bool isPlatform;
 	private float _power;
+	public bool destroyWhenLifecycleComplete = false; // Once duration has passed, the class will stop running and self-destruct
+	public bool useKillFunctionWhenComplete = true; // Execute the kill function once complete
+	
 
 	protected override void OnPerishingUpdate(float progress) {
+		Debug.Log("Running\n");
 		if(isPlatform){
 			rigidbody.AddForce(GetComponent<TTSRacer>().displayMeshComponent.forward * _power);
 			Debug.Log("IsPlatform!");
@@ -53,10 +57,12 @@ public class TTSRacerSpeedBoost : TTSPerishingBehaviour {
 		}
 		go.transform.parent = null;
 		go.transform.position = this.transform.position;
-		Invoke("Cleanup", 5.0f);
+		Invoke("Cleanup", 5);
 	}
 	
 	void Cleanup() {
+		Debug.Log("Cleanup\n");
+		Debug.Log(this.go);
 		Destroy (this.go);
 		Destroy (this);
 	}

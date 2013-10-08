@@ -48,7 +48,8 @@ public class TTSPerishingBehaviour : TTSBehaviour {
 		if(progressSinceBirth/duration > 1.0f) {
 			if(destroyWhenLifecycleComplete) {
 				Kill();
-				Destroy(this);				
+				Debug.Log("Killing\n");
+				Destroy(this);
 			}
 			
 			if(useKillFunctionWhenComplete) {
