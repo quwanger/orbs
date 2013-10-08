@@ -14,6 +14,7 @@ public class TTSPowerup : TTSBehaviour {
 	public GameObject EntropyCannonPrefab;
 	public GameObject BoostPrefab;
 	public GameObject TimeBonusPrefab;
+	public GameObject ShieldPrefab;
 	#endregion
 	
 	
@@ -24,6 +25,7 @@ public class TTSPowerup : TTSBehaviour {
 			if(Input.GetKeyDown("2")) EntropyCannon(DebugTier);
 			if(Input.GetKeyDown("3")) SuperCBooster(DebugTier);
 			if(Input.GetKeyDown("4")) TimeBonus();
+			if(Input.GetKeyDown("5")) Shield(DebugTier);
 		}
 
 		//if you hit space or the 'a' button on an Xbox controller
@@ -57,6 +59,10 @@ public class TTSPowerup : TTSBehaviour {
 			
 			case Powerup.SuperC:
 			SuperCBooster(tier);
+			break;
+			
+			case Powerup.Shield:
+			Shield(tier);
 			break;
 			
 			default:
@@ -134,11 +140,27 @@ public class TTSPowerup : TTSBehaviour {
 		GiveTimeBonus();
 	}
 	
-	
+	public void Shield(int _tier){
+		if(_tier == 1) {
+			DeployShield(1);
+		}
+		if(_tier == 2) {
+			DeployShield(2);
+		}
+		if(_tier == 3) {
+			DeployShield(3);
+		}
+	}
 
 	#endregion
 	
 	#region internal methods
+	private void DeployShield(int level){
+		GameObject go = (GameObject) Instantiate(ShieldPrefab, this.transform.position, Quaternion.identity);
+		go.transform.parent = this.transform;
+		go.GetComponent<TTSShield>().DeployShield(level);
+	}
+	
 	private void DropDrezzStone() {
 		GameObject go = (GameObject) Instantiate(DrezzStonePrefab, this.transform.position - GetComponent<TTSRacer>().displayMeshComponent.forward * 3.0f, this.transform.rotation);
 		go.rigidbody.AddForce(Random.insideUnitCircle * 50f);
