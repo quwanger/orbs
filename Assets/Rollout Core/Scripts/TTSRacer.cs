@@ -327,10 +327,7 @@ public class TTSRacerAI {
 
 		//vInput = Input.GetAxis("Vertical");
 		//hInput = Input.GetAxis("Horizontal");
-
 		nextWaypointDir = TTSUtils.FlattenVector( waypoints[nextWaypoint].transform.position - rPosition);
-
-		Debug.Log(TTSUtils.GetRelativeAngle(rForward, nextWaypointDir));
 
 		vInput = 0.2f;
 		hInput = TTSUtils.Remap(TTSUtils.GetRelativeAngle(rForward, nextWaypointDir), -90.0f, 90.0f, -1.0f, 1.0f, true);
