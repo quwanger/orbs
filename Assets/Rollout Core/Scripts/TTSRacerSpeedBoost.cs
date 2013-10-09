@@ -8,9 +8,11 @@ public class TTSRacerSpeedBoost : TTSPerishingBehaviour {
 	private List<TrailRenderer> trailRenderers = new List<TrailRenderer>();
 	private bool isPlatform;
 	private float _power;
-	public bool destroyWhenLifecycleComplete = false; // Once duration has passed, the class will stop running and self-destruct
-	public bool useKillFunctionWhenComplete = true; // Execute the kill function once complete
 	
+	void Awake(){
+		destroyWhenLifecycleComplete = false; // Once duration has passed, the class will stop running and self-destruct
+		useKillFunctionWhenComplete = true; // Execute the kill function once complete
+	}
 
 	protected override void OnPerishingUpdate(float progress) {
 		Debug.Log("Running\n");
@@ -61,8 +63,6 @@ public class TTSRacerSpeedBoost : TTSPerishingBehaviour {
 	}
 	
 	void Cleanup() {
-		Debug.Log("Cleanup\n");
-		Debug.Log(this.go);
 		Destroy (this.go);
 		Destroy (this);
 	}

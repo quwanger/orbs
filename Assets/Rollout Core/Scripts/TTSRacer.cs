@@ -65,6 +65,9 @@ public class TTSRacer: TTSBehaviour {
 	public float TopSpeed = 250.0f;
 	public float Acceleration = 8000.0f;
 	public float Handling = 11000.0f;
+	
+	public float Defense;
+	public float Offense;
 	#endregion
 	
 	private float smooth;
@@ -109,6 +112,11 @@ public class TTSRacer: TTSBehaviour {
 		TopSpeed = TopSpeed + (100.0f * CurrentRig.GetComponent<TTSRig>().rigSpeed);
 		Acceleration = Acceleration + (100.0f * CurrentRig.GetComponent<TTSRig>().rigAcceleration);
 		Handling = Handling + (100.0f * CurrentRig.GetComponent<TTSRig>().rigHandling);
+		
+		Offense = CurrentRig.GetComponent<TTSRig>().rigOffense;
+		Defense = CurrentRig.GetComponent<TTSRig>().rigDefense;
+		Debug.Log(CurrentRig.GetComponent<TTSRig>().rigOffense);
+		Debug.Log (Offense);
 	}
 	
 	void FixedUpdate () {
