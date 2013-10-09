@@ -24,6 +24,10 @@ public class TTSWaypoint : TTSBehaviour {
 	public bool hasSibling = false;
 	private List<GameObject> siblings = new List<GameObject>();
 	public Transform transform;
+
+	public List<TTSWaypoint> _siblings = new List<TTSWaypoint>();
+	public List<TTSWaypoint> nextWaypoints = new List<TTSWaypoint>();
+	public List<TTSWaypoint> prevWaypoints = new List<TTSWaypoint>();
 	
 	void Start () {
 		boxCollider = GetComponent<BoxCollider>();
@@ -45,19 +49,53 @@ public class TTSWaypoint : TTSBehaviour {
 			}
 		}
 	}
-	
-	public void AddSibling(GameObject sibling){
-		siblings.Add(sibling);
+
+
+	/// <summary>
+	/// Will add new  sibling waypoint to all the siblings and itself
+	/// </summary>
+	/// <param name="sibling">New sibling</param>
+	public void NewSibling(TTSWaypoint lastSibling) {
+		// Add yourself to all the previous siblings
+		_siblings.Add(lastSibling);
+		_siblings.AddRange(lastSibling._siblings);
+
+		// Add previous siblings to yourself
+		foreach (TTSWaypoint sibling in _siblings) {
+			sibling.AddSibling(this);
+		}
+
+		// Get all the previous waypoints too
+		prevWaypoints = lastSibling.prevWaypoints;
 	}
 
+	private void AddSibling(TTSWaypoint newSibling) {
+		_siblings.Add(newSibling);
+	}
+	
 	/// <summary>
 	/// Will handle the siblings too when adding next waypoint
 	/// </summary>
 	/// <param name="next">Next waypoint</param>
-	public void AddNextWaypoint(GameObject next) {
-		nextWaypoint = next;
-		foreach (GameObject obj in siblings) {
-			obj.GetComponent<TTSWaypoint>().nextWaypoint = next;
+	/// Next waypoint is the newest waypoint being added
+	/// This function is called only once when the index has gone up, otherwise, new sibling is called
+	public void AddNextWaypoint(TTSWaypoint next) { 
+		nextWaypoints.Add(next);
+
+		// Add previous siblings to yourself
+		foreach (TTSWaypoint sibling in _siblings) {
+			sibling.AddNext(next);
 		}
+
+		// Add yourself and siblings to next wp
+		next.AddPrevWaypoints(this);
+	}
+	private void AddNext(TTSWaypoint next) {
+		nextWaypoints.Add(next);
+	}
+
+	public void AddPrevWaypoints(TTSWaypoint prevWaypoint) {
+		prevWaypoints.Add(prevWaypoint);
+		prevWaypoints.AddRange(prevWaypoint._siblings);
 	}
 }
