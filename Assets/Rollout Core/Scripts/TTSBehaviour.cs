@@ -35,10 +35,22 @@ public class TTSBehaviour : MonoBehaviour {
 			return Camera.main.audio;
 		}
 	}
-	
-	public List<GameObject> waypoints{
+
+	public TTSWaypointManager waypointManager {
 		get {
-			return level.waypointManager.waypoints;
+			return level.waypointManager;
+		}
+	}
+	
+	public List<TTSWaypoint> allWaypoints{
+		get {
+			return level.waypointManager.allWaypoints;
+		}
+	}
+
+	public List<List<TTSWaypoint>> waypointLevels {
+		get {
+			return level.waypointManager.waypointLevels;
 		}
 	}
 	
@@ -67,5 +79,4 @@ public class TTSBehaviour : MonoBehaviour {
 			return GameObject.Find("hud").GetComponent<TTSFloatHud>();
 		}
 	}
-	
 }

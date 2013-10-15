@@ -19,25 +19,23 @@ public class TTSWaypoint : TTSBehaviour {
 	public bool isActive = true;
 	private BoxCollider boxCollider;
 	
-	public GameObject nextWaypoint;
-	
 	public bool hasSibling = false;
-	private List<GameObject> siblings = new List<GameObject>();
 	public Transform transform;
 
-	public List<TTSWaypoint> _siblings = new List<TTSWaypoint>();
+	public Vector3 closestPoint = new Vector3();
+	public Vector3 closestPointRotation = new Vector3();
+
+	public List<TTSWaypoint> siblings = new List<TTSWaypoint>();
 	public List<TTSWaypoint> nextWaypoints = new List<TTSWaypoint>();
 	public List<TTSWaypoint> prevWaypoints = new List<TTSWaypoint>();
 	
 	void Start () {
+	}
+
+	void Awake() {
 		boxCollider = GetComponent<BoxCollider>();
 		boxCollider.isTrigger = true;
 		transform = GetComponent<Transform>();
-	}
-	
-	void OnDrawGizmos() {
-		Gizmos.color = Color.black;
-		//Gizmos.DrawIcon(this.transform.position,"Rollout Core/Waypoints/waypoint-icon.png");
 	}
 	
 	void OnTriggerEnter(Collider other) {
@@ -50,6 +48,23 @@ public class TTSWaypoint : TTSBehaviour {
 		}
 	}
 
+	public Vector3 GetClosestPoint(Vector3 position) {
+		// convert point to local space
+		return closestPointRotation = position;//boxCollider.ClosestPointOnBounds(position);
+	}
+
+
+	public void OnDrawGizmos() {
+		Gizmos.color = Color.red;
+
+		Gizmos.DrawWireCube(closestPoint, new Vector3(0.5f, 0.5f, 0.5f));
+
+		Gizmos.color = Color.blue;
+
+		Gizmos.DrawWireCube(closestPointRotation, new Vector3(0.5f, 0.5f, 0.5f));
+	}
+
+	#region initialize
 
 	/// <summary>
 	/// Will add new  sibling waypoint to all the siblings and itself
@@ -57,20 +72,25 @@ public class TTSWaypoint : TTSBehaviour {
 	/// <param name="sibling">New sibling</param>
 	public void NewSibling(TTSWaypoint lastSibling) {
 		// Add yourself to all the previous siblings
-		_siblings.Add(lastSibling);
-		_siblings.AddRange(lastSibling._siblings);
+		siblings.Add(lastSibling);
+		siblings.AddRange(lastSibling.siblings);
 
 		// Add previous siblings to yourself
-		foreach (TTSWaypoint sibling in _siblings) {
+		foreach (TTSWaypoint sibling in siblings) {
 			sibling.AddSibling(this);
 		}
 
 		// Get all the previous waypoints too
 		prevWaypoints = lastSibling.prevWaypoints;
+
+		// Add yourself as next to all the previous
+		foreach (TTSWaypoint prevWaypoint in prevWaypoints) {
+			prevWaypoint.AddNext(this);
+		}
 	}
 
 	private void AddSibling(TTSWaypoint newSibling) {
-		_siblings.Add(newSibling);
+		siblings.Add(newSibling);
 	}
 	
 	/// <summary>
@@ -83,7 +103,7 @@ public class TTSWaypoint : TTSBehaviour {
 		nextWaypoints.Add(next);
 
 		// Add previous siblings to yourself
-		foreach (TTSWaypoint sibling in _siblings) {
+		foreach (TTSWaypoint sibling in siblings) {
 			sibling.AddNext(next);
 		}
 
@@ -96,6 +116,7 @@ public class TTSWaypoint : TTSBehaviour {
 
 	public void AddPrevWaypoints(TTSWaypoint prevWaypoint) {
 		prevWaypoints.Add(prevWaypoint);
-		prevWaypoints.AddRange(prevWaypoint._siblings);
+		prevWaypoints.AddRange(prevWaypoint.siblings);
 	}
+	#endregion
 }
