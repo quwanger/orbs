@@ -76,6 +76,8 @@ public class TTSRacer : TTSBehaviour
 
 	private float smooth;
 	private float stopSpeed = 0.05f;
+
+	// Direction/Wrong way
 	public TTSWaypoint currentWaypoint;
 	public TTSWaypoint previousWaypoint;
 	public TTSWaypoint startingWaypoint;
