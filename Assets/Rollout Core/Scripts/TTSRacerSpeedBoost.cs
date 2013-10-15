@@ -55,6 +55,8 @@ public class TTSRacerSpeedBoost : TTSPerishingBehaviour {
 		foreach(Transform child in go.transform) {
 			if(child.GetComponent<ParticleSystem>()) {
 				child.GetComponent<ParticleSystem>().Stop();
+			}else if(child.GetComponent<TrailRenderer>()){
+				child.GetComponent<TrailRenderer>().enabled = false;
 			}
 		}
 		go.transform.parent = null;

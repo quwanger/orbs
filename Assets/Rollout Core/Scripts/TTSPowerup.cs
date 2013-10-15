@@ -7,6 +7,7 @@ public class TTSPowerup : TTSBehaviour {
 	public int DebugTier = 2;
 	
 	public Powerup AvailablePowerup;
+	public Powerup ActivePowerup;
 	public int tier = 1;
 	
 	#region Projectile Prefab Assignment
@@ -70,10 +71,9 @@ public class TTSPowerup : TTSBehaviour {
 			break;
 		}
 		
+		this.ActivePowerup = this.AvailablePowerup;
 		this.AvailablePowerup = Powerup.None;
 		this.tier = 1;
-		
-		
 	}
 	
 	#endregion
@@ -94,7 +94,8 @@ public class TTSPowerup : TTSBehaviour {
 				Invoke("DropDrezzStone", i * 0.5f);
 			}
 		}
-		
+		//it is only active while firing
+		this.ActivePowerup = TTSBehaviour.Powerup.None;
 	}
 	
 	public void EntropyCannon(int _tier) {
@@ -112,6 +113,8 @@ public class TTSPowerup : TTSBehaviour {
 				Invoke("FireEntropyCannon", i * 0.1f);
 			}
 		}
+		//it is only active while firing
+		this.ActivePowerup = TTSBehaviour.Powerup.None;
 	}
 	
 

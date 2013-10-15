@@ -115,8 +115,6 @@ public class TTSRacer: TTSBehaviour {
 		
 		Offense = CurrentRig.GetComponent<TTSRig>().rigOffense;
 		Defense = CurrentRig.GetComponent<TTSRig>().rigDefense;
-		Debug.Log(CurrentRig.GetComponent<TTSRig>().rigOffense);
-		Debug.Log (Offense);
 	}
 	
 	void FixedUpdate () {
