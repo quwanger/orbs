@@ -12,6 +12,8 @@ public class TTSDrezzStone : MonoBehaviour {
 			GameObject newemitter = (GameObject) Instantiate(EmitterToSpawn, this.transform.position, this.transform.rotation);
 			newemitter.transform.parent = this.transform;
 			newemitter.GetComponent<LightningBolt>().target = other.gameObject.transform;
+			if(other.gameObject.GetComponent<TTSRacer>())
+				other.GetComponent<TTSRacer>().DamageRacer(0.5f);
 			Emitters.Add(newemitter);
 		}
 	}
