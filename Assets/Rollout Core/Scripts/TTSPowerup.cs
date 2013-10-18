@@ -156,19 +156,22 @@ public class TTSPowerup : TTSBehaviour {
 	
 	#region internal methods
 	private void DeployShield(int level){
+		this.GetComponent<TTSRacer>().hasShield = true;
 		GameObject go = (GameObject) Instantiate(ShieldPrefab, this.transform.position, Quaternion.identity);
 		go.transform.parent = this.transform;
 		//defense stat effects to the duration of the shield
-		go.GetComponent<TTSShield>().DeployShield(level, this.GetComponent<TTSRacer>().Defense);
+		go.GetComponent<TTSShield>().DeployShield(level, this.GetComponent<TTSRacer>().Defense, this.GetComponent<TTSRacer>());
 	}
 	
 	private void DropDrezzStone() {
 		GameObject go = (GameObject) Instantiate(DrezzStonePrefab, this.transform.position - GetComponent<TTSRacer>().displayMeshComponent.forward * 7.0f, this.transform.rotation);
+		go.GetComponent<TTSDrezzStone>().offensiveMultiplier = this.GetComponent<TTSRacer>().Offense;
 		go.rigidbody.AddForce(Random.insideUnitCircle * 50f);
 	}
 	
 	private void FireEntropyCannon() {
 		GameObject go = (GameObject) Instantiate(EntropyCannonPrefab);
+		go.GetComponent<TTSEntropyCannonProjectile>().offensiveMultiplier = this.GetComponent<TTSRacer>().Offense;
 		go.transform.rotation = GetComponent<TTSRacer>().displayMeshComponent.transform.rotation;
 		go.transform.position = this.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
 		go.rigidbody.velocity = this.rigidbody.velocity.normalized * go.GetComponent<TTSEntropyCannonProjectile>().ProjectileStartVelocity;

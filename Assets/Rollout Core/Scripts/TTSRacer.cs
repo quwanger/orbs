@@ -70,6 +70,7 @@ public class TTSRacer: TTSBehaviour {
 	public float Offense;
 	#endregion
 	
+	public bool hasShield;
 	private float smooth;
 	private float stopSpeed = 0.05f;
 	public GameObject currentWaypoint;
@@ -157,15 +158,19 @@ public class TTSRacer: TTSBehaviour {
 	
 	public void DamageRacer(float dmgLevel){
 		//dmgLevel should be a percentage (between 0.0f and 1.0f)
-		if(Defense > dmgLevel)
-			if((Defense - dmgLevel) < 1.0f)
-				dmgLevel = Defense - dmgLevel;
-			else
-				dmgLevel = 1.0f;
-		else
-			dmgLevel = 0.0f;
-		Vector3 damageVector = new Vector3(rigidbody.velocity.x * dmgLevel, rigidbody.velocity.y * dmgLevel, rigidbody.velocity.z * dmgLevel);
-		rigidbody.velocity = damageVector;
+		if(!hasShield){
+			if(Defense > dmgLevel){
+				if((Defense - dmgLevel) < 1.0f){
+					dmgLevel = Defense - dmgLevel;
+				}else{
+					dmgLevel = 1.0f;
+				}
+			}else{
+				dmgLevel = 0.0f;
+			}
+			Vector3 damageVector = new Vector3(rigidbody.velocity.x * dmgLevel, rigidbody.velocity.y * dmgLevel, rigidbody.velocity.z * dmgLevel);
+			rigidbody.velocity = damageVector;
+		}
 	}
 	
 	void OnCollisionEnter(Collision collision) {

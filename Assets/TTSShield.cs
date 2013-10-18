@@ -4,14 +4,16 @@ using System.Collections;
 public class TTSShield : TTSPerishingBehaviour {
 	
 	private bool dead = false;
+	private TTSRacer racer;
 	
 	void Awake(){
 		destroyWhenLifecycleComplete = false; // Once duration has passed, the class will stop running and self-destruct
 		useKillFunctionWhenComplete = true; // Execute the kill function once complete
 	}
 	
-	public void DeployShield(int level, float def){
+	public void DeployShield(int level, float def, TTSRacer tempRacer){
 		this.duration = 4.0f * level * def;
+		racer = tempRacer;
 	}
 	
 	protected override void Kill(){
@@ -26,6 +28,7 @@ public class TTSShield : TTSPerishingBehaviour {
 			}
 			dead = true;
 		}
+		racer.hasShield = false;
 		Invoke("Cleanup", 5);
 	}
 	

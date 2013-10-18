@@ -7,13 +7,15 @@ public class TTSDrezzStone : MonoBehaviour {
 	public GameObject EmitterToSpawn;
 	public GameObject RegisteredTargets;
 	
+	public float offensiveMultiplier;
+	
 	void OnTriggerEnter(Collider other) {
 		if(!other.gameObject.isStatic) {
 			GameObject newemitter = (GameObject) Instantiate(EmitterToSpawn, this.transform.position, this.transform.rotation);
 			newemitter.transform.parent = this.transform;
 			newemitter.GetComponent<LightningBolt>().target = other.gameObject.transform;
 			if(other.gameObject.GetComponent<TTSRacer>())
-				other.GetComponent<TTSRacer>().DamageRacer(0.5f);
+				other.GetComponent<TTSRacer>().DamageRacer(0.5f + (0.5f*offensiveMultiplier));
 			Emitters.Add(newemitter);
 		}
 	}
