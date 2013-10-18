@@ -346,14 +346,16 @@ public class TTSRacerAI {
 
 	public void update() {
 		nextDest = waypoints[nextWaypoint].GetClosestPoint(rPosition);
-		nextWaypointDir = TTSUtils.FlattenVector(waypoints[nextWaypoint].transform.position - rPosition);
+		nextWaypointDir = TTSUtils.FlattenVector(nextDest - rPosition);
+
+		float sensitivity = 90.0f;
 
 		vInput = 1.0f;
-		hInput = TTSUtils.Remap(TTSUtils.GetRelativeAngle(rForward, nextWaypointDir), -90.0f, 90.0f, -1.0f, 1.0f, true);
+		hInput = TTSUtils.Remap(TTSUtils.GetRelativeAngle(rForward, nextWaypointDir), -sensitivity, sensitivity, -1.0f, 1.0f, true);
 	}
 
 	public void drawGizmos() {
-		Gizmos.color = Color.white;
+		Gizmos.color = Color.yellow;
 		Gizmos.DrawLine(rPosition, nextDest);
 
 		Gizmos.color = Color.cyan;

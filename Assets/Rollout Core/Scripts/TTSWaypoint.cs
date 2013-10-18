@@ -23,12 +23,13 @@ public class TTSWaypoint : TTSBehaviour {
 	public Transform transform;
 
 	public Vector3 closestPoint = new Vector3();
-	public Vector3 closestPointRotation = new Vector3();
 
 	public List<TTSWaypoint> siblings = new List<TTSWaypoint>();
 	public List<TTSWaypoint> nextWaypoints = new List<TTSWaypoint>();
 	public List<TTSWaypoint> prevWaypoints = new List<TTSWaypoint>();
-	
+
+	private Vector3 colliderLine;
+
 	void Start () {
 	}
 
@@ -36,6 +37,8 @@ public class TTSWaypoint : TTSBehaviour {
 		boxCollider = GetComponent<BoxCollider>();
 		boxCollider.isTrigger = true;
 		transform = GetComponent<Transform>();
+
+		colliderLine = boxCollider.transform.right;
 	}
 	
 	void OnTriggerEnter(Collider other) {
@@ -48,20 +51,32 @@ public class TTSWaypoint : TTSBehaviour {
 		}
 	}
 
+	public Vector3 racerPos = new Vector3();
+	public Vector3 closestPointPos = new Vector3();
+
 	public Vector3 GetClosestPoint(Vector3 position) {
+		racerPos = position;
+
+		Vector3 pnt = Vector3.ClampMagnitude(Vector3.Project(racerPos - transform.position, colliderLine), boxCollider.size.x / 2) + transform.position;
+
+		pnt.y = position.y;
+
 		// convert point to local space
-		return closestPointRotation = position;//boxCollider.ClosestPointOnBounds(position);
+		return closestPointPos = pnt;
 	}
 
-
 	public void OnDrawGizmos() {
-		Gizmos.color = Color.red;
-
-		Gizmos.DrawWireCube(closestPoint, new Vector3(0.5f, 0.5f, 0.5f));
+		if (transform == null)
+			return;
 
 		Gizmos.color = Color.blue;
+		Gizmos.DrawLine(transform.position, closestPointPos);
 
-		Gizmos.DrawWireCube(closestPointRotation, new Vector3(0.5f, 0.5f, 0.5f));
+		Gizmos.color = Color.green;
+		Gizmos.DrawRay(transform.position, colliderLine);
+
+		Gizmos.color = Color.magenta;
+		Gizmos.DrawLine(transform.position + Vector3.left * 3, transform.position + Vector3.right * 3);
 	}
 
 	#region initialize
