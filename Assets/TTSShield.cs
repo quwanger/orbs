@@ -11,7 +11,7 @@ public class TTSShield : TTSPerishingBehaviour {
 	}
 	
 	public void DeployShield(int level, float def){
-			this.duration = 4.0f * level * def;
+		this.duration = 4.0f * level * def;
 	}
 	
 	protected override void Kill(){
@@ -20,15 +20,12 @@ public class TTSShield : TTSPerishingBehaviour {
 			foreach(Transform child in this.transform){
 				if(child.GetComponent<ParticleSystem>().playOnAwake == false){
 					child.GetComponent<ParticleSystem>().Play();
-					Debug.Log("Playing Perish\n");
 				}else{
 					child.GetComponent<ParticleSystem>().Stop();
-					Debug.Log("Stopping\n");
 				}
 			}
 			dead = true;
 		}
-		
 		Invoke("Cleanup", 5);
 	}
 	
