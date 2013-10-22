@@ -119,19 +119,20 @@ public class TTSPowerup : TTSBehaviour {
 		TTSRacerSpeedBoost boost = gameObject.AddComponent<TTSRacerSpeedBoost>();
 		boost.FireBoost(BoostPrefab);
 		
+		//offense adds to the boost duration and target force at every level
 		if(_tier == 1) {
-			boost.duration = 1.0f;
-			boost.TargetForce = 80.0f;
+			boost.duration = 1.0f * this.GetComponent<TTSRacer>().Offense;
+			boost.TargetForce = 80.0f * this.GetComponent<TTSRacer>().Offense;
 			vfx.BoostEffect(1.0f);
 		}
 		if(_tier == 2) {
-			boost.duration = 1.5f;
-			boost.TargetForce = 90.0f;
+			boost.duration = 1.5f * this.GetComponent<TTSRacer>().Offense;
+			boost.TargetForce = 90.0f * this.GetComponent<TTSRacer>().Offense;
 			vfx.BoostEffect(1.0f);
 		}
 		if(_tier == 3) {
-			boost.duration = 2.0f;
-			boost.TargetForce = 100.0f;
+			boost.duration = 2.0f * this.GetComponent<TTSRacer>().Offense;
+			boost.TargetForce = 100.0f * this.GetComponent<TTSRacer>().Offense;
 			vfx.BoostEffect(1.0f);
 		}
 	}
@@ -141,15 +142,7 @@ public class TTSPowerup : TTSBehaviour {
 	}
 	
 	public void Shield(int _tier){
-		if(_tier == 1) {
-			DeployShield(1);
-		}
-		if(_tier == 2) {
-			DeployShield(2);
-		}
-		if(_tier == 3) {
-			DeployShield(3);
-		}
+		DeployShield(_tier);
 	}
 
 	#endregion
@@ -158,7 +151,8 @@ public class TTSPowerup : TTSBehaviour {
 	private void DeployShield(int level){
 		GameObject go = (GameObject) Instantiate(ShieldPrefab, this.transform.position, Quaternion.identity);
 		go.transform.parent = this.transform;
-		go.GetComponent<TTSShield>().DeployShield(level);
+		//defense stat effects to the duration of the shield
+		go.GetComponent<TTSShield>().DeployShield(level, this.GetComponent<TTSRacer>().Defense);
 	}
 	
 	private void DropDrezzStone() {
