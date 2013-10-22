@@ -126,12 +126,13 @@ public class TTSRacer : TTSBehaviour
 		Offense = CurrentRig.GetComponent<TTSRig>().rigOffense;
 		Defense = CurrentRig.GetComponent<TTSRig>().rigDefense;
 	}
-
-	void FixedUpdate() {
-		if (IsPlayerControlled && !level.raceHasFinished) {
-			CalculateInputForces();
-		}
-		else {
+	
+	void FixedUpdate () {
+		if(!level.raceHasFinished){
+			if(IsPlayerControlled){ 
+				CalculateInputForces();
+			}
+		}else{
 			SlowToStop();
 		}
 
@@ -198,6 +199,19 @@ public class TTSRacer : TTSBehaviour
 	
 	public void StopRacer(){
 		rigidbody.velocity = new Vector3(0, 0, 0);
+	}
+	
+	public void DamageRacer(float dmgLevel){
+		//dmgLevel should be a percentage (between 0.0f and 1.0f)
+		if(Defense > dmgLevel)
+			if((Defense - dmgLevel) < 1.0f)
+				dmgLevel = Defense - dmgLevel;
+			else
+				dmgLevel = 1.0f;
+		else
+			dmgLevel = 0.0f;
+		Vector3 damageVector = new Vector3(rigidbody.velocity.x * dmgLevel, rigidbody.velocity.y * dmgLevel, rigidbody.velocity.z * dmgLevel);
+		rigidbody.velocity = damageVector;
 	}
 	
 	void OnCollisionEnter(Collision collision) {

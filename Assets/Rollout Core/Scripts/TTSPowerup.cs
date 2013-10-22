@@ -27,6 +27,10 @@ public class TTSPowerup : TTSBehaviour {
 			if(Input.GetKeyDown("3")) SuperCBooster(DebugTier);
 			if(Input.GetKeyDown("4")) TimeBonus();
 			if(Input.GetKeyDown("5")) Shield(DebugTier);
+			
+			if(Input.GetKeyDown("9")){
+				this.GetComponent<TTSRacer>().DamageRacer(0.9f);
+			}
 		}
 
 		//if you hit space or the 'a' button on an Xbox controller
@@ -159,7 +163,7 @@ public class TTSPowerup : TTSBehaviour {
 	}
 	
 	private void DropDrezzStone() {
-		GameObject go = (GameObject) Instantiate(DrezzStonePrefab, this.transform.position - GetComponent<TTSRacer>().displayMeshComponent.forward * 3.0f, this.transform.rotation);
+		GameObject go = (GameObject) Instantiate(DrezzStonePrefab, this.transform.position - GetComponent<TTSRacer>().displayMeshComponent.forward * 7.0f, this.transform.rotation);
 		go.rigidbody.AddForce(Random.insideUnitCircle * 50f);
 	}
 	
