@@ -14,6 +14,8 @@ public class TTSEntropyCannonProjectile : MonoBehaviour {
 	public float ProjectileAccleration = 10.0f;
 	public float ProjectileStartVelocity = 100.0f;
 	
+	public float offensiveMultiplier;
+	
 	private float initialDistanceToGround;
 #endregion
 
@@ -69,6 +71,10 @@ public class TTSEntropyCannonProjectile : MonoBehaviour {
 	}
 	
 	void OnCollisionEnter(Collision other) {
+		//damage racer if racer is hit
+		if(other.gameObject.GetComponent<TTSRacer>()){
+			other.gameObject.GetComponent<TTSRacer>().DamageRacer(offensiveMultiplier);
+		}
 		Explode(true);
 	}
 #endregion
