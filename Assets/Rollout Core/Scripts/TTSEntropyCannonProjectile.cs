@@ -26,6 +26,8 @@ public class TTSEntropyCannonProjectile : MonoBehaviour {
 		RaycastHit hit;
         if (Physics.Raycast(transform.position, -Vector3.up, out hit, 100.0F)){
             initialDistanceToGround = hit.distance;
+			//this is how you get the item is collides with
+			//Debug.Log (hit.collider);
 		}
 	}
 	
@@ -37,18 +39,20 @@ public class TTSEntropyCannonProjectile : MonoBehaviour {
 		
 		float distanceToGround = checkDistanceToGround();
 		
-		while(distanceToGround > initialDistanceToGround){
-			float tempY = this.transform.position.y;
-			tempY -= 0.05f;
-			this.transform.position = new Vector3(this.transform.position.x, tempY, this.transform.position.z);
-			distanceToGround = checkDistanceToGround();
-		}
-		
-		while(distanceToGround < initialDistanceToGround){
-			float tempY = this.transform.position.y;
-			tempY += 0.05f;
-			this.transform.position = new Vector3(this.transform.position.x, tempY, this.transform.position.z);
-			distanceToGround = checkDistanceToGround();
+		if(distanceToGround < initialDistanceToGround){
+			//while(distanceToGround < initialDistanceToGround){
+				float tempY = this.transform.position.y;
+				tempY += (initialDistanceToGround - distanceToGround);
+				this.transform.position = new Vector3(this.transform.position.x, tempY, this.transform.position.z);
+				//distanceToGround = checkDistanceToGround();
+			//}
+		}else if(distanceToGround > initialDistanceToGround){
+			//while(distanceToGround > initialDistanceToGround){
+				float tempY = this.transform.position.y;
+				tempY -= (distanceToGround - initialDistanceToGround);
+				this.transform.position = new Vector3(this.transform.position.x, tempY, this.transform.position.z);
+				//distanceToGround = checkDistanceToGround();
+			//}
 		}
 		
 	}
