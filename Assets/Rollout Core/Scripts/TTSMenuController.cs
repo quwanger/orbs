@@ -1,8 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-
-
-
+using System.Collections;
 
 public class TTSMenuController : TTSMenuEnums {
 	
@@ -13,6 +11,15 @@ public class TTSMenuController : TTSMenuEnums {
 	public PerkMenuItem SelectedPerk;
 	
 	public List<GameObject> _rigs = new List<GameObject>();
+	
+	public List<GameObject> _levels = new List<GameObject>();
+	public LevelMenuItem SelectedLevel;
+
+	private bool frontUnlocked = true;
+	private bool midUnlocked = false;
+	private bool backUnlocked = false;
+	
+	private bool isTweenCompleted = true;
 	
 	//each of the panels (blue, green, grey)
 	public GameObject BlueP;
@@ -26,18 +33,37 @@ public class TTSMenuController : TTSMenuEnums {
 	public GameObject RightMidNode;
 	public GameObject RightRearNode;
 	
+	public AudioClip menuHighlight;
+	public AudioClip menuSelect;
+	
+	public GameObject CharacterHighlighter;
+	public GameObject PerkHighlighter;
+	public GameObject LevelHighlighter;
+	
+	public GameObject Highlighter;
+	
 	//used to change the menuController
 	public int changer = 2;
+	
 	public int selectedCharacterIndex = 11;
 	public int selectedPerkIndex = 11;
-		
+	public int selectedLevelIndex = 11;
+	//public int selectedIndex = 11;	
+	
 	public PerkMenuItem chosenPerk;
 	public CharacterMenuItem chosenCharacter;
+	public LevelMenuItem chosenLevel;
+	
+	public GUIStyle TextStyle;
 	
 	private Texture2D texture;
 	
 	private string text;
 	private string text2;
+	private string text3;
+	
+	public GameObject[] decals;
+	
 	void Awake() {	
 		//Debug.Log(SelectedPerk);
 		texture = new Texture2D(1,1);
@@ -49,10 +75,12 @@ public class TTSMenuController : TTSMenuEnums {
 	void Start () {
 		GameObject[] characters = GameObject.FindGameObjectsWithTag("CharacterMenuItem");
 		GameObject[] perks = GameObject.FindGameObjectsWithTag("PerkMenuItem");
-		
+		GameObject[] levels = GameObject.FindGameObjectsWithTag("LevelMenuItem");
+			
 		foreach(GameObject c in characters)
 		{
 			_characters.Add(c);
+			c.GetComponent<TTSMenuItemCharacter>().decal.renderer.enabled = false;
 		}
 		
 		foreach(GameObject p in perks)
@@ -60,50 +88,69 @@ public class TTSMenuController : TTSMenuEnums {
 			_perks.Add(p);
 		}
 		
+		foreach(GameObject l in levels)
+		{
+			_levels.Add(l);
+		}
+		
 		//blue outline around square on launch 
 		HighlightCharacter();
-		//HighlightPerk();
+	}
+
+	void TweenComplete(){
+		//Debug.Log("The Tween completed!");	
+		//TweenComplete();
+		
 	}
 	
-	// Update is called once per frame
-	void Update () {			
-		menuControls();
+	 void LaunchTween() {
+        isTweenCompleted = true;
+    }
+	
+    void Example() {
+        Invoke("LaunchTween", 1);
+    }
 
-		if(Input.GetKeyDown(KeyCode.L)) 
+	// Update is called once per frame
+	void Update () {
+		
+		if(isTweenCompleted){
+			menuControls();
+		}
+		
+		if(Input.GetKeyDown(KeyCode.Return)) 
 		{
 			if(changer>0)
 			{
-				//Debug.Log (changer);
 				changer -= 1;
-				//Debug.Log (changer);
+				audio.PlayOneShot(menuSelect);
 				Controller();
 			}
 		}
 		
-		else if(Input.GetKeyDown(KeyCode.K)) 
+		else if(Input.GetKeyDown(KeyCode.Backspace)) 
 		{
 			if(changer<2)
 			{
-				
 				changer += 1;
-				
 				Controller();
 			}
 		}
 		
 		else if(Input.GetKeyDown(KeyCode.Y))
 		{
-			//float progress;
-
-			AsyncOperation async = Application.LoadLevelAsync("city1-1");
-
-	      	//progress = async.isDone;
-			//Debug.Log(progress);
+			AsyncOperation async = Application.LoadLevelAsync("loadingScene");
 		} 
 		
 		else if(Input.GetKeyDown(KeyCode.B))
 		{
-			if(changer == 1)
+						
+			if(changer == 0)
+			{
+				chosenLevel = SelectedLevel;
+			}
+			
+			else if(changer == 1)
 			{
 				chosenPerk = SelectedPerk;
 			}
@@ -112,10 +159,9 @@ public class TTSMenuController : TTSMenuEnums {
 			{
 				chosenCharacter = SelectedCharacter;
 			}
-			
 		}	
 	}
-	
+
 	private void menuControls(){
 		if(changer == 2)
 		{
@@ -140,6 +186,42 @@ public class TTSMenuController : TTSMenuEnums {
 			else if(Input.GetKeyDown(KeyCode.D))
 				ChangePerkIndex("right");
 		}
+		
+		else if(changer == 0)
+		{
+			if(Input.GetKeyDown(KeyCode.W))
+				ChangeLevelIndex("up");
+			else if(Input.GetKeyDown(KeyCode.S))
+				ChangeLevelIndex("down");
+			else if(Input.GetKeyDown(KeyCode.A))
+				ChangeLevelIndex("left");
+			else if(Input.GetKeyDown(KeyCode.D))
+				ChangeLevelIndex("right");
+		}
+	}
+	
+	private void ChangeLevelIndex(string direction){
+		if(direction == "left"){
+			if((selectedLevelIndex-4)>10)
+				selectedLevelIndex -= 10;
+		}
+		
+		else if(direction == "right"){
+			if((selectedLevelIndex+9)<30)
+				selectedLevelIndex += 10;
+		}
+		
+		else if(direction == "down"){
+			if((selectedLevelIndex%10+1) <= 3)
+				selectedLevelIndex += 1;
+		}
+		
+		else if(direction == "up"){
+			if((selectedLevelIndex%10-1) >= 1)
+				selectedLevelIndex -= 1;
+		}
+		
+		HighlightLevel();
 	}
 	
 	private void ChangeCharacterIndex(string direction){
@@ -162,7 +244,7 @@ public class TTSMenuController : TTSMenuEnums {
 			if((selectedCharacterIndex%10-1) >= 1)
 				selectedCharacterIndex -= 1;
 		}
-		//22%10 = 2 - 1 = 1 = 1 22 = 22-1 = 21
+		
 		HighlightCharacter();
 	}
 	
@@ -186,72 +268,96 @@ public class TTSMenuController : TTSMenuEnums {
 			if((selectedPerkIndex%10-1) >= 1)
 				selectedPerkIndex -= 1;
 		}
-		//22%10 = 2 - 1 = 1 = 1 22 = 22-1 = 21
+		
 		HighlightPerk();
 	}
 	
 	private void HighlightCharacter(){
 		foreach(GameObject c in _characters)
 		{
+			c.GetComponent<TTSMenuItemCharacter>().decal.renderer.enabled = false;
 			if(selectedCharacterIndex == c.GetComponent<TTSMenuItemCharacter>().index)
 			{
 				c.GetComponent<TTSMenuItemCharacter>().isSelected = true;
+				
+				c.GetComponent<TTSMenuItemCharacter>().decal.renderer.enabled = true;
+				
 				SelectedCharacter = c.GetComponent<TTSMenuItemCharacter>().character;
-				c.GetComponent<TTSMenuItemCharacter>().border.renderer.material.color = Color.yellow;
-			}else{
-				c.GetComponent<TTSMenuItemCharacter>().border.renderer.material.color = Color.white;
+			
+				Vector3 positionVector = new Vector3((c.transform.position.x + 1.0f),
+										  c.transform.position.y,
+										  CharacterHighlighter.transform.position.z);
+				audio.PlayOneShot(menuHighlight);
+				iTween.MoveTo(CharacterHighlighter,positionVector,0);
 			}
 		}
 	}
-	
+		
 	private void HighlightPerk(){
 		foreach(GameObject p in _perks)
 		{
 			if(selectedPerkIndex == p.GetComponent<TTSMenuItemPerk>().index)
 			{
-				p.GetComponent<TTSMenuItemPerk>().isSelected = true;
+				p.GetComponent<TTSMenuItemPerk>().isSelected = true;	
 				SelectedPerk = p.GetComponent<TTSMenuItemPerk>().perk;
-				p.GetComponent<TTSMenuItemPerk>().border.renderer.material.color = Color.yellow;
-				//message();
-			}else{
-				p.GetComponent<TTSMenuItemPerk>().border.renderer.material.color = Color.white;
+			
+				Vector3 positionVector = new Vector3((p.transform.position.x + 1.0f),
+										  p.transform.position.y,
+										  PerkHighlighter.transform.position.z);
+				audio.PlayOneShot(menuHighlight);
+				iTween.MoveTo(PerkHighlighter,positionVector,0);
+				
+			}
+		}
+	}
+	
+	private void HighlightLevel(){
+		foreach(GameObject l in _levels)
+		{
+			if(selectedLevelIndex == l.GetComponent<TTSMenuItemLevel>().index)
+			{
+				l.GetComponent<TTSMenuItemLevel>().isSelected = true;
+				SelectedLevel = l.GetComponent<TTSMenuItemLevel>().level;
+			
+				Vector3 positionVector = new Vector3((l.transform.position.x + 1.0f),
+										  l.transform.position.y,
+										  LevelHighlighter.transform.position.z);
+				audio.PlayOneShot(menuHighlight);
+				iTween.MoveTo(LevelHighlighter,positionVector,0);
+				
 			}
 		}
 	}
 	
 	void OnGUI(){
-		if(changer==1)
+		if(changer==0)
 		{
-			//Debug.Log (changer);
-			GUI.color = new Color(0f,0f,0f);
-			GUI.skin.box.normal.background = texture;
-			//GUI.Box(new Rect(Screen.width/4,Screen.height/0.8f,Screen.width/2,Screen.height/2), "");
-			GUI.color = new Color(1F,1F,1F,0.5f);
-			GUI.skin.label.alignment = TextAnchor.UpperCenter;
-			GUI.skin.label.fontSize = 24;
-			GUI.skin.label.fontStyle = FontStyle.Bold;
+			TextStyle.fontSize = 36;
+			TextStyle.normal.textColor = Color.white;
+			TextStyle.fontStyle = FontStyle.Bold;
+			text3 = SelectedLevel.ToString();
 
+			GUI.Label (new Rect(180,20,200,200), text3,TextStyle );
+		}
+		
+		else if(changer==1)
+		{
+			TextStyle.fontSize = 36;
+			TextStyle.normal.textColor = Color.white;
+			TextStyle.fontStyle = FontStyle.Bold;
 			text = SelectedPerk.ToString();
-			//message.ToUpper ();
-			
-			GUI.Label (new Rect(Screen.width/4,Screen.height/1.2f,Screen.width/2,Screen.height), text);
+
+			GUI.Label (new Rect(180,20,200,200), text,TextStyle );
 		}
 		
 		else if(changer==2)
 		{
-			//Debug.Log (changer);
-			GUI.color = new Color(0f,0f,0f);
-			GUI.skin.box.normal.background = texture;
-			//GUI.Box(new Rect(Screen.width/4,Screen.height/0.8f,Screen.width/2,Screen.height/2), "");
-			GUI.color = new Color(1F,1F,1F,0.5f);
-			GUI.skin.label.alignment = TextAnchor.UpperCenter;
-			GUI.skin.label.fontSize = 24;
-			GUI.skin.label.fontStyle = FontStyle.Bold;
-
+			TextStyle.fontSize = 36;
+			TextStyle.normal.textColor = Color.white;
+			TextStyle.fontStyle = FontStyle.Bold;
 			text2 = SelectedCharacter.ToString();
-			//message.ToUpper ();
-			
-			GUI.Label (new Rect(Screen.width/4,Screen.height/1.2f,Screen.width/2,Screen.height), text2);
+
+			GUI.Label (new Rect(180,20,200,200), text2,TextStyle );
 		}
 	}
 	
@@ -259,25 +365,32 @@ public class TTSMenuController : TTSMenuEnums {
 	// 1 = middle position
 	// 2 = right position
 	void Controller () {
+		
+		isTweenCompleted = false;
+		
 		switch(changer) {
 			case 0:
-			iTween.MoveTo(BlueP,LeftRearNode.transform.position,2);
-			iTween.MoveTo(GreenP,LeftMidNode.transform.position,2);
-			iTween.MoveTo(GreyP,FrontNode.transform.position,2);
+			// start invoke
+			iTween.MoveTo(BlueP, iTween.Hash("position",LeftRearNode.transform.position, "x", 1.0f, "onComplete", "TweenComplete", "onCompleteTarget", gameObject));
+			iTween.MoveTo(GreenP, iTween.Hash("position",LeftMidNode.transform.position, "x", 1.0f, "onComplete", "TweenComplete", "onCompleteTarget", gameObject));
+			iTween.MoveTo(GreyP, iTween.Hash("position",FrontNode.transform.position, "x", 1.0f, "onComplete", "TweenComplete", "onCompleteTarget", gameObject));
+			Example();
 			break;
 			
 			case 1:
-			iTween.MoveTo(BlueP,LeftMidNode.transform.position,2);
-			iTween.MoveTo(GreenP,FrontNode.transform.position,2);
-			iTween.MoveTo(GreyP,RightMidNode.transform.position,2);
-			HighlightPerk();
-		
+			// start invoke
+			iTween.MoveTo(BlueP, iTween.Hash("position",LeftMidNode.transform.position, "x", 1.0f, "onComplete", "TweenComplete", "onCompleteTarget", gameObject));
+			iTween.MoveTo(GreenP, iTween.Hash("position",FrontNode.transform.position, "x", 1.0f, "onComplete", "TweenComplete", "onCompleteTarget", gameObject));
+			iTween.MoveTo(GreyP, iTween.Hash("position",RightMidNode.transform.position, "x", 1.0f, "onComplete", "TweenComplete", "onCompleteTarget", gameObject));
+			Example();
 			break;
 			
 			case 2:
-			iTween.MoveTo(BlueP,FrontNode.transform.position,2);
-			iTween.MoveTo(GreenP,RightMidNode.transform.position,2);
-			iTween.MoveTo(GreyP,RightRearNode.transform.position,2);
+			// start invoke
+			iTween.MoveTo(BlueP, iTween.Hash("position",FrontNode.transform.position, "x", 1.0f, "onComplete", "TweenComplete", "onCompleteTarget", gameObject));
+			iTween.MoveTo(GreenP, iTween.Hash("position",RightMidNode.transform.position, "x", 1.0f, "onComplete", "TweenComplete", "onCompleteTarget", gameObject));
+			iTween.MoveTo(GreyP, iTween.Hash("position",RightRearNode.transform.position, "x", 1.0f, "onComplete", "TweenComplete", "onCompleteTarget", gameObject));
+			Example();
 			break;
 			
 			default:

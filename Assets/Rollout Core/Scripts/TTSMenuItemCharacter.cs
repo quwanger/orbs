@@ -6,7 +6,7 @@ public class TTSMenuItemCharacter : TTSMenuEnums {
 	public bool isSelected = false;
 	public CharacterMenuItem character;
 	public int index;
-	public GameObject border;
+	public GameObject decal;
 	
 	// Use this for initialization
 	void Start () {
