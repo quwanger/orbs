@@ -13,7 +13,7 @@ GameObject:
   - 95: {fileID: 9500000}
   - 114: {fileID: 11400000}
   m_Layer: 0
-  m_Name: Rig
+  m_Name: Rig_Scorpion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25,9 +25,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_LocalRotation: {x: 0, y: 0, z: .70710659, w: -.707106948}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: .600000024, y: .600000024, z: .600000024}
+  m_LocalRotation: {x: 0, y: 0, z: -3.2584137e-07, w: -1}
+  m_LocalPosition: {x: -1.99303031e-05, y: .343994141, z: -.288202018}
+  m_LocalScale: {x: .213238209, y: .213238209, z: .213238209}
   m_Children: []
   m_Father: {fileID: 0}
 --- !u!23 &2300000
@@ -54,7 +54,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_Mesh: {fileID: 4300000, guid: 297542b602ebf1446a89e389739eb8f9, type: 3}
+  m_Mesh: {fileID: 4300000, guid: 57df47e3e06af4ea8a054091330aa75b, type: 3}
 --- !u!95 &9500000
 Animator:
   m_ObjectHideFlags: 1
@@ -78,9 +78,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d93680be1655194ea97164dd24e94ca, type: 3}
   m_Name: 
   rotationSpeed: 0
-  rigAcceleration: 7
-  rigSpeed: 7
-  rigHandling: 7
+  rigAcceleration: 9
+  rigSpeed: 6
+  rigHandling: 6
+  rigOffense: 1.5
+  rigDefense: .5
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
