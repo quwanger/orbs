@@ -225,7 +225,7 @@ public class TTSRacer : TTSBehaviour
 		}
 	}
 	
-	void OnCollisionEnter(Collision collision) {
+	/*void OnCollisionEnter(Collision collision) {
 
 		onGround = true;
 		if (collision.relativeVelocity.magnitude > 10) {
@@ -248,7 +248,7 @@ public class TTSRacer : TTSBehaviour
 
 	void OnCollisionExit(Collision collision) {
 		onGround = false;
-	}
+	}*/
 
 	void CalculateBodyOrientation() {
 
