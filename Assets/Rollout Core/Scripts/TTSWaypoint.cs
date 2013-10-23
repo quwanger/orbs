@@ -59,4 +59,15 @@ public class TTSWaypoint : TTSBehaviour {
 	public void AddSibling(GameObject sibling){
 		siblings.Add(sibling);
 	}
+
+	/// <summary>
+	/// Will handle the siblings too when adding next waypoint
+	/// </summary>
+	/// <param name="next">Next waypoint</param>
+	public void AddNextWaypoint(GameObject next) {
+		nextWaypoint = next;
+		foreach (GameObject obj in siblings) {
+			obj.GetComponent<TTSWaypoint>().nextWaypoint = next;
+		}
+	}
 }
