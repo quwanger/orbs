@@ -98,7 +98,6 @@ public class TTSRacer : TTSBehaviour
 			}
 		}
 
-		player = PlayerType.AI;
 		if (player == PlayerType.AI) {
 			AIControl = new TTSRacerAI(waypoints, rigidbody.velocity);
 		}
