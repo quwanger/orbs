@@ -13,6 +13,7 @@ GameObject:
   - 23: {fileID: 2300000}
   - 54: {fileID: 5400000}
   - 114: {fileID: 11400000}
+  - 114: {fileID: 11400006}
   m_Layer: 0
   m_Name: Drezz Stone
   m_TagString: Untagged
@@ -239,6 +240,7 @@ MonoBehaviour:
   Emitters: []
   EmitterToSpawn: {fileID: 100000, guid: c4439dd5aa89449ef9cdb0c70b2bafbc, type: 2}
   RegisteredTargets: {fileID: 0}
+  offensiveMultiplier: 0
 --- !u!114 &11400004
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -274,6 +276,20 @@ MonoBehaviour:
   autoCreateLight: 1
   autoCreateForce: 0
   autoCreateHeatwave: 1
+--- !u!114 &11400006
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 147126489b708094f80bee9593706e7b, type: 3}
+  m_Name: 
+  Emitters: []
+  EmitterToSpawn: {fileID: 100000, guid: c4439dd5aa89449ef9cdb0c70b2bafbc, type: 2}
+  RegisteredTargets: {fileID: 0}
+  offensiveMultiplier: 0
 --- !u!135 &13500000
 SphereCollider:
   m_ObjectHideFlags: 1
