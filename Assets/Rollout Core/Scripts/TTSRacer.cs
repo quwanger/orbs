@@ -81,9 +81,9 @@ public class TTSRacer : TTSBehaviour
 	public bool hasShield;
 	private float smooth;
 	private float stopSpeed = 0.05f;
-	public GameObject currentWaypoint;
-	public GameObject previousWaypoint;
-	public GameObject startingWaypoint;
+	public TTSWaypoint currentWaypoint;
+	public TTSWaypoint previousWaypoint;
+	public TTSWaypoint startingWaypoint;
 	public bool goingWrongWay = false;
 
 	// AI
@@ -99,7 +99,7 @@ public class TTSRacer : TTSBehaviour
 		}
 
 		if (player == PlayerType.AI) {
-			AIControl = new TTSRacerAI(waypoints, rigidbody.velocity);
+			AIControl = new TTSRacerAI(allWaypoints, rigidbody.velocity);
 		}
 
 		lastForward = TTSUtils.FlattenVector(displayMeshComponent.forward).normalized;
@@ -317,7 +317,7 @@ public class TTSRacer : TTSBehaviour
 
 	public void OnWaypoint(TTSWaypoint hit) {
 		previousWaypoint = currentWaypoint;
-		currentWaypoint = hit.gameObject;
+		currentWaypoint = hit;
 		if (previousWaypoint == currentWaypoint) {
 			if (goingWrongWay == true) {
 				goingWrongWay = false;
@@ -330,7 +330,7 @@ public class TTSRacer : TTSBehaviour
 		}
 
 		if (AIControl != null)
-			AIControl.nextWaypoint = currentWaypoint.GetComponent<TTSWaypoint>().nextWaypoint.GetComponent<TTSWaypoint>().index;
+			AIControl.nextWaypoint = currentWaypoint.index + 1;
 	}
 
 	#endregion
@@ -360,7 +360,7 @@ public class TTSRacer : TTSBehaviour
 
 public class TTSRacerAI {
 	// Waypoints
-	private List<GameObject> waypoints;
+	private List<TTSWaypoint> waypoints;
 	public int nextWaypoint = 0;
 
 	// Racer Vars
@@ -369,6 +369,7 @@ public class TTSRacerAI {
 	private Vector3 rPosition;
 
 	// Movement Vars
+	private Vector3 nextDest;
 	private Vector3 nextWaypointDir = new Vector3();
 
 	// Input
@@ -380,7 +381,7 @@ public class TTSRacerAI {
 	/// </summary> 
 	/// <param name="waypointList">List of waypoints needed</param> 
 	/// <param name="rSpeed">Reference to racer speed</param> 
-	public TTSRacerAI(List<GameObject> waypointList, Vector3 racerSpeed)
+	public TTSRacerAI(List<TTSWaypoint> waypointList, Vector3 racerSpeed)
 	{
 		waypoints = waypointList;
 		rSpeed = racerSpeed;
@@ -393,12 +394,8 @@ public class TTSRacerAI {
 	}
 
 	public void update() {
-		//vInput = 1.0f;
-		//hInput = Mathf.Sin(Time.time*2)/4.0f;
-
-		//vInput = Input.GetAxis("Vertical");
-		//hInput = Input.GetAxis("Horizontal");
-		nextWaypointDir = TTSUtils.FlattenVector( waypoints[nextWaypoint].transform.position - rPosition);
+		nextDest = waypoints[nextWaypoint].GetClosestPoint(rPosition);
+		nextWaypointDir = TTSUtils.FlattenVector(waypoints[nextWaypoint].transform.position - rPosition);
 
 		vInput = 1.0f;
 		hInput = TTSUtils.Remap(TTSUtils.GetRelativeAngle(rForward, nextWaypointDir), -90.0f, 90.0f, -1.0f, 1.0f, true);
@@ -406,6 +403,9 @@ public class TTSRacerAI {
 
 	public void drawGizmos() {
 		Gizmos.color = Color.white;
-		Gizmos.DrawLine(rPosition, waypoints[nextWaypoint].transform.position);
+		Gizmos.DrawLine(rPosition, nextDest);
+
+		Gizmos.color = Color.cyan;
+		Gizmos.DrawCube(waypoints[nextWaypoint].GetClosestPoint(rPosition), new Vector3(0.5f, 0.5f, 0.5f));
 	}
 }
