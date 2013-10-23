@@ -2,9 +2,9 @@ using UnityEngine;
 using System.Collections.Generic;
 
 public class TTSWaypointManager : MonoBehaviour {
-	
-	
-	public List<GameObject> waypoints = new List<GameObject>();
+
+
+	public List<TTSWaypoint> waypoints = new List<TTSWaypoint>();
 	
 	// Use this for initialization
 	void Start() {
@@ -44,24 +44,22 @@ public class TTSWaypointManager : MonoBehaviour {
 	}
 
 	private void AddWP(GameObject wp) {
-
+		TTSWaypoint newWP = wp.GetComponent<TTSWaypoint>();
 		if (waypoints.Count > 0) {
-			TTSWaypoint newWP = wp.GetComponent<TTSWaypoint>();
 			TTSWaypoint lastWP = waypoints[waypoints.Count - 1].GetComponent<TTSWaypoint>();
 
 			// Check to see if they're siblings
 			if (lastWP.index == newWP.index) {
 				lastWP.hasSibling = newWP.hasSibling = true;
 
-				lastWP.AddSibling(wp);
-				newWP.AddSibling(waypoints[waypoints.Count - 1]);
+				newWP.NewSibling(lastWP);
 			}
 			else {
-				lastWP.AddNextWaypoint(wp);
+				lastWP.AddNextWaypoint(newWP);
 			}
 		}
 
-		waypoints.Add(wp);
+		waypoints.Add(newWP);
 	}
 
 	private void SortWaypoints(GameObject[] original) {
