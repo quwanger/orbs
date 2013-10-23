@@ -150,11 +150,6 @@ public class TTSRacer : TTSBehaviour
 		resultAccel = Mathf.Lerp(resultAccel, rigidbody.velocity.magnitude - PreviousVelocity.magnitude, 0.01f);
 		PreviousVelocity = rigidbody.velocity;
 	}
-	
-	public void WrongWay(){
-		if(goingWrongWay == true) Debug.Log("WRONG WAY");
-		else Debug.Log("RIGHT WAY");
-	}
 
 	private void CalculateInputForces() {
 
@@ -211,7 +206,7 @@ public class TTSRacer : TTSBehaviour
 	public void StopRacer(){
 		rigidbody.velocity = new Vector3(0, 0, 0);
 	}
-	
+
 	public void DamageRacer(float dmgLevel){
 		//dmgLevel should be a percentage (between 0.0f and 1.0f)
 		if(!hasShield){
@@ -290,6 +285,57 @@ public class TTSRacer : TTSBehaviour
 		}
 	}
 
+	#region Events
+	void OnCollisionEnter(Collision collision) {
+
+		onGround = true;
+		if (collision.relativeVelocity.magnitude > 10) {
+			vfx.DamageEffect(100.0f);
+			//RacerSfx.volume = collision.relativeVelocity.magnitude / TopSpeed / 1.5f;
+			RacerSfx.volume = collision.relativeVelocity.magnitude / 100.0f / 1.5f;
+			RacerSfx.PlayOneShot(DamageSounds[Mathf.FloorToInt(Random.value * DamageSounds.Length)]);
+		}
+
+		//spawn sparks (TODO: move this to a component script)
+		GameObject sparkClone = (GameObject)Instantiate(SparksEmitter);
+		sparkClone.transform.position = collision.contacts[0].point;
+		sparkClone.particleEmitter.emit = true;
+		sparkClone.transform.forward = displayMeshComponent.forward;
+	}
+
+	void OnCollisionStay(Collision collision) {
+		onGround = true;
+	}
+
+	void OnCollisionExit(Collision collision) {
+		onGround = false;
+	}
+
+	public void WrongWay() {
+		if (goingWrongWay == true) Debug.Log("WRONG WAY");
+		else Debug.Log("RIGHT WAY");
+	}
+
+	public void OnWaypoint(TTSWaypoint hit) {
+		previousWaypoint = currentWaypoint;
+		currentWaypoint = hit.gameObject;
+		if (previousWaypoint == currentWaypoint) {
+			if (goingWrongWay == true) {
+				goingWrongWay = false;
+				WrongWay();
+			}
+			else {
+				goingWrongWay = true;
+				WrongWay();
+			}
+		}
+
+		if (AIControl != null)
+			AIControl.nextWaypoint = currentWaypoint.GetComponent<TTSWaypoint>().nextWaypoint.GetComponent<TTSWaypoint>().index;
+	}
+
+	#endregion
+
 	public float GetTiltAngle() {
 		return TiltAngle;
 	}
@@ -355,7 +401,7 @@ public class TTSRacerAI {
 		//hInput = Input.GetAxis("Horizontal");
 		nextWaypointDir = TTSUtils.FlattenVector( waypoints[nextWaypoint].transform.position - rPosition);
 
-		vInput = 0.2f;
+		vInput = 1.0f;
 		hInput = TTSUtils.Remap(TTSUtils.GetRelativeAngle(rForward, nextWaypointDir), -90.0f, 90.0f, -1.0f, 1.0f, true);
 	}
 
