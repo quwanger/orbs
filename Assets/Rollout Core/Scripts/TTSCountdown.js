@@ -1,6 +1,6 @@
 #pragma strict
 
-var HighBeep : AudioClip;
+var countGO : AudioClip;
 
 var count3 : AudioClip;
 var count2 : AudioClip;
@@ -28,6 +28,6 @@ function playCount1() {
 
 
 function go() {
-	audio.PlayOneShot(HighBeep);
+	audio.PlayOneShot(countGO);
 	GameObject.Find("TTSLevel").SendMessage("StartRace");
 }
