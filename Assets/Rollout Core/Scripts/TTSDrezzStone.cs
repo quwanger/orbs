@@ -10,6 +10,10 @@ public class TTSDrezzStone : MonoBehaviour {
 	public float offensiveMultiplier;
 	
 	void OnTriggerEnter(Collider other) {
+		
+		if(offensiveMultiplier == null)
+			offensiveMultiplier = 1.0f;
+		
 		if(!other.gameObject.isStatic) {
 			GameObject newemitter = (GameObject) Instantiate(EmitterToSpawn, this.transform.position, this.transform.rotation);
 			newemitter.transform.parent = this.transform;
