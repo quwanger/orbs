@@ -37,7 +37,7 @@ public class TTSWaypointManager : MonoBehaviour {
 		}
 		waypointLevels[waypointLevels.Count - 1].Add(newWP);
 
-		Debug.Log("ADDING WP: " + waypointLevels.Count + "-" + waypointLevels[waypointLevels.Count - 1].Count);
+		//Debug.Log("ADDING WP: " + waypointLevels.Count + "-" + waypointLevels[waypointLevels.Count - 1].Count);
 		allWaypoints.Add(newWP);
 	}
 

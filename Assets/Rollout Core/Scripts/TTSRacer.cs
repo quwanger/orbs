@@ -92,6 +92,9 @@ public class TTSRacer : TTSBehaviour
 	private TTSRacerAI AIControl;
 
 	void Awake() {
+		
+		Debug.Log("Racer Awake");
+		
 		level.RegisterRacer(gameObject);
 		//Get the body via tag.
 		foreach (Transform child in transform) {
@@ -104,14 +107,14 @@ public class TTSRacer : TTSBehaviour
 			AIControl = new TTSRacerAI(allWaypoints, rigidbody.velocity);
 		}
 
-		lastForward = TTSUtils.FlattenVector(displayMeshComponent.forward).normalized;
+		//lastForward = TTSUtils.FlattenVector(displayMeshComponent.forward).normalized;
 
 		if (!level.PerksEnabled) {
 			this.GetComponent<TTSPerkManager>().enabled = false;
 		}
 
 		if (displayMeshComponent == null) {
-			Debug.LogException(new UnassignedReferenceException());
+			//Debug.LogException(new UnassignedReferenceException());
 		}
 		IdleForwardVector = transform.forward;
 
