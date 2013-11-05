@@ -101,7 +101,7 @@ public class TTSRacer : TTSBehaviour
 		}
 
 		if (player == PlayerType.AI) {
-			AIControl = new TTSRacerAI(allWaypoints, rigidbody.velocity);
+			AIControl = new TTSRacerAI(allWaypoints, rigidbody.velocity, waypointManager);
 		}
 
 		lastForward = TTSUtils.FlattenVector(displayMeshComponent.forward).normalized;
@@ -165,6 +165,8 @@ public class TTSRacer : TTSBehaviour
 			AIControl.update(rigidbody.position, lastForward);
 			vInput = AIControl.vInput;
 			hInput = AIControl.hInput;
+			//vInput = Input.GetAxis("Vertical");
+			//hInput = Input.GetAxis("Horizontal");
 		}
 		else {
 			Debug.LogError("PLAYER TYPE NOT SET");
@@ -363,6 +365,7 @@ public class TTSRacer : TTSBehaviour
 public class TTSRacerAI {
 	// Waypoints
 	private List<TTSWaypoint> waypoints;
+	private TTSWaypointManager wpManager;
 	public int nextWaypoint = 0;
 
 	// Racer Vars
@@ -371,7 +374,7 @@ public class TTSRacerAI {
 	private Vector3 rPosition;
 
 	// Movement Vars
-	private Vector3 nextDest;
+	private Vector3 destination;
 	private Vector3 nextWaypointDir = new Vector3();
 
 	// Input
@@ -383,9 +386,10 @@ public class TTSRacerAI {
 	/// </summary> 
 	/// <param name="waypointList">List of waypoints needed</param> 
 	/// <param name="rSpeed">Reference to racer speed</param> 
-	public TTSRacerAI(List<TTSWaypoint> waypointList, Vector3 racerSpeed)
+	public TTSRacerAI(List<TTSWaypoint> waypointList, Vector3 racerSpeed, TTSWaypointManager waypointManager)
 	{
 		waypoints = waypointList;
+		wpManager = waypointManager;
 		rSpeed = racerSpeed;
 	}
 
@@ -396,8 +400,8 @@ public class TTSRacerAI {
 	}
 
 	public void update() {
-		nextDest = waypoints[nextWaypoint].GetClosestPoint(rPosition);
-		nextWaypointDir = TTSUtils.FlattenVector(nextDest - rPosition);
+		destination = waypoints[nextWaypoint].GetClosestSeenPoint(rPosition, 7);
+		nextWaypointDir = TTSUtils.FlattenVector(destination - rPosition);
 
 		float sensitivity = 90.0f;
 
@@ -407,9 +411,9 @@ public class TTSRacerAI {
 
 	public void drawGizmos() {
 		Gizmos.color = Color.yellow;
-		Gizmos.DrawLine(rPosition, nextDest);
+		Gizmos.DrawLine(rPosition, destination);
 
 		Gizmos.color = Color.cyan;
-		Gizmos.DrawCube(waypoints[nextWaypoint].GetClosestPoint(rPosition), new Vector3(0.5f, 0.5f, 0.5f));
+		Gizmos.DrawCube(destination, new Vector3(0.5f, 0.5f, 0.5f));
 	}
 }

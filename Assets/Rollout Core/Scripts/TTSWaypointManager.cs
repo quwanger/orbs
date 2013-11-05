@@ -15,6 +15,32 @@ public class TTSWaypointManager : MonoBehaviour {
 	void OnDrawGizmos() {
 	}
 
+	public TTSWaypoint getClosestWP(int index, Vector3 pos) {
+		List<TTSWaypoint> waypoints = waypointLevels[index];
+		TTSWaypoint closest = null;
+
+		foreach (TTSWaypoint waypoint in waypoints) {
+			if (closest == null || (pos - waypoint.GetClosestPoint(pos)).magnitude < (pos - closest.GetClosestPoint(pos)).magnitude) {
+				closest = waypoint;
+			}
+		}
+
+		return closest;
+	}
+
+	public TTSWaypoint getFarthestSeen(int index, Vector3 pos) {
+		List<TTSWaypoint> waypoints = waypointLevels[index];
+		TTSWaypoint farthest = null;
+
+		foreach (TTSWaypoint waypoint in waypoints) {
+			//if (farthest == null || ) {
+			//	farthest = waypoint;
+			//}
+		}
+
+		return farthest;
+	}
+
 	// Sorting
 	private void AddWP(GameObject wp) {
 		TTSWaypoint newWP = wp.GetComponent<TTSWaypoint>();
@@ -37,7 +63,7 @@ public class TTSWaypointManager : MonoBehaviour {
 		}
 		waypointLevels[waypointLevels.Count - 1].Add(newWP);
 
-		Debug.Log("ADDING WP: " + waypointLevels.Count + "-" + waypointLevels[waypointLevels.Count - 1].Count);
+		// Debug.Log("ADDING WP: " + waypointLevels.Count + "-" + waypointLevels[waypointLevels.Count - 1].Count);
 		allWaypoints.Add(newWP);
 	}
 

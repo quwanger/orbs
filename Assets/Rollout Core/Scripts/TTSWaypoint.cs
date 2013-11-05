@@ -20,7 +20,7 @@ public class TTSWaypoint : TTSBehaviour {
 	private BoxCollider boxCollider;
 	
 	public bool hasSibling = false;
-	public Transform transform;
+	//public Transform transform;
 
 	public Vector3 closestPoint = new Vector3();
 
@@ -36,7 +36,7 @@ public class TTSWaypoint : TTSBehaviour {
 	void Awake() {
 		boxCollider = GetComponent<BoxCollider>();
 		boxCollider.isTrigger = true;
-		transform = GetComponent<Transform>();
+		//transform = GetComponent<Transform>();
 
 		colliderLine = boxCollider.transform.right;
 	}
@@ -55,14 +55,69 @@ public class TTSWaypoint : TTSBehaviour {
 	public Vector3 closestPointPos = new Vector3();
 
 	public Vector3 GetClosestPoint(Vector3 position) {
-		racerPos = position;
 
-		Vector3 pnt = Vector3.ClampMagnitude(Vector3.Project(racerPos - transform.position, colliderLine), boxCollider.size.x / 2) + transform.position;
+		Vector3 pnt = Vector3.ClampMagnitude(Vector3.Project(position - transform.position, colliderLine), boxCollider.size.x / 2) + transform.position;
 
 		pnt.y = position.y;
 
 		// convert point to local space
 		return closestPointPos = pnt;
+	}
+	
+	/// <summary>
+	/// Returns transform.position if no points seen.
+	/// </summary>
+	/// <param name="position"></param>
+	/// <param name="resolution"></param>
+	/// <returns>Finds the closest seen point on the collider</returns>
+	public Vector3 GetClosestSeenPoint(Vector3 position, int resolution) {
+		Vector3 closest = GetClosestPoint(position);
+		RaycastHit hit;
+
+		if(Physics.Raycast(position, (closest - position), out hit, (closest - position).magnitude))
+			if (hit.collider.name == "Waypoint")//(!Physics.Linecast(position, closest, 10))
+				return closest;
+			else
+				Debug.Log("Can't see closest point " + hit.collider.name);
+
+		closest = transform.position;
+		closest.y = position.y;
+		Vector3 pnt = new Vector3();
+
+		resolution--; // So that we make as many checks as resolutions;
+		for (int i = 0; i < resolution+1; i++) { // Start from right to left.
+			pnt = colliderLine * ((float)i / resolution * boxCollider.size.x - (boxCollider.size.x / 2)) + transform.position;
+			pnt.y = position.y;
+
+			Debug.DrawLine(position, pnt);
+			if (Physics.Raycast(position, (pnt - position), out hit, (pnt - position).magnitude)) {
+				if (hit.collider.name == "Waypoint" && Vector3.Distance(position, pnt) < Vector3.Distance(position, closest)) {
+					closest = pnt;
+				}
+			}
+		}
+
+		return closest;
+	}
+
+	public bool canBeSeenFrom(Vector3 posistion) {
+		return canBeSeenFrom(posistion, 5);
+	}
+
+	public bool canBeSeenFrom(Vector3 position, int resolution) {
+		Vector3 pnt = colliderLine * -boxCollider.size.x / 2 + transform.position; // Left most
+		pnt.y = position.y;
+
+		if (Physics.Linecast(position, pnt))
+			return true;
+
+		resolution--; // So that we make as many checks as resolutions;
+		for (int i = resolution; i > 0; i--) { // Start from right to left.
+			pnt = colliderLine * (i / resolution * boxCollider.size.x - (boxCollider.size.x / 2)) + transform.position;
+			if (Physics.Linecast(position, pnt))
+				return true;
+		}
+		return false;
 	}
 
 	public void OnDrawGizmos() {
