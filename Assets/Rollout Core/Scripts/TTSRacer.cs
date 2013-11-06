@@ -162,9 +162,14 @@ public class TTSRacer : TTSBehaviour
 
 		}
 		else if (player == PlayerType.AI) {
-			AIControl.update(rigidbody.position, lastForward);
-			vInput = AIControl.vInput;
-			hInput = AIControl.hInput;
+			vInput = Input.GetAxis("Vertical");
+			hInput = Input.GetAxis("Horizontal");
+
+			if (level.DebugMode && vInput == 0 && hInput == 0) {
+				AIControl.update(rigidbody.position, lastForward);
+				vInput = AIControl.vInput;
+				hInput = AIControl.hInput;
+			}
 			//vInput = Input.GetAxis("Vertical");
 			//hInput = Input.GetAxis("Horizontal");
 		}
@@ -367,6 +372,7 @@ public class TTSRacerAI {
 	private List<TTSWaypoint> waypoints;
 	private TTSWaypointManager wpManager;
 	public int nextWaypoint = 0;
+	public int foresight = 3;
 
 	// Racer Vars
 	private Vector3 rForward;
@@ -400,13 +406,17 @@ public class TTSRacerAI {
 	}
 
 	public void update() {
-		destination = waypoints[nextWaypoint].GetClosestSeenPoint(rPosition, 7);
+		destination = waypoints[nextWaypoint].getClosestSeenPoint(rPosition, 7);
 		nextWaypointDir = TTSUtils.FlattenVector(destination - rPosition);
 
 		float sensitivity = 90.0f;
 
 		vInput = 1.0f;
 		hInput = TTSUtils.Remap(TTSUtils.GetRelativeAngle(rForward, nextWaypointDir), -sensitivity, sensitivity, -1.0f, 1.0f, true);
+	}
+
+	public void lookForward(){
+		//Debug.DrawRay()
 	}
 
 	public void drawGizmos() {

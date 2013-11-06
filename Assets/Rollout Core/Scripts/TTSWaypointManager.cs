@@ -20,7 +20,7 @@ public class TTSWaypointManager : MonoBehaviour {
 		TTSWaypoint closest = null;
 
 		foreach (TTSWaypoint waypoint in waypoints) {
-			if (closest == null || (pos - waypoint.GetClosestPoint(pos)).magnitude < (pos - closest.GetClosestPoint(pos)).magnitude) {
+			if (closest == null || (pos - waypoint.getClosestPoint(pos)).magnitude < (pos - closest.getClosestPoint(pos)).magnitude) {
 				closest = waypoint;
 			}
 		}
