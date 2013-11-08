@@ -89,7 +89,7 @@ public class TTSRacer : TTSBehaviour
 	public bool goingWrongWay = false;
 
 	// AI
-	private TTSRacerAI AIControl;
+	//private TTSRacerAI AIControl;
 
 	void Awake() {
 		level.RegisterRacer(gameObject);
@@ -101,7 +101,7 @@ public class TTSRacer : TTSBehaviour
 		}
 
 		if (player == PlayerType.AI) {
-			AIControl = new TTSRacerAI(allWaypoints, rigidbody.velocity, waypointManager);
+			//AIControl = new TTSRacerAI(allWaypoints, rigidbody.velocity, waypointManager);
 		}
 
 		lastForward = TTSUtils.FlattenVector(displayMeshComponent.forward).normalized;
@@ -166,12 +166,10 @@ public class TTSRacer : TTSBehaviour
 			hInput = Input.GetAxis("Horizontal");
 
 			if (level.DebugMode && vInput == 0 && hInput == 0) {
-				AIControl.update(rigidbody.position, lastForward);
-				vInput = AIControl.vInput;
-				hInput = AIControl.hInput;
+				//AIControl.update(rigidbody.position, lastForward);
+				//vInput = AIControl.vInput;
+				//hInput = AIControl.hInput;
 			}
-			//vInput = Input.GetAxis("Vertical");
-			//hInput = Input.GetAxis("Horizontal");
 		}
 		else {
 			Debug.LogError("PLAYER TYPE NOT SET");
@@ -231,31 +229,6 @@ public class TTSRacer : TTSBehaviour
 			rigidbody.velocity = damageVector;
 		}
 	}
-	
-	/*void OnCollisionEnter(Collision collision) {
-
-		onGround = true;
-		if (collision.relativeVelocity.magnitude > 10) {
-			vfx.DamageEffect(100.0f);
-			//RacerSfx.volume = collision.relativeVelocity.magnitude / TopSpeed / 1.5f;
-			RacerSfx.volume = collision.relativeVelocity.magnitude / 100.0f / 1.5f;
-			RacerSfx.PlayOneShot(DamageSounds[Mathf.FloorToInt(Random.value * DamageSounds.Length)]);
-		}
-
-		//spawn sparks (TODO: move this to a component script)
-		GameObject sparkClone = (GameObject)Instantiate(SparksEmitter);
-		sparkClone.transform.position = collision.contacts[0].point;
-		sparkClone.particleEmitter.emit = true;
-		sparkClone.transform.forward = displayMeshComponent.forward;
-	}
-
-	void OnCollisionStay(Collision collision) {
-		onGround = true;
-	}
-
-	void OnCollisionExit(Collision collision) {
-		onGround = false;
-	}*/
 
 	void CalculateBodyOrientation() {
 
@@ -338,8 +311,8 @@ public class TTSRacer : TTSBehaviour
 			}
 		}
 
-		if (AIControl != null)
-			AIControl.nextWaypoint = currentWaypoint.index + 1;
+		//if (AIControl != null)
+		//	AIControl.nextWaypoint = currentWaypoint.index + 1;
 	}
 
 	#endregion
@@ -361,12 +334,12 @@ public class TTSRacer : TTSBehaviour
 		Gizmos.color = Color.cyan;
 		Gizmos.DrawRay(transform.position, lastForward * 5);
 
-		if (AIControl != null)
-			AIControl.drawGizmos();
+		//if (AIControl != null)
+		//	AIControl.drawGizmos();
 	}
 }
 
-
+/*
 public class TTSRacerAI {
 	// Waypoints
 	private List<TTSWaypoint> waypoints;
@@ -427,3 +400,4 @@ public class TTSRacerAI {
 		Gizmos.DrawCube(destination, new Vector3(0.5f, 0.5f, 0.5f));
 	}
 }
+*/
