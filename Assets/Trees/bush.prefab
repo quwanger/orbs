@@ -8,11 +8,11 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 400000}
-  - 193: {fileID: 19300000}
   - 33: {fileID: 3300000}
   - 23: {fileID: 2300000}
+  - 95: {fileID: 9500000}
   m_Layer: 0
-  m_Name: Bush01
+  m_Name: bush
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24,8 +24,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: .0280714352, y: -.182842463, z: -.0076627396, w: .982711494}
+  m_LocalPosition: {x: -1555.38306, y: 256.699585, z: 4259.30859}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -41,8 +41,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 4730bfad35d844ad7a69d5eeb13b34b9, type: 2}
-  - {fileID: 2100002, guid: 4730bfad35d844ad7a69d5eeb13b34b9, type: 2}
+  - {fileID: 2100000, guid: 7b919a039cef74366875b3c38426e479, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -54,14 +53,19 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_Mesh: {fileID: 4300000, guid: 4730bfad35d844ad7a69d5eeb13b34b9, type: 2}
---- !u!193 &19300000
-Tree:
+  m_Mesh: {fileID: 4300000, guid: 0465a191fb2484483b85389285de1995, type: 3}
+--- !u!95 &9500000
+Animator:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_TreeData: {fileID: 11400000, guid: 4730bfad35d844ad7a69d5eeb13b34b9, type: 2}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 0465a191fb2484483b85389285de1995, type: 3}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 1
+  m_ApplyRootMotion: 1
+  m_AnimatePhysics: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
