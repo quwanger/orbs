@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &100002
 GameObject:
   m_ObjectHideFlags: 0
@@ -310,7 +310,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: f9929be8a43d15b408cb23dd53efaaa4, type: 3}
+  - {fileID: 2100000, guid: bee20ba22eb8e485d925f08f8c4a1a5b, type: 3}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -415,17 +415,17 @@ TextMesh:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100012}
-  m_Text: 00:00.00
+  m_Text: 00:00:00
   m_OffsetZ: 0
   m_CharacterSize: .300000012
   m_LineSpacing: 1
   m_Anchor: 1
   m_Alignment: 0
   m_TabSize: 4
-  m_FontSize: 50
+  m_FontSize: 30
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 12800000, guid: f9929be8a43d15b408cb23dd53efaaa4, type: 3}
+  m_Font: {fileID: 12800000, guid: bee20ba22eb8e485d925f08f8c4a1a5b, type: 3}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -438,7 +438,7 @@ MonoBehaviour:
   m_Name: 
   timeDisplay: {fileID: 10200008}
   boundCamera: {fileID: 0}
-  flashColor: {r: 1, g: .818181753, b: 0, a: 1}
+  flashColor: {r: 1, g: 1, b: 1, a: 1}
   displayBacking: {fileID: 100004}
   bonusTime: {fileID: 100000}
 --- !u!114 &11400002
@@ -468,7 +468,7 @@ MonoBehaviour:
   m_Name: 
   anchorMode: 0
   hideOffset: 10
-  padding: {x: 0, y: .200000003}
+  padding: {x: 0, y: -1}
   depth: 4
   frustrumDimentions: {x: 0, y: 0}
 --- !u!114 &11400006
@@ -528,7 +528,7 @@ MonoBehaviour:
   m_Name: 
   anchorMode: 0
   hideOffset: 10
-  padding: {x: 0, y: .600000024}
+  padding: {x: 0, y: -1}
   depth: 2
   frustrumDimentions: {x: 0, y: 0}
 --- !u!1001 &100100000
