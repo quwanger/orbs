@@ -31,18 +31,27 @@ public class TTSWaypoint : TTSBehaviour {
 	private Vector3 colliderLine;
 	private Vector3 forwardLine;
 	public float boxWidth = 0.0f;
+	public Vector3 position;
+
+	public float distanceFromEnd = 0.0f;
 
 	void Start () {
 		boxWidth = boxCollider.size.x;
 
 		colliderLine = boxCollider.transform.right;
 		forwardLine = -boxCollider.transform.forward;
+
+		position = transform.position;
 	}
 
 	void Awake() {
 		boxCollider = GetComponent<BoxCollider>();
 		boxCollider.isTrigger = true;
 		//transform = GetComponent<Transform>();
+	}
+
+	public void addPreviousWaypoint(TTSWaypoint prev){
+		prevWaypoints.Add(prev);
 	}
 	
 	void OnTriggerEnter(Collider other) {
@@ -55,6 +64,7 @@ public class TTSWaypoint : TTSBehaviour {
 		}
 	}
 
+	#region Vector Calculations
 	/// <summary>
 	/// </summary>
 	public Vector3 getPointOn(float b){
@@ -127,6 +137,7 @@ public class TTSWaypoint : TTSBehaviour {
 		}
 		return false;
 	}
+	#endregion
 
 	public void OnDrawGizmos() {
 		if (transform == null)
@@ -142,6 +153,10 @@ public class TTSWaypoint : TTSBehaviour {
 
 		Gizmos.color = Color.red;
 		Gizmos.DrawRay(transform.position, forwardLine);
+
+		Gizmos.color = Color.magenta;
+		foreach(TTSWaypoint prev in prevWaypoints)
+			Gizmos.DrawLine(position, prev.position);
 	}
 
 	#region initialize

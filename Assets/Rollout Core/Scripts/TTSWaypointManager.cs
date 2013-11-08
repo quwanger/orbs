@@ -3,18 +3,73 @@ using System.Collections.Generic;
 
 public class TTSWaypointManager : MonoBehaviour {
 
+	/// <summary>
+	/// Set in unity editor
+	/// </summary>
+	public TTSWaypoint SpawnZone;
 
-	public List<TTSWaypoint> allWaypoints = new List<TTSWaypoint>();
-	public List<List<TTSWaypoint>> waypointLevels = new List<List<TTSWaypoint>>();
+	// Populated through TTSWaypoint Manager
+	public List<TTSWaypoint> EndPoints = new List<TTSWaypoint>();
 	
 	// Use this for initialization
 	void Start() {
-		SortWaypoints(GameObject.FindGameObjectsWithTag("Waypoint"));
+		if (SpawnZone == null) {
+			Debug.LogError("You must set the starting waypoint under the TTSWaypointManager");
+			return;
+		}
+
+		parseWaypoints(SpawnZone);
+		foreach (TTSWaypoint end in EndPoints) {
+			parseDistances(end);
+		}
 	}
 	
 	void OnDrawGizmos() {
 	}
 
+	private void parseWaypoints(TTSWaypoint waypoint) {
+		// Reached the end
+		if (waypoint.nextWaypoints.Count == 0) {
+			EndPoints.Add(waypoint);
+			return;
+		}
+
+		// Go through each of the next waypoints
+		foreach (TTSWaypoint next in waypoint.nextWaypoints) {
+			next.addPreviousWaypoint(waypoint);
+			parseWaypoints(next);
+		}
+	}
+
+	private void parseDistances(TTSWaypoint end) {
+
+		// end point
+		if (end.nextWaypoints.Count == 0) {
+			end.distanceFromEnd = 0.0f;
+		}
+		// Get distance from the end
+		else {
+			// First find the farthest distance
+
+			foreach(TTSWaypoint next in end.nextWaypoints){
+				float temp = next.distanceFromEnd + Vector3.Distance(end.position, next.position);
+				if (temp > end.distanceFromEnd)
+					end.distanceFromEnd = temp;
+			}
+		}
+
+		// Reached the start point
+		if (end.prevWaypoints.Count == 0)
+			return;
+
+		// Parse previous
+		foreach (TTSWaypoint prev in end.prevWaypoints) {
+			parseDistances(prev);
+		}
+	}
+
+	#region Finding
+	/*
 	public TTSWaypoint getClosestWP(int index, Vector3 pos) {
 		List<TTSWaypoint> waypoints = waypointLevels[index];
 		TTSWaypoint closest = null;
@@ -40,48 +95,10 @@ public class TTSWaypointManager : MonoBehaviour {
 
 		return farthest;
 	}
+	 */
+	#endregion
 
-	// Sorting
-	private void AddWP(GameObject wp) {
-		TTSWaypoint newWP = wp.GetComponent<TTSWaypoint>();
-		if (allWaypoints.Count > 0) {
-			TTSWaypoint lastWP = allWaypoints[allWaypoints.Count - 1].GetComponent<TTSWaypoint>();
 
-			// Check to see if they're siblings
-			if (lastWP.index == newWP.index) {
-				lastWP.hasSibling = newWP.hasSibling = true;
-				newWP.NewSibling(lastWP);
-			}
-			// When they're not.
-			else {
-				waypointLevels.Add(new List<TTSWaypoint>());
-				lastWP.AddNextWaypoint(newWP);
-			}
-		}
-		else {
-			waypointLevels.Add(new List<TTSWaypoint>());
-		}
-		waypointLevels[waypointLevels.Count - 1].Add(newWP);
-
-		// Debug.Log("ADDING WP: " + waypointLevels.Count + "-" + waypointLevels[waypointLevels.Count - 1].Count);
-		allWaypoints.Add(newWP);
-	}
-
-	private void SortWaypoints(GameObject[] original) {
-		for (int i = 0; i < original.Length - 1; i++) {
-			int index = 0;
-			for (int j = 0; j < original.Length - i; j++) {
-				// Find the highest index
-				index = (CompareWP(original[index], original[j]) < 0) ? index : j;
-			}
-
-			GameObject temp = original[index];
-			original[index] = original[original.Length - i - 1];
-			original[original.Length - i - 1] = temp;
-
-			AddWP(temp);
-		}
-	}
 	private int CompareWP(GameObject one, GameObject two) {
 		return (one.GetComponent<TTSWaypoint>().index - two.GetComponent<TTSWaypoint>().index);
 	}
