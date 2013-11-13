@@ -31,16 +31,17 @@ public class TTSWaypoint : TTSBehaviour {
 	private Vector3 colliderLine;
 	private Vector3 forwardLine;
 	public float boxWidth = 0.0f;
+	public float boxHeight = 0.0f;
 	public Vector3 position;
 
 	public float distanceFromEnd = 0.0f;
 
 	void Start () {
 		boxWidth = boxCollider.size.x;
+		boxHeight = boxCollider.size.y;
 
 		colliderLine = boxCollider.transform.right;
 		forwardLine = -boxCollider.transform.forward;
-
 		position = transform.position;
 	}
 
@@ -69,47 +70,50 @@ public class TTSWaypoint : TTSBehaviour {
 	/// </summary>
 	public Vector3 getPointOn(float b){
 		b -= 0.5f; // correct for start from left edge
-		return colliderLine * (b * boxWidth) + transform.position;
+		return colliderLine * (b * boxWidth) + position;
 	}
 
 	public Vector3 racerPos = new Vector3();
 	public Vector3 closestPointPos = new Vector3();
 
-	public Vector3 getClosestPoint(Vector3 position) {
+	public Vector3 getClosestPoint(Vector3 from) {
 
-		Vector3 pnt = Vector3.ClampMagnitude(Vector3.Project(position - transform.position, colliderLine), boxCollider.size.x / 2) + transform.position;
+		Vector3 pnt = Vector3.ClampMagnitude(Vector3.Project(from - position, colliderLine), boxWidth / 2) + position;
 
-		pnt.y = position.y;
+		pnt.y = Mathf.Clamp(from.y, position.y - boxHeight / 2, position.y + boxHeight / 2);
 
 		// convert point to local space
 		return closestPointPos = pnt;
+	}
+
+	public float getDistanceFrom(Vector3 from) {
+		return (getClosestPoint(from) - from).magnitude;
 	}
 	
 	/// <summary>
 	/// Returns transform.position if no points seen.
 	/// </summary>
-	/// <param name="position"></param>
+	/// <param name="from"></param>
 	/// <param name="resolution"></param>
 	/// <returns>Finds the closest seen point on the collider</returns>
-	public Vector3 getClosestSeenPoint(Vector3 position, int resolution) {
-		Vector3 closest = getClosestPoint(position);
+	public Vector3 getClosestSeenPoint(Vector3 from, int resolution) {
+		Vector3 closest = getClosestPoint(from);
 
-		if(!Physics.Linecast(position, closest, TTSUtils.LayerMask(10)))
+		if(!Physics.Linecast(from, closest, TTSUtils.LayerMask(10)))
 			return closest;
 		else
 			Debug.Log("Can't see closest point");
 
-		closest = transform.position;
-		closest.y = position.y;
+		closest = position;
+		closest.y = Mathf.Clamp(from.y, position.y - boxHeight / 2, position.y - boxHeight / 2);
 		Vector3 pnt = new Vector3();
 
 		resolution--; // So that we make as many checks as resolutions;
 		for (float i = 0; i < resolution+1; i++) { // Start from right to left.
 			pnt = getPointOn(i / resolution);
-			pnt.y = position.y;
+			pnt.y = Mathf.Clamp(from.y, position.y - boxHeight / 2, position.y - boxHeight / 2);
 
-			Debug.DrawLine(position, pnt);
-			if (!Physics.Linecast(position, pnt, TTSUtils.LayerMask(10)) && Vector3.Distance(position, pnt) < Vector3.Distance(position, closest)) {
+			if (!Physics.Linecast(from, pnt, TTSUtils.LayerMask(10)) && Vector3.Distance(from, pnt) < Vector3.Distance(from, closest)) {
 				closest = pnt;
 			}
 		}
@@ -117,22 +121,22 @@ public class TTSWaypoint : TTSBehaviour {
 		return closest;
 	}
 
-	public bool visibleFrom(Vector3 posistion) {
-		return visibleFrom(posistion, 5);
+	public bool visibleFrom(Vector3 from) {
+		return visibleFrom(from, 5);
 	}
 
-	public bool visibleFrom(Vector3 position, int resolution) {
+	public bool visibleFrom(Vector3 from, int resolution) {
 		Vector3 pnt = getPointOn(1.0f); // Left most
-		pnt.y = position.y;
+		pnt.y = Mathf.Clamp(from.y, position.y - boxHeight / 2, position.y - boxHeight / 2);
 
-		if (!Physics.Linecast(position, pnt, TTSUtils.LayerMask(10)))
+		if (!Physics.Linecast(from, pnt, TTSUtils.LayerMask(10)))
 			return true;
 
 		resolution--; // So that we make as many checks as resolutions;
 		for (float i = 0; i < resolution+1; i++) { // Start from right to left.
 			pnt = getPointOn(i / resolution);
 
-			if (!Physics.Linecast(position, pnt, TTSUtils.LayerMask(10)))
+			if (!Physics.Linecast(from, pnt, TTSUtils.LayerMask(10)))
 				return true;
 		}
 		return false;
