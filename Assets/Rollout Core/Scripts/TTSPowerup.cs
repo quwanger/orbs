@@ -138,7 +138,7 @@ public class TTSPowerup : TTSBehaviour {
 			vfx.BoostEffect(1.0f);
 		}
 		if(_tier == 3) {
-			boost.duration = 2.0f * this.GetComponent<TTSRacer>().Offense;
+			boost.duration = 3.0f * this.GetComponent<TTSRacer>().Offense;
 			boost.TargetForce = 100.0f * this.GetComponent<TTSRacer>().Offense;
 			vfx.BoostEffect(1.0f);
 		}
