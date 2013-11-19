@@ -84,6 +84,8 @@ public class TTSRacer : TTSBehaviour
 	public float Offense;
 
 	public bool finished = false;
+
+	public float AISlowDownDistance = 300.0f;
 	#endregion
 	
 	public bool hasShield;
@@ -175,34 +177,13 @@ public class TTSRacer : TTSBehaviour
 
 		}
 		else if (player == PlayerType.AI) {
-			if (level.DebugMode) {
-				vInput = Input.GetAxis("Vertical");
-				hInput = Input.GetAxis("Horizontal");
-			}
-
-			if (nextWaypoint == null){
-				if (!waypointManager.EndPoints.Contains(currentWaypoint))
-					nextWaypoint = waypointManager.SpawnZone;
-				else {
-					finished = true;
-					return;
-				}
-			}
-
-			Vector3 destination = TTSAIUtils.getVisibleWaypointPos(nextWaypoint, position);
-			Debug.DrawLine(position, destination);
-			Vector3 steerDir = TTSUtils.FlattenVector(destination - position);
-
-			if (vInput == 0 && hInput == 0) {
-				vInput = 1.0f;
-				hInput = TTSUtils.Remap(TTSUtils.GetRelativeAngle(lastForward, steerDir), -90.0f, 90.0f, -1.0f, 1.0f, true);
-			}
+			AIInput();
 		}
 		else {
 			Debug.LogError("PLAYER TYPE NOT SET");
 		}
 
-		// Vertical Input
+		#region Vertical Input
 		if (onGround && rigidbody.velocity.magnitude < TopSpeed && canMove) {
 			rigidbody.AddForce(displayMeshComponent.forward * vInput * Time.deltaTime * Acceleration);
 
@@ -225,6 +206,7 @@ public class TTSRacer : TTSBehaviour
 			else
 				rpm *= 0.99f;
 		}
+		#endregion
 
 		// Horizontal Input
 		if (canMove) {
@@ -336,10 +318,8 @@ public class TTSRacer : TTSBehaviour
 
 		if(!waypointManager.EndPoints.Contains(currentWaypoint))
 			nextWaypoint = TTSAIUtils.getClosestWaypoint(currentWaypoint.nextWaypoints, position);
-
-		//if (AIControl != null)
-		//	AIControl.nextWaypoint = currentWaypoint.index + 1;
 	}
+
 	public void SlowToStop() {
 		rigidbody.velocity = Vector3.Lerp(rigidbody.velocity, new Vector3(0, 0, 0), stopSpeed);
 	}
@@ -351,7 +331,7 @@ public class TTSRacer : TTSBehaviour
 	#endregion
 
 	public void OnDrawGizmos() {
-		bool drawMovement = false;
+		bool drawMovement = true;
 
 		if (drawMovement) {
 			Gizmos.color = Color.red;
@@ -370,11 +350,51 @@ public class TTSRacer : TTSBehaviour
 		//if (AIControl != null)
 		//	AIControl.drawGizmos();
 	}
+
+	public void AIInput(){
+		if (level.DebugMode) {
+			vInput = Input.GetAxis("Vertical");
+			hInput = Input.GetAxis("Horizontal");
+		}
+
+		if (nextWaypoint == null){
+			if (!waypointManager.EndPoints.Contains(currentWaypoint))
+				nextWaypoint = waypointManager.SpawnZone;
+			else {
+				finished = true;
+				return;
+			}
+		}
+
+		float turnSpeed = TTSAIUtils.turnSpeed(lastForward, nextWaypoint);
+		Debug.Log(turnSpeed);
+		Vector3 destination;
+
+		destination = TTSAIUtils.getVisibleWaypointPos(nextWaypoint, position);
+
+		// if (turnSpeed > 0.8f)
+		// 	destination = TTSAIUtils.getVisibleWaypointPos(nextWaypoint, position);
+		// else
+		// 	destination = nextWaypoint.getPointOn(1-turnSpeed);
+
+		Vector3 steerDir = TTSUtils.FlattenVector(destination - position);
+
+		Debug.DrawLine(position, destination);
+
+		if (vInput == 0 && hInput == 0) {
+			//float distanceMultiplier = (position - destination).magnitude / AISlowDownDistance;
+			//distanceMultiplier = Mathf.Min(1, distanceMultiplier) * 0.8f + 0.2f;
+
+			vInput = turnSpeed;// *distanceMultiplier;
+			hInput = TTSUtils.Remap(TTSUtils.GetRelativeAngle(lastForward, steerDir), -90.0f, 90.0f, -1.0f, 1.0f, true);
+		}
+	}
 }
 
 public class TTSAIUtils
 {
 	public static int resolution = 5;
+	public static int foresight = 3;
 
 	public static Vector3 getVisibleWaypointPos(TTSWaypoint wp, Vector3 from) {
 		int resolution = 5;
@@ -382,19 +402,17 @@ public class TTSAIUtils
 
 		if (!Physics.Linecast(from, closest, TTSUtils.LayerMask(10)))
 			return closest;
-		else
-			Debug.Log("Can't see closest point");
+		//else
+			//Debug.Log("Can't see closest point");
 
 		closest = wp.position;
 		closest.y = from.y;
 		Vector3 pnt = new Vector3();
 
-		//resolution--; // So that we make as many checks as resolutions;
+		// So that we make as many checks as resolutions;
 		for (float i = 0; i < resolution; i++) { // Start from right to left.
 			pnt = wp.getPointOn(i / (resolution-1));
 			pnt.y = from.y;
-
-			Debug.DrawLine(from, pnt);
 
 			if (!Physics.Linecast(from, pnt, TTSUtils.LayerMask(10)) && Vector3.Distance(from, pnt) < Vector3.Distance(from, closest)) {
 				closest = pnt;
@@ -421,7 +439,24 @@ public class TTSAIUtils
 	}
 
 	public static float turnSpeed(Vector3 forward, TTSWaypoint wp) {
-		return 0.0f;
+		Vector3 tempForward = waypointForwardForesight(foresight, wp).normalized;
+		//Debug.DrawRay(wp.position, tempForward * 5);
+
+		return Vector3.Project(tempForward, forward).magnitude;
+	}
+
+	private static Vector3 waypointForwardForesight(int foresight, TTSWaypoint wp) {
+		Vector3 forward = wp.forwardLine * foresight;
+
+		if(foresight != 1){
+			foresight--;
+
+			foreach (TTSWaypoint next in wp.nextWaypoints) {
+				forward += waypointForwardForesight(foresight, next);
+			}
+		}
+
+		return forward;
 	}
 }
 

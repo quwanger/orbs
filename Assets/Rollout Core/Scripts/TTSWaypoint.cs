@@ -29,7 +29,7 @@ public class TTSWaypoint : TTSBehaviour {
 	public List<TTSWaypoint> prevWaypoints = new List<TTSWaypoint>();
 
 	private Vector3 colliderLine;
-	private Vector3 forwardLine;
+	public Vector3 forwardLine;
 	public float boxWidth = 0.0f;
 	public float boxHeight = 0.0f;
 	public Vector3 position;
