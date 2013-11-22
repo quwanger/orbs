@@ -61,7 +61,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 400006}
-  - 102: {fileID: 10200002}
   - 23: {fileID: 2300004}
   - 114: {fileID: 11400006}
   m_Layer: 9
@@ -356,24 +355,6 @@ TextMesh:
   m_FontStyle: 0
   m_RichText: 1
   m_Font: {fileID: 12800000, guid: f9929be8a43d15b408cb23dd53efaaa4, type: 3}
---- !u!102 &10200002
-TextMesh:
-  serializedVersion: 3
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100006}
-  m_Text: 0
-  m_OffsetZ: 0
-  m_CharacterSize: .100000001
-  m_LineSpacing: 1
-  m_Anchor: 0
-  m_Alignment: 0
-  m_TabSize: 4
-  m_FontSize: 0
-  m_FontStyle: 0
-  m_RichText: 1
-  m_Font: {fileID: 12800000, guid: f9929be8a43d15b408cb23dd53efaaa4, type: 3}
 --- !u!102 &10200004
 TextMesh:
   serializedVersion: 3
@@ -471,7 +452,7 @@ MonoBehaviour:
   m_Name: 
   anchorMode: 0
   hideOffset: 10
-  padding: {x: 0, y: -1.70000005}
+  padding: {x: 0, y: 0}
   depth: 4
   frustrumDimentions: {x: 0, y: 0}
 --- !u!114 &11400006
@@ -516,7 +497,7 @@ MonoBehaviour:
   m_Name: 
   anchorMode: 5
   hideOffset: 10
-  padding: {x: 4, y: 4}
+  padding: {x: 5, y: 4}
   depth: 0
   frustrumDimentions: {x: 0, y: 0}
 --- !u!114 &11400012
@@ -531,7 +512,7 @@ MonoBehaviour:
   m_Name: 
   anchorMode: 0
   hideOffset: 10
-  padding: {x: 0, y: -1}
+  padding: {x: 0, y: .5}
   depth: 2
   frustrumDimentions: {x: 0, y: 0}
 --- !u!114 &11400014
