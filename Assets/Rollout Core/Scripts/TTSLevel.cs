@@ -31,8 +31,8 @@ public class TTSLevel : MonoBehaviour {
 		if(DebugMode) {
 			StartRace();
 			foreach(GameObject racer in _racers){
-				if(racer.GetComponent<TTSRacer>().startingWaypoint){
-					racer.transform.position = racer.GetComponent<TTSRacer>().startingWaypoint.transform.position;
+				if(racer.GetComponent<TTSRacer>().debugStart){
+					racer.transform.position = racer.GetComponent<TTSRacer>().debugStart.transform.position;
 				}
 			}
 		}else{

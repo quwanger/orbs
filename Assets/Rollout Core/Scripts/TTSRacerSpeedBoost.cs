@@ -15,7 +15,6 @@ public class TTSRacerSpeedBoost : TTSPerishingBehaviour {
 	}
 
 	protected override void OnPerishingUpdate(float progress) {
-		Debug.Log("Running\n");
 		if(isPlatform){
 			rigidbody.AddForce(GetComponent<TTSRacer>().displayMeshComponent.forward * _power);
 			Debug.Log("IsPlatform!");
