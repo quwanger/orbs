@@ -369,14 +369,14 @@ public class TTSRacer : TTSBehaviour
 
 		//destination = TTSAIUtils.getVisibleWaypointPos(nextWaypoint, position);
 
-		if (turnSpeed > 0.7f) // How hard the speed needs to be
+		if (turnSpeed > 0.9f) // How hard the speed needs to be
 			destination = TTSAIUtils.getVisibleWaypointPos(nextWaypoint, position);
 		else
 			destination = TTSAIUtils.hardTurnManeuver(turnSpeed, position, nextWaypoint);//nextWaypoint.getPointOn(1 - turnSpeed);
 
 		Vector3 steerDir = TTSUtils.FlattenVector(destination - position);
 
-		if (!level.DebugMode || (debugVInput == 0.0f && debugHInput == 0.0f)) {
+		if (!level.DebugMode || level.racers.Length > 1 || (debugVInput == 0.0f && debugHInput == 0.0f)) {
 			vInput = Mathf.Lerp(vInput, turnSpeed, 0.1f);
 			hInput = TTSUtils.Remap(TTSUtils.GetRelativeAngle(lastForward, steerDir)*2, -90.0f, 90.0f, -1.0f, 1.0f, true);
 		}
@@ -393,15 +393,16 @@ public class TTSAIUtils
 	public static float foresightDistance = 300;
 	public static bool debugMode = false;
 	public static float AISlowDownDistance = 300.0f;
+	public static float hardTurnDistance = 100.0f;
 
 	public static Vector3 hardTurnManeuver(float turnSpeed, Vector3 position, TTSWaypoint nextWP) {
 		Vector3 destination = new Vector3();
 
-		Vector3 point = Vector3.Project(waypointForwardForesight(3, nextWP).normalized, nextWP.colliderLine);
+		Vector3 point = Vector3.Project(waypointForwardForesight(foresight, nextWP).normalized, nextWP.colliderLine);
 
 		Debug.DrawRay(nextWP.position, point * nextWP.boxWidth / 2);
 
-		if (nextWP.getDistanceFrom(position) > 75.0f)
+		if (nextWP.getDistanceFrom(position) > hardTurnDistance)
 			destination = nextWP.position - (point * nextWP.boxWidth / 2);
 		else {
 			destination = nextWP.position + (point.normalized * nextWP.boxWidth / 2);
