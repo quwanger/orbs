@@ -28,7 +28,7 @@ public class TTSWaypoint : TTSBehaviour {
 	public List<TTSWaypoint> nextWaypoints = new List<TTSWaypoint>();
 	public List<TTSWaypoint> prevWaypoints = new List<TTSWaypoint>();
 
-	private Vector3 colliderLine;
+	public Vector3 colliderLine;
 	public Vector3 forwardLine;
 	public float boxWidth = 0.0f;
 	public float boxHeight = 0.0f;
@@ -88,6 +88,19 @@ public class TTSWaypoint : TTSBehaviour {
 
 	public float getDistanceFrom(Vector3 from) {
 		return (getClosestPoint(from) - from).magnitude;
+	}
+
+	public float getDistanceFrom(Vector3 from, TTSWaypoint currentWaypoint) {
+		if (currentWaypoint == this)
+			return getDistanceFrom(from);
+		else {
+			Debug.Log(currentWaypoint.distanceFromEnd - distanceFromEnd);
+			return currentWaypoint.getDistanceFrom(from) + (currentWaypoint.distanceFromEnd - distanceFromEnd);
+		}
+	}
+
+	public float getDistanceFromEnd(Vector3 from) {
+		return getDistanceFrom(from) + distanceFromEnd;
 	}
 	
 	/// <summary>

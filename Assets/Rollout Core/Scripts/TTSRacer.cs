@@ -84,8 +84,6 @@ public class TTSRacer : TTSBehaviour
 	public float Offense;
 
 	public bool finished = false;
-
-	public float AISlowDownDistance = 300.0f;
 	#endregion
 	
 	public bool hasShield;
@@ -345,17 +343,18 @@ public class TTSRacer : TTSBehaviour
 
 			Gizmos.color = Color.cyan;
 			Gizmos.DrawRay(transform.position, lastForward * 5);
+
+			Gizmos.color = Color.green;
+			Gizmos.DrawLine(transform.position, destination);
 		}
 
 		//if (AIControl != null)
 		//	AIControl.drawGizmos();
 	}
 
+	Vector3 destination;
 	public void AIInput(){
-		if (level.DebugMode) {
-			vInput = Input.GetAxis("Vertical");
-			hInput = Input.GetAxis("Horizontal");
-		}
+		float debugVInput = Input.GetAxis("Vertical"), debugHInput = Input.GetAxis("Horizontal");
 
 		if (nextWaypoint == null){
 			if (!waypointManager.EndPoints.Contains(currentWaypoint))
@@ -366,35 +365,62 @@ public class TTSRacer : TTSBehaviour
 			}
 		}
 
-		float turnSpeed = TTSAIUtils.turnSpeed(lastForward, nextWaypoint);
-		Debug.Log(turnSpeed);
-		Vector3 destination;
+		float turnSpeed = TTSAIUtils.turnSpeed(lastForward, position, nextWaypoint);
 
-		destination = TTSAIUtils.getVisibleWaypointPos(nextWaypoint, position);
+		//destination = TTSAIUtils.getVisibleWaypointPos(nextWaypoint, position);
 
-		// if (turnSpeed > 0.8f)
-		// 	destination = TTSAIUtils.getVisibleWaypointPos(nextWaypoint, position);
-		// else
-		// 	destination = nextWaypoint.getPointOn(1-turnSpeed);
+		if (turnSpeed > 0.7f) // How hard the speed needs to be
+			destination = TTSAIUtils.getVisibleWaypointPos(nextWaypoint, position);
+		else
+			destination = TTSAIUtils.hardTurnManeuver(turnSpeed, position, nextWaypoint);//nextWaypoint.getPointOn(1 - turnSpeed);
 
 		Vector3 steerDir = TTSUtils.FlattenVector(destination - position);
 
-		Debug.DrawLine(position, destination);
-
-		if (vInput == 0 && hInput == 0) {
-			//float distanceMultiplier = (position - destination).magnitude / AISlowDownDistance;
-			//distanceMultiplier = Mathf.Min(1, distanceMultiplier) * 0.8f + 0.2f;
-
-			vInput = turnSpeed;// *distanceMultiplier;
-			hInput = TTSUtils.Remap(TTSUtils.GetRelativeAngle(lastForward, steerDir), -90.0f, 90.0f, -1.0f, 1.0f, true);
+		if (!level.DebugMode || (debugVInput == 0.0f && debugHInput == 0.0f)) {
+			vInput = Mathf.Lerp(vInput, turnSpeed, 0.1f);
+			hInput = TTSUtils.Remap(TTSUtils.GetRelativeAngle(lastForward, steerDir)*2, -90.0f, 90.0f, -1.0f, 1.0f, true);
 		}
+
+		Debug.DrawLine(position, destination);
+		//nextWaypoint.nextWaypoints[0].getDistanceFrom(position, nextWaypoint); // Distance from end is screwed up.
 	}
 }
 
 public class TTSAIUtils
 {
-	public static int resolution = 5;
+	public static int resolution = 4;
 	public static int foresight = 3;
+	public static float foresightDistance = 300;
+	public static bool debugMode = false;
+	public static float AISlowDownDistance = 300.0f;
+
+	public static Vector3 hardTurnManeuver(float turnSpeed, Vector3 position, TTSWaypoint nextWP) {
+		Vector3 destination = new Vector3();
+
+		Vector3 point = Vector3.Project(waypointForwardForesight(3, nextWP).normalized, nextWP.colliderLine);
+
+		Debug.DrawRay(nextWP.position, point * nextWP.boxWidth / 2);
+
+		if (nextWP.getDistanceFrom(position) > 75.0f)
+			destination = nextWP.position - (point * nextWP.boxWidth / 2);
+		else {
+			destination = nextWP.position + (point.normalized * nextWP.boxWidth / 2);
+		}
+
+		return destination;
+	}
+
+	/// TODO: implement distance slowdown.
+	public static float turnSpeed(Vector3 forward, Vector3 position, TTSWaypoint wp) {
+		Vector3 tempForward = waypointForwardForesight(foresight, wp).normalized;
+		//Debug.DrawRay(wp.position, tempForward * 5);
+		float speed = Vector3.Project(tempForward, forward).magnitude;
+
+		float distanceMultiplier = Mathf.Min(1.0f, wp.getDistanceFrom(position) / AISlowDownDistance);
+		Debug.Log(distanceMultiplier);
+
+		return Mathf.Sqrt(speed);
+	}
 
 	public static Vector3 getVisibleWaypointPos(TTSWaypoint wp, Vector3 from) {
 		int resolution = 5;
@@ -402,22 +428,30 @@ public class TTSAIUtils
 
 		if (!Physics.Linecast(from, closest, TTSUtils.LayerMask(10)))
 			return closest;
-		//else
-			//Debug.Log("Can't see closest point");
+		else if (debugMode)
+			Debug.Log("Can't see closest point");
 
 		closest = wp.position;
 		closest.y = from.y;
 		Vector3 pnt = new Vector3();
 
+		closest = Vector3.zero;
+
 		// So that we make as many checks as resolutions;
 		for (float i = 0; i < resolution; i++) { // Start from right to left.
 			pnt = wp.getPointOn(i / (resolution-1));
 			pnt.y = from.y;
+			
+			if(debugMode)
+				Debug.DrawLine(from, pnt);
 
 			if (!Physics.Linecast(from, pnt, TTSUtils.LayerMask(10)) && Vector3.Distance(from, pnt) < Vector3.Distance(from, closest)) {
 				closest = pnt;
 			}
 		}
+
+		if (debugMode)
+			Debug.Log("No points found. " + Vector3.Distance(from, closest));
 
 		return closest;
 	}
@@ -436,13 +470,6 @@ public class TTSAIUtils
 		}
 
 		return closest;
-	}
-
-	public static float turnSpeed(Vector3 forward, TTSWaypoint wp) {
-		Vector3 tempForward = waypointForwardForesight(foresight, wp).normalized;
-		//Debug.DrawRay(wp.position, tempForward * 5);
-
-		return Vector3.Project(tempForward, forward).magnitude;
 	}
 
 	private static Vector3 waypointForwardForesight(int foresight, TTSWaypoint wp) {
