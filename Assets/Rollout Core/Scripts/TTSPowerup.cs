@@ -10,6 +10,8 @@ public class TTSPowerup : TTSBehaviour {
 	public Powerup ActivePowerup;
 	public int tier = 1;
 	
+	public GameObject hudPowerup;
+	
 	#region Projectile Prefab Assignment
 	public GameObject DrezzStonePrefab;
 	public GameObject EntropyCannonPrefab;
@@ -41,14 +43,17 @@ public class TTSPowerup : TTSBehaviour {
 	
 	#region donation methods
 	public void GivePowerup(Powerup powerup) {
-		if(powerup == AvailablePowerup && tier < 3) {
-			tier++;
+		if(powerup == AvailablePowerup) {
+			if(tier < 3){
+				tier++;
+			}
 		} else if(powerup == Powerup.TimeBonus) {
 			TimeBonus();
 		} else {
 			AvailablePowerup = powerup;
 			tier = 1;
 		}
+		hudPowerup.GetComponent<TTSHudPowerup>().UpdateHudPowerup(AvailablePowerup, tier);
 	}   
 	
 	public void ConsumePowerup() {
@@ -77,6 +82,9 @@ public class TTSPowerup : TTSBehaviour {
 		
 		this.ActivePowerup = this.AvailablePowerup;
 		this.AvailablePowerup = Powerup.None;
+		
+		this.tier = 0;
+		hudPowerup.GetComponent<TTSHudPowerup>().UpdateHudPowerup(this.AvailablePowerup, this.tier);
 		this.tier = 1;
 	}
 	
@@ -138,7 +146,7 @@ public class TTSPowerup : TTSBehaviour {
 			vfx.BoostEffect(1.0f);
 		}
 		if(_tier == 3) {
-			boost.duration = 2.0f * this.GetComponent<TTSRacer>().Offense;
+			boost.duration = 3.0f * this.GetComponent<TTSRacer>().Offense;
 			boost.TargetForce = 100.0f * this.GetComponent<TTSRacer>().Offense;
 			vfx.BoostEffect(1.0f);
 		}

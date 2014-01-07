@@ -6,6 +6,7 @@ public class TTSFloatHud : TTSBehaviour {
 	public TextMesh timeDisplay; 
 	public Transform boundCamera;
 	
+	public GameObject racerToFollow;
 	
 	private Color initialBackingColor;
 	public Color flashColor;
