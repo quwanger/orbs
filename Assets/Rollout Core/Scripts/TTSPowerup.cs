@@ -18,6 +18,7 @@ public class TTSPowerup : TTSBehaviour {
 	public GameObject BoostPrefab;
 	public GameObject TimeBonusPrefab;
 	public GameObject ShieldPrefab;
+	public GameObject ShockwavePrefab;
 	#endregion
 	
 	
@@ -75,6 +76,10 @@ public class TTSPowerup : TTSBehaviour {
 			Shield(tier);
 			break;
 			
+			case Powerup.Shockwave:
+			Shockwave(tier);
+			break;
+			
 			default:
 			//Play a sound?
 			break;
@@ -92,6 +97,16 @@ public class TTSPowerup : TTSBehaviour {
 	
 	
 	#region public methods
+	public void Shockwave(int _tier) {
+		if(_tier==1){
+			DeployShockwave(1.0f);
+		}else if(_tier==2){
+			DeployShockwave(2.0f);
+		}else if(_tier==3){
+			DeployShockwave(3.0f);
+		}
+	}
+	
 	public void DrezzStone(int _tier) {
 		if(_tier == 1) {
 			DropDrezzStone();
@@ -189,6 +204,13 @@ public class TTSPowerup : TTSBehaviour {
 		level.time.GiveTimeBonus(1.0f);
 		GameObject go = (GameObject) Instantiate(TimeBonusPrefab, this.transform.position, this.transform.rotation);
 		go.GetComponent<TTSTimeBonusPrefab>().target = this.GetComponent<TTSRacer>().displayMeshComponent.gameObject;
+	}
+	
+	private void DeployShockwave(float _power){
+		GameObject go = (GameObject) Instantiate(ShockwavePrefab, this.transform.position, Quaternion.identity);
+		go.GetComponent<TTSExplosiveForce>().power *= _power;
+		go.GetComponent<TTSExplosiveForce>().radius *= _power;
+		go.GetComponent<TTSExplosiveForce>().Activate();
 	}
 	#endregion
 	
