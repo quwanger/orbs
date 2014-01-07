@@ -76,7 +76,7 @@ public class TTSBehaviour : MonoBehaviour {
 	public TTSFloatHud hud {
 		get {
 			//GGHHEETTOO
-			return GameObject.Find("hud").GetComponent<TTSFloatHud>();
+			return GameObject.Find("hud(Clone)").GetComponent<TTSFloatHud>();
 		}
 	}
 }

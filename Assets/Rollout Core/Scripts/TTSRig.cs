@@ -13,6 +13,8 @@ public class TTSRig : MonoBehaviour {
 	public float rigOffense = 1.0f;
 	public float rigDefense = 1.0f;
 	
+	public string rigName;
+	
 	void Update () {
 		
 		//this rig is nested under display mesh so that it keeps the same position

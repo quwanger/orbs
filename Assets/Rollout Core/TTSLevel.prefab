@@ -11,6 +11,7 @@ GameObject:
   - 114: {fileID: 11400000}
   - 114: {fileID: 11400002}
   - 114: {fileID: 11400004}
+  - 114: {fileID: 11400006}
   m_Layer: 0
   m_Name: TTSLevel
   m_TagString: Untagged
@@ -69,6 +70,27 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 98427cc437fc53f40ab0947178818ee2, type: 3}
   m_Name: 
+  allWaypoints: []
+--- !u!114 &11400006
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 594730c6d405c439c9a166e2348e236c, type: 3}
+  m_Name: 
+  _rigs:
+  - {fileID: 100000, guid: 4222a4c25048c4676885fb09d185cfcc, type: 2}
+  - {fileID: 100000, guid: c1ad3e441e22c4da8a77df751a244c7f, type: 2}
+  - {fileID: 100000, guid: c20b079c5fcdf46f2aa9e3af0af3c542, type: 2}
+  _characters:
+  - {fileID: 100000, guid: 189d21dfc47334c93b9485bb32b654c4, type: 2}
+  _startingpoints: []
+  racerGO: {fileID: 100000, guid: 32f9bdadaccd84b44ae9856e8195bf9b, type: 2}
+  cameraGO: {fileID: 100000, guid: d8186dff409a24800b99162373b1525d, type: 2}
+  hudGO: {fileID: 100008, guid: c272487b8b30f413a89680f8556ed0fb, type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
