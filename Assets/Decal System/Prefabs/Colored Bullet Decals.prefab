@@ -1,0 +1,244 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &100000
+GameObject:
+  m_ObjectHideFlags: 8
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 400002}
+  - 33: {fileID: 3300000}
+  - 23: {fileID: 2300000}
+  - 114: {fileID: 11400002}
+  m_Layer: 0
+  m_Name: Decals Mesh Renderer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &100002
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 400000}
+  - 114: {fileID: 11400000}
+  m_Layer: 0
+  m_Name: Colored Bullet Decals
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &400000
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100002}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 105.070808, y: 30.0402908, z: 24.173912}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 400002}
+  m_Father: {fileID: 0}
+--- !u!4 &400002
+Transform:
+  m_ObjectHideFlags: 8
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 400000}
+--- !u!23 &2300000
+Renderer:
+  m_ObjectHideFlags: 8
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_LightmapIndex: 255
+  m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
+  m_Materials:
+  - {fileID: 2100000, guid: 5fcbad987097f124d91068ab80479e07, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 0
+  m_LightProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+--- !u!33 &3300000
+MeshFilter:
+  m_ObjectHideFlags: 8
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Mesh: {fileID: 0}
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9226db5f616c97041a741d6a06c860af, type: 3}
+  m_Name: 
+  m_Material: {fileID: 2100000, guid: 5fcbad987097f124d91068ab80479e07, type: 2}
+  m_ProjectionMode: 0
+  m_UVMode: 0
+  m_UV2Mode: 0
+  m_NormalsMode: 1
+  m_TangentsMode: 0
+  m_AffectSameLODOnly: 0
+  m_LightmapUpdateMode: 0
+  uvRectangles:
+  - name: Concrete 1
+    lowerLeftUV: {x: 0, y: .758539081}
+    upperRightUV: {x: .121093675, y: 1}
+  - name: Concrete 2
+    lowerLeftUV: {x: .13512899, y: .765352368}
+    upperRightUV: {x: .246002913, y: 1}
+  - name: Concrete 3
+    lowerLeftUV: {x: .248682767, y: .758539259}
+    upperRightUV: {x: .382267445, y: 1}
+  - name: Generic 1
+    lowerLeftUV: {x: .387218297, y: .781250119}
+    upperRightUV: {x: .491279185, y: 1}
+  - name: Generic 2
+    lowerLeftUV: {x: .505314291, y: .756268203}
+    upperRightUV: {x: .621866047, y: 1}
+  - name: Generic 3
+    lowerLeftUV: {x: .62681669, y: .758538961}
+    upperRightUV: {x: .75245297, y: 1}
+  - name: Generic 4
+    lowerLeftUV: {x: .755481839, y: .765352428}
+    upperRightUV: {x: .868277788, y: 1}
+  - name: Glass 1
+    lowerLeftUV: {x: 0, y: .471191406}
+    upperRightUV: {x: .125976562, y: .728845119}
+  - name: Glass 2
+    lowerLeftUV: {x: .126981646, y: .513549089}
+    upperRightUV: {x: .246445134, y: .735030591}
+  - name: Glass 3
+    lowerLeftUV: {x: .2471302, y: .508609653}
+    upperRightUV: {x: .376594365, y: .749680996}
+  - name: Metal 1
+    lowerLeftUV: {x: .382652938, y: .511798382}
+    upperRightUV: {x: .488201678, y: .7369259}
+  - name: Metal 2
+    lowerLeftUV: {x: .512595534, y: .522959173}
+    upperRightUV: {x: .611766577, y: .720982194}
+  - name: Metal 3
+    lowerLeftUV: {x: .638552368, y: .535714269}
+    upperRightUV: {x: .725765049, y: .719387829}
+  - name: Old Metal 1
+    lowerLeftUV: {x: 0, y: .267857134}
+    upperRightUV: {x: .111856125, y: .473851979}
+  - name: Old Metal 2
+    lowerLeftUV: {x: .137246653, y: .277132511}
+    upperRightUV: {x: .246463329, y: .461571008}
+  - name: Old Metal 3
+    lowerLeftUV: {x: .258657098, y: .279771924}
+    upperRightUV: {x: .358636051, y: .493243337}
+  - name: Wood 1
+    lowerLeftUV: {x: .364231437, y: .24018155}
+    upperRightUV: {x: .503800571, y: .511718869}
+  - name: Wood 2
+    lowerLeftUV: {x: .502797782, y: .256017715}
+    upperRightUV: {x: .625211179, y: .493243277}
+  - name: Wood 3
+    lowerLeftUV: {x: .629486859, y: .282411247}
+    upperRightUV: {x: .747941315, y: .493243456}
+  uv2Rectangles:
+  - name: Concrete 1
+    lowerLeftUV: {x: 0, y: 0}
+    upperRightUV: {x: 1, y: 1}
+  - name: Concrete 2
+    lowerLeftUV: {x: 0, y: 0}
+    upperRightUV: {x: 1, y: 1}
+  - name: Concrete 3
+    lowerLeftUV: {x: 0, y: 0}
+    upperRightUV: {x: 1, y: 1}
+  - name: Generic 1
+    lowerLeftUV: {x: 0, y: 0}
+    upperRightUV: {x: 1, y: 1}
+  - name: Generic 2
+    lowerLeftUV: {x: 0, y: 0}
+    upperRightUV: {x: 1, y: 1}
+  - name: Generic 3
+    lowerLeftUV: {x: 0, y: 0}
+    upperRightUV: {x: 1, y: 1}
+  - name: Generic 4
+    lowerLeftUV: {x: 0, y: 0}
+    upperRightUV: {x: 1, y: 1}
+  - name: Glass 1
+    lowerLeftUV: {x: 0, y: 0}
+    upperRightUV: {x: 1, y: 1}
+  - name: Glass 2
+    lowerLeftUV: {x: 0, y: 0}
+    upperRightUV: {x: 1, y: 1}
+  - name: Glass 3
+    lowerLeftUV: {x: 0, y: 0}
+    upperRightUV: {x: 1, y: 1}
+  - name: Metal 1
+    lowerLeftUV: {x: 0, y: 0}
+    upperRightUV: {x: 1, y: 1}
+  - name: Metal 2
+    lowerLeftUV: {x: 0, y: 0}
+    upperRightUV: {x: 1, y: 1}
+  - name: Metal 3
+    lowerLeftUV: {x: 0, y: 0}
+    upperRightUV: {x: 1, y: 1}
+  - name: Old Metal 1
+    lowerLeftUV: {x: 0, y: 0}
+    upperRightUV: {x: 1, y: 1}
+  - name: Old Metal 2
+    lowerLeftUV: {x: 0, y: 0}
+    upperRightUV: {x: 1, y: 1}
+  - name: Old Metal 3
+    lowerLeftUV: {x: 0, y: 0}
+    upperRightUV: {x: 1, y: 1}
+  - name: Wood 1
+    lowerLeftUV: {x: 0, y: 0}
+    upperRightUV: {x: 1, y: 1}
+  - name: Wood 2
+    lowerLeftUV: {x: 0, y: 0}
+    upperRightUV: {x: 1, y: 1}
+  - name: Wood 3
+    lowerLeftUV: {x: 0, y: 0}
+    upperRightUV: {x: 1, y: 1}
+  m_AreDecalsMeshesOptimized: 0
+  m_MeshAssetFolder: Assets
+--- !u!114 &11400002
+MonoBehaviour:
+  m_ObjectHideFlags: 8
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b5c1c49d0200344baea57044bec5987, type: 3}
+  m_Name: 
+  m_MeshFilter: {fileID: 3300000}
+  m_MeshRenderer: {fileID: 2300000}
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 100002}
+  m_IsPrefabParent: 1
+  m_IsExploded: 1
