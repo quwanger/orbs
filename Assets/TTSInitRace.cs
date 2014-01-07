@@ -17,7 +17,7 @@ public class TTSInitRace : MonoBehaviour {
 	private string tempRigChoice = "Rig_Rhino";
 	private string tempCharacterChoice = "Character_Default";
 	private int tempNumHumanPlayers = 1;
-	private int numberOfRacers = 4;
+	public int numberOfRacers = 1;
 	
 	GameObject rigToLoad;
 	GameObject characterToLoad;
@@ -88,6 +88,12 @@ public class TTSInitRace : MonoBehaviour {
 				
 				GameObject tempHUD = (GameObject)Instantiate(hudGO);
 				tempHUD.GetComponent<TTSFloatHud>().boundCamera = tempCamera.transform;
+
+				//assinging the hud powerup for the racer
+
+				Transform tempHudPowerup = tempHUD.transform.Find("CurrentPowerup");
+
+				tempRacer.GetComponent<TTSPowerup>().hudPowerup = tempHudPowerup.gameObject;
 			}else{
 				tempRacer.GetComponent<TTSRacer>().IsPlayerControlled = false;
 			}
