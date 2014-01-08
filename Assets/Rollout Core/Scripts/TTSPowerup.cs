@@ -8,7 +8,7 @@ public class TTSPowerup : TTSBehaviour {
 	
 	public Powerup AvailablePowerup;
 	public Powerup ActivePowerup;
-	public int tier = 1;
+	public int tier = 0;
 	
 	public GameObject hudPowerup;
 	
@@ -30,6 +30,7 @@ public class TTSPowerup : TTSBehaviour {
 			if(Input.GetKeyDown("3")) SuperCBooster(DebugTier);
 			if(Input.GetKeyDown("4")) TimeBonus();
 			if(Input.GetKeyDown("5")) Shield(DebugTier);
+			if(Input.GetKeyDown("6")) Shockwave(DebugTier);
 			
 			if(Input.GetKeyDown("9")){
 				this.GetComponent<TTSRacer>().DamageRacer(0.9f);
@@ -49,6 +50,8 @@ public class TTSPowerup : TTSBehaviour {
 				tier++;
 			}
 		} else if(powerup == Powerup.TimeBonus) {
+			if(AvailablePowerup == TTSBehaviour.Powerup.None)
+				tier = 0;
 			TimeBonus();
 		} else {
 			AvailablePowerup = powerup;
@@ -208,8 +211,8 @@ public class TTSPowerup : TTSBehaviour {
 	
 	private void DeployShockwave(float _power){
 		GameObject go = (GameObject) Instantiate(ShockwavePrefab, this.transform.position, Quaternion.identity);
-		go.GetComponent<TTSExplosiveForce>().power *= _power;
-		go.GetComponent<TTSExplosiveForce>().radius *= _power;
+		go.GetComponent<TTSExplosiveForce>().power = go.GetComponent<TTSExplosiveForce>().power * _power * this.GetComponent<TTSRacer>().Offense;
+		go.GetComponent<TTSExplosiveForce>().radius = go.GetComponent<TTSExplosiveForce>().radius * _power * this.GetComponent<TTSRacer>().Offense;
 		go.GetComponent<TTSExplosiveForce>().Activate();
 	}
 	#endregion
