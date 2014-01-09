@@ -19,6 +19,7 @@ public class TTSPowerup : TTSBehaviour {
 	public GameObject TimeBonusPrefab;
 	public GameObject ShieldPrefab;
 	public GameObject ShockwavePrefab;
+	public GameObject LeechPrefab;
 	#endregion
 	
 	
@@ -31,6 +32,7 @@ public class TTSPowerup : TTSBehaviour {
 			if(Input.GetKeyDown("4")) TimeBonus();
 			if(Input.GetKeyDown("5")) Shield(DebugTier);
 			if(Input.GetKeyDown("6")) Shockwave(DebugTier);
+			if(Input.GetKeyDown("7")) Leech(DebugTier);
 			
 			if(Input.GetKeyDown("9")){
 				this.GetComponent<TTSRacer>().DamageRacer(0.9f);
@@ -83,6 +85,10 @@ public class TTSPowerup : TTSBehaviour {
 			Shockwave(tier);
 			break;
 			
+			case Powerup.Leech:
+			Leech(tier);
+			break;
+			
 			default:
 			//Play a sound?
 			break;
@@ -100,6 +106,22 @@ public class TTSPowerup : TTSBehaviour {
 	
 	
 	#region public methods
+	public void Leech(int _tier) {
+		if(_tier==1){
+			for(int i=0; i<2; i++){
+				DeployLeech();
+			}
+		}else if(_tier==2){
+			for(int i=0; i<5; i++){
+				DeployLeech();
+			}
+		}else if(_tier==3){
+			for(int i=0; i<15; i++){
+				DeployLeech();
+			}
+		}
+	}
+	
 	public void Shockwave(int _tier) {
 		if(_tier==1){
 			DeployShockwave(1.0f);
@@ -214,6 +236,10 @@ public class TTSPowerup : TTSBehaviour {
 		go.GetComponent<TTSExplosiveForce>().power = go.GetComponent<TTSExplosiveForce>().power * _power * this.GetComponent<TTSRacer>().Offense;
 		go.GetComponent<TTSExplosiveForce>().radius = go.GetComponent<TTSExplosiveForce>().radius * _power * this.GetComponent<TTSRacer>().Offense;
 		go.GetComponent<TTSExplosiveForce>().Activate();
+	}
+	
+	private void DeployLeech() {
+		//instantiate leech shiz here
 	}
 	#endregion
 	
