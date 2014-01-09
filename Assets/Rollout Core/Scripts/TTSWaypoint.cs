@@ -32,22 +32,26 @@ public class TTSWaypoint : TTSBehaviour {
 	public Vector3 forwardLine;
 	public float boxWidth = 0.0f;
 	public float boxHeight = 0.0f;
-	public Vector3 position;
+	public Vector3 position{
+		get{return transform.position;}
+		set{transform.position = value;}
+	}
 
 	public float distanceFromEnd = 0.0f;
 
 	void Start () {
-		boxWidth = boxCollider.size.x;
-		boxHeight = boxCollider.size.y;
-
-		colliderLine = boxCollider.transform.right;
-		forwardLine = -boxCollider.transform.forward;
-		position = transform.position;
 	}
 
 	void Awake() {
 		boxCollider = GetComponent<BoxCollider>();
 		boxCollider.isTrigger = true;
+
+		position = transform.position;
+		boxWidth = boxCollider.size.x;
+		boxHeight = boxCollider.size.y;
+
+		colliderLine = boxCollider.transform.right;
+		forwardLine = -boxCollider.transform.forward;
 		//transform = GetComponent<Transform>();
 	}
 
@@ -67,6 +71,7 @@ public class TTSWaypoint : TTSBehaviour {
 
 	#region Vector Calculations
 	/// <summary>
+	///	Returns position on the box collider. 0.0f->1.0f from left to right edge
 	/// </summary>
 	public Vector3 getPointOn(float b){
 		b -= 0.5f; // correct for start from left edge
@@ -160,7 +165,18 @@ public class TTSWaypoint : TTSBehaviour {
 		if (transform == null)
 			return;
 
-		if (closestPointPos.magnitude == 0) {
+		if(!Application.isPlaying){
+			Gizmos.color = Color.yellow;
+			Gizmos.DrawWireSphere(transform.position, 5.0f);
+		}
+		else{
+			foreach(TTSWaypoint wp in nextWaypoints){
+				Gizmos.DrawLine(getPointOn(0.0f), wp.getPointOn(0.0f));
+				Gizmos.DrawLine(getPointOn(1.0f), wp.getPointOn(1.0f));
+			}
+		}
+
+		if (closestPointPos != Vector3.zero) {
 			Gizmos.color = Color.blue;
 			Gizmos.DrawLine(transform.position, closestPointPos);
 		}

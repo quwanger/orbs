@@ -10,6 +10,10 @@ public class TTSWaypointManager : MonoBehaviour {
 
 	// Populated through TTSWaypoint Manager
 	public List<TTSWaypoint> EndPoints = new List<TTSWaypoint>();
+
+	void Awake(){
+
+	}
 	
 	// Use this for initialization
 	void Start() {

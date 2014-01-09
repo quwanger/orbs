@@ -100,8 +100,11 @@ public class TTSRacer : TTSBehaviour
 	// AI
 	private TTSWaypoint lastWaypoint;
 	private TTSWaypoint nextWaypoint;
+	TTSAIUtils AIUtil;
 
 	void Awake() {
+		AIUtil = new TTSAIUtils(5);
+
 		level.RegisterRacer(gameObject);
 		//Get the body via tag.
 		foreach (Transform child in transform) {
@@ -315,7 +318,7 @@ public class TTSRacer : TTSBehaviour
 		}
 
 		if(!waypointManager.EndPoints.Contains(currentWaypoint))
-			nextWaypoint = TTSAIUtils.getClosestWaypoint(currentWaypoint.nextWaypoints, position);
+			nextWaypoint = AIUtil.getClosestWaypoint(currentWaypoint.nextWaypoints, position);
 	}
 
 	public void SlowToStop() {
@@ -365,19 +368,20 @@ public class TTSRacer : TTSBehaviour
 			}
 		}
 
-		float turnSpeed = TTSAIUtils.turnSpeed(lastForward, position, nextWaypoint);
+		float turnAmount = AIUtil.turnCurveAmount(lastForward, nextWaypoint);
 
-		//destination = TTSAIUtils.getVisibleWaypointPos(nextWaypoint, position);
+		//destination = AIUtil.getVisibleWaypointPos(nextWaypoint, position);
 
-		if (turnSpeed > 0.9f) // How hard the speed needs to be
-			destination = TTSAIUtils.getVisibleWaypointPos(nextWaypoint, position);
+		if (turnAmount > AIUtil.HARD_TURN_AMOUNT) // Check to see if there needs to be a hard turn
+			destination = AIUtil.getVisibleWaypointPos(nextWaypoint, position);
 		else
-			destination = TTSAIUtils.hardTurnManeuver(turnSpeed, position, nextWaypoint);//nextWaypoint.getPointOn(1 - turnSpeed);
+			destination = AIUtil.hardTurnManeuver(position, nextWaypoint);
 
 		Vector3 steerDir = TTSUtils.FlattenVector(destination - position);
 
 		if (!level.DebugMode || level.racers.Length > 1 || (debugVInput == 0.0f && debugHInput == 0.0f)) {
-			vInput = Mathf.Lerp(vInput, turnSpeed, 0.1f);
+
+			vInput = AIUtil.forwardSpeed(vInput, turnAmount, nextWaypoint, position, rigidbody.velocity);
 			hInput = TTSUtils.Remap(TTSUtils.GetRelativeAngle(lastForward, steerDir)*2, -90.0f, 90.0f, -1.0f, 1.0f, true);
 		}
 
@@ -388,14 +392,32 @@ public class TTSRacer : TTSBehaviour
 
 public class TTSAIUtils
 {
-	public static int resolution = 4;
-	public static int foresight = 3;
-	public static float foresightDistance = 300;
-	public static bool debugMode = false;
-	public static float AISlowDownDistance = 300.0f;
-	public static float hardTurnDistance = 100.0f;
+	public float HARD_TURN_AMOUNT = 0.9f;
 
-	public static Vector3 hardTurnManeuver(float turnSpeed, Vector3 position, TTSWaypoint nextWP) {
+	public int resolution = 4;
+	public int foresight = 3;
+	public float foresightDistance = 300;
+	public bool debugMode = false;
+	public float AISlowDownDistance = 300.0f;
+	public float hardTurnDistance = 100.0f;
+
+	public float turnCautiousness = 4.0f;
+
+	public int intelligence;
+
+	public TTSAIUtils(int intelligence){
+		this.intelligence = intelligence;
+
+		if(intelligence > 1){
+			hardTurnDistance = 75.0f;
+		}
+	}
+
+	public void randomizeValues(){
+
+	}
+
+	public Vector3 hardTurnManeuver(Vector3 position, TTSWaypoint nextWP) {
 		Vector3 destination = new Vector3();
 
 		Vector3 point = Vector3.Project(waypointForwardForesight(foresight, nextWP).normalized, nextWP.colliderLine);
@@ -411,24 +433,37 @@ public class TTSAIUtils
 		return destination;
 	}
 
-	/// TODO: implement distance slowdown.
-	public static float turnSpeed(Vector3 forward, Vector3 position, TTSWaypoint wp) {
+	/// How similar the racer's forward and the waypoints forward are (0.0f -> 1.0f = hard -> no turn )
+	public float turnCurveAmount(Vector3 racerForward, TTSWaypoint wp) {
+		// Compare racer forward with waypoint forwards
 		Vector3 tempForward = waypointForwardForesight(foresight, wp).normalized;
-		//Debug.DrawRay(wp.position, tempForward * 5);
-		float speed = Vector3.Project(tempForward, forward).magnitude;
-
-		float distanceMultiplier = Mathf.Min(1.0f, wp.getDistanceFrom(position) / AISlowDownDistance);
-		Debug.Log(distanceMultiplier);
+		float speed = Vector3.Project(tempForward, racerForward).magnitude;
 
 		return Mathf.Sqrt(speed);
 	}
 
-	public static Vector3 getVisibleWaypointPos(TTSWaypoint wp, Vector3 from) {
+	/// Takes distance into account for how fast the racer must go.
+	public float forwardSpeed(float prevInput, float turnAmount, TTSWaypoint wp, Vector3 position, Vector3 velocity){
+		// Get distance multiplier based on how far the racer is from the waypoint
+		float distanceMultiplier = Mathf.Pow(Mathf.Min(1.0f, wp.getDistanceFrom(position) / AISlowDownDistance), turnCautiousness);
+
+		if(intelligence > 2){ // Reverse if it's a hard turn
+			if(turnAmount < HARD_TURN_AMOUNT &&	velocity.magnitude > (80.0f * turnAmount) && wp.getDistanceFrom(position) < ((1-turnAmount) * hardTurnDistance))
+				return -1.0f;
+		}
+
+		float t = Mathf.Pow(turnAmount, 1-distanceMultiplier);
+
+		return Mathf.Lerp(prevInput, t, 0.1f);
+	}
+
+	public Vector3 getVisibleWaypointPos(TTSWaypoint wp, Vector3 from) {
 		int resolution = 5;
 		Vector3 closest = wp.getClosestPoint(from);
 
-		if (!Physics.Linecast(from, closest, TTSUtils.LayerMask(10)))
+		if (!Physics.Linecast(from, closest, TTSUtils.LayerMask(10))){
 			return closest;
+		}
 		else if (debugMode)
 			Debug.Log("Can't see closest point");
 
@@ -436,7 +471,7 @@ public class TTSAIUtils
 		closest.y = from.y;
 		Vector3 pnt = new Vector3();
 
-		closest = Vector3.zero;
+		closest = wp.position;
 
 		// So that we make as many checks as resolutions;
 		for (float i = 0; i < resolution; i++) { // Start from right to left.
@@ -451,13 +486,10 @@ public class TTSAIUtils
 			}
 		}
 
-		if (debugMode)
-			Debug.Log("No points found. " + Vector3.Distance(from, closest));
-
 		return closest;
 	}
 
-	public static TTSWaypoint getClosestWaypoint(List<TTSWaypoint> wp, Vector3 from){
+	public TTSWaypoint getClosestWaypoint(List<TTSWaypoint> wp, Vector3 from){
 		TTSWaypoint closest = null;
 
 		foreach (TTSWaypoint waypoint in wp) {
@@ -473,7 +505,7 @@ public class TTSAIUtils
 		return closest;
 	}
 
-	private static Vector3 waypointForwardForesight(int foresight, TTSWaypoint wp) {
+	private Vector3 waypointForwardForesight(int foresight, TTSWaypoint wp) {
 		Vector3 forward = wp.forwardLine * foresight;
 
 		if(foresight != 1){
