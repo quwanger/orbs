@@ -239,7 +239,10 @@ public class TTSPowerup : TTSBehaviour {
 	}
 	
 	private void DeployLeech() {
-		//instantiate leech shiz here
+		GameObject go = (GameObject) Instantiate(LeechPrefab, this.transform.position, Quaternion.identity);
+		go.transform.rotation = GetComponent<TTSRacer>().displayMeshComponent.transform.rotation;
+		go.transform.position = this.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
+		go.rigidbody.velocity = this.rigidbody.velocity;
 	}
 	#endregion
 	
