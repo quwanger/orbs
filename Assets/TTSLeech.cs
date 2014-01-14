@@ -9,6 +9,10 @@ public class TTSLeech : TTSBehaviour {
 	private float randX;
 	private float randY;
 	
+	private Vector3 currentTarget;
+	
+	public TTSRacer currentRacer;
+	
 	// Use this for initialization
 	void Start () {
 		sortRacers();

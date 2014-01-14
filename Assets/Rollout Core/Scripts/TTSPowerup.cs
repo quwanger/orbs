@@ -20,6 +20,7 @@ public class TTSPowerup : TTSBehaviour {
 	public GameObject ShieldPrefab;
 	public GameObject ShockwavePrefab;
 	public GameObject LeechPrefab;
+	public GameObject HelixPrefab;
 	#endregion
 	
 	
@@ -33,6 +34,7 @@ public class TTSPowerup : TTSBehaviour {
 			if(Input.GetKeyDown("5")) Shield(DebugTier);
 			if(Input.GetKeyDown("6")) Shockwave(DebugTier);
 			if(Input.GetKeyDown("7")) Leech(DebugTier);
+			if(Input.GetKeyDown("8")) Helix(DebugTier);
 			
 			if(Input.GetKeyDown("9")){
 				this.GetComponent<TTSRacer>().DamageRacer(0.9f);
@@ -87,6 +89,10 @@ public class TTSPowerup : TTSBehaviour {
 			
 			case Powerup.Leech:
 			Leech(tier);
+			break;
+			
+			case Powerup.Helix:
+			Helix(tier);
 			break;
 			
 			default:
@@ -169,6 +175,24 @@ public class TTSPowerup : TTSBehaviour {
 		this.ActivePowerup = TTSBehaviour.Powerup.None;
 	}
 	
+	public void Helix(int _tier) {
+		if(_tier == 1) {
+			FireHelix();
+		}
+		
+		if(_tier == 2) {
+			for(int i = 0; i < 5; i++) {
+				Invoke("FireHelix", i * 0.1f);
+			}
+		}
+		if(_tier == 3) {
+			for(int i = 0; i < 10; i++) {
+				Invoke("FireHelix", i * 0.1f);
+			}
+		}
+		//it is only active while firing
+		this.ActivePowerup = TTSBehaviour.Powerup.None;
+	}
 
 	public void SuperCBooster(int _tier) {
 		TTSRacerSpeedBoost boost = gameObject.AddComponent<TTSRacerSpeedBoost>();
@@ -225,6 +249,14 @@ public class TTSPowerup : TTSBehaviour {
 		go.rigidbody.velocity = this.rigidbody.velocity.normalized * go.GetComponent<TTSEntropyCannonProjectile>().ProjectileStartVelocity;
 	}
 	
+	private void FireHelix() {
+		GameObject go = (GameObject) Instantiate(HelixPrefab);
+		go.GetComponent<TTSHelixProjectile>().offensiveMultiplier = this.GetComponent<TTSRacer>().Offense;
+		go.transform.rotation = GetComponent<TTSRacer>().displayMeshComponent.transform.rotation;
+		go.transform.position = this.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
+		go.rigidbody.velocity = this.rigidbody.velocity.normalized * go.GetComponent<TTSHelixProjectile>().ProjectileStartVelocity;
+	}
+	
 	private void GiveTimeBonus() {
 		level.time.GiveTimeBonus(1.0f);
 		GameObject go = (GameObject) Instantiate(TimeBonusPrefab, this.transform.position, this.transform.rotation);
@@ -240,6 +272,7 @@ public class TTSPowerup : TTSBehaviour {
 	
 	private void DeployLeech() {
 		GameObject go = (GameObject) Instantiate(LeechPrefab, this.transform.position, Quaternion.identity);
+		go.GetComponent<TTSLeech>().currentRacer = this.GetComponent<TTSRacer>();
 		go.transform.rotation = GetComponent<TTSRacer>().displayMeshComponent.transform.rotation;
 		go.transform.position = this.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
 		go.rigidbody.velocity = this.rigidbody.velocity;
