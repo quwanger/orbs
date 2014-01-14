@@ -22,8 +22,15 @@ public static class TTSUtils {
 
 	}
 
-	public static Vector3 RotateAround(Vector3 point, Vector3 pivot, Vector3 angles){
+	public static Vector3 RotateAround(Vector3 point, Vector3 pivot, Vector3 angles) {
 		Vector3 dir = point - pivot;
+		dir = Quaternion.Euler(angles) * dir;
+		point = dir + pivot;
+		return point;
+	}
+	public static Vector3 RotateScaleAround(Vector3 point, Vector3 pivot, Vector3 angles, float scale) {
+		Vector3 dir = point - pivot;
+		dir *= scale;
 		dir = Quaternion.Euler(angles) * dir;
 		point = dir + pivot;
 		return point;
