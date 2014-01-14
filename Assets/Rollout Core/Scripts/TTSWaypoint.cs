@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEditor;
 using System.Collections.Generic;
 
 [RequireComponent (typeof (BoxCollider))]
@@ -53,6 +54,8 @@ public class TTSWaypoint : TTSBehaviour {
 		colliderLine = boxCollider.transform.right;
 		forwardLine = -boxCollider.transform.forward;
 		//transform = GetComponent<Transform>();
+
+		gameObject.name = gameObject.name + " " + index;
 	}
 
 	public void addPreviousWaypoint(TTSWaypoint prev){
@@ -167,7 +170,13 @@ public class TTSWaypoint : TTSBehaviour {
 
 		if(!Application.isPlaying){
 			Gizmos.color = Color.yellow;
-			Gizmos.DrawWireSphere(transform.position, 5.0f);
+			Gizmos.DrawWireSphere(transform.position, 0.5f);
+
+			Handles.Label(transform.position, index.ToString());
+
+			foreach(TTSWaypoint wp in nextWaypoints){
+				Gizmos.DrawLine(position, wp.position);
+			}
 		}
 		else{
 			foreach(TTSWaypoint wp in nextWaypoints){

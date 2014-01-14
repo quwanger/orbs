@@ -100,10 +100,10 @@ public class TTSRacer : TTSBehaviour
 	// AI
 	private TTSWaypoint lastWaypoint;
 	private TTSWaypoint nextWaypoint;
-	TTSAIUtils AIUtil;
+	TTSAIController AIUtil;
 
 	void Awake() {
-		AIUtil = new TTSAIUtils(5);
+		AIUtil = new TTSAIController(5);
 
 		level.RegisterRacer(gameObject);
 		//Get the body via tag.
@@ -357,8 +357,14 @@ public class TTSRacer : TTSBehaviour
 
 	Vector3 destination;
 	public void AIInput(){
-		float debugVInput = Input.GetAxis("Vertical"), debugHInput = Input.GetAxis("Horizontal");
+		float debugVInput = 0.0f, debugHInput = 0.0f;
 
+		if(AIUtil.debugMode){
+			debugVInput = Input.GetAxis("Vertical");
+			debugHInput = Input.GetAxis("Horizontal");
+		}
+
+		// If there's no next waypoint
 		if (nextWaypoint == null){
 			if (!waypointManager.EndPoints.Contains(currentWaypoint))
 				nextWaypoint = waypointManager.SpawnZone;
@@ -368,157 +374,21 @@ public class TTSRacer : TTSBehaviour
 			}
 		}
 
-		float turnAmount = AIUtil.turnCurveAmount(lastForward, nextWaypoint);
-
-		//destination = AIUtil.getVisibleWaypointPos(nextWaypoint, position);
-
-		if (turnAmount > AIUtil.HARD_TURN_AMOUNT) // Check to see if there needs to be a hard turn
-			destination = AIUtil.getVisibleWaypointPos(nextWaypoint, position);
-		else
-			destination = AIUtil.hardTurnManeuver(position, nextWaypoint);
+		destination = AIUtil.getDestination(lastForward, nextWaypoint, position);
 
 		Vector3 steerDir = TTSUtils.FlattenVector(destination - position);
 
 		if (!level.DebugMode || level.racers.Length > 1 || (debugVInput == 0.0f && debugHInput == 0.0f)) {
 
-			vInput = AIUtil.forwardSpeed(vInput, turnAmount, nextWaypoint, position, rigidbody.velocity);
+			vInput = AIUtil.verticalInput(vInput, nextWaypoint, position, rigidbody.velocity);
 			hInput = TTSUtils.Remap(TTSUtils.GetRelativeAngle(lastForward, steerDir)*2, -90.0f, 90.0f, -1.0f, 1.0f, true);
 		}
 
-		Debug.DrawLine(position, destination);
+		Debug.DrawLine(position, destination); 
 		//nextWaypoint.nextWaypoints[0].getDistanceFrom(position, nextWaypoint); // Distance from end is screwed up.
 	}
 }
 
-public class TTSAIUtils
-{
-	public float HARD_TURN_AMOUNT = 0.9f;
-
-	public int resolution = 4;
-	public int foresight = 3;
-	public float foresightDistance = 300;
-	public bool debugMode = false;
-	public float AISlowDownDistance = 300.0f;
-	public float hardTurnDistance = 100.0f;
-
-	public float turnCautiousness = 4.0f;
-
-	public int intelligence;
-
-	public TTSAIUtils(int intelligence){
-		this.intelligence = intelligence;
-
-		if(intelligence > 1){
-			hardTurnDistance = 75.0f;
-		}
-	}
-
-	public void randomizeValues(){
-
-	}
-
-	public Vector3 hardTurnManeuver(Vector3 position, TTSWaypoint nextWP) {
-		Vector3 destination = new Vector3();
-
-		Vector3 point = Vector3.Project(waypointForwardForesight(foresight, nextWP).normalized, nextWP.colliderLine);
-
-		Debug.DrawRay(nextWP.position, point * nextWP.boxWidth / 2);
-
-		if (nextWP.getDistanceFrom(position) > hardTurnDistance)
-			destination = nextWP.position - (point * nextWP.boxWidth / 2);
-		else {
-			destination = nextWP.position + (point.normalized * nextWP.boxWidth / 2);
-		}
-
-		return destination;
-	}
-
-	/// How similar the racer's forward and the waypoints forward are (0.0f -> 1.0f = hard -> no turn )
-	public float turnCurveAmount(Vector3 racerForward, TTSWaypoint wp) {
-		// Compare racer forward with waypoint forwards
-		Vector3 tempForward = waypointForwardForesight(foresight, wp).normalized;
-		float speed = Vector3.Project(tempForward, racerForward).magnitude;
-
-		return Mathf.Sqrt(speed);
-	}
-
-	/// Takes distance into account for how fast the racer must go.
-	public float forwardSpeed(float prevInput, float turnAmount, TTSWaypoint wp, Vector3 position, Vector3 velocity){
-		// Get distance multiplier based on how far the racer is from the waypoint
-		float distanceMultiplier = Mathf.Pow(Mathf.Min(1.0f, wp.getDistanceFrom(position) / AISlowDownDistance), turnCautiousness);
-
-		if(intelligence > 2){ // Reverse if it's a hard turn
-			if(turnAmount < HARD_TURN_AMOUNT &&	velocity.magnitude > (80.0f * turnAmount) && wp.getDistanceFrom(position) < ((1-turnAmount) * hardTurnDistance))
-				return -1.0f;
-		}
-
-		float t = Mathf.Pow(turnAmount, 1-distanceMultiplier);
-
-		return Mathf.Lerp(prevInput, t, 0.1f);
-	}
-
-	public Vector3 getVisibleWaypointPos(TTSWaypoint wp, Vector3 from) {
-		int resolution = 5;
-		Vector3 closest = wp.getClosestPoint(from);
-
-		if (!Physics.Linecast(from, closest, TTSUtils.LayerMask(10))){
-			return closest;
-		}
-		else if (debugMode)
-			Debug.Log("Can't see closest point");
-
-		closest = wp.position;
-		closest.y = from.y;
-		Vector3 pnt = new Vector3();
-
-		closest = wp.position;
-
-		// So that we make as many checks as resolutions;
-		for (float i = 0; i < resolution; i++) { // Start from right to left.
-			pnt = wp.getPointOn(i / (resolution-1));
-			pnt.y = from.y;
-			
-			if(debugMode)
-				Debug.DrawLine(from, pnt);
-
-			if (!Physics.Linecast(from, pnt, TTSUtils.LayerMask(10)) && Vector3.Distance(from, pnt) < Vector3.Distance(from, closest)) {
-				closest = pnt;
-			}
-		}
-
-		return closest;
-	}
-
-	public TTSWaypoint getClosestWaypoint(List<TTSWaypoint> wp, Vector3 from){
-		TTSWaypoint closest = null;
-
-		foreach (TTSWaypoint waypoint in wp) {
-			if (closest == null) {
-				closest = waypoint;
-			}
-			else {
-				if(waypoint.getDistanceFrom(from) < closest.getDistanceFrom(from))
-					closest = waypoint;
-			}
-		}
-
-		return closest;
-	}
-
-	private Vector3 waypointForwardForesight(int foresight, TTSWaypoint wp) {
-		Vector3 forward = wp.forwardLine * foresight;
-
-		if(foresight != 1){
-			foresight--;
-
-			foreach (TTSWaypoint next in wp.nextWaypoints) {
-				forward += waypointForwardForesight(foresight, next);
-			}
-		}
-
-		return forward;
-	}
-}
 
 /*
 public class TTSRacerAI {
