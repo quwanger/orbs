@@ -348,7 +348,7 @@ public class TTSRacer : TTSBehaviour
 			Gizmos.DrawRay(transform.position, lastForward * 5);
 
 			Gizmos.color = Color.green;
-			Gizmos.DrawLine(transform.position, destination);
+			Gizmos.DrawCube(destination, Vector3.one);
 		}
 
 		//if (AIControl != null)
@@ -362,6 +362,11 @@ public class TTSRacer : TTSBehaviour
 		if(AIUtil.debugMode){
 			debugVInput = Input.GetAxis("Vertical");
 			debugHInput = Input.GetAxis("Horizontal");
+		}
+
+		if (currentWaypoint == null) {
+			vInput = hInput = 0.0f;
+			return;
 		}
 
 		// If there's no next waypoint
@@ -379,13 +384,11 @@ public class TTSRacer : TTSBehaviour
 		Vector3 steerDir = TTSUtils.FlattenVector(destination - position);
 
 		if (!level.DebugMode || level.racers.Length > 1 || (debugVInput == 0.0f && debugHInput == 0.0f)) {
-
 			vInput = AIUtil.verticalInput(vInput, nextWaypoint, position, rigidbody.velocity);
-			hInput = TTSUtils.Remap(TTSUtils.GetRelativeAngle(lastForward, steerDir)*2, -90.0f, 90.0f, -1.0f, 1.0f, true);
+			hInput = TTSUtils.Remap(TTSUtils.GetRelativeAngle(lastForward, steerDir) * 2, -90.0f, 90.0f, -1.0f, 1.0f, true);
 		}
 
-		Debug.DrawLine(position, destination); 
-		//nextWaypoint.nextWaypoints[0].getDistanceFrom(position, nextWaypoint); // Distance from end is screwed up.
+		Debug.DrawLine(position, destination);
 	}
 }
 

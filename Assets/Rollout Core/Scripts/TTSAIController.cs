@@ -1,15 +1,16 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEditor;
 
 
-public class TTSAIController
+public class TTSAIController : MonoBehaviour
 {
 	#region AI gameplay vars
 	public int intelligence; // Can engage in certain maneuvers based on intelligence
 	public bool debugMode = true; // Draws debug rays
 	public float HARD_TURN_AMOUNT = 0.9f; // How hard the next turn will be to use the hard turn maneuver
 	public int resolution = 4; // How many rays are cast to find way around obstacle. Higher = more accurate
-	public int hardAngleInterval = 20; // Angle between rays cast to find way around in secondary path correction. Lower = more accurate
+	public int hardAngleInterval = 30; // Angle between rays cast to find way around in secondary path correction. Lower = more accurate
 	public int foresight = 3; // How many future waypoints to check
 	public float foresightDistance = 300; // Not implemented, but how close waypoints need to be to consider for foresight
 	public float AISlowDownDistance = 300.0f; // How far ahead to consider slowing down for a turn
@@ -17,8 +18,8 @@ public class TTSAIController
 	public float turnCautiousness = 4.0f; // Affects how the racer will slow down at turns
 	private Vector3 tempDestination; // Used in secondary path correction
 	private float secondaryManeuverBuffer = 1.0f;
-	private float maxSecondaryBuffer = 5.0f;
-	private float secondaryBufferStep = 1.0f;
+	private float maxSecondaryBuffer = 10.0f;
+	private float secondaryBufferStep = 2.0f;
 	#endregion
 
 	#region AI persistent vars
@@ -79,17 +80,18 @@ public class TTSAIController
 
 		// Blocked Path
 		if (Physics.Linecast(position, destination, TTSUtils.LayerMask(10))) {
+			// Debug.Log("Blocked Path");
 			destination = blockedPathManeuver(next, position);
 		}
 
 		// Secondary Blocked Path
 		RaycastHit hit;
 		if (Physics.Linecast(position, destination, out hit, TTSUtils.LayerMask(10))) {
-			Debug.Log("Secondary Blocked Path");
+			// Debug.Log("Secondary Blocked Path");
 			destination = secondaryBlockedPathManeuver(next, position, hit);
 		}
 		else {
-			Debug.Log("Blocked Path");
+			// Debug.Log("Blocked Path");
 		}
 
 		return destination;
@@ -109,6 +111,8 @@ public class TTSAIController
 			destination = nextWP.position + (point.normalized * nextWP.boxWidth / 2);
 		}
 
+		destination.y = Mathf.Clamp(position.y, nextWP.position.y - nextWP.boxHeight / 2, nextWP.position.y + nextWP.boxHeight / 2);
+
 		return destination;
 	}
 
@@ -118,8 +122,6 @@ public class TTSAIController
 		Vector3 destination = wp.position;
 		destination.y = position.y;
 		Vector3 pnt = new Vector3();
-
-		destination = wp.position;
 
 		// So that we make as many checks as resolutions;
 		for (float i = 0; i < resolution; i++) { // Start from right to left.
@@ -146,7 +148,7 @@ public class TTSAIController
 		if (detourDestination != Vector3.zero) {
 			Vector3 tempPos = next.getClosestSeenPoint(detourDestination, resolution);
 			if (!Physics.Linecast(position, detourDestination, TTSUtils.LayerMask(10)) && !Physics.Linecast(detourDestination, tempPos, TTSUtils.LayerMask(10))) {
-				Debug.Log("Detour Destination reused.");
+				// Debug.Log("Detour Destination reused.");
 				return detourDestination;
 			}
 			else {
@@ -157,46 +159,53 @@ public class TTSAIController
 		float distance = (hit.point - position).magnitude * multiplier;
 
 		Vector3 rotatedVec1, rotatedVec2;
-		for (int i = 1; i <= 45.0f / hardAngleInterval; i++) {
+		for (int i = 1; i <= 90.0f / hardAngleInterval; i++) {
 			float checkAngle = hardAngleInterval * i;
 
 			// Get the two paths
 			rotatedVec1 = TTSUtils.RotateScaleAround(hit.point, position, new Vector3(0, checkAngle, 0), multiplier);
 			rotatedVec2 = TTSUtils.RotateScaleAround(hit.point, position, new Vector3(0, -checkAngle, 0), multiplier);
 
-			Vector3 nextPosition1 = next.getClosestSeenPoint(rotatedVec1, resolution);
-			Vector3 nextPosition2 = next.getClosestSeenPoint(rotatedVec2, resolution);
+			rotatedVec1.y = rotatedVec2.y = position.y;
+
+			Vector3 nextPosition1 = next.getClosestPoint(rotatedVec1);
+			Vector3 nextPosition2 = next.getClosestPoint(rotatedVec2);
 
 			float dist1 = -1.0f, dist2 = -1.0f;
+			Debug.DrawLine(position, rotatedVec1);
+			Debug.DrawLine(rotatedVec1, nextPosition1);
+			Debug.DrawLine(position, rotatedVec2);
+			Debug.DrawLine(rotatedVec2, nextPosition2);
+
+			Debug.Log(distance);
 
 			// Check to see if there's anything in the way
 			if (!Physics.Linecast(position, rotatedVec1, TTSUtils.LayerMask(10)) && !Physics.Linecast(nextPosition1, rotatedVec1, TTSUtils.LayerMask(10))) {
 				dist1 = (next.position - rotatedVec1).magnitude;
-				Debug.DrawLine(position, rotatedVec1);
-				Debug.DrawLine(rotatedVec1, nextPosition1);
 			}
 			if (!Physics.Linecast(position, rotatedVec2, TTSUtils.LayerMask(10)) && !Physics.Linecast(nextPosition2, rotatedVec2, TTSUtils.LayerMask(10))) {
 				dist2 = (next.position - rotatedVec2).magnitude;
-				Debug.DrawLine(position, rotatedVec2);
-				Debug.DrawLine(rotatedVec2, nextPosition2);
 			}
 
-			if ((dist2 == -1.0f && dist1 != -1.0f) || dist1 < dist2) {
-				destination = detourDestination = rotatedVec2;
-				break;
+			// Return right destination
+			if (dist1 == -1.0f && dist2 == -1.0f) {
+				continue;
 			}
-			else if ((dist1 == -1.0f && dist2 != -1.0f) || dist2 < dist1) {
-				destination = detourDestination = rotatedVec1;
-				break;
+			else if ((dist2 == -1.0f && dist1 != -1.0f) || (dist1 < dist2 && dist1 != -1.0f)) {
+				return destination = detourDestination = rotatedVec1;
 			}
-			else if (multiplier < maxSecondaryBuffer) {
-				destination = detourDestination = secondaryBlockedPathManeuver(next, position, hit, multiplier + secondaryBufferStep);
-				break;
+			else if ((dist1 == -1.0f && dist2 != -1.0f) || (dist2 < dist1  && dist2 != -1.0f)) {
+				return destination = detourDestination = rotatedVec2;
 			}
-			else { // NOthing worked. Abandon all hope.
-				Debug.Log("No way out.");
-				return next.position;
-			}
+		}
+
+		// Retry with new multiplier if it didn't work.
+		if (multiplier < maxSecondaryBuffer) {
+			destination = detourDestination = secondaryBlockedPathManeuver(next, position, hit, multiplier + secondaryBufferStep);
+		}
+		else { // NOthing worked. Abandon all hope.
+			Debug.Log("No way out.");
+			destination = next.position;
 		}
 
 		return destination;
