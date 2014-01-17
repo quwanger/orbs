@@ -53,16 +53,17 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 959effcefe7ee442c834a6ae9f5e42bf, type: 3}
   m_Name: 
-  distance: 0
-  finishlineObject: {fileID: 0}
-  hasBoosted: 0
+  equiptPerkPool1: 1
+  equiptPerkPool2: 0
+  accelerationIncrease: 500
+  speedIncrease: 500
+  handlingIncrease: 500
   BoostPrefab: {fileID: 100006, guid: f3a172c9924cf0944bb9de17cebc8f60, type: 2}
-  EquiptPerks: 0
-  hot: 0
+  finishlineObject: {fileID: 0}
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -76,6 +77,7 @@ MonoBehaviour:
   debug: 1
   DebugTier: 2
   AvailablePowerup: 0
+  PreviouslyAvailablePowerup: 0
   ActivePowerup: 0
   tier: 0
   hudPowerup: {fileID: 0}

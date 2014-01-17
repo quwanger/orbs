@@ -7,6 +7,7 @@ public class TTSPowerup : TTSBehaviour {
 	public int DebugTier = 2;
 	
 	public Powerup AvailablePowerup;
+	public Powerup PreviouslyAvailablePowerup = Powerup.None;
 	public Powerup ActivePowerup;
 	public int tier = 0;
 	
@@ -43,7 +44,12 @@ public class TTSPowerup : TTSBehaviour {
 
 		//if you hit space or the 'a' button on an Xbox controller
 		if(Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown("joystick button 0")) ConsumePowerup();
-	
+		
+		//changes the powerup in the hud when a new powerup is picked up
+		if(AvailablePowerup != PreviouslyAvailablePowerup)
+			hudPowerup.GetComponent<TTSHudPowerup>().UpdateHudPowerup(AvailablePowerup, tier);
+		
+		PreviouslyAvailablePowerup = AvailablePowerup;
 	}
 	#endregion
 	
@@ -105,7 +111,6 @@ public class TTSPowerup : TTSBehaviour {
 		
 		this.tier = 0;
 		hudPowerup.GetComponent<TTSHudPowerup>().UpdateHudPowerup(this.AvailablePowerup, this.tier);
-		this.tier = 1;
 	}
 	
 	#endregion
