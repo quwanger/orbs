@@ -115,7 +115,7 @@ public class TTSFollowCamera : TTSBehaviour
 
 		//Linecast and solve camera clipping.
 		RaycastHit hit = new RaycastHit ();
-		if (Physics.Linecast (target.position, transform.position, out hit, TTSUtils.LayerMask(10))) {
+		if (Physics.Linecast (target.position, transform.position, out hit, TTSUtils.ExceptLayerMask(10))) {
 			if (hit.collider.gameObject.isStatic) {
 				transform.position = Vector3.Lerp (transform.position, hit.point, 0.5f);
 			}

@@ -40,6 +40,18 @@ public static class TTSUtils {
 		return new Vector3(vec.x, 0.0f, vec.z);
 	}
 
+	public static int ExceptLayerMask(int[] layers) {
+		return ~LayerMask(layers);
+	}
+
+	public static int ExceptLayerMask(int layer) {
+		return ~LayerMask(layer);
+	}
+
+	public static int LayerMask(int layer) {
+		return (1 << layer);
+	}
+
 	public static int LayerMask(int[] layers) {
 		int mask = (1 << layers[0]);
 
@@ -47,10 +59,6 @@ public static class TTSUtils {
 			mask |= (1 << layers[i]);
 		}
 
-		return ~mask;
-	}
-
-	public static int LayerMask(int layer) {
-		return ~(1 << layer);
+		return mask;
 	}
 }

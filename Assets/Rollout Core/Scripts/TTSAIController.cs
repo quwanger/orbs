@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEditor;
 
 
-public class TTSAIController : MonoBehaviour
+public class TTSAIController : TTSBehaviour
 {
 	#region AI gameplay vars
-	public int intelligence; // Can engage in certain maneuvers based on intelligence
-	public bool debugMode = true; // Draws debug rays
+	public int intelligence = 5; // Can engage in certain maneuvers based on intelligence
+	public bool debugMode = false; // Draws debug rays
 	public float HARD_TURN_AMOUNT = 0.9f; // How hard the next turn will be to use the hard turn maneuver
 	public int resolution = 4; // How many rays are cast to find way around obstacle. Higher = more accurate
-	public int hardAngleInterval = 30; // Angle between rays cast to find way around in secondary path correction. Lower = more accurate
+	public int hardAngleInterval = 10; // Angle between rays cast to find way around in secondary path correction. Lower = more accurate
 	public int foresight = 3; // How many future waypoints to check
 	public float foresightDistance = 300; // Not implemented, but how close waypoints need to be to consider for foresight
 	public float AISlowDownDistance = 300.0f; // How far ahead to consider slowing down for a turn
@@ -20,6 +20,9 @@ public class TTSAIController : MonoBehaviour
 	private float secondaryManeuverBuffer = 1.0f;
 	private float maxSecondaryBuffer = 10.0f;
 	private float secondaryBufferStep = 2.0f;
+
+	private float racerBufferDistance = 20.0f; // How close a racer has to be to affect it.
+	private float racerAvoidStrength = 5.0f;
 	#endregion
 
 	#region AI persistent vars
@@ -34,9 +37,7 @@ public class TTSAIController : MonoBehaviour
 	#endregion
 
 
-	public TTSAIController(int intelligence) {
-		this.intelligence = intelligence;
-
+	public void Awake() {
 		if (intelligence > 1) {
 			hardTurnDistance = 75.0f;
 		}
@@ -79,22 +80,48 @@ public class TTSAIController : MonoBehaviour
 			destination = hardTurnManeuver(next, position);
 
 		// Blocked Path
-		if (Physics.Linecast(position, destination, TTSUtils.LayerMask(10))) {
-			// Debug.Log("Blocked Path");
+		if (Physics.Linecast(position, destination, TTSUtils.ExceptLayerMask(10))) {
+			if (debugMode)
+				Debug.Log("Blocked Path");
 			destination = blockedPathManeuver(next, position);
 		}
 
 		// Secondary Blocked Path
 		RaycastHit hit;
-		if (Physics.Linecast(position, destination, out hit, TTSUtils.LayerMask(10))) {
-			// Debug.Log("Secondary Blocked Path");
+		if (Physics.Linecast(position, destination, out hit, TTSUtils.ExceptLayerMask(10))) {
+			if (debugMode)
+				Debug.Log("Secondary Blocked Path");
 			destination = secondaryBlockedPathManeuver(next, position, hit);
 		}
 		else {
-			// Debug.Log("Blocked Path");
+			if (debugMode)
+				Debug.Log("Blocked Path");
 		}
 
+		destination += racerRelative(position, racerForward)  * Mathf.Min(1.0f, next.getDistanceFrom(position) / racerBufferDistance);
+
 		return destination;
+	}
+
+	private Vector3 racerRelative(Vector3 position, Vector3 racerForward) {
+		Vector3 direction = Vector3.zero;
+
+		foreach (GameObject racer in racers) {
+			if (racer.Equals(gameObject))
+				continue;
+
+			Vector3 dir = racer.transform.position - position;
+
+			Vector3 normalizedDir = dir.normalized;
+			float directionalStrength = Mathf.Pow(1 - Vector3.Project(normalizedDir, racerForward).magnitude, 2); // Stronger avoidance when a racer is on the side than front.
+
+			if (dir.magnitude < racerBufferDistance) {
+				//Debug.DrawLine(position, racer.transform.position);
+				direction -= dir.normalized * Mathf.Pow(50.0f / dir.magnitude, 2) * directionalStrength;
+			}
+		}
+
+		return direction * racerAvoidStrength;
 	}
 
 	// Used when the upcoming turns are very drastic
@@ -103,7 +130,8 @@ public class TTSAIController : MonoBehaviour
 
 		Vector3 point = Vector3.Project(waypointForwardForesight(foresight, nextWP).normalized, nextWP.colliderLine);
 
-		Debug.DrawRay(nextWP.position, point * nextWP.boxWidth / 2);
+		if(debugMode)
+			Debug.DrawRay(nextWP.position, point * nextWP.boxWidth / 2);
 
 		if (nextWP.getDistanceFrom(position) > hardTurnDistance)
 			destination = nextWP.position - (point * nextWP.boxWidth / 2);
@@ -128,7 +156,7 @@ public class TTSAIController : MonoBehaviour
 			pnt = wp.getPointOn(i / (resolution - 1));
 			pnt.y = position.y;
 
-			if (!Physics.Linecast(position, pnt, TTSUtils.LayerMask(10)) && Vector3.Distance(position, pnt) < Vector3.Distance(position, destination)) {
+			if (!Physics.Linecast(position, pnt, TTSUtils.ExceptLayerMask(10)) && Vector3.Distance(position, pnt) < Vector3.Distance(position, destination)) {
 				if (debugMode)
 					Debug.DrawLine(position, pnt);
 
@@ -147,7 +175,7 @@ public class TTSAIController : MonoBehaviour
 
 		if (detourDestination != Vector3.zero) {
 			Vector3 tempPos = next.getClosestSeenPoint(detourDestination, resolution);
-			if (!Physics.Linecast(position, detourDestination, TTSUtils.LayerMask(10)) && !Physics.Linecast(detourDestination, tempPos, TTSUtils.LayerMask(10))) {
+			if (!Physics.Linecast(position, detourDestination, TTSUtils.ExceptLayerMask(10)) && !Physics.Linecast(detourDestination, tempPos, TTSUtils.ExceptLayerMask(10))) {
 				// Debug.Log("Detour Destination reused.");
 				return detourDestination;
 			}
@@ -172,18 +200,19 @@ public class TTSAIController : MonoBehaviour
 			Vector3 nextPosition2 = next.getClosestPoint(rotatedVec2);
 
 			float dist1 = -1.0f, dist2 = -1.0f;
-			Debug.DrawLine(position, rotatedVec1);
-			Debug.DrawLine(rotatedVec1, nextPosition1);
-			Debug.DrawLine(position, rotatedVec2);
-			Debug.DrawLine(rotatedVec2, nextPosition2);
 
-			Debug.Log(distance);
+			if (debugMode) {
+				Debug.DrawLine(position, rotatedVec1);
+				Debug.DrawLine(rotatedVec1, nextPosition1);
+				Debug.DrawLine(position, rotatedVec2);
+				Debug.DrawLine(rotatedVec2, nextPosition2);
+			}
 
 			// Check to see if there's anything in the way
-			if (!Physics.Linecast(position, rotatedVec1, TTSUtils.LayerMask(10)) && !Physics.Linecast(nextPosition1, rotatedVec1, TTSUtils.LayerMask(10))) {
+			if (!Physics.Linecast(position, rotatedVec1, TTSUtils.ExceptLayerMask(10)) && !Physics.Linecast(nextPosition1, rotatedVec1, TTSUtils.ExceptLayerMask(10))) {
 				dist1 = (next.position - rotatedVec1).magnitude;
 			}
-			if (!Physics.Linecast(position, rotatedVec2, TTSUtils.LayerMask(10)) && !Physics.Linecast(nextPosition2, rotatedVec2, TTSUtils.LayerMask(10))) {
+			if (!Physics.Linecast(position, rotatedVec2, TTSUtils.ExceptLayerMask(10)) && !Physics.Linecast(nextPosition2, rotatedVec2, TTSUtils.ExceptLayerMask(10))) {
 				dist2 = (next.position - rotatedVec2).magnitude;
 			}
 
@@ -204,7 +233,8 @@ public class TTSAIController : MonoBehaviour
 			destination = detourDestination = secondaryBlockedPathManeuver(next, position, hit, multiplier + secondaryBufferStep);
 		}
 		else { // NOthing worked. Abandon all hope.
-			Debug.Log("No way out.");
+			if (debugMode) { Debug.Log("No way out."); }
+
 			destination = next.position;
 		}
 
@@ -248,5 +278,10 @@ public class TTSAIController : MonoBehaviour
 		}
 
 		return forward;
+	}
+
+	public void OnDrawGizmos() {
+		//Gizmos.color = Color.green;
+		//Gizmos.DrawWireSphere(transform.position, racerBufferDistance);
 	}
 }

@@ -29,8 +29,8 @@ public class TTSWaypoint : TTSBehaviour {
 	public List<TTSWaypoint> nextWaypoints = new List<TTSWaypoint>();
 	public List<TTSWaypoint> prevWaypoints = new List<TTSWaypoint>();
 
-	public Vector3 colliderLine;
-	public Vector3 forwardLine;
+	public Vector3 colliderLine; //{ get{return transform.right;} }
+	public Vector3 forwardLine; //{	get{return -transform.forward;} }
 	public float boxWidth = 0.0f;
 	public float boxHeight = 0.0f;
 	public Vector3 position{
@@ -48,11 +48,11 @@ public class TTSWaypoint : TTSBehaviour {
 		boxCollider.isTrigger = true;
 
 		position = transform.position;
-		boxWidth = boxCollider.size.x;
-		boxHeight = boxCollider.size.y;
+		boxWidth = boxCollider.size.x * transform.localScale.x;
+		boxHeight = boxCollider.size.y * transform.localScale.y;
 
-		colliderLine = boxCollider.transform.right;
-		forwardLine = -boxCollider.transform.forward;
+		colliderLine = transform.right; //boxCollider.transform.right;
+		forwardLine = -transform.forward; //-boxCollider.transform.forward;
 		//transform = GetComponent<Transform>();
 
 		gameObject.name = gameObject.name + " " + index;
@@ -120,7 +120,7 @@ public class TTSWaypoint : TTSBehaviour {
 	public Vector3 getClosestSeenPoint(Vector3 from, int resolution) {
 		Vector3 closest = getClosestPoint(from);
 
-		if(!Physics.Linecast(from, closest, TTSUtils.LayerMask(10)))
+		if(!Physics.Linecast(from, closest, TTSUtils.ExceptLayerMask(10)))
 			return closest;
 		else
 			Debug.Log("Can't see closest point");
@@ -134,7 +134,7 @@ public class TTSWaypoint : TTSBehaviour {
 			pnt = getPointOn(i / resolution);
 			pnt.y = Mathf.Clamp(from.y, position.y - boxHeight / 2, position.y - boxHeight / 2);
 
-			if (!Physics.Linecast(from, pnt, TTSUtils.LayerMask(10)) && Vector3.Distance(from, pnt) < Vector3.Distance(from, closest)) {
+			if (!Physics.Linecast(from, pnt, TTSUtils.ExceptLayerMask(10)) && Vector3.Distance(from, pnt) < Vector3.Distance(from, closest)) {
 				closest = pnt;
 			}
 		}
@@ -150,14 +150,14 @@ public class TTSWaypoint : TTSBehaviour {
 		Vector3 pnt = getPointOn(1.0f); // Left most
 		pnt.y = Mathf.Clamp(from.y, position.y - boxHeight / 2, position.y - boxHeight / 2);
 
-		if (!Physics.Linecast(from, pnt, TTSUtils.LayerMask(10)))
+		if (!Physics.Linecast(from, pnt, TTSUtils.ExceptLayerMask(10)))
 			return true;
 
 		resolution--; // So that we make as many checks as resolutions;
 		for (float i = 0; i < resolution+1; i++) { // Start from right to left.
 			pnt = getPointOn(i / resolution);
 
-			if (!Physics.Linecast(from, pnt, TTSUtils.LayerMask(10)))
+			if (!Physics.Linecast(from, pnt, TTSUtils.ExceptLayerMask(10)))
 				return true;
 		}
 		return false;

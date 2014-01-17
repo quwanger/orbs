@@ -103,7 +103,8 @@ public class TTSRacer : TTSBehaviour
 	TTSAIController AIUtil;
 
 	void Awake() {
-		AIUtil = new TTSAIController(5);
+		if(player == PlayerType.AI)
+			AIUtil = gameObject.AddComponent<TTSAIController>();
 
 		level.RegisterRacer(gameObject);
 		//Get the body via tag.
@@ -317,7 +318,7 @@ public class TTSRacer : TTSBehaviour
 			}
 		}
 
-		if(!waypointManager.EndPoints.Contains(currentWaypoint))
+		if(player == PlayerType.AI && !waypointManager.EndPoints.Contains(currentWaypoint))
 			nextWaypoint = AIUtil.getClosestWaypoint(currentWaypoint.nextWaypoints, position);
 	}
 
