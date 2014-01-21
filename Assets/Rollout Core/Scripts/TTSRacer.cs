@@ -64,6 +64,12 @@ public class TTSRacer : TTSBehaviour
 	public float rpm = 0;
 	private float vInput = 0.0f, hInput = 0.0f;
 	private Vector3 lastForward;
+
+	public Vector3 position{
+		get{
+			return transform.position;
+		}
+	}
 	#endregion
 
 	#region gameplay vars
@@ -76,25 +82,30 @@ public class TTSRacer : TTSBehaviour
 	
 	public float Defense;
 	public float Offense;
+
+	public bool finished = false;
 	#endregion
 	
 	public bool hasShield;
 	private float smooth;
 	private float stopSpeed = 0.05f;
 
-	// Direction/Wrong way
+	#region Direction/Wrong way
 	public TTSWaypoint currentWaypoint;
 	public TTSWaypoint previousWaypoint;
-	public TTSWaypoint startingWaypoint;
+	public TTSWaypoint debugStart;
 	public bool goingWrongWay = false;
+	#endregion
 
 	// AI
-	private TTSRacerAI AIControl;
+	private TTSWaypoint lastWaypoint;
+	private TTSWaypoint nextWaypoint;
+	TTSAIController AIUtil;
 
 	void Awake() {
-		
-		Debug.Log("Racer Awake");
-		
+		if(player == PlayerType.AI)
+			AIUtil = gameObject.AddComponent<TTSAIController>();
+
 		level.RegisterRacer(gameObject);
 		//Get the body via tag.
 		foreach (Transform child in transform) {
@@ -104,7 +115,7 @@ public class TTSRacer : TTSBehaviour
 		}
 
 		if (player == PlayerType.AI) {
-			AIControl = new TTSRacerAI(allWaypoints, rigidbody.velocity);
+			//AIControl = new TTSRacerAI(allWaypoints, rigidbody.velocity, waypointManager);
 		}
 
 		//lastForward = TTSUtils.FlattenVector(displayMeshComponent.forward).normalized;
@@ -156,24 +167,25 @@ public class TTSRacer : TTSBehaviour
 	}
 
 	private void CalculateInputForces() {
+		if (finished && !level.DebugMode) // No input when race is finished
+			return;
 
 		if (player == PlayerType.Player) {
 			vInput = Input.GetAxis("Vertical");
 			hInput = Input.GetAxis("Horizontal");
+
 		}
 		else if (player == PlayerType.Multiplayer) {
 
 		}
 		else if (player == PlayerType.AI) {
-			AIControl.update(rigidbody.position, lastForward);
-			vInput = AIControl.vInput;
-			hInput = AIControl.hInput;
+			AIInput();
 		}
 		else {
 			Debug.LogError("PLAYER TYPE NOT SET");
 		}
 
-		// Vertical Input
+		#region Vertical Input
 		if (onGround && rigidbody.velocity.magnitude < TopSpeed && canMove) {
 			rigidbody.AddForce(displayMeshComponent.forward * vInput * Time.deltaTime * Acceleration);
 
@@ -196,19 +208,12 @@ public class TTSRacer : TTSBehaviour
 			else
 				rpm *= 0.99f;
 		}
+		#endregion
 
 		// Horizontal Input
 		if (canMove) {
 			rigidbody.AddForce(displayMeshComponent.right * hInput * Time.deltaTime * Handling);
 		}
-	}
-
-	public void SlowToStop() {
-		rigidbody.velocity = Vector3.Lerp(rigidbody.velocity, new Vector3(0, 0, 0), stopSpeed);
-	}
-	
-	public void StopRacer(){
-		rigidbody.velocity = new Vector3(0, 0, 0);
 	}
 
 	public void DamageRacer(float dmgLevel){
@@ -227,31 +232,6 @@ public class TTSRacer : TTSBehaviour
 			rigidbody.velocity = damageVector;
 		}
 	}
-	
-	/*void OnCollisionEnter(Collision collision) {
-
-		onGround = true;
-		if (collision.relativeVelocity.magnitude > 10) {
-			vfx.DamageEffect(100.0f);
-			//RacerSfx.volume = collision.relativeVelocity.magnitude / TopSpeed / 1.5f;
-			RacerSfx.volume = collision.relativeVelocity.magnitude / 100.0f / 1.5f;
-			RacerSfx.PlayOneShot(DamageSounds[Mathf.FloorToInt(Random.value * DamageSounds.Length)]);
-		}
-
-		//spawn sparks (TODO: move this to a component script)
-		GameObject sparkClone = (GameObject)Instantiate(SparksEmitter);
-		sparkClone.transform.position = collision.contacts[0].point;
-		sparkClone.particleEmitter.emit = true;
-		sparkClone.transform.forward = displayMeshComponent.forward;
-	}
-
-	void OnCollisionStay(Collision collision) {
-		onGround = true;
-	}
-
-	void OnCollisionExit(Collision collision) {
-		onGround = false;
-	}*/
 
 	void CalculateBodyOrientation() {
 
@@ -274,6 +254,10 @@ public class TTSRacer : TTSBehaviour
 		if (TTSUtils.FlattenVector(displayMeshComponent.forward).magnitude > 0.2f) {
 			lastForward = TTSUtils.FlattenVector(displayMeshComponent.forward).normalized;
 		}
+	}
+
+	public float GetTiltAngle() {
+		return TiltAngle;
 	}
 
 	void LateUpdate() {
@@ -334,39 +318,89 @@ public class TTSRacer : TTSBehaviour
 			}
 		}
 
-		if (AIControl != null)
-			AIControl.nextWaypoint = currentWaypoint.index + 1;
+		if(player == PlayerType.AI && !waypointManager.EndPoints.Contains(currentWaypoint))
+			nextWaypoint = AIUtil.getClosestWaypoint(currentWaypoint.nextWaypoints, position);
+	}
+
+	public void SlowToStop() {
+		rigidbody.velocity = Vector3.Lerp(rigidbody.velocity, new Vector3(0, 0, 0), stopSpeed);
+	}
+
+	public void StopRacer() {
+		rigidbody.velocity = new Vector3(0, 0, 0);
 	}
 
 	#endregion
 
-	public float GetTiltAngle() {
-		return TiltAngle;
+	public void OnDrawGizmos() {
+		bool drawMovement = true;
+
+		if (drawMovement) {
+			Gizmos.color = Color.red;
+			Gizmos.DrawRay(transform.position, IdleForwardVector * 10);
+
+			Gizmos.color = Color.yellow;
+			Gizmos.DrawRay(transform.position, displayMeshComponent.forward * 10);
+
+			Gizmos.color = Color.magenta;
+			Gizmos.DrawRay(transform.position, rigidbody.velocity * 5);
+
+			Gizmos.color = Color.cyan;
+			Gizmos.DrawRay(transform.position, lastForward * 5);
+
+			Gizmos.color = Color.green;
+			Gizmos.DrawCube(destination, Vector3.one);
+		}
+
+		//if (AIControl != null)
+		//	AIControl.drawGizmos();
 	}
 
-	public void OnDrawGizmos() {
-		Gizmos.color = Color.red;
-		Gizmos.DrawRay(transform.position, IdleForwardVector * 10);
+	Vector3 destination;
+	public void AIInput(){
+		float debugVInput = 0.0f, debugHInput = 0.0f;
 
-		Gizmos.color = Color.yellow;
-		Gizmos.DrawRay(transform.position, displayMeshComponent.forward * 10);
+		if(AIUtil.debugMode){
+			debugVInput = Input.GetAxis("Vertical");
+			debugHInput = Input.GetAxis("Horizontal");
+		}
 
-		Gizmos.color = Color.magenta;
-		Gizmos.DrawRay(transform.position, rigidbody.velocity * 5);
+		if (currentWaypoint == null) {
+			vInput = hInput = 0.0f;
+			return;
+		}
 
-		Gizmos.color = Color.cyan;
-		Gizmos.DrawRay(transform.position, lastForward * 5);
+		// If there's no next waypoint
+		if (nextWaypoint == null){
+			if (!waypointManager.EndPoints.Contains(currentWaypoint))
+				nextWaypoint = waypointManager.SpawnZone;
+			else {
+				finished = true;
+				return;
+			}
+		}
 
-		if (AIControl != null)
-			AIControl.drawGizmos();
+		destination = AIUtil.getDestination(lastForward, nextWaypoint, position);
+
+		Vector3 steerDir = TTSUtils.FlattenVector(destination - position);
+
+		if (!level.DebugMode || level.racers.Length > 1 || (debugVInput == 0.0f && debugHInput == 0.0f)) {
+			vInput = AIUtil.verticalInput(vInput, nextWaypoint, position, rigidbody.velocity);
+			hInput = TTSUtils.Remap(TTSUtils.GetRelativeAngle(lastForward, steerDir) * 2, -90.0f, 90.0f, -1.0f, 1.0f, true);
+		}
+
+		Debug.DrawLine(position, destination);
 	}
 }
 
 
+/*
 public class TTSRacerAI {
 	// Waypoints
 	private List<TTSWaypoint> waypoints;
+	private TTSWaypointManager wpManager;
 	public int nextWaypoint = 0;
+	public int foresight = 3;
 
 	// Racer Vars
 	private Vector3 rForward;
@@ -374,7 +408,7 @@ public class TTSRacerAI {
 	private Vector3 rPosition;
 
 	// Movement Vars
-	private Vector3 nextDest;
+	private Vector3 destination;
 	private Vector3 nextWaypointDir = new Vector3();
 
 	// Input
@@ -386,9 +420,10 @@ public class TTSRacerAI {
 	/// </summary> 
 	/// <param name="waypointList">List of waypoints needed</param> 
 	/// <param name="rSpeed">Reference to racer speed</param> 
-	public TTSRacerAI(List<TTSWaypoint> waypointList, Vector3 racerSpeed)
+	public TTSRacerAI(List<TTSWaypoint> waypointList, Vector3 racerSpeed, TTSWaypointManager waypointManager)
 	{
 		waypoints = waypointList;
+		wpManager = waypointManager;
 		rSpeed = racerSpeed;
 	}
 
@@ -399,8 +434,8 @@ public class TTSRacerAI {
 	}
 
 	public void update() {
-		nextDest = waypoints[nextWaypoint].GetClosestPoint(rPosition);
-		nextWaypointDir = TTSUtils.FlattenVector(nextDest - rPosition);
+		destination = waypoints[nextWaypoint].getClosestSeenPoint(rPosition, 7);
+		nextWaypointDir = TTSUtils.FlattenVector(destination - rPosition);
 
 		float sensitivity = 90.0f;
 
@@ -408,11 +443,16 @@ public class TTSRacerAI {
 		hInput = TTSUtils.Remap(TTSUtils.GetRelativeAngle(rForward, nextWaypointDir), -sensitivity, sensitivity, -1.0f, 1.0f, true);
 	}
 
+	public void lookForward(){
+		//Debug.DrawRay()
+	}
+
 	public void drawGizmos() {
 		Gizmos.color = Color.yellow;
-		Gizmos.DrawLine(rPosition, nextDest);
+		Gizmos.DrawLine(rPosition, destination);
 
 		Gizmos.color = Color.cyan;
-		Gizmos.DrawCube(waypoints[nextWaypoint].GetClosestPoint(rPosition), new Vector3(0.5f, 0.5f, 0.5f));
+		Gizmos.DrawCube(destination, new Vector3(0.5f, 0.5f, 0.5f));
 	}
 }
+*/

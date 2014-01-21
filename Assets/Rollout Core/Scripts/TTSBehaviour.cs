@@ -41,19 +41,7 @@ public class TTSBehaviour : MonoBehaviour {
 			return level.waypointManager;
 		}
 	}
-	
-	public List<TTSWaypoint> allWaypoints{
-		get {
-			return level.waypointManager.allWaypoints;
-		}
-	}
 
-	public List<List<TTSWaypoint>> waypointLevels {
-		get {
-			return level.waypointManager.waypointLevels;
-		}
-	}
-	
 	public TTSCameraEffects vfx {
 		get {
 			return Camera.main.GetComponent<TTSCameraEffects>();

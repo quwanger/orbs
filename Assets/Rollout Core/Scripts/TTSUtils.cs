@@ -22,7 +22,43 @@ public static class TTSUtils {
 
 	}
 
+	public static Vector3 RotateAround(Vector3 point, Vector3 pivot, Vector3 angles) {
+		Vector3 dir = point - pivot;
+		dir = Quaternion.Euler(angles) * dir;
+		point = dir + pivot;
+		return point;
+	}
+	public static Vector3 RotateScaleAround(Vector3 point, Vector3 pivot, Vector3 angles, float scale) {
+		Vector3 dir = point - pivot;
+		dir *= scale;
+		dir = Quaternion.Euler(angles) * dir;
+		point = dir + pivot;
+		return point;
+	}
+
 	public static Vector3 FlattenVector(Vector3 vec) {
 		return new Vector3(vec.x, 0.0f, vec.z);
+	}
+
+	public static int ExceptLayerMask(int[] layers) {
+		return ~LayerMask(layers);
+	}
+
+	public static int ExceptLayerMask(int layer) {
+		return ~LayerMask(layer);
+	}
+
+	public static int LayerMask(int layer) {
+		return (1 << layer);
+	}
+
+	public static int LayerMask(int[] layers) {
+		int mask = (1 << layers[0]);
+
+		for (int i = 1; i < layers.Length; i++) {
+			mask |= (1 << layers[i]);
+		}
+
+		return mask;
 	}
 }

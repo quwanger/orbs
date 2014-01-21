@@ -10,7 +10,7 @@ GameObject:
   - 4: {fileID: 400000}
   - 114: {fileID: 11400000}
   - 65: {fileID: 6500000}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Waypoint
   m_TagString: Waypoint
   m_Icon: {fileID: 2800000, guid: 1346de2cd31a7794180a7245c507fb1a, type: 3}
@@ -54,7 +54,16 @@ MonoBehaviour:
   isLastWaypoint: 0
   isActive: 1
   hasSibling: 0
-  transform: {fileID: 0}
+  closestPoint: {x: 0, y: 0, z: 0}
+  siblings: []
+  nextWaypoints: []
+  prevWaypoints: []
+  boxWidth: 0
+  boxHeight: 0
+  position: {x: 0, y: 0, z: 0}
+  distanceFromEnd: 0
+  racerPos: {x: 0, y: 0, z: 0}
+  closestPointPos: {x: 0, y: 0, z: 0}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
