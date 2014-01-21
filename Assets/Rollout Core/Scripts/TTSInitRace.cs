@@ -16,7 +16,7 @@ public class TTSInitRace : MonoBehaviour {
 	
 	private string tempRigChoice = "Rig_Rhino";
 	private string tempCharacterChoice = "Character_Default";
-	private int tempNumHumanPlayers = 1;
+	public int tempNumHumanPlayers = 1;
 	public int numberOfRacers = 1;
 	
 	GameObject rigToLoad;
@@ -95,7 +95,8 @@ public class TTSInitRace : MonoBehaviour {
 
 				tempRacer.GetComponent<TTSPowerup>().hudPowerup = tempHudPowerup.gameObject;
 			}else{
-				tempRacer.GetComponent<TTSRacer>().IsPlayerControlled = false;
+				tempRacer.GetComponent<TTSRacer>().IsPlayerControlled = true;
+				tempRacer.GetComponent<TTSRacer>().player = TTSRacer.PlayerType.AI;
 			}
 		}
 	}

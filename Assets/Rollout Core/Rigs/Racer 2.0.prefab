@@ -102,7 +102,16 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e595e9937de9cd74fa0d0f882187e39d, type: 3}
   m_Name: 
-  waypointsCrossed: []
+  intelligence: 5
+  debugMode: 0
+  HARD_TURN_AMOUNT: .899999976
+  resolution: 4
+  hardAngleInterval: 10
+  foresight: 3
+  foresightDistance: 300
+  AISlowDownDistance: 300
+  hardTurnDistance: 100
+  turnCautiousness: 4
 --- !u!114 &11400006
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -127,13 +136,14 @@ MonoBehaviour:
   TopSpeed: 250
   Acceleration: 8000
   Handling: 11000
-  player: 0
+  player: 1
   Defense: 0
   Offense: 0
+  finished: 0
   hasShield: 0
   currentWaypoint: {fileID: 0}
   previousWaypoint: {fileID: 0}
-  startingWaypoint: {fileID: 0}
+  debugStart: {fileID: 0}
   goingWrongWay: 0
 --- !u!135 &13500000
 SphereCollider:

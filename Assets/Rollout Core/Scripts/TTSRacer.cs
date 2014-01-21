@@ -103,8 +103,6 @@ public class TTSRacer : TTSBehaviour
 	TTSAIController AIUtil;
 
 	void Awake() {
-		if(player == PlayerType.AI)
-			AIUtil = gameObject.AddComponent<TTSAIController>();
 
 		level.RegisterRacer(gameObject);
 		//Get the body via tag.
@@ -113,10 +111,9 @@ public class TTSRacer : TTSBehaviour
 				displayMeshComponent = child;
 			}
 		}
-
-		if (player == PlayerType.AI) {
-			//AIControl = new TTSRacerAI(allWaypoints, rigidbody.velocity, waypointManager);
-		}
+		
+		if(player == PlayerType.AI)
+			AIUtil = gameObject.AddComponent<TTSAIController>();
 
 		//lastForward = TTSUtils.FlattenVector(displayMeshComponent.forward).normalized;
 
@@ -307,6 +304,7 @@ public class TTSRacer : TTSBehaviour
 	public void OnWaypoint(TTSWaypoint hit) {
 		previousWaypoint = currentWaypoint;
 		currentWaypoint = hit;
+
 		if (previousWaypoint == currentWaypoint) {
 			if (goingWrongWay == true) {
 				goingWrongWay = false;
@@ -318,8 +316,12 @@ public class TTSRacer : TTSBehaviour
 			}
 		}
 
-		if(player == PlayerType.AI && !waypointManager.EndPoints.Contains(currentWaypoint))
+		if(player == PlayerType.AI && !waypointManager.EndPoints.Contains(currentWaypoint)){
+			if(AIUtil == null)
+				AIUtil = gameObject.AddComponent<TTSAIController>();
+
 			nextWaypoint = AIUtil.getClosestWaypoint(currentWaypoint.nextWaypoints, position);
+		}
 	}
 
 	public void SlowToStop() {
@@ -358,6 +360,7 @@ public class TTSRacer : TTSBehaviour
 
 	Vector3 destination;
 	public void AIInput(){
+
 		float debugVInput = 0.0f, debugHInput = 0.0f;
 
 		if(AIUtil.debugMode){

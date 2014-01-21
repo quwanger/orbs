@@ -70,7 +70,8 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 98427cc437fc53f40ab0947178818ee2, type: 3}
   m_Name: 
-  allWaypoints: []
+  SpawnZone: {fileID: 0}
+  EndPoints: []
 --- !u!114 &11400006
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -91,6 +92,7 @@ MonoBehaviour:
   racerGO: {fileID: 100000, guid: 32f9bdadaccd84b44ae9856e8195bf9b, type: 2}
   cameraGO: {fileID: 100000, guid: d8186dff409a24800b99162373b1525d, type: 2}
   hudGO: {fileID: 100008, guid: c272487b8b30f413a89680f8556ed0fb, type: 2}
+  numberOfRacers: 1
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
