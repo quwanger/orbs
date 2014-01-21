@@ -11,7 +11,7 @@ public class TTSEntropyCannonProjectile : MonoBehaviour {
 	public GameObject explosion;
 	public AudioClip fire;
 	public float Timeout = 5.0f;
-	public float ProjectileAccleration = 10.0f;
+	public float ProjectileAcceleration = 10.0f;
 	public float ProjectileStartVelocity = 100.0f;
 	
 	public float offensiveMultiplier;

@@ -7,10 +7,13 @@ public class TTSPowerup : TTSBehaviour {
 	public int DebugTier = 2;
 	
 	public Powerup AvailablePowerup;
+	public Powerup PreviouslyAvailablePowerup = Powerup.None;
 	public Powerup ActivePowerup;
-	public int tier = 1;
+	public int tier = 0;
 	
 	public GameObject hudPowerup;
+	
+	public Powerup pp2;
 	
 	#region Projectile Prefab Assignment
 	public GameObject DrezzStonePrefab;
@@ -18,8 +21,14 @@ public class TTSPowerup : TTSBehaviour {
 	public GameObject BoostPrefab;
 	public GameObject TimeBonusPrefab;
 	public GameObject ShieldPrefab;
+	public GameObject ShockwavePrefab;
+	public GameObject LeechPrefab;
+	public GameObject HelixPrefab;
 	#endregion
 	
+	void Awake() {
+		pp2 = this.GetComponent<TTSPerkManager>().equiptPerkPool2;
+	}
 	
 	#region monobehaviour methods
 	void Update() {
@@ -29,6 +38,9 @@ public class TTSPowerup : TTSBehaviour {
 			if(Input.GetKeyDown("3")) SuperCBooster(DebugTier);
 			if(Input.GetKeyDown("4")) TimeBonus();
 			if(Input.GetKeyDown("5")) Shield(DebugTier);
+			if(Input.GetKeyDown("6")) Shockwave(DebugTier);
+			if(Input.GetKeyDown("7")) Leech(DebugTier);
+			if(Input.GetKeyDown("8")) Helix(DebugTier);
 			
 			if(Input.GetKeyDown("9")){
 				this.GetComponent<TTSRacer>().DamageRacer(0.9f);
@@ -37,7 +49,12 @@ public class TTSPowerup : TTSBehaviour {
 
 		//if you hit space or the 'a' button on an Xbox controller
 		if(Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown("joystick button 0")) ConsumePowerup();
-	
+		
+		//changes the powerup in the hud when a new powerup is picked up
+		if(AvailablePowerup != PreviouslyAvailablePowerup)
+			hudPowerup.GetComponent<TTSHudPowerup>().UpdateHudPowerup(AvailablePowerup, tier);
+		
+		PreviouslyAvailablePowerup = AvailablePowerup;
 	}
 	#endregion
 	
@@ -48,13 +65,18 @@ public class TTSPowerup : TTSBehaviour {
 				tier++;
 			}
 		} else if(powerup == Powerup.TimeBonus) {
+			if(AvailablePowerup == TTSBehaviour.Powerup.None)
+				tier = 0;
 			TimeBonus();
 		} else {
 			AvailablePowerup = powerup;
-			tier = 1;
+			if(pp2 == AvailablePowerup)
+				tier = 2;
+			else
+				tier = 1;
 		}
 		hudPowerup.GetComponent<TTSHudPowerup>().UpdateHudPowerup(AvailablePowerup, tier);
-	}   
+	} 
 	
 	public void ConsumePowerup() {
 		
@@ -75,6 +97,18 @@ public class TTSPowerup : TTSBehaviour {
 			Shield(tier);
 			break;
 			
+			case Powerup.Shockwave:
+			Shockwave(tier);
+			break;
+			
+			case Powerup.Leech:
+			Leech(tier);
+			break;
+			
+			case Powerup.Helix:
+			Helix(tier);
+			break;
+			
 			default:
 			//Play a sound?
 			break;
@@ -85,13 +119,38 @@ public class TTSPowerup : TTSBehaviour {
 		
 		this.tier = 0;
 		hudPowerup.GetComponent<TTSHudPowerup>().UpdateHudPowerup(this.AvailablePowerup, this.tier);
-		this.tier = 1;
 	}
 	
 	#endregion
 	
 	
 	#region public methods
+	public void Leech(int _tier) {
+		if(_tier==1){
+			for(int i=0; i<2; i++){
+				DeployLeech();
+			}
+		}else if(_tier==2){
+			for(int i=0; i<5; i++){
+				DeployLeech();
+			}
+		}else if(_tier==3){
+			for(int i=0; i<15; i++){
+				DeployLeech();
+			}
+		}
+	}
+	
+	public void Shockwave(int _tier) {
+		if(_tier==1){
+			DeployShockwave(1.0f);
+		}else if(_tier==2){
+			DeployShockwave(2.0f);
+		}else if(_tier==3){
+			DeployShockwave(3.0f);
+		}
+	}
+	
 	public void DrezzStone(int _tier) {
 		if(_tier == 1) {
 			DropDrezzStone();
@@ -129,6 +188,24 @@ public class TTSPowerup : TTSBehaviour {
 		this.ActivePowerup = TTSBehaviour.Powerup.None;
 	}
 	
+	public void Helix(int _tier) {
+		if(_tier == 1) {
+			FireHelix();
+		}
+		
+		if(_tier == 2) {
+			for(int i = 0; i < 5; i++) {
+				Invoke("FireHelix", i * 0.1f);
+			}
+		}
+		if(_tier == 3) {
+			for(int i = 0; i < 10; i++) {
+				Invoke("FireHelix", i * 0.1f);
+			}
+		}
+		//it is only active while firing
+		this.ActivePowerup = TTSBehaviour.Powerup.None;
+	}
 
 	public void SuperCBooster(int _tier) {
 		TTSRacerSpeedBoost boost = gameObject.AddComponent<TTSRacerSpeedBoost>();
@@ -185,10 +262,33 @@ public class TTSPowerup : TTSBehaviour {
 		go.rigidbody.velocity = this.rigidbody.velocity.normalized * go.GetComponent<TTSEntropyCannonProjectile>().ProjectileStartVelocity;
 	}
 	
+	private void FireHelix() {
+		GameObject go = (GameObject) Instantiate(HelixPrefab);
+		go.GetComponent<TTSHelixProjectile>().offensiveMultiplier = this.GetComponent<TTSRacer>().Offense;
+		go.transform.rotation = GetComponent<TTSRacer>().displayMeshComponent.transform.rotation;
+		go.transform.position = this.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
+		go.rigidbody.velocity = this.rigidbody.velocity.normalized * go.GetComponent<TTSHelixProjectile>().ProjectileStartVelocity;
+	}
+	
 	private void GiveTimeBonus() {
 		level.time.GiveTimeBonus(1.0f);
 		GameObject go = (GameObject) Instantiate(TimeBonusPrefab, this.transform.position, this.transform.rotation);
 		go.GetComponent<TTSTimeBonusPrefab>().target = this.GetComponent<TTSRacer>().displayMeshComponent.gameObject;
+	}
+	
+	private void DeployShockwave(float _power){
+		GameObject go = (GameObject) Instantiate(ShockwavePrefab, this.transform.position, Quaternion.identity);
+		go.GetComponent<TTSExplosiveForce>().power = go.GetComponent<TTSExplosiveForce>().power * _power * this.GetComponent<TTSRacer>().Offense;
+		go.GetComponent<TTSExplosiveForce>().radius = go.GetComponent<TTSExplosiveForce>().radius * _power * this.GetComponent<TTSRacer>().Offense;
+		go.GetComponent<TTSExplosiveForce>().Activate();
+	}
+	
+	private void DeployLeech() {
+		GameObject go = (GameObject) Instantiate(LeechPrefab, this.transform.position, Quaternion.identity);
+		go.GetComponent<TTSLeech>().currentRacer = this.GetComponent<TTSRacer>();
+		go.transform.rotation = GetComponent<TTSRacer>().displayMeshComponent.transform.rotation;
+		go.transform.position = this.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
+		go.rigidbody.velocity = this.rigidbody.velocity;
 	}
 	#endregion
 	
