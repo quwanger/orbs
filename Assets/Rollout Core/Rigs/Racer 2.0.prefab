@@ -53,16 +53,19 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 959effcefe7ee442c834a6ae9f5e42bf, type: 3}
   m_Name: 
-  distance: 0
-  finishlineObject: {fileID: 0}
-  hasBoosted: 0
+  equiptPerkPool1: 7
+  equiptPerkPool2: 5
+  accelerationIncrease: 500
+  speedIncrease: 25
+  handlingIncrease: 750
+  offenseIncrease: .300000012
+  defenseIncrease: .300000012
   BoostPrefab: {fileID: 100006, guid: f3a172c9924cf0944bb9de17cebc8f60, type: 2}
-  EquiptPerks: 0
-  hot: 0
+  finishlineObject: {fileID: 0}
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -74,15 +77,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5cc97ae1a10dff4eb6810de005a3d16, type: 3}
   m_Name: 
   debug: 1
-  DebugTier: 1
+  DebugTier: 2
   AvailablePowerup: 0
+  PreviouslyAvailablePowerup: 0
   ActivePowerup: 0
-  tier: 1
+  tier: 0
+  hudPowerup: {fileID: 0}
+  pp2: 0
   DrezzStonePrefab: {fileID: 100000, guid: 0a8a8e54eac559c4eb9eaf21597dc517, type: 2}
   EntropyCannonPrefab: {fileID: 100004, guid: ffa3df054cf855b40b77a94e33b9cab4, type: 2}
   BoostPrefab: {fileID: 100006, guid: f3a172c9924cf0944bb9de17cebc8f60, type: 2}
   TimeBonusPrefab: {fileID: 100004, guid: c8b70da22c34fd247b90222a2498bcf0, type: 2}
   ShieldPrefab: {fileID: 100004, guid: 24f7d037b7ebf43cba4948602e318719, type: 2}
+  ShockwavePrefab: {fileID: 100000, guid: 03fb1200dc9ef44289b971c778a8efb0, type: 2}
+  LeechPrefab: {fileID: 100002, guid: 4099cbcdeaced42e0ad98093bd327361, type: 2}
+  HelixPrefab: {fileID: 100004, guid: 91e0f6e5128764f0784af9858af549da, type: 2}
 --- !u!114 &11400004
 MonoBehaviour:
   m_ObjectHideFlags: 1

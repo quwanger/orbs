@@ -3,70 +3,123 @@ using System.Collections;
 
 public class TTSPerkManager : TTSBehaviour {
 	
-	public float distance;
-	public GameObject finishlineObject;
-	public bool hasBoosted = false;
+	//general use variables
+	public PerksPool1 equiptPerkPool1;
+	public Powerup equiptPerkPool2;
+	public float accelerationIncrease = 500.0f;
+	public float speedIncrease = 25.0f;
+	public float handlingIncrease = 750.0f;
+	public float offenseIncrease = 0.3f;
+	public float defenseIncrease = 0.3f;
+	
+	//photofinish variables
+	private float distance;
+	private bool hasBoosted = false;
 	public GameObject BoostPrefab;
+	public GameObject finishlineObject;
 	
-	public Perks EquiptPerks;
+	//hot start variables
+	private bool hot = false;
 	
-	public bool hot = false;
+	void Awake(){
+		switch(equiptPerkPool1) {
+			case PerksPool1.Acceleration:
+				doAcceleration();
+				break;
+			case PerksPool1.DiamondCoat:
+				doDiamondCoat();
+				break;
+			case PerksPool1.Handling:
+				doHandling();
+				break;
+			case PerksPool1.HotStart:
+				doHotStart();
+				break;
+			case PerksPool1.ManOWar:
+				doManOWar();
+				break;
+			case PerksPool1.Evolution:
+				doEvolution();
+				break;
+			case PerksPool1.Speed:
+				doSpeed();
+				break;
+			default:
+				break;
+		}
+	}
 	
 	// Update is called once per frame
 	void Update ()
 	{
-		if(!hot) { 
-			hot = true;
-			HotStart();
+		switch(equiptPerkPool1) {
+			case PerksPool1.PhotoFinish:
+				doPhotoFinish();
+				break;
+			default:
+				break;
 		}
-		
+	}
+	
+	private void doPhotoFinish() {
 		distance = Vector3.Distance(this.transform.position, finishlineObject.transform.position);
 		
 		if(distance < 170 && !hasBoosted){
 			hasBoosted = true;
-			PhotoFinish();		
-		}
-		
-		//IncreasedAcceleration();
-	}
-	
-	public void PhotoFinish() {
-		TTSRacerSpeedBoost boost = gameObject.AddComponent<TTSRacerSpeedBoost>();	
-		boost.FireBoost(BoostPrefab);
-		
-		//GetComponent<TTSPowerup>().SuperCBooster(2);	
-		
-		boost.duration = 2.0f;
-		boost.TargetForce = 80.0f;
-		vfx.BoostEffect(1.0f);
-	}
-	
-	public void HotStart() {
-		
-		var randomNum = Random.Range(0,2);
-		
-		switch(randomNum) {
-			case 0:
-			this.GetComponent<TTSPowerup>().AvailablePowerup = Powerup.EntropyCannon;
-			break;
-			
-			case 1:
-			this.GetComponent<TTSPowerup>().AvailablePowerup = Powerup.DrezzStones;
-			break;
-			
-			case 2:
-			this.GetComponent<TTSPowerup>().AvailablePowerup = Powerup.SuperC;
-			break;
-			
-			default:
-			//Play a sound?
-			break;
+			TTSRacerSpeedBoost boost = gameObject.AddComponent<TTSRacerSpeedBoost>();	
+			boost.FireBoost(BoostPrefab);
+			boost.duration = 2.0f;
+			boost.TargetForce = 80.0f;
+			vfx.BoostEffect(1.0f);
 		}
 	}
 	
-	/*public void IncreasedAcceleration() {
-		this.GetComponent<TTSRacer>().Acceleration = 3000.0f;
-	}*/
+	private void doHotStart() {
+		if(!hot && level.raceHasStarted){
+			Debug.Log("Hot Start");
+			hot = true;
+			Powerup p = getRandomPowerup();
+			this.GetComponent<TTSPowerup>().GivePowerup(p);
+		}
+	}
+	
+	private void doAcceleration(){
+		this.GetComponent<TTSRacer>().Acceleration += (accelerationIncrease * 3);
+	}
+	
+	private void doSpeed(){
+		this.GetComponent<TTSRacer>().TopSpeed += (speedIncrease * 3);
+	}
+	
+	private void doHandling(){
+		this.GetComponent<TTSRacer>().Handling += (handlingIncrease * 3);
+	}
+	
+	private void doManOWar(){
+		this.GetComponent<TTSRacer>().Offense += offenseIncrease;
+	}
+	
+	private void doEvolution(){
+		this.GetComponent<TTSRacer>().Handling += handlingIncrease;
+		this.GetComponent<TTSRacer>().TopSpeed += speedIncrease;
+		this.GetComponent<TTSRacer>().Acceleration += accelerationIncrease;
+	}
+	
+	private void doDiamondCoat(){
+		this.GetComponent<TTSRacer>().Defense += defenseIncrease;
+	}
+	
+	private Powerup getRandomPowerup () {
+	
+		Powerup powerup = GetRandomEnum<Powerup>();
+		
+		while(powerup == Powerup.None || powerup == Powerup.TimeBonus) {
+			powerup = GetRandomEnum<Powerup>();
+		}
+		
+		Debug.Log (powerup);
+		
+		return powerup;
+	}
 	
 }
-
