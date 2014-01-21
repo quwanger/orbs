@@ -13,6 +13,8 @@ public class TTSPowerup : TTSBehaviour {
 	
 	public GameObject hudPowerup;
 	
+	public Powerup pp2;
+	
 	#region Projectile Prefab Assignment
 	public GameObject DrezzStonePrefab;
 	public GameObject EntropyCannonPrefab;
@@ -24,6 +26,9 @@ public class TTSPowerup : TTSBehaviour {
 	public GameObject HelixPrefab;
 	#endregion
 	
+	void Awake() {
+		pp2 = this.GetComponent<TTSPerkManager>().equiptPerkPool2;
+	}
 	
 	#region monobehaviour methods
 	void Update() {
@@ -65,10 +70,13 @@ public class TTSPowerup : TTSBehaviour {
 			TimeBonus();
 		} else {
 			AvailablePowerup = powerup;
-			tier = 1;
+			if(pp2 == AvailablePowerup)
+				tier = 2;
+			else
+				tier = 1;
 		}
 		hudPowerup.GetComponent<TTSHudPowerup>().UpdateHudPowerup(AvailablePowerup, tier);
-	}   
+	} 
 	
 	public void ConsumePowerup() {
 		
