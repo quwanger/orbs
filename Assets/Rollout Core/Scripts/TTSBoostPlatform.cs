@@ -22,9 +22,9 @@ public class TTSBoostPlatform : TTSBehaviour {
 				TTSRacerSpeedBoost boost = racer.AddComponent<TTSRacerSpeedBoost>();
 				boost.FireBoost(BoostPrefab, BoostPower);
 		
-				boost.duration = 0.4f;
+				boost.duration = 1.0f;
 				boost.TargetForce = 35.0f;
-				vfx.BoostEffect(0.4f);
+				vfx.BoostEffect(1.4f);
 			}
 		}
 	}
