@@ -56,42 +56,42 @@ public class TTSPowerupPlatform : TTSBehaviour {
 					collider.gameObject.GetComponent<TTSPowerup>().GivePowerup(this.currentPowerup);
 					switch(currentPowerup) {
 						case Powerup.EntropyCannon:
-						pickupParticleSystem = Instantiate(EntropyParticleSystem, new Vector3(transform.position.x,transform.position.y+2.0f, transform.position.z), powerupMesh.transform.rotation) as ParticleSystem;
+						pickupParticleSystem = Instantiate(EntropyParticleSystem, new Vector3(transform.position.x,transform.position.y+3.0f, transform.position.z), powerupMesh.transform.rotation) as ParticleSystem;
 						pickupParticleSystem.Emit(numParticlesToEmitOnPickup);
 						break;
 						
 						case Powerup.SuperC:
-						pickupParticleSystem = Instantiate(SuperCParticleSystem, new Vector3(transform.position.x,transform.position.y+2.0f, transform.position.z), powerupMesh.transform.rotation) as ParticleSystem;
+						pickupParticleSystem = Instantiate(SuperCParticleSystem, new Vector3(transform.position.x,transform.position.y+3.0f, transform.position.z), powerupMesh.transform.rotation) as ParticleSystem;
 						pickupParticleSystem.Emit(numParticlesToEmitOnPickup);
 						break;
 						
 						case Powerup.TimeBonus:
-						pickupParticleSystem = Instantiate(TimeBonusParticleSystem, new Vector3(transform.position.x,transform.position.y+2.0f, transform.position.z), powerupMesh.transform.rotation) as ParticleSystem;
+						pickupParticleSystem = Instantiate(TimeBonusParticleSystem, new Vector3(transform.position.x,transform.position.y+3.0f, transform.position.z), powerupMesh.transform.rotation) as ParticleSystem;
 						pickupParticleSystem.Emit(numParticlesToEmitOnPickup);
 						break;
 						
 						case Powerup.Shield:
-						pickupParticleSystem = Instantiate(ShieldParticleSystem, new Vector3(transform.position.x,transform.position.y+2.0f, transform.position.z), powerupMesh.transform.rotation) as ParticleSystem;
+						pickupParticleSystem = Instantiate(ShieldParticleSystem, new Vector3(transform.position.x,transform.position.y+3.0f, transform.position.z), powerupMesh.transform.rotation) as ParticleSystem;
 						pickupParticleSystem.Emit(numParticlesToEmitOnPickup);
 						break;
 						
 						case Powerup.DrezzStones:
-						pickupParticleSystem = Instantiate(DrezzStoneParticleSystem, new Vector3(transform.position.x,transform.position.y+2.0f, transform.position.z), powerupMesh.transform.rotation) as ParticleSystem;
+						pickupParticleSystem = Instantiate(DrezzStoneParticleSystem, new Vector3(transform.position.x,transform.position.y+3.0f, transform.position.z), powerupMesh.transform.rotation) as ParticleSystem;
 						pickupParticleSystem.Emit(numParticlesToEmitOnPickup);
 						break;
 						
 						case Powerup.Helix:
-						pickupParticleSystem = Instantiate(HelixParticleSystem, new Vector3(transform.position.x,transform.position.y+2.0f, transform.position.z), powerupMesh.transform.rotation) as ParticleSystem;
+						pickupParticleSystem = Instantiate(HelixParticleSystem, new Vector3(transform.position.x,transform.position.y+3.0f, transform.position.z), powerupMesh.transform.rotation) as ParticleSystem;
 						pickupParticleSystem.Emit(numParticlesToEmitOnPickup);
 						break;
 						
 						case Powerup.Leech:
-						pickupParticleSystem = Instantiate(LeechParticleSystem, new Vector3(transform.position.x,transform.position.y+2.0f, transform.position.z), powerupMesh.transform.rotation) as ParticleSystem;
+						pickupParticleSystem = Instantiate(LeechParticleSystem, new Vector3(transform.position.x,transform.position.y+3.0f, transform.position.z), powerupMesh.transform.rotation) as ParticleSystem;
 						pickupParticleSystem.Emit(numParticlesToEmitOnPickup);
 						break;
 						
 						case Powerup.Shockwave:
-						pickupParticleSystem = Instantiate(ShockwaveParticleSystem, new Vector3(transform.position.x,transform.position.y+2.0f, transform.position.z), powerupMesh.transform.rotation) as ParticleSystem;
+						pickupParticleSystem = Instantiate(ShockwaveParticleSystem, new Vector3(transform.position.x,transform.position.y+3.0f, transform.position.z), powerupMesh.transform.rotation) as ParticleSystem;
 						pickupParticleSystem.Emit(numParticlesToEmitOnPickup);
 						break;
 						
@@ -134,36 +134,36 @@ public class TTSPowerupPlatform : TTSBehaviour {
 		//display the current powerup as a child of the platform
 		switch (currentPowerup){
     	case (Powerup.SuperC):
-			powerupMesh = Instantiate(powerupBoost, new Vector3(transform.position.x,transform.position.y+2.0f, transform.position.z), transform.rotation) as GameObject;
+			powerupMesh = Instantiate(powerupBoost, new Vector3(transform.position.x,transform.position.y+3.0f, transform.position.z), transform.rotation) as GameObject;
 			powerupMesh.transform.parent = this.transform;
 			break;
 	    case (Powerup.EntropyCannon):
-			powerupMesh = Instantiate(powerupMissiles, new Vector3(transform.position.x,transform.position.y+2.0f, transform.position.z), transform.rotation) as GameObject;
+			powerupMesh = Instantiate(powerupMissiles, new Vector3(transform.position.x,transform.position.y+3.0f, transform.position.z), transform.rotation) as GameObject;
 			powerupMesh.transform.parent = this.transform;
 			break;
 			
 		case (Powerup.TimeBonus):
-			powerupMesh = Instantiate(powerupMoreTime, new Vector3(transform.position.x,transform.position.y+2.0f, transform.position.z), transform.rotation) as GameObject;
+			powerupMesh = Instantiate(powerupMoreTime, new Vector3(transform.position.x,transform.position.y+3.0f, transform.position.z), transform.rotation) as GameObject;
 			powerupMesh.transform.parent = this.transform;
 			break;
 		case (Powerup.DrezzStones):
-			powerupMesh = Instantiate(powerupDrezzStone, new Vector3(transform.position.x,transform.position.y+2.0f, transform.position.z), transform.rotation) as GameObject;
+			powerupMesh = Instantiate(powerupDrezzStone, new Vector3(transform.position.x,transform.position.y+3.0f, transform.position.z), transform.rotation) as GameObject;
 			powerupMesh.transform.parent = this.transform;
 			break;
 		case (Powerup.Shield):
-			powerupMesh = Instantiate(powerupShield, new Vector3(transform.position.x,transform.position.y+2.0f, transform.position.z), transform.rotation) as GameObject;
+			powerupMesh = Instantiate(powerupShield, new Vector3(transform.position.x,transform.position.y+3.0f, transform.position.z), transform.rotation) as GameObject;
 			powerupMesh.transform.parent = this.transform;
 			break;
 		case (Powerup.Helix):
-			powerupMesh = Instantiate(powerupHelix, new Vector3(transform.position.x,transform.position.y+2.0f, transform.position.z), transform.rotation) as GameObject;
+			powerupMesh = Instantiate(powerupHelix, new Vector3(transform.position.x,transform.position.y+3.0f, transform.position.z), transform.rotation) as GameObject;
 			powerupMesh.transform.parent = this.transform;
 			break;
 		case (Powerup.Leech):
-			powerupMesh = Instantiate(powerupLeech, new Vector3(transform.position.x,transform.position.y+2.0f, transform.position.z), transform.rotation) as GameObject;
+			powerupMesh = Instantiate(powerupLeech, new Vector3(transform.position.x,transform.position.y+3.0f, transform.position.z), transform.rotation) as GameObject;
 			powerupMesh.transform.parent = this.transform;
 			break;
 		case (Powerup.Shockwave):
-			powerupMesh = Instantiate(powerupShockwave, new Vector3(transform.position.x,transform.position.y+2.0f, transform.position.z), transform.rotation) as GameObject;
+			powerupMesh = Instantiate(powerupShockwave, new Vector3(transform.position.x,transform.position.y+3.0f, transform.position.z), transform.rotation) as GameObject;
 			powerupMesh.transform.parent = this.transform;
 			break;
 			
