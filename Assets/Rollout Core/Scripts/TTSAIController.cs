@@ -73,29 +73,29 @@ public class TTSAIController : TTSBehaviour
 		}
 
 		// Straight Path
-		if (turnAmount > HARD_TURN_AMOUNT) // Check to see if there needs to be a hard turn
+		if (turnAmount > HARD_TURN_AMOUNT){ // Check to see if there needs to be a hard turn
+			if (debugMode) Debug.Log("Straight Path");
 			destination = next.getClosestPoint(position);
+		}
 		// Hard turn
-		else
+		else{
+			if (debugMode) Debug.Log("Hard Turn");
 			destination = hardTurnManeuver(next, position);
-
+		}
+		
 		// Blocked Path
 		if (Physics.Linecast(position, destination, TTSUtils.ExceptLayerMask(10))) {
-			if (debugMode)
-				Debug.Log("Blocked Path");
+			if (debugMode) Debug.Log("Blocked Path");
+			
 			destination = blockedPathManeuver(next, position);
 		}
 
 		// Secondary Blocked Path
 		RaycastHit hit;
 		if (Physics.Linecast(position, destination, out hit, TTSUtils.ExceptLayerMask(10))) {
-			if (debugMode)
-				Debug.Log("Secondary Blocked Path");
+			if (debugMode)Debug.Log("Secondary Blocked Path");
+			
 			destination = secondaryBlockedPathManeuver(next, position, hit);
-		}
-		else {
-			if (debugMode)
-				Debug.Log("Blocked Path");
 		}
 
 		destination += racerRelative(position, racerForward)  * Mathf.Min(1.0f, next.getDistanceFrom(position) / racerBufferDistance);
