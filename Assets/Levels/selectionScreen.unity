@@ -374,10 +374,11 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7a41531e7b1c88f42808f00cb26c5449, type: 3}
   m_Name: 
-  NextScene: 
+  NextScene: city1-1
   chosenPerk: 
   chosenCharacter: 
   chosenLevel: 
+  numHumans: 
   controller: {fileID: 1877882276}
 --- !u!1001 &279904646
 Prefab:
@@ -903,6 +904,73 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 558438422}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &569944831
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 569944835}
+  - 33: {fileID: 569944834}
+  - 64: {fileID: 569944833}
+  - 23: {fileID: 569944832}
+  m_Layer: 0
+  m_Name: Plane
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!23 &569944832
+Renderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 569944831}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_LightmapIndex: 255
+  m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
+  m_Materials:
+  - {fileID: 2100000, guid: c646c64cc4d47491e8b61caef05321ca, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 0
+  m_LightProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+--- !u!64 &569944833
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 569944831}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_SmoothSphereCollisions: 0
+  m_Convex: 0
+  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!33 &569944834
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 569944831}
+  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &569944835
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 569944831}
+  m_LocalRotation: {x: .707106829, y: 0, z: 0, w: .707106829}
+  m_LocalPosition: {x: -833.960205, y: 2.66330353e-05, z: -634.331787}
+  m_LocalScale: {x: 79.3968048, y: 79.3968048, z: 79.3968048}
+  m_Children: []
+  m_Father: {fileID: 0}
 --- !u!1001 &599248204
 Prefab:
   m_ObjectHideFlags: 0
@@ -2215,7 +2283,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1297757511}
-  - 114: {fileID: 1297757512}
   m_Layer: 0
   m_Name: Decals
   m_TagString: Untagged
@@ -2241,16 +2308,6 @@ Transform:
   - {fileID: 2042880871}
   - {fileID: 1479734547}
   m_Father: {fileID: 1877882277}
---- !u!114 &1297757512
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1297757510}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4da81933c6e699941b218a859df61e87, type: 3}
-  m_Name: 
 --- !u!1001 &1316877735
 Prefab:
   m_ObjectHideFlags: 0
@@ -3720,7 +3777,6 @@ MonoBehaviour:
   CharacterHighlighter: {fileID: 805953110}
   PerkHighlighter: {fileID: 1186147757}
   LevelHighlighter: {fileID: 717757520}
-  Highlighter: {fileID: 405393414}
   changer: 2
   selectedCharacterIndex: 11
   selectedPerkIndex: 11
@@ -3728,6 +3784,7 @@ MonoBehaviour:
   chosenPerk: 0
   chosenCharacter: 0
   chosenLevel: 0
+  numHumans: 0
   TextStyle:
     m_Name: 
     m_Normal:
@@ -3787,6 +3844,7 @@ MonoBehaviour:
     m_FixedHeight: 0
     m_StretchWidth: 1
     m_StretchHeight: 0
+  characters: []
   decals: []
 --- !u!114 &1877882279
 MonoBehaviour:
@@ -3941,6 +3999,7 @@ GameObject:
   - 20: {fileID: 1926326334}
   - 124: {fileID: 1926326333}
   - 92: {fileID: 1926326332}
+  - 114: {fileID: 1926326331}
   m_Layer: 0
   m_Name: MenuCamera
   m_TagString: Untagged
@@ -3959,6 +4018,17 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1877882277}
+--- !u!114 &1926326331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1926326329}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca7aa620514eece46be89dc54e518a5c, type: 3}
+  m_Name: 
+  Overlay: {fileID: 2800000, guid: aa19bbb4a0550c4499ac6c2fed0cc341, type: 3}
 --- !u!92 &1926326332
 Behaviour:
   m_ObjectHideFlags: 0

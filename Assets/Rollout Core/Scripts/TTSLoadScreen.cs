@@ -4,7 +4,8 @@ using System.Collections;
 public class TTSLoadScreen : MonoBehaviour {
 	
 	void Awake() {
-		GetComponent<TTSSceneTransition>().transitionToSceneWithLoad(GameObject.Find("TTSPM").GetComponent<TTSPersistenceManager>().NextScene);	
+		//GetComponent<TTSSceneTransition>().transitionToSceneWithLoad(GameObject.Find("TTSPM").GetComponent<TTSPersistenceManager>().NextScene);
+		GetComponent<TTSSceneTransition>().transitionToSceneWithLoad(PlayerPrefs.GetString("Next Scene"));
 	}
 	
 	void Update() {

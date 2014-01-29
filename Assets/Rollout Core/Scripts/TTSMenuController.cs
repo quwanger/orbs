@@ -46,6 +46,7 @@ public class TTSMenuController : TTSMenuEnums {
 	public PerkMenuItem chosenPerk;
 	public CharacterMenuItem chosenCharacter;
 	public LevelMenuItem chosenLevel;
+	public int numHumans;
 	
 	public GUIStyle TextStyle;
 	private string text;
@@ -62,7 +63,7 @@ public class TTSMenuController : TTSMenuEnums {
 	
 	// Use this for initialization
 	void Start(){
-		
+		numHumans = 1;
 		GameObject[] perks = GameObject.FindGameObjectsWithTag("PerkMenuItem");
 		GameObject[] levels = GameObject.FindGameObjectsWithTag("LevelMenuItem");
 		characters = GameObject.FindGameObjectsWithTag("CharacterMenuItem");
@@ -124,8 +125,7 @@ public class TTSMenuController : TTSMenuEnums {
 				changer -= 1;
 				audio.PlayOneShot(menuSelect);
 				Controller();
-			}
-			
+			}	
 		}
 		
 		if(Input.GetKeyDown(KeyCode.Backspace)){
