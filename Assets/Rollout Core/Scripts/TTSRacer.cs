@@ -84,6 +84,8 @@ public class TTSRacer : TTSBehaviour
 	public float Offense;
 
 	public bool finished = false;
+	
+	public float collisionSensitivity = 50.0f;
 	#endregion
 	
 	public bool hasShield;
@@ -203,7 +205,7 @@ public class TTSRacer : TTSBehaviour
 					-100.0f, 100.0f);
 			}
 			else
-				rpm *= 0.99f;
+				rpm *= 0.9999f;
 		}
 		#endregion
 
@@ -274,7 +276,7 @@ public class TTSRacer : TTSBehaviour
 	void OnCollisionEnter(Collision collision) {
 
 		onGround = true;
-		if (collision.relativeVelocity.magnitude > 10) {
+		if (collision.relativeVelocity.magnitude > collisionSensitivity) {
 			vfx.DamageEffect(100.0f);
 			//RacerSfx.volume = collision.relativeVelocity.magnitude / TopSpeed / 1.5f;
 			RacerSfx.volume = collision.relativeVelocity.magnitude / 100.0f / 1.5f;

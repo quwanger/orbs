@@ -58,7 +58,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 959effcefe7ee442c834a6ae9f5e42bf, type: 3}
   m_Name: 
   equiptPerkPool1: 7
-  equiptPerkPool2: 5
+  equiptPerkPool2: 7
   accelerationIncrease: 500
   speedIncrease: 25
   handlingIncrease: 750
@@ -124,7 +124,7 @@ MonoBehaviour:
   m_Name: 
   IsPlayerControlled: 1
   displayMeshComponent: {fileID: 0}
-  RollingSound: {fileID: 8300000, guid: b881dac17943287429d02776bfed46f3, type: 3}
+  RollingSound: {fileID: 8300000, guid: a4467c75f195144c6b2af9e751a8738d, type: 3}
   onGround: 1
   DamageSounds:
   - {fileID: 8300000, guid: 07185902a679f8a45a62fb7954bf000e, type: 3}
@@ -136,10 +136,11 @@ MonoBehaviour:
   TopSpeed: 250
   Acceleration: 8000
   Handling: 11000
-  player: 1
+  player: 0
   Defense: 0
   Offense: 0
   finished: 0
+  collisionSensitivity: 100
   hasShield: 0
   currentWaypoint: {fileID: 0}
   previousWaypoint: {fileID: 0}
