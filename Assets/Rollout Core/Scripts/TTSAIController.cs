@@ -76,6 +76,7 @@ public class TTSAIController : TTSBehaviour
 		if (turnAmount > HARD_TURN_AMOUNT){ // Check to see if there needs to be a hard turn
 			if (debugMode) Debug.Log("Straight Path");
 			destination = next.getClosestPoint(position);
+			destination = Vector3.Lerp(next.position, destination, 0.9f);
 		}
 		// Hard turn
 		else{
