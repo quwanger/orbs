@@ -16,7 +16,7 @@ public class TTSLevel : MonoBehaviour {
 	public bool DebugMode = true;
 	public bool PerksEnabled = true;
 	
-	private TTSScoreboard scoreboard;
+	// private TTSScoreboard scoreboard;
 	
 	public Font[] fonts;
 	
@@ -169,7 +169,7 @@ public class TTSLevel : MonoBehaviour {
 		raceHasFinished = true;
 		
 		GetComponent<TTSTimeManager>().StopTimer();
-		scoreboard = this.gameObject.AddComponent<TTSScoreboard>();
+		// scoreboard = this.gameObject.AddComponent<TTSScoreboard>();
 	}
 	
 	#endregion

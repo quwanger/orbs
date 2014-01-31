@@ -3,8 +3,8 @@ using System.Collections;
 
 public class TTSLightFlicker : MonoBehaviour {
 	
-	private float minFlickerSpeed = 0.3f;
-	private float maxFlickerSpeed = 1.0f;
+	//private float minFlickerSpeed = 0.3f;
+	//private float maxFlickerSpeed = 1.0f;
 	private float randomTemp;
 	public float offChance = 0.1f;
 	

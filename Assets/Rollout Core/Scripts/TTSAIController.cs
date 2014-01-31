@@ -185,8 +185,6 @@ public class TTSAIController : TTSBehaviour
 			}
 		}
 
-		float distance = (hit.point - position).magnitude * multiplier;
-
 		Vector3 rotatedVec1, rotatedVec2;
 		for (int i = 1; i <= 90.0f / hardAngleInterval; i++) {
 			float checkAngle = hardAngleInterval * i;

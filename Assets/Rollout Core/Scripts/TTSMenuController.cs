@@ -140,7 +140,7 @@ public class TTSMenuController : TTSMenuEnums {
 		}
 		
 		if(Input.GetKeyDown(KeyCode.Y)){
-			AsyncOperation async = Application.LoadLevelAsync("loadingScene");
+			Application.LoadLevelAsync("loadingScene");
 		}
 		
 		if(Input.GetKeyDown(KeyCode.B)){				

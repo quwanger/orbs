@@ -4,7 +4,7 @@ using System.Collections;
 public class TTSDisclaimerCamera : TTSBehaviour {
 	
 	private Perlin noise;
-	private float speed = 0.001f;
+	//private float speed = 0.001f;
 	private bool startedDeath = false;
 	
 	private TTSBlur blur;

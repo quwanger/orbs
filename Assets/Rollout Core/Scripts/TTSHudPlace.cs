@@ -10,7 +10,9 @@ public class TTSHudPlace : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		r = GameObject.Find("TTSLevel").GetComponent<TTSLevel>().racers;
-		currentRacer = this.transform.parent.GetComponent<TTSFloatHud>().racerToFollow;
+
+		if (transform.parent.GetComponent<TTSFloatHud>() != null)
+			currentRacer = this.transform.parent.GetComponent<TTSFloatHud>().racerToFollow;
 	}
 	
 	// Update is called once per frame

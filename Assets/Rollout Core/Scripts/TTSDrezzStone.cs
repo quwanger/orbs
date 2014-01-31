@@ -7,11 +7,11 @@ public class TTSDrezzStone : MonoBehaviour {
 	public GameObject EmitterToSpawn;
 	public GameObject RegisteredTargets;
 	
-	public float offensiveMultiplier;
+	public float offensiveMultiplier = -1.0f;
 	
 	void OnTriggerEnter(Collider other) {
 		
-		if(offensiveMultiplier == null)
+		if(offensiveMultiplier == -1.0f)
 			offensiveMultiplier = 1.0f;
 		
 		if(!other.gameObject.isStatic) {

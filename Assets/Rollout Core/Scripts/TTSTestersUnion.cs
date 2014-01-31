@@ -3,7 +3,7 @@ using System.Collections;
 
 public class TTSTestersUnion : MonoBehaviour {
 	
-	public string name;
+	public string Name;
 	public string age;
 	public string sex;
 	public string token;
@@ -19,7 +19,7 @@ public class TTSTestersUnion : MonoBehaviour {
 		WWW request = new WWW("http://studio236.ca/Testers-Union/token-resolver.php?token=" + userToken);
 		yield return request;
 		string[] paramSet = request.text.Split('|');
-		name = paramSet[0];
+		Name = paramSet[0];
 		age = paramSet[1];
 		sex = paramSet[2];
 		
@@ -39,7 +39,7 @@ public class TTSTestersUnion : MonoBehaviour {
 		
 		string requestBody = System.DateTime.Now.ToString();
 		requestBody += " Token=" + token;
-		requestBody += " Name=\"" + name + "\"";
+		requestBody += " Name=\"" + Name + "\"";
 		requestBody += " Age=" + age;
 		requestBody += " Sex=" + sex;
 		requestBody += " Debug=" + Application.isEditor.ToString();
