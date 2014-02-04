@@ -35,7 +35,7 @@ AudioListener:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!82 &8200000
 AudioSource:
   m_ObjectHideFlags: 1
@@ -104,6 +104,13 @@ MonoBehaviour:
   m_Name: 
   LOAD_RANDOM_TRACK: 0
   songToPlay: {fileID: 8300000, guid: 5c10cce97f5404543993159e3424eeaf, type: 3}
+  tracks:
+  - {fileID: 8300000, guid: 1fc0a401b899f49d89c843f38712539d, type: 3}
+  - {fileID: 8300000, guid: 04b7d214f83824a07a7ce3a833e70926, type: 3}
+  - {fileID: 8300000, guid: b9b123378049f4b86a3436a9b6eb7d8d, type: 3}
+  - {fileID: 8300000, guid: 3ee00948acfea5545a60f851cdc16e52, type: 3}
+  - {fileID: 8300000, guid: 5c10cce97f5404543993159e3424eeaf, type: 3}
+  - {fileID: 8300000, guid: 835e098f591134a4892cc3731219c69b, type: 3}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
