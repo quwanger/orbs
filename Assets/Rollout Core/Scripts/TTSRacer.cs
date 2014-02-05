@@ -84,6 +84,8 @@ public class TTSRacer : TTSBehaviour
 	public float Offense;
 
 	public bool finished = false;
+	public float distanceToFinish;
+	public int place;
 	#endregion
 	
 	public bool hasShield;
@@ -99,7 +101,7 @@ public class TTSRacer : TTSBehaviour
 
 	// AI
 	private TTSWaypoint lastWaypoint;
-	private TTSWaypoint nextWaypoint;
+	public TTSWaypoint nextWaypoint;
 	TTSAIController AIUtil;
 
 	void Awake() {
@@ -146,6 +148,7 @@ public class TTSRacer : TTSBehaviour
 		
 		Offense = CurrentRig.GetComponent<TTSRig>().rigOffense;
 		Defense = CurrentRig.GetComponent<TTSRig>().rigDefense;
+		
 	}
 	
 	void FixedUpdate () {
@@ -297,8 +300,10 @@ public class TTSRacer : TTSBehaviour
 	}
 
 	public void WrongWay() {
-		if (goingWrongWay == true) Debug.Log("WRONG WAY");
-		else Debug.Log("RIGHT WAY");
+		//if (goingWrongWay == true) 
+			//Debug.Log("WRONG WAY");
+		//else 
+			//Debug.Log("RIGHT WAY");
 	}
 
 	public void OnWaypoint(TTSWaypoint hit) {
@@ -318,10 +323,12 @@ public class TTSRacer : TTSBehaviour
 
 		if(player == PlayerType.AI && !waypointManager.EndPoints.Contains(currentWaypoint)){
 			if(AIUtil == null)
-				AIUtil = gameObject.AddComponent<TTSAIController>();
-
-			nextWaypoint = AIUtil.getClosestWaypoint(currentWaypoint.nextWaypoints, position);
+				AIUtil = gameObject.AddComponent<TTSAIController>();	
 		}
+		
+		//this must be done for the player as well so that we can get the distance of all racers from the finish line
+		nextWaypoint = AIUtil.getClosestWaypoint(currentWaypoint.nextWaypoints, position);
+		
 	}
 
 	public void SlowToStop() {

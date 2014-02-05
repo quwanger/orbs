@@ -51,7 +51,7 @@ public class TTSPowerup : TTSBehaviour {
 		if(Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown("joystick button 0")) ConsumePowerup();
 		
 		//changes the powerup in the hud when a new powerup is picked up
-		if(AvailablePowerup != PreviouslyAvailablePowerup)
+		if(AvailablePowerup != PreviouslyAvailablePowerup && this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)
 			hudPowerup.GetComponent<TTSHudPowerup>().UpdateHudPowerup(AvailablePowerup, tier);
 		
 		PreviouslyAvailablePowerup = AvailablePowerup;
@@ -75,7 +75,10 @@ public class TTSPowerup : TTSBehaviour {
 			else
 				tier = 1;
 		}
-		hudPowerup.GetComponent<TTSHudPowerup>().UpdateHudPowerup(AvailablePowerup, tier);
+		
+		//only update the hud if they are a human racer (as AI do not have HUDs)
+		if(this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)
+			hudPowerup.GetComponent<TTSHudPowerup>().UpdateHudPowerup(AvailablePowerup, tier);
 	} 
 	
 	public void ConsumePowerup() {
@@ -118,7 +121,9 @@ public class TTSPowerup : TTSBehaviour {
 		this.AvailablePowerup = Powerup.None;
 		
 		this.tier = 0;
-		hudPowerup.GetComponent<TTSHudPowerup>().UpdateHudPowerup(this.AvailablePowerup, this.tier);
+		
+		if(this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)
+			hudPowerup.GetComponent<TTSHudPowerup>().UpdateHudPowerup(this.AvailablePowerup, this.tier);
 	}
 	
 	#endregion

@@ -14,7 +14,8 @@ public class TTSInitRace : MonoBehaviour {
 	public enum Rigs {Rhino, Scorpion, Default};
 	public enum Characters {Character_Default, Character1, Character2};
 	
-	private string tempRigChoice = "Rig_Rhino";
+	//private string tempRigChoice = "Rig_Rhino";
+	private string tempRigChoice;
 	private string tempCharacterChoice = "Character_Default";
 	public int tempNumHumanPlayers = 1;
 	public int numberOfRacers = 1;
@@ -33,7 +34,8 @@ public class TTSInitRace : MonoBehaviour {
 				}
 			}
 			if(rigToLoad == null){
-				rigToLoad = _rigs[0];
+				Debug.Log (_rigs.Count);
+				rigToLoad = _rigs[Random.Range(0, _rigs.Count)];
 			}
 			
 			foreach(GameObject character in _characters){
@@ -47,7 +49,8 @@ public class TTSInitRace : MonoBehaviour {
 			GameObject sp = _startingpoints[i];
 			sp.GetComponent<TTSStartingPoint>().isTaken = true;
 			
-			GameObject tempRig = (GameObject)Instantiate(rigToLoad, sp.transform.position, rigToLoad.transform.rotation);
+			GameObject tempRig = (GameObject)Instantiate(rigToLoad, sp.transform.position, sp.transform.rotation );
+			rigToLoad = null;
 			
 			GameObject tempChar = (GameObject)Instantiate(characterToLoad, sp.transform.position, sp.transform.rotation);
 	
@@ -59,8 +62,9 @@ public class TTSInitRace : MonoBehaviour {
 			
 			tempRacer.GetComponent<TTSRacer>().displayMeshComponent = tempChar.transform;
 			tempRacer.GetComponent<TTSRacer>().CurrentRig = tempRig;
-			if(i >= (numberOfRacers - tempNumHumanPlayers)){
+			if(i < tempNumHumanPlayers){
 				tempRacer.GetComponent<TTSRacer>().IsPlayerControlled = true;
+				tempRacer.GetComponent<TTSRacer>().player = TTSRacer.PlayerType.Player;
 			
 				GameObject tempCamera = (GameObject)Instantiate(cameraGO);
 				if(tempNumHumanPlayers > 1){
@@ -88,6 +92,7 @@ public class TTSInitRace : MonoBehaviour {
 				
 				GameObject tempHUD = (GameObject)Instantiate(hudGO);
 				tempHUD.GetComponent<TTSFloatHud>().boundCamera = tempCamera.transform;
+				tempHUD.GetComponent<TTSFloatHud>().racerToFollow = tempRacer;
 
 				//assinging the hud powerup for the racer
 
