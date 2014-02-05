@@ -51,7 +51,7 @@ public class TTSPowerup : TTSBehaviour {
 		if(Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown("joystick button 0")) ConsumePowerup();
 		
 		//changes the powerup in the hud when a new powerup is picked up
-		if(AvailablePowerup != PreviouslyAvailablePowerup)
+		if(AvailablePowerup != PreviouslyAvailablePowerup && this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)
 			hudPowerup.GetComponent<TTSHudPowerup>().UpdateHudPowerup(AvailablePowerup, tier);
 		
 		PreviouslyAvailablePowerup = AvailablePowerup;
@@ -75,7 +75,10 @@ public class TTSPowerup : TTSBehaviour {
 			else
 				tier = 1;
 		}
-		hudPowerup.GetComponent<TTSHudPowerup>().UpdateHudPowerup(AvailablePowerup, tier);
+		
+		//only update the hud if they are a human racer (as AI do not have HUDs)
+		if(this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)
+			hudPowerup.GetComponent<TTSHudPowerup>().UpdateHudPowerup(AvailablePowerup, tier);
 	} 
 	
 	public void ConsumePowerup() {
@@ -118,7 +121,9 @@ public class TTSPowerup : TTSBehaviour {
 		this.AvailablePowerup = Powerup.None;
 		
 		this.tier = 0;
-		hudPowerup.GetComponent<TTSHudPowerup>().UpdateHudPowerup(this.AvailablePowerup, this.tier);
+		
+		if(this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)
+			hudPowerup.GetComponent<TTSHudPowerup>().UpdateHudPowerup(this.AvailablePowerup, this.tier);
 	}
 	
 	#endregion
@@ -259,7 +264,7 @@ public class TTSPowerup : TTSBehaviour {
 		go.GetComponent<TTSEntropyCannonProjectile>().offensiveMultiplier = this.GetComponent<TTSRacer>().Offense;
 		go.transform.rotation = GetComponent<TTSRacer>().displayMeshComponent.transform.rotation;
 		go.transform.position = this.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
-		go.rigidbody.velocity = this.rigidbody.velocity.normalized * go.GetComponent<TTSEntropyCannonProjectile>().ProjectileStartVelocity;
+		go.rigidbody.velocity = this.rigidbody.velocity.normalized * (this.rigidbody.velocity.magnitude + go.GetComponent<TTSEntropyCannonProjectile>().ProjectileStartVelocity);
 	}
 	
 	private void FireHelix() {
@@ -267,7 +272,7 @@ public class TTSPowerup : TTSBehaviour {
 		go.GetComponent<TTSHelixProjectile>().offensiveMultiplier = this.GetComponent<TTSRacer>().Offense;
 		go.transform.rotation = GetComponent<TTSRacer>().displayMeshComponent.transform.rotation;
 		go.transform.position = this.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
-		go.rigidbody.velocity = this.rigidbody.velocity.normalized * go.GetComponent<TTSHelixProjectile>().ProjectileStartVelocity;
+		go.rigidbody.velocity = this.rigidbody.velocity.normalized * (this.rigidbody.velocity.magnitude + go.GetComponent<TTSHelixProjectile>().ProjectileStartVelocity);
 	}
 	
 	private void GiveTimeBonus() {

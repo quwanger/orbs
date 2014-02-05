@@ -127,6 +127,13 @@ public class TTSPowerupPlatform : TTSBehaviour {
 		while(powerup == Powerup.None) {
 			powerup = GetRandomEnum<Powerup>();
 		}
+		
+		if(level.currentGameType != TTSLevel.Gametype.TimeTrial){
+			while(powerup == Powerup.TimeBonus) {
+				powerup = GetRandomEnum<Powerup>();
+			}
+		}
+		
 		return powerup;
 	}
 	
