@@ -7,7 +7,7 @@ public class TTSHudPlace : TTSBehaviour {
 	void Start () {
 	}
 	
-	void Update () {
+	void UpdatePositions () {
 		foreach(GameObject r in racers){
 			r.GetComponent<TTSRacer>().distanceToFinish = r.GetComponent<TTSRacer>().currentWaypoint.distanceFromEnd;
 			r.GetComponent<TTSRacer>().distanceToFinish += Vector3.Distance(r.transform.position, r.GetComponent<TTSRacer>().nextWaypoint.transform.position);

@@ -264,7 +264,7 @@ public class TTSPowerup : TTSBehaviour {
 		go.GetComponent<TTSEntropyCannonProjectile>().offensiveMultiplier = this.GetComponent<TTSRacer>().Offense;
 		go.transform.rotation = GetComponent<TTSRacer>().displayMeshComponent.transform.rotation;
 		go.transform.position = this.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
-		go.rigidbody.velocity = this.rigidbody.velocity.normalized * go.GetComponent<TTSEntropyCannonProjectile>().ProjectileStartVelocity;
+		go.rigidbody.velocity = this.rigidbody.velocity.normalized * (this.rigidbody.velocity.magnitude + go.GetComponent<TTSEntropyCannonProjectile>().ProjectileStartVelocity);
 	}
 	
 	private void FireHelix() {
@@ -272,7 +272,7 @@ public class TTSPowerup : TTSBehaviour {
 		go.GetComponent<TTSHelixProjectile>().offensiveMultiplier = this.GetComponent<TTSRacer>().Offense;
 		go.transform.rotation = GetComponent<TTSRacer>().displayMeshComponent.transform.rotation;
 		go.transform.position = this.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
-		go.rigidbody.velocity = this.rigidbody.velocity.normalized * go.GetComponent<TTSHelixProjectile>().ProjectileStartVelocity;
+		go.rigidbody.velocity = this.rigidbody.velocity.normalized * (this.rigidbody.velocity.magnitude + go.GetComponent<TTSHelixProjectile>().ProjectileStartVelocity);
 	}
 	
 	private void GiveTimeBonus() {
