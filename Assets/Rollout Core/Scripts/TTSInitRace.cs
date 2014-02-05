@@ -34,7 +34,7 @@ public class TTSInitRace : MonoBehaviour {
 				}
 			}
 			if(rigToLoad == null){
-				Debug.Log (_rigs.Count);
+				//Debug.Log (_rigs.Count);
 				rigToLoad = _rigs[Random.Range(0, _rigs.Count)];
 			}
 			
