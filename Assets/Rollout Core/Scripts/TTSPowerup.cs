@@ -136,11 +136,11 @@ public class TTSPowerup : TTSBehaviour {
 				DeployLeech();
 			}
 		}else if(_tier==2){
-			for(int i=0; i<5; i++){
+			for(int i=0; i<4; i++){
 				DeployLeech();
 			}
 		}else if(_tier==3){
-			for(int i=0; i<15; i++){
+			for(int i=0; i<8; i++){
 				DeployLeech();
 			}
 		}

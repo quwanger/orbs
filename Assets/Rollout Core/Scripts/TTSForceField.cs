@@ -26,6 +26,7 @@ public class TTSForceField : TTSBehaviour {
 				newPosition.y = collider.gameObject.GetComponent<TTSRacer>().currentWaypoint.transform.position.y - (collider.gameObject.GetComponent<TTSRacer>().currentWaypoint.GetComponent<BoxCollider>().size.y/2.0f) + (collider.gameObject.GetComponent<SphereCollider>().radius/2.0f);
 				newPosition.z = collider.gameObject.GetComponent<TTSRacer>().currentWaypoint.transform.position.z;
 				collider.gameObject.transform.position = newPosition;
+				collider.gameObject.transform.rotation = collider.gameObject.GetComponent<TTSRacer>().currentWaypoint.transform.rotation;
 			
 				//rotate the object to face the proper direction
 				//collider.gameObject.transform.forward = collider.gameObject.GetComponent<TTSRacer>().currentWaypoint.transform.forward;

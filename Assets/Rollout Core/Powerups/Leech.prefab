@@ -28,8 +28,8 @@ GameObject:
   - 199: {fileID: 19900000}
   - 114: {fileID: 11400000}
   - 82: {fileID: 8200000}
-  - 54: {fileID: 5400000}
   - 135: {fileID: 13500002}
+  - 54: {fileID: 5400000}
   m_Layer: 0
   m_Name: Leech
   m_TagString: Untagged
@@ -271,7 +271,19 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 145717ee0e4ae4233987bce2cb75c3b0, type: 3}
   m_Name: 
+  accelerationIncrease: 500
+  speedIncrease: 25
+  handlingIncrease: 750
+  offenseIncrease: .300000012
+  defenseIncrease: .300000012
+  homingRadius: 15
+  stickRadius: 1
+  explosionRadius: 5
+  explosionPower: 1000
   currentRacer: {fileID: 0}
+  currentWaypoint: {fileID: 0}
+  destinationTransform: {fileID: 0}
+  stuckMaterial: {fileID: 2100000, guid: f8c061fa99a6d44fd9eae9d0ab9a056e, type: 2}
 --- !u!135 &13500000
 SphereCollider:
   m_ObjectHideFlags: 1
