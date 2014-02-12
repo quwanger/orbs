@@ -30,38 +30,40 @@ public class TTSMenu : TTSMenuEnums {
 	public bool unzone = false;
 	public Texture Overlay;
 	
+	//Racer
 	public TTSRacer racer;
+
+	//Spawn zones
 	public GameObject spawn_mp;
 	public GameObject spawn_sp;
 	
+	//Selection indices
 	public int selectedRigIndex = 11;
 	public int selectedPerkIndex = 1;
 	public int selectedPerkBIndex = 1;
 	public int selectedLevelIndex = 11;
 	public int changer = 3;
 	public bool isTweening = false;
-	public GameObject RigHighlighter;
 	public GameObject[] rigs;
 	
 	//text variables
-	public GUIStyle TextStyle;
-	private string text;
-	private Texture2D texture;
+	public GUIText RigModelName;
+	private string RigModelText;
 	
 	void Awake(){
-		texture = new Texture2D(1,1);
-		texture.SetPixel(0,0,new Color(1f,1f,1f,1f));
-		texture.Apply();
+
 	}
 	
 	void Start() {
+		//Turn off the main camera and enable menu cam
 		menuCamera.enabled = false;
 		hubCamera.enabled = true;
 
+		//The menu background
 		Rect tempInset = new Rect(-640, -360, 3840, 720);
-
 		backPanel.pixelInset = tempInset;
 		
+		//Initiate indices
 		GameObject[] perks = GameObject.FindGameObjectsWithTag("PerkMenuItem");
 		GameObject[] perksB = GameObject.FindGameObjectsWithTag("PerkMenuItemB");
 		GameObject[] levels = GameObject.FindGameObjectsWithTag("LevelMenuItem");
@@ -87,14 +89,14 @@ public class TTSMenu : TTSMenuEnums {
 			_levels.Add(l);
 		}
 		
+		//Control highlights
 		HighlightRig();
 		HighlightPerkB();
 		HighlightPerk();
 	}
 
 	// Update is called once per frame
-	void Update () {
-		
+	void Update () {		
 		menuControls();
 		
 		if(Input.GetKeyDown(KeyCode.Return)) {
@@ -107,7 +109,7 @@ public class TTSMenu : TTSMenuEnums {
 			}	
 		}
 		
-		if(Input.GetKeyDown(KeyCode.Backspace)){
+		if(Input.GetKeyDown(KeyCode.Backspace)) {
 			if(changer<3&&!isTweening){	
 				changer += 1;
 				if(changer !=2){
@@ -117,7 +119,7 @@ public class TTSMenu : TTSMenuEnums {
 			}
 		}
 
-		if(zone){
+		if(zone) {
 			racer.canMove = false;
 			racer.transform.rotation = Quaternion.Euler(0, 0, 180);
 			racer.calcOrientation = false;
@@ -175,7 +177,6 @@ public class TTSMenu : TTSMenuEnums {
 	}
 
 	private void ChangeIndex(string direction, int index){	
-		
 		// rig menu system
 		if(changer == 3)
 		{
@@ -286,7 +287,7 @@ public class TTSMenu : TTSMenuEnums {
 		foreach(GameObject r in _rigs){	
 			if(r.GetComponent<TTSMenuItemRig>().index!=selectedRigIndex)
 				r.SetActive(false);
-			
+
 			else{
 				SelectedRig = r.GetComponent<TTSMenuItemRig>().rig;
 				r.SetActive(true);
@@ -300,32 +301,27 @@ public class TTSMenu : TTSMenuEnums {
        		//GUI.DrawTexture( new Rect(0, 0, Screen.width, Screen.height ), Overlay);
 		}
 		
-		TextStyle.fontSize = 124;
-		//TextStyle.normal.textColor = Color.white;
-		//TextStyle.fontStyle = FontStyle.Bold;
-		
 		switch(changer){
 			case 0:
-				text = SelectedLevel.ToString();
+				RigModelText = SelectedLevel.ToString();
 			break;
 			
 			case 1:
-				text = SelectedPerkB.ToString();
+				RigModelText = SelectedPerkB.ToString();
 			break;
 			
 			case 2:
-				text = SelectedPerk.ToString();
+				RigModelText = SelectedPerk.ToString();
 			break;
 			
 			case 3:
-				text = SelectedRig.ToString();
+				RigModelText = SelectedRig.ToString();
+				RigModelName.text = RigModelText;
 			break;
 			
 			default:
 			//Play a sound?
 			break;
 		}
-		GUI.Label (new Rect(500,600,200,200), text,TextStyle );
 	}
-	
 }
