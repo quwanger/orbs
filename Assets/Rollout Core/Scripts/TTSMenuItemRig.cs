@@ -1,13 +1,13 @@
 using UnityEngine;
 using System.Collections;
 
-public class TTSMenuItemPerk : TTSMenuEnums {
+public class TTSMenuItemRig : TTSMenuEnums {
 	
 	public bool isSelected = false;
-	public PerkMenuItem perk;
-	public PerkMenuItemB perkB;
+	public RigMenuItem rig;
 	public int index;
-
+	public GameObject decal;
+	
 	// Use this for initialization
 	void Start () {
 		
@@ -17,6 +17,4 @@ public class TTSMenuItemPerk : TTSMenuEnums {
 	void Update () {
 	
 	}
-	
-	
 }

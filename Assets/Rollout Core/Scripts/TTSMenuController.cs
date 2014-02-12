@@ -5,7 +5,7 @@ using System.Collections;
 public class TTSMenuController : TTSMenuEnums {
 	
 	public List<GameObject> _characters = new List<GameObject>();
-	public CharacterMenuItem SelectedCharacter;
+	public RigMenuItem SelectedRig;
 	
 	public List<GameObject> _perks = new List<GameObject>();
 	public PerkMenuItem SelectedPerk;
@@ -39,12 +39,12 @@ public class TTSMenuController : TTSMenuEnums {
 	//used to change the menuController
 	public int changer = 2;
 	
-	public int selectedCharacterIndex = 11;
+	public int selectedRigIndex = 11;
 	public int selectedPerkIndex = 11;
 	public int selectedLevelIndex = 11;
 
 	public PerkMenuItem chosenPerk;
-	public CharacterMenuItem chosenCharacter;
+	public RigMenuItem chosenCharacter;
 	public LevelMenuItem chosenLevel;
 	public int numHumans;
 	
@@ -71,7 +71,7 @@ public class TTSMenuController : TTSMenuEnums {
 		foreach(GameObject c in characters)
 		{
 			_characters.Add(c);
-			c.GetComponent<TTSMenuItemCharacter>().decal.renderer.enabled = false;
+			c.GetComponent<TTSMenuItemRig>().decal.renderer.enabled = false;
 		}
 		
 		foreach(GameObject p in perks)
@@ -94,8 +94,8 @@ public class TTSMenuController : TTSMenuEnums {
 	void LaunchDelay(){
 		if(changer==2){
 			foreach(GameObject c in characters){
-				if(c.GetComponent<TTSMenuItemCharacter>().isSelected==true){
-					c.GetComponent<TTSMenuItemCharacter>().decal.renderer.enabled = true;
+				if(c.GetComponent<TTSMenuItemRig>().isSelected==true){
+					c.GetComponent<TTSMenuItemRig>().decal.renderer.enabled = true;
 				}
 			}
 		}	
@@ -119,7 +119,7 @@ public class TTSMenuController : TTSMenuEnums {
 				
 				foreach(GameObject c in characters)
 				{
-					c.GetComponent<TTSMenuItemCharacter>().decal.renderer.enabled = false;
+					c.GetComponent<TTSMenuItemRig>().decal.renderer.enabled = false;
 				}
 				
 				changer -= 1;
@@ -151,7 +151,7 @@ public class TTSMenuController : TTSMenuEnums {
 				chosenPerk = SelectedPerk;
 			
 			else if(changer == 2)
-				chosenCharacter = SelectedCharacter;
+				chosenCharacter = SelectedRig;
 		}	
 	}
 
@@ -167,7 +167,7 @@ public class TTSMenuController : TTSMenuEnums {
 			break;
 			
 			case 2:
-				index = selectedCharacterIndex;
+				index = selectedRigIndex;
 			break;
 			
 			default:
@@ -218,7 +218,7 @@ public class TTSMenuController : TTSMenuEnums {
 			break;
 			
 			case 2:
-				selectedCharacterIndex = index;
+				selectedRigIndex = index;
 				HighlightCharacter();
 			break;
 			
@@ -230,13 +230,13 @@ public class TTSMenuController : TTSMenuEnums {
 	
 	private void HighlightCharacter(){
 		foreach(GameObject c in _characters){
-			c.GetComponent<TTSMenuItemCharacter>().decal.renderer.enabled = false;
-			if(selectedCharacterIndex == c.GetComponent<TTSMenuItemCharacter>().index){
-				c.GetComponent<TTSMenuItemCharacter>().isSelected = true;
+			c.GetComponent<TTSMenuItemRig>().decal.renderer.enabled = false;
+			if(selectedRigIndex == c.GetComponent<TTSMenuItemRig>().index){
+				c.GetComponent<TTSMenuItemRig>().isSelected = true;
 				
-				c.GetComponent<TTSMenuItemCharacter>().decal.renderer.enabled = true;
+				c.GetComponent<TTSMenuItemRig>().decal.renderer.enabled = true;
 				
-				SelectedCharacter = c.GetComponent<TTSMenuItemCharacter>().character;
+				SelectedRig = c.GetComponent<TTSMenuItemRig>().rig;
 			
 				Vector3 positionVector = new Vector3((c.transform.position.x + 1.0f),
 										  c.transform.position.y,
@@ -245,8 +245,8 @@ public class TTSMenuController : TTSMenuEnums {
 				iTween.MoveTo(CharacterHighlighter,positionVector,0);
 			}
 			
-			if(selectedCharacterIndex != c.GetComponent<TTSMenuItemCharacter>().index){
-				c.GetComponent<TTSMenuItemCharacter>().isSelected = false;
+			if(selectedRigIndex != c.GetComponent<TTSMenuItemRig>().index){
+				c.GetComponent<TTSMenuItemRig>().isSelected = false;
 			}
 		}
 	}
@@ -296,7 +296,7 @@ public class TTSMenuController : TTSMenuEnums {
 			break;
 			
 			case 2:
-				text = SelectedCharacter.ToString();
+				text = SelectedRig.ToString();
 			break;
 			
 			default:

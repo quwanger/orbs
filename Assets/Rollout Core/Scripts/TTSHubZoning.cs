@@ -1,7 +1,9 @@
 using UnityEngine;
+using System.Collections.Generic;
 using System.Collections;
 
-public class TTSHubZoning : MonoBehaviour {
+public class TTSHubZoning : TTSBehaviour {
+	
 	// Use this for initialization
 	void Start () {
 	}
@@ -12,11 +14,12 @@ public class TTSHubZoning : MonoBehaviour {
 	}
 	
 	void OnTriggerEnter(Collider collision){
-		if(collision.gameObject == GameObject.Find("Racer 2.0"))
+		if(collision.gameObject.name == "Racer 2.0")
 		{
 			//AsyncOperation async = Application.LoadLevelAsync("loadingScene");
-			Application.LoadLevel("selectionScreen");
-			
+			//Application.LoadLevel("selectionScreen");
+			//GameObject.Find("TTSLEVEL").GetComponent
+			level.GetComponent<TTSMenu>().zone=true;
 		}
 	}
 }
