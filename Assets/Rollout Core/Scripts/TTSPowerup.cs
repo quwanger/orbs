@@ -33,14 +33,14 @@ public class TTSPowerup : TTSBehaviour {
 	#region monobehaviour methods
 	void Update() {
 		if(level.DebugMode){
-			if(Input.GetKeyDown("1")) DrezzStone(DebugTier);
-			if(Input.GetKeyDown("2")) EntropyCannon(DebugTier);
-			if(Input.GetKeyDown("3")) SuperCBooster(DebugTier);
-			if(Input.GetKeyDown("4")) TimeBonus();
-			if(Input.GetKeyDown("5")) Shield(DebugTier);
-			if(Input.GetKeyDown("6")) Shockwave(DebugTier);
-			if(Input.GetKeyDown("7")) Leech(DebugTier);
-			if(Input.GetKeyDown("8")) Helix(DebugTier);
+			if(Input.GetKeyDown("1")){ if(this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)  DrezzStone(DebugTier);}
+			if(Input.GetKeyDown("2")){ if(this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)  EntropyCannon(DebugTier);}
+			if(Input.GetKeyDown("3")){ if(this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)  SuperCBooster(DebugTier, this.gameObject);}
+			if(Input.GetKeyDown("4")){ if(this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)  TimeBonus();}
+			if(Input.GetKeyDown("5")){ if(this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)  Shield(DebugTier);}
+			if(Input.GetKeyDown("6")){ if(this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)  Shockwave(DebugTier);}
+			if(Input.GetKeyDown("7")){ if(this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)  Leech(DebugTier);}
+			if(Input.GetKeyDown("8")){ if(this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)  Helix(DebugTier);}
 			
 			if(Input.GetKeyDown("9")){
 				this.GetComponent<TTSRacer>().DamageRacer(0.9f);
@@ -93,7 +93,7 @@ public class TTSPowerup : TTSBehaviour {
 			break;
 			
 			case Powerup.SuperC:
-			SuperCBooster(tier);
+			SuperCBooster(tier, this.gameObject);
 			break;
 			
 			case Powerup.Shield:
@@ -133,87 +133,99 @@ public class TTSPowerup : TTSBehaviour {
 	public void Leech(int _tier) {
 		if(_tier==1){
 			for(int i=0; i<2; i++){
-				DeployLeech();
+				DeployLeech(this.gameObject);
 			}
 		}else if(_tier==2){
 			for(int i=0; i<4; i++){
-				DeployLeech();
+				DeployLeech(this.gameObject);
 			}
 		}else if(_tier==3){
 			for(int i=0; i<8; i++){
-				DeployLeech();
+				DeployLeech(this.gameObject);
 			}
 		}
 	}
 	
 	public void Shockwave(int _tier) {
 		if(_tier==1){
-			DeployShockwave(1.0f);
+			DeployShockwave(1.0f, this.gameObject);
 		}else if(_tier==2){
-			DeployShockwave(2.0f);
+			DeployShockwave(2.0f, this.gameObject);
 		}else if(_tier==3){
-			DeployShockwave(3.0f);
+			DeployShockwave(3.0f, this.gameObject);
 		}
 	}
 	
 	public void DrezzStone(int _tier) {
 		if(_tier == 1) {
-			DropDrezzStone();
+			DrezzMid();
 		}
 		
 		if(_tier == 2) {
-			DropDrezzStone();
-			Invoke("DropDrezzStone", 0.5f);
+			DropDrezzStone(this.gameObject);
+			Invoke("DrezzMid", 0.5f);
 		}
 		if(_tier == 3) {
 			for(int i = 0; i < 5; i++) {
-				Invoke("DropDrezzStone", i * 0.5f);
+				Invoke("DrezzMid", i * 0.5f);
 			}
 		}
 		//it is only active while firing
 		this.ActivePowerup = TTSBehaviour.Powerup.None;
+	}
+	
+	private void DrezzMid(){
+		DropDrezzStone(this.gameObject);
 	}
 	
 	public void EntropyCannon(int _tier) {
 		if(_tier == 1) {
-			FireEntropyCannon();
+			EntropyMid();
 		}
 		
 		if(_tier == 2) {
 			for(int i = 0; i < 5; i++) {
-				Invoke("FireEntropyCannon", i * 0.1f);
+				Invoke("EntropyMid", i * 0.1f);
 			}
 		}
 		if(_tier == 3) {
 			for(int i = 0; i < 10; i++) {
-				Invoke("FireEntropyCannon", i * 0.1f);
+				Invoke("EntropyMid", i * 0.1f);
 			}
 		}
 		//it is only active while firing
 		this.ActivePowerup = TTSBehaviour.Powerup.None;
 	}
 	
+	private void EntropyMid(){
+		FireEntropyCannon(this.gameObject);
+	}
+	
 	public void Helix(int _tier) {
 		if(_tier == 1) {
-			FireHelix();
+			HelixMid();
 		}
 		
 		if(_tier == 2) {
 			for(int i = 0; i < 5; i++) {
-				Invoke("FireHelix", i * 0.1f);
+				Invoke("HelixMid", i * 0.1f);
 			}
 		}
 		if(_tier == 3) {
 			for(int i = 0; i < 10; i++) {
-				Invoke("FireHelix", i * 0.1f);
+				Invoke("HelixMid", i * 0.1f);
 			}
 		}
 		//it is only active while firing
 		this.ActivePowerup = TTSBehaviour.Powerup.None;
 	}
+	
+	private void HelixMid(){
+		FireHelix(this.gameObject);
+	}
 
-	public void SuperCBooster(int _tier) {
-		TTSRacerSpeedBoost boost = gameObject.AddComponent<TTSRacerSpeedBoost>();
+	public void SuperCBooster(int _tier, GameObject effectedRacer) {
+		TTSRacerSpeedBoost boost = effectedRacer.AddComponent<TTSRacerSpeedBoost>();
 		boost.FireBoost(BoostPrefab);
 		
 		//offense adds to the boost duration and target force at every level
@@ -235,65 +247,72 @@ public class TTSPowerup : TTSBehaviour {
 	}
 
 	public void TimeBonus() {
-		GiveTimeBonus();
+		GiveTimeBonus(this.gameObject);
 	}
 	
 	public void Shield(int _tier){
-		DeployShield(_tier);
+		DeployShield(_tier, this.gameObject);
 	}
 
 	#endregion
 	
 	#region internal methods
-	private void DeployShield(int level){
-		this.GetComponent<TTSRacer>().hasShield = true;
-		GameObject go = (GameObject) Instantiate(ShieldPrefab, this.transform.position, Quaternion.identity);
-		go.transform.parent = this.transform;
+	public GameObject DeployShield(int level, GameObject effectedRacer){
+		effectedRacer.GetComponent<TTSRacer>().hasShield = true;
+		GameObject go = (GameObject) Instantiate(ShieldPrefab, effectedRacer.transform.position, Quaternion.identity);
+		go.transform.parent = effectedRacer.transform;
 		//defense stat effects to the duration of the shield
-		go.GetComponent<TTSShield>().DeployShield(level, this.GetComponent<TTSRacer>().Defense, this.GetComponent<TTSRacer>());
+		go.GetComponent<TTSShield>().DeployShield(level, effectedRacer.GetComponent<TTSRacer>().Defense, effectedRacer.GetComponent<TTSRacer>());
+		return go;
 	}
 	
-	private void DropDrezzStone() {
-		GameObject go = (GameObject) Instantiate(DrezzStonePrefab, this.transform.position - GetComponent<TTSRacer>().displayMeshComponent.forward * 7.0f, this.transform.rotation);
-		go.GetComponent<TTSDrezzStone>().offensiveMultiplier = this.GetComponent<TTSRacer>().Offense;
+	public GameObject DropDrezzStone(GameObject effectedRacer) {
+		GameObject go = (GameObject) Instantiate(DrezzStonePrefab, effectedRacer.transform.position - GetComponent<TTSRacer>().displayMeshComponent.forward * 7.0f, effectedRacer.transform.rotation);
+		go.GetComponent<TTSDrezzStone>().offensiveMultiplier = effectedRacer.GetComponent<TTSRacer>().Offense;
 		go.rigidbody.AddForce(Random.insideUnitCircle * 50f);
+		return go;
 	}
 	
-	private void FireEntropyCannon() {
+	public GameObject FireEntropyCannon(GameObject effectedRacer) {
 		GameObject go = (GameObject) Instantiate(EntropyCannonPrefab);
-		go.GetComponent<TTSEntropyCannonProjectile>().offensiveMultiplier = this.GetComponent<TTSRacer>().Offense;
+		go.GetComponent<TTSEntropyCannonProjectile>().offensiveMultiplier = effectedRacer.GetComponent<TTSRacer>().Offense;
 		go.transform.rotation = GetComponent<TTSRacer>().displayMeshComponent.transform.rotation;
-		go.transform.position = this.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
-		go.rigidbody.velocity = this.rigidbody.velocity.normalized * (this.rigidbody.velocity.magnitude + go.GetComponent<TTSEntropyCannonProjectile>().ProjectileStartVelocity);
+		go.transform.position = effectedRacer.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
+		go.rigidbody.velocity = effectedRacer.rigidbody.velocity.normalized * (effectedRacer.rigidbody.velocity.magnitude + go.GetComponent<TTSEntropyCannonProjectile>().ProjectileStartVelocity);
+		return go;
 	}
 	
-	private void FireHelix() {
+	public GameObject FireHelix(GameObject effectedRacer) {
 		GameObject go = (GameObject) Instantiate(HelixPrefab);
-		go.GetComponent<TTSHelixProjectile>().offensiveMultiplier = this.GetComponent<TTSRacer>().Offense;
+		go.GetComponent<TTSHelixProjectile>().offensiveMultiplier = effectedRacer.GetComponent<TTSRacer>().Offense;
 		go.transform.rotation = GetComponent<TTSRacer>().displayMeshComponent.transform.rotation;
-		go.transform.position = this.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
-		go.rigidbody.velocity = this.rigidbody.velocity.normalized * (this.rigidbody.velocity.magnitude + go.GetComponent<TTSHelixProjectile>().ProjectileStartVelocity);
+		go.transform.position = effectedRacer.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
+		go.rigidbody.velocity = effectedRacer.rigidbody.velocity.normalized * (effectedRacer.rigidbody.velocity.magnitude + go.GetComponent<TTSHelixProjectile>().ProjectileStartVelocity);
+		return go;
 	}
 	
-	private void GiveTimeBonus() {
+	public GameObject GiveTimeBonus(GameObject effectedRacer) {
 		level.time.GiveTimeBonus(1.0f);
-		GameObject go = (GameObject) Instantiate(TimeBonusPrefab, this.transform.position, this.transform.rotation);
-		go.GetComponent<TTSTimeBonusPrefab>().target = this.GetComponent<TTSRacer>().displayMeshComponent.gameObject;
+		GameObject go = (GameObject) Instantiate(TimeBonusPrefab, effectedRacer.transform.position, effectedRacer.transform.rotation);
+		go.GetComponent<TTSTimeBonusPrefab>().target = effectedRacer.GetComponent<TTSRacer>().displayMeshComponent.gameObject;
+		return go;
 	}
 	
-	private void DeployShockwave(float _power){
-		GameObject go = (GameObject) Instantiate(ShockwavePrefab, this.transform.position, Quaternion.identity);
-		go.GetComponent<TTSExplosiveForce>().power = go.GetComponent<TTSExplosiveForce>().power * _power * this.GetComponent<TTSRacer>().Offense;
-		go.GetComponent<TTSExplosiveForce>().radius = go.GetComponent<TTSExplosiveForce>().radius * _power * this.GetComponent<TTSRacer>().Offense;
+	public GameObject DeployShockwave(float _power, GameObject effectedRacer){
+		GameObject go = (GameObject) Instantiate(ShockwavePrefab, effectedRacer.transform.position, Quaternion.identity);
+		go.GetComponent<TTSExplosiveForce>().power = go.GetComponent<TTSExplosiveForce>().power * _power * effectedRacer.GetComponent<TTSRacer>().Offense;
+		go.GetComponent<TTSExplosiveForce>().radius = go.GetComponent<TTSExplosiveForce>().radius * _power * effectedRacer.GetComponent<TTSRacer>().Offense;
 		go.GetComponent<TTSExplosiveForce>().Activate();
+		return go;
 	}
 	
-	private void DeployLeech() {
-		GameObject go = (GameObject) Instantiate(LeechPrefab, this.transform.position, Quaternion.identity);
-		go.GetComponent<TTSLeech>().currentRacer = this.GetComponent<TTSRacer>();
+	public GameObject DeployLeech(GameObject effectedRacer) {
+		GameObject go = (GameObject) Instantiate(LeechPrefab, effectedRacer.transform.position, Quaternion.identity);
+		go.GetComponent<TTSLeech>().currentRacer = effectedRacer.GetComponent<TTSRacer>();
 		go.transform.rotation = GetComponent<TTSRacer>().displayMeshComponent.transform.rotation;
-		go.transform.position = this.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
-		go.rigidbody.velocity = this.rigidbody.velocity;
+		go.transform.position = effectedRacer.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
+		go.rigidbody.velocity = effectedRacer.rigidbody.velocity;
+		return go;
 	}
 	#endregion
 	
