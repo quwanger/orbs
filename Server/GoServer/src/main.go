@@ -1,6 +1,7 @@
 package main
 
 import (
+	"OrbsCommands"
 	"Packets"
 	"UnityGo"
 	"errors"
@@ -58,11 +59,10 @@ func main() {
 		packetReader.Data = make([]byte, 1024)
 		_, address, err := inConn.ReadFromUDP(packetReader.Data)
 
-		// println(n)
-
 		if err != nil {
 			fmt.Println(err)
 		}
+
 		go ProcessPacket(address, packetReader)
 	}
 }
@@ -79,14 +79,14 @@ func ProcessPacket(sender *net.UDPAddr, reader *Packets.PacketReader) {
 		outPacket.InitPacket()
 	}
 
-	for command != 0 {
+	for command != OrbsCommands.EndPacket {
 
 		fmt.Printf("Received command: '%v' from %v\n", command, sender)
 
 		switch command {
 
 		// First Connection
-		case 1:
+		case OrbsCommands.HandshakeStart:
 			// Establish connection
 			connection, keyExists := connections[sender.IP.String()]
 
@@ -102,20 +102,20 @@ func ProcessPacket(sender *net.UDPAddr, reader *Packets.PacketReader) {
 			go TimeoutConnection(sender.IP.String())
 
 		// Handshake complete
-		case 3:
+		case OrbsCommands.HandshakeComplete:
 			connections[sender.IP.String()].IsEstablished = true
 			fmt.Printf("X	Connection to %v established\n\n", sender.IP.String())
 
 		// UnityGo.Unity object Update
-		case 4:
+		case OrbsCommands.ObjectUpdate:
 			ObjectUpdate(reader, connections[sender.IP.String()], outPacket)
 
 		// UnityGo.Unity Object Registration
-		case 10:
+		case OrbsCommands.ObjectRegister:
 			RegisterObject(reader, connections[sender.IP.String()], outPacket)
 
 		// Close connection
-		case 9999:
+		case OrbsCommands.CloseConnection:
 			CloseConnection(sender.IP.String())
 		}
 
@@ -183,9 +183,8 @@ func ObjectUpdate(reader *Packets.PacketReader, connection *UnityGo.UnityConn, o
 func ObjectUpdateToBytes(obj *UnityGo.UnityGameObject) []byte {
 	var broadcastPacket = new(Packets.PacketWriter)
 	broadcastPacket.InitPacket()
-	broadcastPacket.WriteUInt32(4)
+	broadcastPacket.WriteUInt32(OrbsCommands.ObjectUpdate)
 	broadcastPacket.WriteFloat32(obj.Id)
-
 	broadcastPacket.WriteVector3(obj.LastPos.X, obj.LastPos.Y, obj.LastPos.Z)
 	broadcastPacket.WriteVector3(obj.LastRot.X, obj.LastRot.Y, obj.LastRot.Z)
 	broadcastPacket.WriteVector3(obj.LastSpeed.X, obj.LastSpeed.Y, obj.LastSpeed.Z)

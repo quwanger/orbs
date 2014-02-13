@@ -1,6 +1,7 @@
 package UnityGo
 
 import (
+	"OrbsCommands"
 	"Packets"
 	"fmt"
 	"net"
@@ -54,7 +55,7 @@ func (this *UnityCommand) checkWritable(dataLength int) {
 
 func (this *UnityCommand) ReplyInit() {
 	this.checkWritable(this.VAR_SIZE)
-	this.OutPacket.WriteUInt32(2)
+	this.OutPacket.WriteUInt32(OrbsCommands.HandshakeAcknowledge)
 }
 
 func (this *UnityCommand) ObjectUpdate(data []byte) {
@@ -64,21 +65,21 @@ func (this *UnityCommand) ObjectUpdate(data []byte) {
 
 func (this *UnityCommand) ObjectNotRegistered(id float32) {
 	this.checkWritable(this.VAR_SIZE * 2)
-	this.OutPacket.WriteUInt32(5)
+	this.OutPacket.WriteUInt32(OrbsCommands.ObjectIsNotRegistered)
 	this.OutPacket.WriteFloat32(id)
 }
 
 func (this *UnityCommand) ObjectAlreadyRegistered(id float32) {
 	this.checkWritable(this.VAR_SIZE * 2)
 	fmt.Printf("*	OBJECT #%v REGISTERED TO DIFFERENT OWNER\n\n", id)
-	this.OutPacket.WriteUInt32(6)
+	this.OutPacket.WriteUInt32(OrbsCommands.ObjectAlreadyRegistered)
 	this.OutPacket.WriteFloat32(id)
 }
 
 func (this *UnityCommand) ObjectRegisteredSuccess(id float32) {
 	this.checkWritable(this.VAR_SIZE * 2)
 	fmt.Printf("X	Added new obj %v\n\n", id)
-	this.OutPacket.WriteUInt32(11)
+	this.OutPacket.WriteUInt32(OrbsCommands.ObjectRegisterOK)
 	this.OutPacket.WriteFloat32(id)
 }
 
