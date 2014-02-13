@@ -6,11 +6,6 @@ public class TTSPerkManager : TTSBehaviour {
 	//general use variables
 	public PerksPool1 equiptPerkPool1;
 	public Powerup equiptPerkPool2;
-	public float accelerationIncrease = 500.0f;
-	public float speedIncrease = 25.0f;
-	public float handlingIncrease = 750.0f;
-	public float offenseIncrease = 0.3f;
-	public float defenseIncrease = 0.3f;
 	
 	//photofinish variables
 	private float distance;
@@ -76,7 +71,7 @@ public class TTSPerkManager : TTSBehaviour {
 	
 	private void doHotStart() {
 		if(!hot && level.raceHasStarted){
-			Debug.Log("Hot Start");
+			//Debug.Log("Hot Start");
 			hot = true;
 			Powerup p = getRandomPowerup();
 			this.GetComponent<TTSPowerup>().GivePowerup(p);
@@ -117,7 +112,7 @@ public class TTSPerkManager : TTSBehaviour {
 			powerup = GetRandomEnum<Powerup>();
 		}
 		
-		Debug.Log (powerup);
+		//Debug.Log (powerup);
 		
 		return powerup;
 	}

@@ -14,7 +14,6 @@ GameObject:
   - 114: {fileID: 11400004}
   - 114: {fileID: 11400002}
   - 114: {fileID: 11400000}
-  - 114: {fileID: 11400008}
   m_Layer: 8
   m_Name: Racer 2.0
   m_TagString: Player
@@ -58,13 +57,13 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 959effcefe7ee442c834a6ae9f5e42bf, type: 3}
   m_Name: 
-  equiptPerkPool1: 7
-  equiptPerkPool2: 5
   accelerationIncrease: 500
   speedIncrease: 25
   handlingIncrease: 750
   offenseIncrease: .300000012
   defenseIncrease: .300000012
+  equiptPerkPool1: 7
+  equiptPerkPool2: 5
   BoostPrefab: {fileID: 100006, guid: f3a172c9924cf0944bb9de17cebc8f60, type: 2}
   finishlineObject: {fileID: 0}
 --- !u!114 &11400002
@@ -77,6 +76,11 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a5cc97ae1a10dff4eb6810de005a3d16, type: 3}
   m_Name: 
+  accelerationIncrease: 500
+  speedIncrease: 25
+  handlingIncrease: 750
+  offenseIncrease: .300000012
+  defenseIncrease: .300000012
   debug: 1
   DebugTier: 2
   AvailablePowerup: 0
@@ -103,6 +107,11 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e595e9937de9cd74fa0d0f882187e39d, type: 3}
   m_Name: 
+  accelerationIncrease: 500
+  speedIncrease: 25
+  handlingIncrease: 750
+  offenseIncrease: .300000012
+  defenseIncrease: .300000012
   intelligence: 5
   debugMode: 0
   HARD_TURN_AMOUNT: .899999976
@@ -123,6 +132,11 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 46aae1e125f0a8941abd8b4c37f0ee97, type: 3}
   m_Name: 
+  accelerationIncrease: 500
+  speedIncrease: 25
+  handlingIncrease: 750
+  offenseIncrease: .300000012
+  defenseIncrease: .300000012
   IsPlayerControlled: 1
   displayMeshComponent: {fileID: 0}
   RollingSound: {fileID: 8300000, guid: b881dac17943287429d02776bfed46f3, type: 3}
@@ -141,21 +155,14 @@ MonoBehaviour:
   Defense: 0
   Offense: 0
   finished: 0
+  distanceToFinish: 0
+  place: 0
   hasShield: 0
   currentWaypoint: {fileID: 0}
   previousWaypoint: {fileID: 0}
   debugStart: {fileID: 0}
   goingWrongWay: 0
---- !u!114 &11400008
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8196987ffb90dfe44a869f686a0b5db9, type: 3}
-  m_Name: 
+  nextWaypoint: {fileID: 0}
 --- !u!135 &13500000
 SphereCollider:
   m_ObjectHideFlags: 1

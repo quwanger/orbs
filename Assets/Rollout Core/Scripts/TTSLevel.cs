@@ -9,6 +9,8 @@ public class TTSLevel : MonoBehaviour {
 	public List<Camera> _maincameras = new List<Camera>();
 	public List<Camera> _otherCameras = new List<Camera>();
 	
+	public enum Gametype {SinglePlayer, MultiplayerLocal, MultiplayerOnline, TimeTrial};
+	public Gametype currentGameType = Gametype.MultiplayerLocal;
 	
 	public bool raceHasStarted = false;
 	public bool raceHasFinished = false;
