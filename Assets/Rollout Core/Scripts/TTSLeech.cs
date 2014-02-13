@@ -13,6 +13,7 @@ public class TTSLeech : TTSBehaviour {
 	
 	public float homingRadius = 25.0F;
 	public float stickRadius = 1.5f;
+	public float jumpRadius = 5.0f;
 	public float explosionRadius = 5.0f;
 	public float explosionPower = 1000.0F;
 	
@@ -71,10 +72,23 @@ public class TTSLeech : TTSBehaviour {
 		if(racerStuck){
 			positionDifference = TTSUtils.RotateAround(positionDifference, Vector3.zero, new Vector3(Random.Range(10.0f, 20.0f), Random.Range(10.0f, 20.0f), Random.Range(10.0f, 20.0f)));
 			transform.position = stuckRacer.transform.position + positionDifference;
+			CheckForOtherRacers();
 		}else{
 			this.rigidbody.velocity = (destinationPosition - this.transform.position).normalized * leechVelocity;
 			findDestination();
 		}
+	}
+	
+	private void CheckForOtherRacers(){
+		Collider[] colliders = Physics.OverlapSphere(this.transform.position, jumpRadius);
+		    foreach (Collider hit in colliders) {
+		        if (hit.GetComponent<TTSRacer>() && hit.gameObject != stuckRacer.gameObject){
+					racerStuck = false;
+					destinationPosition = hit.gameObject.transform.position;
+					if(level.DebugMode)
+						Debug.Log("Leech jump to: " + hit.gameObject);
+				}
+		    }
 	}
 	
 	private void LeechExplosion(){

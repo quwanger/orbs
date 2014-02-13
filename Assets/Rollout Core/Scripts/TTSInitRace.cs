@@ -27,17 +27,23 @@ public class TTSInitRace : MonoBehaviour {
 	void Start () {
 		
 		for(int i = 0; i < numberOfRacers; i++){
+			InstantiateRacers(i);
+		}
+	}
+	
+	public void InstantiateRacers(int i){
+		//finds the rig to initialize
 			foreach(GameObject rig in _rigs){
-				//Debug.Log(rig.GetComponent<TTSRig>().rigName);
 				if(rig.GetComponent<TTSRig>().rigName == tempRigChoice){
 					rigToLoad = rig;
 				}
 			}
+			//makes sure there is a rig to load if none selected
 			if(rigToLoad == null){
-				//Debug.Log (_rigs.Count);
 				rigToLoad = _rigs[Random.Range(0, _rigs.Count)];
 			}
 			
+			//checks for the character (in this case, default sphere)
 			foreach(GameObject character in _characters){
 				if(character.name == tempCharacterChoice)
 					characterToLoad = character;
@@ -46,27 +52,38 @@ public class TTSInitRace : MonoBehaviour {
 				characterToLoad = _characters[0];
 			}
 			
+			//gets the starting positions, sets them as taken if someone spawning on them already
 			GameObject sp = _startingpoints[i];
 			sp.GetComponent<TTSStartingPoint>().isTaken = true;
 			
+			//instantiates the rig
 			GameObject tempRig = (GameObject)Instantiate(rigToLoad, sp.transform.position, sp.transform.rotation );
 			rigToLoad = null;
 			
+			//instantiates the character mesh (sphere)
 			GameObject tempChar = (GameObject)Instantiate(characterToLoad, sp.transform.position, sp.transform.rotation);
-	
+			
+			//instantiates Racer2.0
 			GameObject tempRacer = (GameObject)Instantiate(racerGO, sp.transform.position, sp.transform.rotation);
 			
+			//parents the racer properly
 			tempChar.transform.parent = tempRacer.transform;
-			
 			tempRig.transform.parent = tempChar.transform;
 			
+			//makes the sphere mesh follow the Racer2.0
 			tempRacer.GetComponent<TTSRacer>().displayMeshComponent = tempChar.transform;
+			//sets the currentrig variable of the racer to the rig selecte above
 			tempRacer.GetComponent<TTSRacer>().CurrentRig = tempRig;
+			
+			//do this only for human players
 			if(i < tempNumHumanPlayers){
+				//set to player controlled and set the player type to Player
 				tempRacer.GetComponent<TTSRacer>().IsPlayerControlled = true;
 				tempRacer.GetComponent<TTSRacer>().player = TTSRacer.PlayerType.Player;
 			
+				//instantiate a camera for the player
 				GameObject tempCamera = (GameObject)Instantiate(cameraGO);
+				//handles splitting the screen for splitscreen
 				if(tempNumHumanPlayers > 1){
 					if(i%2 == 0){
 						if(tempNumHumanPlayers > 3){
@@ -88,22 +105,26 @@ public class TTSInitRace : MonoBehaviour {
 						}
 					}
 				}
+				
+				//tells the camera which racer to follow
 				tempCamera.GetComponent<TTSFollowCamera>().target = tempChar.transform;
 				
+				//instantiate a hud for the human racer and get it to follow the camera and racer
 				GameObject tempHUD = (GameObject)Instantiate(hudGO);
 				tempHUD.GetComponent<TTSFloatHud>().boundCamera = tempCamera.transform;
 				tempHUD.GetComponent<TTSFloatHud>().racerToFollow = tempRacer;
 
 				//assinging the hud powerup for the racer
-
 				Transform tempHudPowerup = tempHUD.transform.Find("CurrentPowerup");
-
 				tempRacer.GetComponent<TTSPowerup>().hudPowerup = tempHudPowerup.gameObject;
+			
+				tempRacer.GetComponent<TTSRacer>().myCamera = tempCamera;
 			}else{
+				//this is for AI only
+				//set the player type to AI
 				tempRacer.GetComponent<TTSRacer>().IsPlayerControlled = true;
 				tempRacer.GetComponent<TTSRacer>().player = TTSRacer.PlayerType.AI;
 			}
-		}
 	}
 	
 	// Update is called once per frame

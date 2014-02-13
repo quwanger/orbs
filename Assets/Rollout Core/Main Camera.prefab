@@ -41,6 +41,7 @@ GameObject:
   - 114: {fileID: 11400016}
   - 114: {fileID: 11400020}
   - 81: {fileID: 8100000}
+  - 114: {fileID: 11400022}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -337,6 +338,11 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 105410cefd4c4114cb6ad61953f89162, type: 3}
   m_Name: 
+  accelerationIncrease: 500
+  speedIncrease: 25
+  handlingIncrease: 750
+  offenseIncrease: .300000012
+  defenseIncrease: .300000012
   CameraMode: 0
   target: {fileID: 0}
   distance: 5
@@ -592,6 +598,11 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a76573c10807f164a96bc6349ffba554, type: 3}
   m_Name: 
+  accelerationIncrease: 500
+  speedIncrease: 25
+  handlingIncrease: 750
+  offenseIncrease: .300000012
+  defenseIncrease: .300000012
 --- !u!114 &11400018
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -602,6 +613,11 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53696d39b2616fa459958ac8a656c08d, type: 3}
   m_Name: 
+  accelerationIncrease: 500
+  speedIncrease: 25
+  handlingIncrease: 750
+  offenseIncrease: .300000012
+  defenseIncrease: .300000012
 --- !u!114 &11400020
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -627,6 +643,16 @@ MonoBehaviour:
   shaderFXAAPreset3: {fileID: 4800000, guid: c182fa94a5a0a4c02870641efcd38cd5, type: 3}
   shaderFXAAII: {fileID: 4800000, guid: cd5b323dcc592457790ff18b528f5e67, type: 3}
   shaderFXAAIII: {fileID: 4800000, guid: c547503fff0e8482ea5793727057041c, type: 3}
+--- !u!114 &11400022
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 626f08fcb2c45487f9299504ffcef1b5, type: 3}
+  m_Name: 
 --- !u!124 &12400000
 Behaviour:
   m_ObjectHideFlags: 1
