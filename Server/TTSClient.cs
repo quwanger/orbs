@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 public class TTSClient : MonoBehaviour
 {
-	public const string SERVER_IP = "127.0.0.1";//"192.168.1.21";
+	public string SERVER_IP = "127.0.0.1";//"192.168.1.21";
 
 	// Status
 	bool isConnectionEstablished = false;
@@ -16,11 +16,11 @@ public class TTSClient : MonoBehaviour
 	// Sender
 	TTSPacketWriter UpdateWriter = new TTSPacketWriter();
 	Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-	IPAddress serverAddr = IPAddress.Parse(SERVER_IP);
+	IPAddress serverAddr;
 	IPEndPoint endPoint;
 
 	// Game Object Updater
-	Dictionary<float, TTSNetworkObj> networkObjects = new Dictionary<float, TTSNetworkObj>();
+	Dictionary<float, TTSNetworkHandle> networkObjects = new Dictionary<float, TTSNetworkHandle>();
 
 	// Receiver
 	Thread receiveThread;
@@ -31,6 +31,7 @@ public class TTSClient : MonoBehaviour
 	// Use this for initialization
 	void Start() {
 		// Sender
+		serverAddr = IPAddress.Parse(SERVER_IP);
 		endPoint = new IPEndPoint(serverAddr, 6666);
 
 		// Receiver
@@ -51,8 +52,8 @@ public class TTSClient : MonoBehaviour
 		if (isConnectionEstablished == false)
 			return;
 
-		foreach (KeyValuePair<float, TTSNetworkObj> pair in networkObjects) {
-			if (pair.Value.receiveOnly)
+		foreach (KeyValuePair<float, TTSNetworkHandle> pair in networkObjects) {
+			if (!pair.Value.owner)
 				continue;
 
 			UpdateWriter.AddData(TTSOrbsCommands.OBJECT_UPDATE);
@@ -144,7 +145,7 @@ public class TTSClient : MonoBehaviour
 
 				case TTSOrbsCommands.OBJECT_ALREADY_REGISTERED:
 					objID = reader.ReadFloat();
-					networkObjects[objID].receiveOnly = true;
+					networkObjects[objID].owner = false;
 					Debug.Log("Server object already registered: " + objID);
 					break;
 
@@ -156,7 +157,7 @@ public class TTSClient : MonoBehaviour
 		SendPacket(writer);
 	}
 
-	public void RegisterObject(TTSNetworkObj obj) {
+	public void RegisterObject(TTSNetworkHandle obj) {
 		networkObjects.Add(obj.id, obj);
 
 		// Send data in the next packet to register
@@ -198,12 +199,12 @@ public class TTSOrbsCommands
 	public const int OBJECT_IS_NOT_REGISTERED = 1092;
 }
 
-public class TTSNetworkObj
+public class TTSNetworkHandle
 {
 	TTSClient client;
 	public float id;
-	public bool receiveOnly = false;
 	public bool updated = false;
+	public bool owner = true;
 
 	public Vector3 pos;
 	public Vector3 rotation;
@@ -218,21 +219,23 @@ public class TTSNetworkObj
 	/// </summary>
 	/// <param name="Client">The global network client</param>
 	/// <param name="StartingPosition">Used to hash and differentiate between different objects</param>
-	public TTSNetworkObj(TTSClient Client, Vector3 StartingPosition) {
+	public TTSNetworkHandle(TTSClient Client, Vector3 StartingPosition) {
 		client = Client;
 		id = StartingPosition.x * StartingPosition.y * StartingPosition.z;
+
 		client.RegisterObject(this);
 	}
 
-	public TTSNetworkObj(TTSClient Client, Vector3 StartingPosition, bool ReceiveOnly) {
-		receiveOnly = true;
+	public TTSNetworkHandle(TTSClient Client, Vector3 StartingPosition, bool Owner) {
 		client = Client;
 		id = StartingPosition.x * StartingPosition.y * StartingPosition.z;
+		owner = Owner;
+
 		client.RegisterObject(this);
 	}
 
 	public void Update(Vector3 Position, Vector3 Rotation, Vector3 Speed) {
-		if (receiveOnly)
+		if (!owner)
 			return;
 
 		pos = Position;
