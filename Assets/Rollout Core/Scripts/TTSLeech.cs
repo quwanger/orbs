@@ -137,7 +137,7 @@ public class TTSLeech : TTSBehaviour {
 	}
 	
 	public void OnWaypoint(TTSWaypoint hit) {
-		if(!racerFound && !racerStuck && previousWaypoint != currentWaypoint){
+		if(!racerFound && !racerStuck){
 			previousWaypoint = currentWaypoint;
 			currentWaypoint = hit;
 		

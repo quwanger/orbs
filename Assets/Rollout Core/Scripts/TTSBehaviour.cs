@@ -16,10 +16,10 @@ public class TTSBehaviour : MonoBehaviour {
 	public float offenseIncrease = 0.3f;
 	public float defenseIncrease = 0.3f;
 
-	public enum Powerup {None, EntropyCannon, DrezzStones, TimeBonus, SuperC, Shield, Helix, Shockwave, Leech};
+	public enum Powerup {None, EntropyCannon, DrezzStones, TimeBonus, SuperC, Shield, Helix, Shockwave, Leech, Lottery};
 	
 	public enum PerksPool1 {PhotoFinish, HotStart, DiamondCoat, ManOWar, Evolution, Speed, Acceleration, Handling, None};
-	//public enum PerksPool2 {Helix, SuperC, Drezz, Entropy, Leech, Nanite, EMP, None};
+	//public enum PerksPool2 {None, EntropyCannon, DrezzStones, TimeBonus, SuperC, Shield, Helix, Shockwave, Leech, Lottery};
 
 	public TTSLevel level {
 		 get { 

@@ -13,7 +13,9 @@ public class TTSPowerup : TTSBehaviour {
 	
 	public GameObject hudPowerup;
 	
+	//Perk Stuff
 	public Powerup pp2;
+	private float lotteryChance = 0.2f;
 	
 	#region Projectile Prefab Assignment
 	public GameObject DrezzStonePrefab;
@@ -70,10 +72,21 @@ public class TTSPowerup : TTSBehaviour {
 			TimeBonus();
 		} else {
 			AvailablePowerup = powerup;
-			if(pp2 == AvailablePowerup)
+			if(pp2 == AvailablePowerup){
 				tier = 2;
-			else
+			}else if(pp2 == Powerup.Lottery){
+				//deals with the lottery perk
+				float temp = Random.Range(0, 1.0f);
+				if(temp <= lotteryChance){
+					if(level.DebugMode == true)
+						Debug.Log("Lottery Winner");
+					tier = 2;
+				}else{
+					tier = 1;
+				}
+			}else{
 				tier = 1;
+			}
 		}
 		
 		//only update the hud if they are a human racer (as AI do not have HUDs)
