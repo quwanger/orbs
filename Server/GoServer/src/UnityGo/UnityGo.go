@@ -1,7 +1,6 @@
 package UnityGo
 
 import (
-	"OrbsCommands"
 	"Packets"
 	"fmt"
 	"net"
@@ -29,6 +28,20 @@ func (this *Vector3) Add(add *Vector3) *Vector3 {
 
 // UNITY COMMAND
 
+const (
+	EndPacket            = 0
+	HandshakeStart       = 1
+	HandshakeAcknowledge = 2
+	HandshakeComplete    = 3
+	CloseConnection      = 9999
+
+	ObjectUpdate            = 1004
+	ObjectRegister          = 1010
+	ObjectRegisterOK        = 1011
+	ObjectAlreadyRegistered = 1091
+	ObjectIsNotRegistered   = 1092
+)
+
 type UnityCommand struct {
 	Address   *net.UDPAddr
 	OutPacket *Packets.PacketWriter
@@ -55,7 +68,7 @@ func (this *UnityCommand) checkWritable(dataLength int) {
 
 func (this *UnityCommand) ReplyInit() {
 	this.checkWritable(this.VAR_SIZE)
-	this.OutPacket.WriteUInt32(OrbsCommands.HandshakeAcknowledge)
+	this.OutPacket.WriteUInt32(HandshakeAcknowledge)
 }
 
 func (this *UnityCommand) ObjectUpdate(data []byte) {
@@ -65,21 +78,21 @@ func (this *UnityCommand) ObjectUpdate(data []byte) {
 
 func (this *UnityCommand) ObjectNotRegistered(id float32) {
 	this.checkWritable(this.VAR_SIZE * 2)
-	this.OutPacket.WriteUInt32(OrbsCommands.ObjectIsNotRegistered)
+	this.OutPacket.WriteUInt32(ObjectIsNotRegistered)
 	this.OutPacket.WriteFloat32(id)
 }
 
 func (this *UnityCommand) ObjectAlreadyRegistered(id float32) {
 	this.checkWritable(this.VAR_SIZE * 2)
 	fmt.Printf("*	OBJECT #%v REGISTERED TO DIFFERENT OWNER\n\n", id)
-	this.OutPacket.WriteUInt32(OrbsCommands.ObjectAlreadyRegistered)
+	this.OutPacket.WriteUInt32(ObjectAlreadyRegistered)
 	this.OutPacket.WriteFloat32(id)
 }
 
 func (this *UnityCommand) ObjectRegisteredSuccess(id float32) {
 	this.checkWritable(this.VAR_SIZE * 2)
 	fmt.Printf("X	Added new obj %v\n\n", id)
-	this.OutPacket.WriteUInt32(OrbsCommands.ObjectRegisterOK)
+	this.OutPacket.WriteUInt32(ObjectRegisterOK)
 	this.OutPacket.WriteFloat32(id)
 }
 
