@@ -54,6 +54,7 @@ MonoBehaviour:
   _racers: []
   _maincameras: []
   _otherCameras: []
+  currentGameType: 1
   raceHasStarted: 0
   raceHasFinished: 0
   countdown: {fileID: 0}
@@ -104,9 +105,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a0e3c6283b57331409ce832ee16eb4bc, type: 3}
+  m_Script: {fileID: 11500000, guid: 753b05e6e04765143aedb0fd922472be, type: 3}
   m_Name: 
   SERVER_IP: 127.0.0.1
+  isConnectionEstablished: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
