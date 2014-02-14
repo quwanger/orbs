@@ -78,7 +78,6 @@ public class TTSClient : UniGoClient
 	protected void PacketListener() {
 		System.Net.IPEndPoint ep = null;
 		while (isRunning) {
-			Debug.Log("Start Listening");
 			byte[] data = client.Receive(ref ep);
 
 			Thread handler = new Thread(new ThreadStart(
@@ -163,15 +162,19 @@ public class TTSClient : UniGoClient
 		SendPacket(writer);
 	}
 	public void RegisterRacer(TTSRacerNetworkHandle racer) {
-		do {
-			racer.id = UnityEngine.Random.value * 100;
-		} while (networkRacers.ContainsKey(racer.id));
+
+		if (racer.owner) {
+			do {
+				racer.id = UnityEngine.Random.value * 100;
+			} while (networkRacers.ContainsKey(racer.id));
+		}
 
 		networkRacers.Add(racer.id, racer);
 
 		if (!racer.owner)
 			return;
 
+		Debug.Log("X	REGISTERING RACER " + racer.id);
 		// Send data in the next packet to register
 		UpdateWriter.AddData(TTSOrbsCommands.RACER_REGISTER);
 		UpdateWriter.AddData(racer.id);
@@ -184,18 +187,15 @@ public class TTSClient : UniGoClient
 
 public class TTSRacerNetworkHandle : UniGoNetworkHandle
 {
-	bool owner = false;
-	float id;
-
 	public TTSRacerNetworkHandle(TTSClient Client, float ID) {
 		id = ID;
 		owner = true;
 		Client.RegisterRacer(this);
 	}
 
-	public TTSRacerNetworkHandle(TTSClient Client, bool Owner) {
+	public TTSRacerNetworkHandle(TTSClient Client, float ID, bool Owner) {
+		id = ID;
 		owner = Owner;
-
 		Client.RegisterRacer(this);
 	}
 

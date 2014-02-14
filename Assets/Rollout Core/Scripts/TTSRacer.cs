@@ -166,7 +166,7 @@ public class TTSRacer : TTSBehaviour
 			netHandle = new TTSRacerNetworkHandle(level.client, racerID);
 		}
 		else if (player == PlayerType.Multiplayer) {
-			netHandle = new TTSRacerNetworkHandle(level.client, false);
+			netHandle = new TTSRacerNetworkHandle(level.client, racerID, false);
 		}
 		else if (player == PlayerType.Player) {
 			netHandle = new TTSRacerNetworkHandle(level.client, racerID);
