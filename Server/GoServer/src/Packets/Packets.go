@@ -101,6 +101,10 @@ func (this *PacketWriter) Clear() {
 	this.readIndex = 0
 }
 
+func (this *PacketWriter) WriteInt(data int) {
+	this.WriteUInt32(uint32(data))
+}
+
 func (this *PacketWriter) WriteUInt32(data uint32) {
 	binary.LittleEndian.PutUint32(this.Data[this.readIndex:this.readIndex+SIZEOF_UINT32], data)
 	this.readIndex += SIZEOF_UINT32

@@ -58,7 +58,7 @@ func (this *UnityCommand) Init(writer *Packets.PacketWriter, address *net.UDPAdd
 	this.VAR_SIZE = 4
 }
 
-func (this *UnityCommand) checkWritable(dataLength int) {
+func (this *UnityCommand) CheckWritable(dataLength int) {
 	if this.OutPacket.Size()+dataLength > len(this.OutPacket.Data) {
 		fmt.Printf(">	POTENTIAL DATA OVERFLOW AT %v BYTES. SENDING/CLEARING PACKET\n", this.OutPacket.Size())
 		this.SendPacket()
@@ -67,33 +67,42 @@ func (this *UnityCommand) checkWritable(dataLength int) {
 }
 
 func (this *UnityCommand) ReplyInit() {
-	this.checkWritable(this.VAR_SIZE)
-	this.OutPacket.WriteUInt32(HandshakeAcknowledge)
+	this.CheckWritable(this.VAR_SIZE)
+	this.WriteCommand(HandshakeAcknowledge)
 }
 
 func (this *UnityCommand) ObjectUpdate(data []byte) {
-	this.checkWritable(len(data))
-	this.OutPacket.WriteBytes(data)
+	this.SendBytes(data)
 }
 
 func (this *UnityCommand) ObjectNotRegistered(id float32) {
-	this.checkWritable(this.VAR_SIZE * 2)
-	this.OutPacket.WriteUInt32(ObjectIsNotRegistered)
+	this.CheckWritable(this.VAR_SIZE * 2)
+	this.WriteCommand(ObjectIsNotRegistered)
 	this.OutPacket.WriteFloat32(id)
 }
 
 func (this *UnityCommand) ObjectAlreadyRegistered(id float32) {
-	this.checkWritable(this.VAR_SIZE * 2)
+	this.CheckWritable(this.VAR_SIZE * 2)
 	fmt.Printf("*	OBJECT #%v REGISTERED TO DIFFERENT OWNER\n\n", id)
-	this.OutPacket.WriteUInt32(ObjectAlreadyRegistered)
+	this.WriteCommand(ObjectAlreadyRegistered)
 	this.OutPacket.WriteFloat32(id)
 }
 
 func (this *UnityCommand) ObjectRegisteredSuccess(id float32) {
-	this.checkWritable(this.VAR_SIZE * 2)
+	this.CheckWritable(this.VAR_SIZE * 2)
 	fmt.Printf("X	Added new obj %v\n\n", id)
-	this.OutPacket.WriteUInt32(ObjectRegisterOK)
+	this.WriteCommand(ObjectRegisterOK)
 	this.OutPacket.WriteFloat32(id)
+}
+
+func (this *UnityCommand) WriteCommand(cmdType uint32) {
+	fmt.Printf(">%v\n", cmdType)
+	this.OutPacket.WriteUInt32(cmdType)
+}
+
+func (this *UnityCommand) SendBytes(data []byte) {
+	this.CheckWritable(len(data))
+	this.OutPacket.WriteBytes(data)
 }
 
 func (this *UnityCommand) ClearData() {
