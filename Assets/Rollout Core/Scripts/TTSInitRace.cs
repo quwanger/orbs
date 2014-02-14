@@ -29,15 +29,19 @@ public class TTSInitRace : MonoBehaviour
 	// Use this for initialization
 	void Start() {
 		for (int i = 0; i < tempNumHumanPlayers; i++) {
-			InitToHuman(InstantiateRacers());
+			InitToHuman(InstantiateRacer());
 		}
 
 		for (int i = 0; i < tempNumAIPlayers; i++) {
-			InitToAI(InstantiateRacers());
+			InitToAI(InstantiateRacer());
 		}
 	}
 
-	public GameObject InstantiateRacers() {
+	public void InitMultiplayerRacer(float id) {
+		InitToMultiplayer(InstantiateRacer(), id);
+	}
+
+	public GameObject InstantiateRacer() {
 		//finds the rig to initialize
 		foreach (GameObject rig in _rigs) {
 			if (rig.GetComponent<TTSRig>().rigName == tempRigChoice) {
@@ -83,12 +87,6 @@ public class TTSInitRace : MonoBehaviour
 		tempRacer.GetComponent<TTSRacer>().CurrentRig = tempRig;
 
 		return tempRacer;
-
-		//do this only for human players
-		if (startingPointIndex < tempNumHumanPlayers) {
-		}
-		else {
-		}
 	}
 
 	private void InitToHuman(GameObject racer) {
@@ -96,7 +94,7 @@ public class TTSInitRace : MonoBehaviour
 		TTSRacer racerControl = racer.GetComponent<TTSRacer>();
 
 		racerControl.IsPlayerControlled = true;
-		racerControl.player = TTSRacer.PlayerType.Player;
+		racerControl.SetPlayerType(TTSRacer.PlayerType.Player);
 
 		//instantiate a camera for the player
 		GameObject tempCamera = (GameObject)Instantiate(cameraGO);
@@ -144,7 +142,13 @@ public class TTSInitRace : MonoBehaviour
 		//this is for AI only
 		//set the player type to AI
 		racer.GetComponent<TTSRacer>().IsPlayerControlled = true;
-		racer.GetComponent<TTSRacer>().player = TTSRacer.PlayerType.AI;
+		racer.GetComponent<TTSRacer>().SetPlayerType(TTSRacer.PlayerType.AI);
+	}
+
+	private void InitToMultiplayer(GameObject racer, float id) {
+		racer.GetComponent<TTSRacer>().IsPlayerControlled = true;
+		racer.GetComponent<TTSRacer>().racerID = id;
+		racer.GetComponent<TTSRacer>().SetPlayerType(TTSRacer.PlayerType.Multiplayer);
 	}
 
 	// Update is called once per frame

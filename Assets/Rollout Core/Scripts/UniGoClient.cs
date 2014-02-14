@@ -14,19 +14,19 @@ public class UniGoClient : MonoBehaviour
 	public bool isConnectionEstablished = false;
 
 	// Sender
-	UniGoPacketWriter UpdateWriter = new UniGoPacketWriter();
-	Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-	IPAddress serverAddr;
-	IPEndPoint endPoint;
+	protected UniGoPacketWriter UpdateWriter = new UniGoPacketWriter();
+	protected Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+	protected IPAddress serverAddr;
+	protected IPEndPoint endPoint;
 
 	// Game Object Updater
-	Dictionary<float, UniGoNetworkHandle> networkObjects = new Dictionary<float, UniGoNetworkHandle>();
+	protected Dictionary<float, UniGoNetworkHandle> networkObjects = new Dictionary<float, UniGoNetworkHandle>();
 
 	// Receiver
-	Thread receiveThread;
-	bool isRunning = true;
-	UdpClient client;
-	UniGoPacketReader reader;
+	protected Thread receiveThread;
+	protected bool isRunning = true;
+	protected UdpClient client;
+	protected UniGoPacketReader reader;
 
 	// Use this for initialization
 	void Start() {
@@ -80,15 +80,14 @@ public class UniGoClient : MonoBehaviour
 		client.Client.Close();
 	}
 
-	private void InitConnection() {
+	protected void InitConnection() {
 		// Send packet with #1
 		UniGoPacketWriter packet = new UniGoPacketWriter();
 		packet.AddData(UniGoCommands.HANDSHAKE_START);
-		packet.AddData(transform.position);
 		SendPacket(packet);
 	}
 
-	private void PacketListener() {
+	protected void PacketListener() {
 		System.Net.IPEndPoint ep = null;
 		while (isRunning) {
 			Debug.Log("Start Listening");
@@ -106,7 +105,7 @@ public class UniGoClient : MonoBehaviour
 		Debug.Log("ended");
 	}
 
-	private void PacketHandler(byte[] data) {
+	protected void PacketHandler(byte[] data) {
 		reader = new UniGoPacketReader(data);
 		bool reading = true;
 		UniGoPacketWriter writer = new UniGoPacketWriter();
@@ -158,7 +157,7 @@ public class UniGoClient : MonoBehaviour
 		UpdateWriter.AddData(obj.id);
 	}
 
-	private void SendPacket(UniGoPacketWriter writer) {
+	protected void SendPacket(UniGoPacketWriter writer) {
 		if (!writer.hasData)
 			return;
 
@@ -168,7 +167,7 @@ public class UniGoClient : MonoBehaviour
 		sock.SendTo(writer.Data, endPoint);
 	}
 
-	private void PrintBytes(byte[] bytes) {
+	protected void PrintBytes(byte[] bytes) {
 		string str = "";
 		foreach (byte b in bytes) {
 			str += b.ToString() + " ";
@@ -207,6 +206,10 @@ public class UniGoNetworkHandle
 	public Vector3 networkRotation;
 	public Vector3 networkSpeed;
 
+	public UniGoNetworkHandle() {
+		// Only be used for children
+	}
+
 	/// <summary>
 	/// Network object that will be updated via the network and also update the network objects
 	/// </summary>
@@ -235,6 +238,12 @@ public class UniGoNetworkHandle
 		client.RegisterObject(this);
 	}
 
+	/// <summary>
+	/// Update the current obj position here
+	/// </summary>
+	/// <param name="Position"></param>
+	/// <param name="Rotation"></param>
+	/// <param name="Speed"></param>
 	public void Update(Vector3 Position, Vector3 Rotation, Vector3 Speed) {
 		if (!owner)
 			return;
@@ -244,6 +253,12 @@ public class UniGoNetworkHandle
 		speed = Speed;
 	}
 
+	/// <summary>
+	/// Only touched by UniGoClient class
+	/// </summary>
+	/// <param name="Position"></param>
+	/// <param name="Rotation"></param>
+	/// <param name="Speed"></param>
 	public void NetworkUpdate(Vector3 Position, Vector3 Rotation, Vector3 Speed) {
 
 		networkPos = Position;
@@ -261,7 +276,7 @@ public class UniGoNetworkHandle
 	}
 }
 
-class UniGoPacketReader
+public class UniGoPacketReader
 {
 	public byte[] Data;
 	public int ReadIndex = 0;
@@ -272,7 +287,7 @@ class UniGoPacketReader
 
 	public uint ReadUInt32() {
 		ReadIndex += 4;
-		return (uint)BitConverter.ToUInt32(Data, ReadIndex - 4);
+		return BitConverter.ToUInt32(Data, ReadIndex - 4);
 	}
 
 	public float ReadFloat() {
