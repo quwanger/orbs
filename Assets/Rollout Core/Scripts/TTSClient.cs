@@ -169,6 +169,9 @@ public class TTSClient : UniGoClient
 
 		networkRacers.Add(racer.id, racer);
 
+		if (!racer.owner)
+			return;
+
 		// Send data in the next packet to register
 		UpdateWriter.AddData(TTSOrbsCommands.RACER_REGISTER);
 		UpdateWriter.AddData(racer.id);
