@@ -17,6 +17,8 @@ public class TTSLevel : MonoBehaviour {
 	public GameObject countdown;
 	public bool DebugMode = true;
 	public bool PerksEnabled = true;
+
+	public TTSClient client;
 	
 	// private TTSScoreboard scoreboard;
 	
@@ -27,6 +29,7 @@ public class TTSLevel : MonoBehaviour {
 	#region MonoBehaviour Methods
 	void Awake() {
 		instance = this;
+		client = GetComponent<TTSClient>();
 	}
 	
 	void Start() {	

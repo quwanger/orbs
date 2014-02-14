@@ -14,6 +14,7 @@ public class TTSFollowCamera : TTSBehaviour
 
 	// The target we are following
 	public Transform target;
+	public TTSRacer racer;
 
 	// The distance in the x-z plane to the target
 	public float distance = 5.0f; 
@@ -59,7 +60,7 @@ public class TTSFollowCamera : TTSBehaviour
 			this.transform.position = target.transform.position + transform.forward * 2;
 			this.transform.rotation = target.transform.rotation;
 
-			if (target.parent.GetComponent<TTSRacer> ().rigidbody.velocity.sqrMagnitude > 3000) {
+			if (racer.rigidbody.velocity.sqrMagnitude > 3000) {
 				transform.position += Random.insideUnitSphere * 0.06f;
 			}
 		}
@@ -67,14 +68,14 @@ public class TTSFollowCamera : TTSBehaviour
 
 	void ThirdPerson ()
 	{
-		racerTopSpeed = target.parent.GetComponent<TTSRacer>().TopSpeed;
+		racerTopSpeed = racer.TopSpeed;
 		
 		// Early out if we don't have a target
 		if (!target)
 			return;
 
 		// Speed squared magnitude
-		float speed = target.parent.GetComponent<TTSRacer> ().rigidbody.velocity.magnitude;
+		float speed = racer.rigidbody.velocity.magnitude;
 
 		// Calculate the current rotation angles
 		float currentRotationAngle = transform.eulerAngles.y;
@@ -139,7 +140,7 @@ public class TTSFollowCamera : TTSBehaviour
 			transform.LookAt (target);
 		}
 
-		tiltAngle = Mathf.Lerp (tiltAngle, Mathf.Clamp (target.parent.GetComponent<TTSRacer> ().GetTiltAngle (), -Mathf.PI / 2, Mathf.PI / 2), 0.05f);
+		tiltAngle = Mathf.Lerp(tiltAngle, Mathf.Clamp(racer.GetTiltAngle(), -Mathf.PI / 2, Mathf.PI / 2), 0.05f);
 
 		transform.RotateAround (transform.forward, tiltAngle);
 
