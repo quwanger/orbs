@@ -165,8 +165,9 @@ public class UniGoClient : MonoBehaviour
 		writer.AddData(UniGoCommands.END_PACKET);
 
 		if (DebugMode)
-			Debug.Log("Sending " + writer.Data.Length + " bytes to " + endPoint.ToString());
-		sock.SendTo(writer.Data, endPoint);
+			Debug.Log("Sending " + writer.Length + " bytes to " + endPoint.ToString());
+
+		sock.SendTo(writer.GetMinimizedData(), endPoint);
 	}
 
 	protected void PrintBytes(byte[] bytes) {
@@ -311,6 +312,9 @@ public class UniGoPacketWriter
 {
 	public byte[] Data = new byte[1024];
 	public int WriteIndex = 0;
+	public int Length {
+		get { return WriteIndex; }
+	}
 
 	public bool hasData {
 		get {
@@ -352,6 +356,12 @@ public class UniGoPacketWriter
 	public void ClearData() {
 		Data = new byte[1024];
 		WriteIndex = 0;
+	}
+
+	public byte[] GetMinimizedData() {
+		byte[] arr = new byte[WriteIndex];
+		Buffer.BlockCopy(Data, 0, arr, 0, WriteIndex);
+		return arr;
 	}
 
 	public string GetBytes() {
