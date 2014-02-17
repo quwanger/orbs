@@ -8,6 +8,7 @@ using System.Collections.Generic;
 
 public class UniGoClient : MonoBehaviour
 {
+	public bool DebugMode = false;
 	public string SERVER_IP = "127.0.0.1";//"192.168.1.21";
 
 	// Status
@@ -163,7 +164,8 @@ public class UniGoClient : MonoBehaviour
 
 		writer.AddData(UniGoCommands.END_PACKET);
 
-		Debug.Log("Sending " + writer.Data.Length + " bytes to " + endPoint.ToString());
+		if (DebugMode)
+			Debug.Log("Sending " + writer.Data.Length + " bytes to " + endPoint.ToString());
 		sock.SendTo(writer.Data, endPoint);
 	}
 
@@ -172,7 +174,8 @@ public class UniGoClient : MonoBehaviour
 		foreach (byte b in bytes) {
 			str += b.ToString() + " ";
 		}
-		Debug.Log(str);
+		if (DebugMode)
+			Debug.Log(str);
 	}
 }
 

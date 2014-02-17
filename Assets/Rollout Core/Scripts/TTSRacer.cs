@@ -182,8 +182,10 @@ public class TTSRacer : TTSBehaviour
 			SlowToStop();
 		}
 
-		CalculateBodyOrientation();
-		netHandle.Update(position, transform.rotation.eulerAngles, rigidbody.velocity, vInput, hInput, 0, 0);
+		if(player != PlayerType.Multiplayer)
+			CalculateBodyOrientation();
+
+		netHandle.Update(position, displayMeshComponent.rotation.eulerAngles, rigidbody.velocity, vInput, hInput, 0, 0);
 
 		resultAccel = Mathf.Lerp(resultAccel, rigidbody.velocity.magnitude - PreviousVelocity.magnitude, 0.01f);
 		PreviousVelocity = rigidbody.velocity;
@@ -241,14 +243,16 @@ public class TTSRacer : TTSBehaviour
 
 	public void MultiplayerInput() {
 		if (netHandle.updated && !netHandle.owner) {
+			client.DebugFPSOutput();
 			netHandle.StartRead();
 			transform.position = netHandle.networkPos;
-			transform.rotation = Quaternion.Euler(netHandle.networkRotation);
+			displayMeshComponent.rotation = Quaternion.Euler(netHandle.networkRotation);
 			rigidbody.velocity = netHandle.networkSpeed;
-			vInput = netHandle.networkVInput;
-			vInput = netHandle.networkHInput;
 			netHandle.EndRead();
 		}
+
+		vInput = Mathf.Lerp(vInput, netHandle.networkVInput, 0.05f);
+		hInput = Mathf.Lerp(hInput, netHandle.networkHInput, 0.05f);
 	}
 
 	public void DamageRacer(float dmgLevel){

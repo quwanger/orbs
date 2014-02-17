@@ -9,6 +9,7 @@ using System.Collections.Generic;
 public class TTSClient : UniGoClient
 {
 	public Dictionary<float, TTSRacerNetworkHandle> networkRacers = new Dictionary<float, TTSRacerNetworkHandle>();
+	private System.DateTime debugTimeStamp;
 
 	// Use this for initialization
 	void Start() {
@@ -89,7 +90,8 @@ public class TTSClient : UniGoClient
 			handler.Start();
 		}
 
-		Debug.Log("ended");
+		if (DebugMode)
+			Debug.Log("ended");
 	}
 
 	private List<float> spawnRacers = new List<float>();
@@ -105,7 +107,8 @@ public class TTSClient : UniGoClient
 			if (reader.IsEOF() == false)
 				command = (int)reader.ReadUInt32();
 
-			Debug.Log("Received Command: " + command);
+			if (DebugMode)
+				Debug.Log("Received Command: " + command);
 
 			float objID;
 
@@ -127,7 +130,8 @@ public class TTSClient : UniGoClient
 				case UniGoCommands.OBJECT_ALREADY_REGISTERED:
 					objID = reader.ReadFloat();
 					networkObjects[objID].owner = false;
-					Debug.Log("Server object already registered: " + objID);
+					if (DebugMode)
+						Debug.Log("Server object already registered: " + objID);
 					break;
 
 				case TTSOrbsCommands.RACER_UPDATE:
@@ -151,15 +155,18 @@ public class TTSClient : UniGoClient
 
 					networkRacers[objID].id = UnityEngine.Random.value * 100;
 					RegisterRacer(networkRacers[objID]);
-					Debug.Log("Server object registered again: " + objID);
+					if (DebugMode)
+						Debug.Log("Server object registered again: " + objID);
 					break;
 
 				default:
-					Debug.Log("Invalid Command received: " + command);
+					if (DebugMode)
+						Debug.Log("Invalid Command received: " + command);
 					break;
 			}
 		}
 		SendPacket(writer);
+		writer.ClearData();
 	}
 	public void RegisterRacer(TTSRacerNetworkHandle racer) {
 
@@ -174,7 +181,8 @@ public class TTSClient : UniGoClient
 		if (!racer.owner)
 			return;
 
-		Debug.Log("X	REGISTERING RACER " + racer.id);
+		if (DebugMode)
+			Debug.Log("X	REGISTERING RACER " + racer.id);
 		// Send data in the next packet to register
 		UpdateWriter.AddData(TTSOrbsCommands.RACER_REGISTER);
 		UpdateWriter.AddData(racer.id);
@@ -182,6 +190,17 @@ public class TTSClient : UniGoClient
 
 	public void DeregisterRacer(TTSRacerNetworkHandle racer) {
 		networkRacers.Remove(racer.id);
+	}
+
+	public void DebugFPSOutput() {
+		if (debugTimeStamp == null)
+			return;
+
+		System.DateTime now = System.DateTime.Now;
+		System.TimeSpan span = now - debugTimeStamp;
+
+		Debug.Log(1000 / span.TotalMilliseconds + " FPS");
+		debugTimeStamp = now;
 	}
 }
 
