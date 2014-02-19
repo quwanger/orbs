@@ -43,12 +43,18 @@ public class TTSMenu : TTSMenuEnums {
 	public int selectedPerkBIndex = 1;
 	public int selectedLevelIndex = 11;
 	public int changer = 3;
-	public bool isTweening = false;
-	public GameObject[] rigs;
+	private bool isTweening = false;
+	private GameObject[] rigs;
 	
 	//text variables
 	public GUIText RigModelName;
 	private string RigModelText;
+	
+	public Texture2D image;
+	
+	
+	public bool accelerationCirclesAreCreated = false;
+	
 	
 	void Awake(){
 
@@ -67,6 +73,7 @@ public class TTSMenu : TTSMenuEnums {
 		GameObject[] perks = GameObject.FindGameObjectsWithTag("PerkMenuItem");
 		GameObject[] perksB = GameObject.FindGameObjectsWithTag("PerkMenuItemB");
 		GameObject[] levels = GameObject.FindGameObjectsWithTag("LevelMenuItem");
+		
 		rigs = GameObject.FindGameObjectsWithTag("RigMenuItem");
 		
 		foreach(GameObject r in rigs)
@@ -292,7 +299,23 @@ public class TTSMenu : TTSMenuEnums {
 				SelectedRig = r.GetComponent<TTSMenuItemRig>().rig;
 				r.SetActive(true);
 			}
+			
+			for(int i = 1; i <= r.GetComponent<TTSMenuItemRig>().acceleration && accelerationCirclesAreCreated == false; i++){
+
+				GameObject obj = new GameObject(i.ToString());
+				obj.AddComponent("GUITexture");
+				obj.transform.parent = GameObject.Find("Acceleration").transform;
+				obj.transform.localPosition = new Vector3(0,0,5);
+				obj.transform.localScale = Vector3.zero;
+				obj.guiTexture.pixelInset = new Rect((-430+(i*15)), -152, 10, 10);
+
+				obj.guiTexture.texture = image;
+				
+				if(r.GetComponent<TTSMenuItemRig>().acceleration == i)
+					accelerationCirclesAreCreated = true;
+			}
 		}
+		
 	}
 	
 	void OnGUI(){
