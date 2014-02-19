@@ -65,8 +65,8 @@ public class TTSRacer : TTSBehaviour
 	private float vInput = 0.0f, hInput = 0.0f;
 	private Vector3 lastForward;
 
-	public Vector3 position{
-		get{
+	public Vector3 position {
+		get {
 			return transform.position;
 		}
 	}
@@ -76,10 +76,10 @@ public class TTSRacer : TTSBehaviour
 	public float TopSpeed = 250.0f;
 	public float Acceleration = 8000.0f;
 	public float Handling = 11000.0f;
-	
+
 	public enum PlayerType { Player, AI, Multiplayer };
 	public PlayerType player = PlayerType.Player;
-	
+
 	public float Defense;
 	public float Offense;
 
@@ -87,7 +87,7 @@ public class TTSRacer : TTSBehaviour
 	public float distanceToFinish;
 	public int place;
 	#endregion
-	
+
 	public bool hasShield;
 	private float smooth;
 	private float stopSpeed = 0.05f;
@@ -153,10 +153,10 @@ public class TTSRacer : TTSBehaviour
 		TopSpeed = TopSpeed + (speedIncrease * CurrentRig.GetComponent<TTSRig>().rigSpeed);
 		Acceleration = Acceleration + (accelerationIncrease * CurrentRig.GetComponent<TTSRig>().rigAcceleration);
 		Handling = Handling + (handlingIncrease * CurrentRig.GetComponent<TTSRig>().rigHandling);
-		
+
 		Offense = CurrentRig.GetComponent<TTSRig>().rigOffense;
 		Defense = CurrentRig.GetComponent<TTSRig>().rigDefense;
-		
+
 	}
 
 	public void SetPlayerType(PlayerType type) {
@@ -172,17 +172,18 @@ public class TTSRacer : TTSBehaviour
 			netHandle = new TTSRacerNetworkHandle(level.client, racerID);
 		}
 	}
-	
-	void FixedUpdate () {
-		if(!level.raceHasFinished){
-			if(IsPlayerControlled){ 
+
+	void FixedUpdate() {
+		if (!level.raceHasFinished) {
+			if (IsPlayerControlled) {
 				CalculateInputForces();
 			}
-		}else{
+		}
+		else {
 			SlowToStop();
 		}
 
-		if(player != PlayerType.Multiplayer)
+		if (player != PlayerType.Multiplayer)
 			CalculateBodyOrientation();
 
 		netHandle.Update(position, displayMeshComponent.rotation.eulerAngles, rigidbody.velocity, vInput, hInput, 0, 0);
@@ -242,29 +243,30 @@ public class TTSRacer : TTSBehaviour
 	}
 
 	public void MultiplayerInput() {
-		if (netHandle.updated && !netHandle.owner) {
+		if (netHandle.updated) {
 			client.DebugFPSOutput();
-			netHandle.StartRead();
-			transform.position = netHandle.networkPos;
-			displayMeshComponent.rotation = Quaternion.Euler(netHandle.networkRotation);
-			rigidbody.velocity = netHandle.networkSpeed;
-			netHandle.EndRead();
 		}
 
-		vInput = Mathf.Lerp(vInput, netHandle.networkVInput, 0.05f);
-		hInput = Mathf.Lerp(hInput, netHandle.networkHInput, 0.05f);
+		transform.position = Vector3.Lerp(transform.position, netHandle.networkPos, netHandle.networkInterpolation);
+		displayMeshComponent.rotation = Quaternion.Lerp(displayMeshComponent.rotation, Quaternion.Euler(netHandle.networkRotation), netHandle.networkInterpolation * 10);
+		rigidbody.velocity = netHandle.networkSpeed;
+
+		vInput = Mathf.Lerp(vInput, netHandle.networkVInput, netHandle.networkInterpolation * 5);
+		hInput = Mathf.Lerp(hInput, netHandle.networkHInput, netHandle.networkInterpolation * 5);
 	}
 
-	public void DamageRacer(float dmgLevel){
+	public void DamageRacer(float dmgLevel) {
 		//dmgLevel should be a percentage (between 0.0f and 1.0f)
-		if(!hasShield){
-			if(Defense > dmgLevel){
-				if((Defense - dmgLevel) < 1.0f){
+		if (!hasShield) {
+			if (Defense > dmgLevel) {
+				if ((Defense - dmgLevel) < 1.0f) {
 					dmgLevel = Defense - dmgLevel;
-				}else{
+				}
+				else {
 					dmgLevel = 1.0f;
 				}
-			}else{
+			}
+			else {
 				dmgLevel = 0.0f;
 			}
 			Vector3 damageVector = new Vector3(rigidbody.velocity.x * dmgLevel, rigidbody.velocity.y * dmgLevel, rigidbody.velocity.z * dmgLevel);
@@ -340,9 +342,9 @@ public class TTSRacer : TTSBehaviour
 
 	public void WrongWay() {
 		//if (goingWrongWay == true) 
-			//Debug.Log("WRONG WAY");
+		//Debug.Log("WRONG WAY");
 		//else 
-			//Debug.Log("RIGHT WAY");
+		//Debug.Log("RIGHT WAY");
 	}
 
 	public void OnWaypoint(TTSWaypoint hit) {
@@ -361,14 +363,14 @@ public class TTSRacer : TTSBehaviour
 			}
 		}
 
-		else if(player == PlayerType.AI && !waypointManager.EndPoints.Contains(currentWaypoint)){
-			if(AIUtil == null)
-				AIUtil = gameObject.AddComponent<TTSAIController>();	
+		else if (player == PlayerType.AI && !waypointManager.EndPoints.Contains(currentWaypoint)) {
+			if (AIUtil == null)
+				AIUtil = gameObject.AddComponent<TTSAIController>();
 		}
-		
+
 		//this must be done for the player as well so that we can get the distance of all racers from the finish line
 		nextWaypoint = AIUtil.getClosestWaypoint(currentWaypoint.nextWaypoints, position);
-		
+
 	}
 
 	public void SlowToStop() {
@@ -399,17 +401,20 @@ public class TTSRacer : TTSBehaviour
 
 			Gizmos.color = Color.green;
 			Gizmos.DrawCube(destination, Vector3.one);
+
+			Gizmos.color = Color.white;
+			Gizmos.DrawCube(netHandle.networkPos, Vector3.one);
 		}
 
 		//if (AIControl != null)
 		//	AIControl.drawGizmos();
 	}
 
-	public void AIInput(){
+	public void AIInput() {
 
 		float debugVInput = 0.0f, debugHInput = 0.0f;
 
-		if(AIUtil.debugMode){
+		if (AIUtil.debugMode) {
 			debugVInput = Input.GetAxis("Vertical");
 			debugHInput = Input.GetAxis("Horizontal");
 		}
@@ -420,7 +425,7 @@ public class TTSRacer : TTSBehaviour
 		}
 
 		// If there's no next waypoint
-		if (nextWaypoint == null){
+		if (nextWaypoint == null) {
 			if (!waypointManager.EndPoints.Contains(currentWaypoint))
 				nextWaypoint = waypointManager.SpawnZone;
 			else {

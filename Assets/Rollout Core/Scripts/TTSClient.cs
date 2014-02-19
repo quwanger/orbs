@@ -206,6 +206,7 @@ public class TTSClient : UniGoClient
 
 public class TTSRacerNetworkHandle : UniGoNetworkHandle
 {
+	public float networkInterpolation = 0.05f;
 	public TTSRacerNetworkHandle(TTSClient Client, float ID) {
 		id = ID;
 		owner = true;
