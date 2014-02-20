@@ -13,7 +13,7 @@ GameObject:
   - 95: {fileID: 9500000}
   - 64: {fileID: 6400000}
   m_Layer: 0
-  m_Name: rock_03
+  m_Name: rock_01_cliff
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25,9 +25,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_LocalRotation: {x: .677671969, y: -.201893538, z: -.201893181, w: -.677671731}
-  m_LocalPosition: {x: 900.001465, y: 280.284546, z: 1026.2373}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -.397640258, y: .369969606, z: -.517325938, w: .661346138}
+  m_LocalPosition: {x: 902.912781, y: 292.102448, z: 1042.80273}
+  m_LocalScale: {x: 3.10775733, y: 3.10775709, z: 3.10775733}
   m_Children: []
   m_Father: {fileID: 0}
 --- !u!23 &2300000
@@ -42,7 +42,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: e97c436fc1f4e634997994c1ca46c03d, type: 2}
+  - {fileID: 2100000, guid: 18db3d136fcf2d9438b293303177ee4f, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -54,7 +54,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_Mesh: {fileID: 4300000, guid: 081301a2b9fd8bc4cb219e0360d4340b, type: 3}
+  m_Mesh: {fileID: 4300000, guid: f1073120e5caf9f47ba44b15521f5c47, type: 3}
 --- !u!64 &6400000
 MeshCollider:
   m_ObjectHideFlags: 1
@@ -67,7 +67,7 @@ MeshCollider:
   serializedVersion: 2
   m_SmoothSphereCollisions: 0
   m_Convex: 0
-  m_Mesh: {fileID: 4300000, guid: 081301a2b9fd8bc4cb219e0360d4340b, type: 3}
+  m_Mesh: {fileID: 4300000, guid: f1073120e5caf9f47ba44b15521f5c47, type: 3}
 --- !u!95 &9500000
 Animator:
   m_ObjectHideFlags: 1
@@ -75,7 +75,7 @@ Animator:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 081301a2b9fd8bc4cb219e0360d4340b, type: 3}
+  m_Avatar: {fileID: 9000000, guid: f1073120e5caf9f47ba44b15521f5c47, type: 3}
   m_Controller: {fileID: 0}
   m_CullingMode: 1
   m_ApplyRootMotion: 1
