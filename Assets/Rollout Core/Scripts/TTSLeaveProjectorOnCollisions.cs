@@ -3,10 +3,10 @@ using System.Collections;
 
 public class TTSLeaveProjectorOnCollisions : MonoBehaviour {
 	
-	public Projector projector;
-	public bool randomize = true;
-	
+	//public Projector projector;
+	//public bool randomize = true;
+
 	void OnCollisionEnter(Collision collision) {
-		Projector clone = (Projector) Instantiate(projector);
+		//Projector clone = (Projector)Instantiate(projector);
 	}
 }

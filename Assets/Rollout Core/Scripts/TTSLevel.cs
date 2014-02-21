@@ -17,8 +17,10 @@ public class TTSLevel : MonoBehaviour {
 	public GameObject countdown;
 	public bool DebugMode = true;
 	public bool PerksEnabled = true;
+
+	public TTSClient client;
 	
-	private TTSScoreboard scoreboard;
+	// private TTSScoreboard scoreboard;
 	
 	public Font[] fonts;
 	
@@ -27,6 +29,7 @@ public class TTSLevel : MonoBehaviour {
 	#region MonoBehaviour Methods
 	void Awake() {
 		instance = this;
+		client = GetComponent<TTSClient>();
 	}
 	
 	void Start() {	
@@ -171,7 +174,7 @@ public class TTSLevel : MonoBehaviour {
 		raceHasFinished = true;
 		
 		GetComponent<TTSTimeManager>().StopTimer();
-		scoreboard = this.gameObject.AddComponent<TTSScoreboard>();
+		// scoreboard = this.gameObject.AddComponent<TTSScoreboard>();
 	}
 	
 	#endregion

@@ -8,13 +8,13 @@ public class TTSTimeBonusPrefab : TTSPerishingBehaviour {
 	
 	public ParticleSystem system;
 	
-	public AudioClip[] audio;
+	public AudioClip[] Audio;
 	
 	void Awake () {
 		this.duration = 2.0f;
 		this.useKillFunctionWhenComplete = true;
 		sfx.volume = 0.5f;
-		sfx.PlayOneShot(audio[Random.Range(0,audio.Length)]);
+		sfx.PlayOneShot(Audio[Random.Range(0,Audio.Length)]);
 		hud.FlashTimeForBonus();
 	}
 	
