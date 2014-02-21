@@ -53,6 +53,7 @@ MonoBehaviour:
   _racers: []
   _maincameras: []
   _otherCameras: []
+  currentGameType: 1
   raceHasStarted: 0
   raceHasFinished: 0
   countdown: {fileID: 0}
@@ -83,15 +84,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 594730c6d405c439c9a166e2348e236c, type: 3}
   m_Name: 
   _rigs:
-  - {fileID: 100000, guid: 4222a4c25048c4676885fb09d185cfcc, type: 2}
-  - {fileID: 100000, guid: c1ad3e441e22c4da8a77df751a244c7f, type: 2}
+  - {fileID: 100000, guid: cac4f45fdecaa41c6b3049591ead6a42, type: 2}
+  - {fileID: 100000, guid: 3d695fc3acab5411a989ff39de826674, type: 2}
+  - {fileID: 100000, guid: f7c902cd5131d4d60b9f82066c72d03e, type: 2}
+  - {fileID: 100000, guid: 86fcc84505238442bb7ecd6d5b3594da, type: 2}
   - {fileID: 100000, guid: c20b079c5fcdf46f2aa9e3af0af3c542, type: 2}
   _characters:
   - {fileID: 100000, guid: 189d21dfc47334c93b9485bb32b654c4, type: 2}
-  _startingpoints: []
+  _startingpoints:
+  - {fileID: 0}
   racerGO: {fileID: 100000, guid: 32f9bdadaccd84b44ae9856e8195bf9b, type: 2}
-  cameraGO: {fileID: 100000, guid: d8186dff409a24800b99162373b1525d, type: 2}
-  hudGO: {fileID: 100008, guid: c272487b8b30f413a89680f8556ed0fb, type: 2}
+  cameraGO: {fileID: 100002, guid: 6ae8ef38693b84fc1bf2f43164d7cf3b, type: 2}
+  hudGO: {fileID: 100014, guid: bf46875515a25a247a2a558437133fc4, type: 2}
+  tempNumHumanPlayers: 1
   numberOfRacers: 1
 --- !u!1001 &100100000
 Prefab:
