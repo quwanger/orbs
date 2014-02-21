@@ -13,10 +13,13 @@ public class TTSSoundtrackManager : MonoBehaviour {
 	
 	
 	void Start () {
-		if(LOAD_RANDOM_TRACK) {
-			songToPlay = (AudioClip) tracks[Random.Range (0, tracks.Length)];
+		if(LOAD_RANDOM_TRACK || songToPlay == null) {
+			//Object[] tracks = UnityEngine.Resources.LoadAll("Soundtrack");
+			songToPlay = (AudioClip) tracks[Random.Range(0, tracks.Length)];
 		}
+		
 		this.GetComponent<AudioSource>().clip = songToPlay;
+
 	}
 	
 	
