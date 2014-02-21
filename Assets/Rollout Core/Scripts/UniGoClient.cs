@@ -210,6 +210,8 @@ public class UniGoNetworkHandle
 	public Vector3 networkRotation;
 	public Vector3 networkSpeed;
 
+	public float networkInterpolation = 0.05f;
+
 	public UniGoNetworkHandle() {
 		// Only be used for children
 	}
@@ -305,6 +307,15 @@ public class UniGoPacketReader
 
 	public bool IsEOF() {
 		return (Data.Length <= ReadIndex);
+	}
+
+	public string GetBytes() {
+		string str = "";
+
+		for (int i = 0; i < Data.Length; i++) {
+			str += Data[i] + ", ";
+		}
+		return str;
 	}
 }
 

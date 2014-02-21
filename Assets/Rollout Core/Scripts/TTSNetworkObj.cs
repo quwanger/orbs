@@ -3,19 +3,19 @@ using System.Collections;
 
 public class TTSNetworkObj : TTSBehaviour
 {
-	UniGoNetworkHandle networker;
+	UniGoNetworkHandle netHandle;
 	public TTSClient client;
 
 	// Use this for initialization
 	void Start() {
 		client = level.client;
-		networker = new UniGoNetworkHandle(client, gameObject.transform.position);
+		netHandle = new UniGoNetworkHandle(client, gameObject.transform.position);
 	}
 	
 	// Update is called once per frame
 	void Update() {
-		if (networker.owner) {
-			networker.Update(transform.position, transform.rotation.eulerAngles, rigidbody.velocity);
+		if (netHandle.owner) {
+			netHandle.Update(transform.position, transform.rotation.eulerAngles, rigidbody.velocity);
 		}
 		else {
 			rigidbody.useGravity = false;
@@ -28,12 +28,12 @@ public class TTSNetworkObj : TTSBehaviour
 	}
 
 	public void ReceiveNetworkPosition() {
-		if (networker.updated && !networker.owner) {
-			networker.StartRead();
-			transform.position = networker.networkPos;
-			transform.rotation = Quaternion.Euler(networker.networkRotation);
-			rigidbody.velocity = networker.networkSpeed;
-			networker.EndRead();
+		if (netHandle.updated && !netHandle.owner) {
+			netHandle.StartRead();
+			transform.position = Vector3.Lerp(transform.position, netHandle.networkPos, netHandle.networkInterpolation);
+			transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(netHandle.networkRotation), netHandle.networkInterpolation * 10);
+			rigidbody.velocity = netHandle.networkSpeed;
+			netHandle.EndRead();
 		}
 	}
 }

@@ -72,6 +72,10 @@ public class TTSRacer : TTSBehaviour
 	}
 	#endregion
 
+	public Vector3 displayForward {
+		get { return displayMeshComponent.forward; }
+	}
+
 	#region gameplay vars
 	public float TopSpeed = 250.0f;
 	public float Acceleration = 8000.0f;
@@ -87,6 +91,8 @@ public class TTSRacer : TTSBehaviour
 	public float distanceToFinish;
 	public int place;
 	#endregion
+
+	private TTSPowerup powerup;
 
 	public bool hasShield;
 	private float smooth;
@@ -121,6 +127,8 @@ public class TTSRacer : TTSBehaviour
 		}
 
 		AIUtil = gameObject.AddComponent<TTSAIController>();
+
+		powerup = GetComponent<TTSPowerup>();
 
 		// Multiplayer
 		client = level.client;
@@ -164,12 +172,15 @@ public class TTSRacer : TTSBehaviour
 
 		if (player == PlayerType.AI) {
 			netHandle = new TTSRacerNetworkHandle(level.client, racerID);
+			racerID = netHandle.id;
 		}
 		else if (player == PlayerType.Multiplayer) {
 			netHandle = new TTSRacerNetworkHandle(level.client, racerID, false);
 		}
 		else if (player == PlayerType.Player) {
 			netHandle = new TTSRacerNetworkHandle(level.client, racerID);
+			racerID = netHandle.id;
+			Debug.Log("PLAYER ID: " + racerID);
 		}
 	}
 
@@ -253,6 +264,19 @@ public class TTSRacer : TTSBehaviour
 
 		vInput = Mathf.Lerp(vInput, netHandle.networkVInput, netHandle.networkInterpolation * 5);
 		hInput = Mathf.Lerp(hInput, netHandle.networkHInput, netHandle.networkInterpolation * 5);
+
+		bool read = false;
+		for (int i = 0; i < netHandle.networkPowerupFire.Count; i++) {
+			read = true;
+			switch (netHandle.networkPowerupFire[i]) {
+				case TTSPowerupNetworkHandle.PowerupType_EntropyCannon:
+					powerup.FireEntropyCannonAsClient(netHandle.networkPowerupFireID[i]);
+					break;
+			}
+		}
+
+		if(read)
+			netHandle.PowerupClear();
 	}
 
 	public void DamageRacer(float dmgLevel) {
@@ -444,5 +468,66 @@ public class TTSRacer : TTSBehaviour
 		}
 
 		Debug.DrawLine(position, destination);
+	}
+}
+
+public class TTSRacerNetworkHandle : UniGoNetworkHandle
+{
+	public TTSRacerNetworkHandle(TTSClient Client, float ID) {
+		id = ID;
+		owner = true;
+		Client.RegisterRacer(this);
+	}
+
+	public TTSRacerNetworkHandle(TTSClient Client, float ID, bool Owner) {
+		id = ID;
+		owner = Owner;
+		Client.RegisterRacer(this);
+	}
+
+	public float vInput, hInput;
+	public int powerUpType, powerUpTier;
+
+	public float networkVInput, networkHInput;
+	public int networkPowerUpType, networkPowerUpTier;
+
+	public List<int> networkPowerupFire = new List<int>();
+	public List<float> networkPowerupFireID = new List<float>();
+
+	public void Update(Vector3 Position, Vector3 Rotation, Vector3 Speed, float VInput, float HInput, int PowerUpType, int PowerUpTier) {
+		if (!owner)
+			return;
+
+		pos = Position;
+		rotation = Rotation;
+		speed = Speed;
+		vInput = VInput;
+		hInput = HInput;
+		powerUpType = PowerUpType;
+		powerUpTier = PowerUpTier;
+	}
+
+	// Only to be accessed by TTSClient
+	public void NetworkUpdate(Vector3 Position, Vector3 Rotation, Vector3 Speed, float VInput, float HInput, int PowerUpType, int PowerUpTier) {
+
+		networkPos = Position;
+		networkRotation = Rotation;
+		networkSpeed = Speed;
+		networkVInput = VInput;
+		networkHInput = HInput;
+		networkPowerUpType = PowerUpType;
+		networkPowerUpTier = PowerUpTier;
+
+		updated = true;
+	}
+
+	public void NetworkPowerup(float id, int type) {
+		networkPowerupFireID.Add(id);
+		networkPowerupFire.Add(type);
+	}
+
+	public void PowerupClear() {
+		networkPowerupFire.Clear();
+		networkPowerupFireID.Clear();
 	}
 }

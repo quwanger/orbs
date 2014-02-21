@@ -1,10 +1,11 @@
 using UnityEngine;
 using System.Collections;
 
-public class TTSEntropyCannonProjectile : MonoBehaviour {
+public class TTSEntropyCannonProjectile : TTSBehaviour {
 	
 #region internal fields
 	private float birth;
+	private bool exploded = false;
 #endregion
 
 #region configuration fields
@@ -19,9 +20,17 @@ public class TTSEntropyCannonProjectile : MonoBehaviour {
 	private float initialDistanceToGround;
 #endregion
 
-	
-#region unity functions
+#region Network
+	public float netRacerID = 0.0f;
+	public bool netOwner = false;
+	public float netID = 0.0f;
+	public TTSPowerupNetworkHandle netHandle;
+#endregion
+
+	#region unity functions
 	void Start () {
+		netHandle = new TTSPowerupNetworkHandle(level.client, TTSPowerupNetworkHandle.PowerupType_EntropyCannon, netOwner, netID, netRacerID);
+
 		birth = Time.time;
 		audio.PlayOneShot(fire);
 		
@@ -35,8 +44,21 @@ public class TTSEntropyCannonProjectile : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if (netHandle != null && !netHandle.owner) {
+			netHandle.StartRead();
+			transform.position = Vector3.Lerp(transform.position, netHandle.networkPos, netHandle.networkInterpolation);
+			transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(netHandle.networkRotation), netHandle.networkInterpolation * 10);
+			rigidbody.velocity = netHandle.networkSpeed;
+
+			if (netHandle.explode)
+				Explode(true);
+
+			netHandle.EndRead();
+			return;
+		}
+
 		if(Time.time - birth > Timeout) {
-			Explode(false);
+			Explode(true);
 		}
 		
 		float distanceToGround = checkDistanceToGround();
@@ -56,7 +78,9 @@ public class TTSEntropyCannonProjectile : MonoBehaviour {
 				//distanceToGround = checkDistanceToGround();
 			//}
 		}
-		
+
+		if(netHandle != null)
+			netHandle.Update(transform.position, transform.rotation.eulerAngles, rigidbody.velocity);
 	}
 
 	private float checkDistanceToGround(){
@@ -80,10 +104,19 @@ public class TTSEntropyCannonProjectile : MonoBehaviour {
 #endregion
 
 	private void Explode(bool actually) {
+		if (exploded)
+			return;
+		else
+			exploded = true;
+
+		if (netHandle != null) {
+			netHandle.Death();
+			netHandle = null;
+		}
+
 		if(actually) {
 			 Instantiate(explosion,this.transform.position,this.transform.rotation);
 		}
-			
 			
 		foreach(Transform child in transform) {
 				Destroy(child.gameObject);

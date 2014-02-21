@@ -9,6 +9,7 @@ using System.Collections.Generic;
 public class TTSClient : UniGoClient
 {
 	public Dictionary<float, TTSRacerNetworkHandle> networkRacers = new Dictionary<float, TTSRacerNetworkHandle>();
+	public Dictionary<float, TTSPowerupNetworkHandle> networkPowerups = new Dictionary<float, TTSPowerupNetworkHandle>();
 	private System.DateTime debugTimeStamp;
 
 	// Use this for initialization
@@ -62,6 +63,17 @@ public class TTSClient : UniGoClient
 			UpdateWriter.AddData(pair.Value.powerUpTier);
 		}
 
+		foreach (KeyValuePair<float, TTSPowerupNetworkHandle> pair in networkPowerups) {
+			if (!pair.Value.owner)
+				continue;
+
+			UpdateWriter.AddData(TTSOrbsCommands.PowerupUpdate);
+			UpdateWriter.AddData(pair.Value.id);
+			UpdateWriter.AddData(pair.Value.pos);
+			UpdateWriter.AddData(pair.Value.rotation);
+			UpdateWriter.AddData(pair.Value.speed);
+		}
+
 		// Send packet if there's something stored.
 		if (UpdateWriter.hasData) {
 			SendPacket(UpdateWriter);
@@ -107,7 +119,8 @@ public class TTSClient : UniGoClient
 			if (reader.IsEOF() == false)
 				command = (int)reader.ReadUInt32();
 
-			if (DebugMode)
+			//if (DebugMode)
+			if(command != 2004 && command != 0 && command != 5004)
 				Debug.Log("Received Command: " + command);
 
 			float objID;
@@ -127,6 +140,7 @@ public class TTSClient : UniGoClient
 					networkObjects[objID].NetworkUpdate(reader.ReadVector3(), reader.ReadVector3(), reader.ReadVector3());
 					break;
 
+				case UniGoCommands.OBJECT_IS_NOT_REGISTERED:
 				case UniGoCommands.OBJECT_ALREADY_REGISTERED:
 					objID = reader.ReadFloat();
 					networkObjects[objID].owner = false;
@@ -159,6 +173,36 @@ public class TTSClient : UniGoClient
 						Debug.Log("Server object registered again: " + objID);
 					break;
 
+				// 5001
+				case TTSOrbsCommands.PowerupRegister:
+					objID = reader.ReadFloat();
+					int powerupType = (int)reader.ReadUInt32();
+					float racerID = reader.ReadFloat();
+
+					SpawnPowerup(objID, powerupType, racerID);
+					break;
+
+				case TTSOrbsCommands.PowerupRegisterOK:
+					objID = reader.ReadFloat();
+					break;
+
+				case TTSOrbsCommands.PowerupUpdate:
+					objID = reader.ReadFloat();
+					networkPowerups[objID].NetworkUpdate(reader.ReadVector3(), reader.ReadVector3(), reader.ReadVector3());
+					break;
+
+				case TTSOrbsCommands.PowerupDeregister:
+					objID = reader.ReadFloat();
+					networkPowerups[objID].explode = true;
+					break;
+
+				case TTSOrbsCommands.PowerupIsNotRegistered:
+				case TTSOrbsCommands.PowerupAlreadyRegistered:
+					objID = reader.ReadFloat();
+					if (networkPowerups[objID] != null)
+						networkPowerups[objID].owner = false;
+					break;
+
 				default:
 					if (DebugMode)
 						Debug.Log("Invalid Command received: " + command);
@@ -168,6 +212,11 @@ public class TTSClient : UniGoClient
 		SendPacket(writer);
 		writer.ClearData();
 	}
+
+	private void SpawnPowerup(float id, int type, float racerID) {
+		networkRacers[racerID].NetworkPowerup(id, type);
+	}
+
 	public void RegisterRacer(TTSRacerNetworkHandle racer) {
 
 		if (racer.owner) {
@@ -189,7 +238,36 @@ public class TTSClient : UniGoClient
 	}
 
 	public void DeregisterRacer(TTSRacerNetworkHandle racer) {
+		UpdateWriter.AddData(TTSOrbsCommands.RACER_DEREGISTER);
+		UpdateWriter.AddData(racer.id);
 		networkRacers.Remove(racer.id);
+	}
+
+	public void RegisterPowerup(TTSPowerupNetworkHandle powerup) {
+		if (powerup.owner) {
+			do {
+				powerup.id = UnityEngine.Random.value * 100;
+			} while (networkPowerups.ContainsKey(powerup.id));
+		}
+
+		networkPowerups.Add(powerup.id, powerup);
+
+		if (!powerup.owner)
+			return;
+
+		//if (DebugMode)
+		Debug.Log("X	REGISTERING POWERUP " + powerup.id);
+
+		UpdateWriter.AddData(TTSOrbsCommands.PowerupRegister);
+		UpdateWriter.AddData(powerup.id);
+		UpdateWriter.AddData(powerup.powerupType);
+		UpdateWriter.AddData(powerup.racerID);
+	}
+
+	public void DeregisterPowerup(TTSPowerupNetworkHandle powerup) {
+		UpdateWriter.AddData(TTSOrbsCommands.PowerupDeregister);
+		UpdateWriter.AddData(powerup.id);
+		networkPowerups.Remove(powerup.id);
 	}
 
 	public void DebugFPSOutput() {
@@ -204,55 +282,6 @@ public class TTSClient : UniGoClient
 	}
 }
 
-public class TTSRacerNetworkHandle : UniGoNetworkHandle
-{
-	public float networkInterpolation = 0.05f;
-	public TTSRacerNetworkHandle(TTSClient Client, float ID) {
-		id = ID;
-		owner = true;
-		Client.RegisterRacer(this);
-	}
-
-	public TTSRacerNetworkHandle(TTSClient Client, float ID, bool Owner) {
-		id = ID;
-		owner = Owner;
-		Client.RegisterRacer(this);
-	}
-
-	public float vInput, hInput;
-	public int powerUpType, powerUpTier;
-
-	public float networkVInput, networkHInput;
-	public int networkPowerUpType, networkPowerUpTier;
-
-	public void Update(Vector3 Position, Vector3 Rotation, Vector3 Speed, float VInput, float HInput, int PowerUpType, int PowerUpTier) {
-		if (!owner)
-			return;
-
-		pos = Position;
-		rotation = Rotation;
-		speed = Speed;
-		vInput = VInput;
-		hInput = HInput;
-		powerUpType = PowerUpType;
-		powerUpTier = PowerUpTier;
-	}
-
-	// Only to be accessed by TTSClient
-	public void NetworkUpdate(Vector3 Position, Vector3 Rotation, Vector3 Speed, float VInput, float HInput, int PowerUpType, int PowerUpTier) {
-
-		networkPos = Position;
-		networkRotation = Rotation;
-		networkSpeed = Speed;
-		networkVInput = VInput;
-		networkHInput = HInput;
-		networkPowerUpType = PowerUpType;
-		networkPowerUpTier = PowerUpTier;
-
-		updated = true;
-	}
-}
-
 public class TTSOrbsCommands : UniGoCommands
 {
 	public const int RACER_UPDATE = 2004;
@@ -261,4 +290,11 @@ public class TTSOrbsCommands : UniGoCommands
 	public const int RACER_DEREGISTER = 2012;
 	public const int RACER_ALREADY_REGISTERED = 2091;
 	public const int RACER_IS_NOT_REGISTERED = 2092;
+
+	public const int PowerupRegister = 5001;
+	public const int PowerupRegisterOK = 5011;
+	public const int PowerupUpdate = 5004;
+	public const int PowerupDeregister = 5009;
+	public const int PowerupAlreadyRegistered = 5091;
+	public const int PowerupIsNotRegistered = 5092;
 }
