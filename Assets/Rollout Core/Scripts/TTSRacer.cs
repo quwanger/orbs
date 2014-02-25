@@ -159,6 +159,9 @@ public class TTSRacer : TTSBehaviour
 		
 		if(myCamera != null)
 			myCamera.GetComponent<TTSCameraFade>().SetScreenOverlayColor(new Color(0,0,0,0));
+		
+		if(AIUtil == null)
+				AIUtil = gameObject.AddComponent<TTSAIController>();
 	}
 	
 	void FixedUpdate () {
@@ -331,10 +334,10 @@ public class TTSRacer : TTSBehaviour
 			}
 		}
 
-		if(player == PlayerType.AI && !waypointManager.EndPoints.Contains(currentWaypoint)){
+		//if(player == PlayerType.AI && !waypointManager.EndPoints.Contains(currentWaypoint)){
 			if(AIUtil == null)
 				AIUtil = gameObject.AddComponent<TTSAIController>();	
-		}
+		//}
 		
 		//this must be done for the player as well so that we can get the distance of all racers from the finish line
 		nextWaypoint = AIUtil.getClosestWaypoint(currentWaypoint.nextWaypoints, position);
@@ -403,7 +406,7 @@ public class TTSRacer : TTSBehaviour
 	public void AIInput(){
 
 		float debugVInput = 0.0f, debugHInput = 0.0f;
-
+		
 		if(AIUtil.debugMode){
 			debugVInput = Input.GetAxis("Vertical");
 			debugHInput = Input.GetAxis("Horizontal");
