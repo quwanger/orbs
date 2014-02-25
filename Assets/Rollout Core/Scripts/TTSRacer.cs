@@ -34,7 +34,7 @@ using System.Collections.Generic;
 [RequireComponent(typeof(MeshRenderer))]
 public class TTSRacer : TTSBehaviour
 {
-
+	public GameObject minimapIcon;
 
 	#region serialized settings
 	public bool IsPlayerControlled = true;
@@ -271,6 +271,10 @@ public class TTSRacer : TTSBehaviour
 			RacerSounds.pitch = Mathf.Max(Mathf.Lerp(RacerSounds.pitch, TTSUtils.Remap(Mathf.Abs(vInput), 0.0f, 1.0f, 0.5f, 1.0f, false), 0.1f), 0);
 			RacerSounds.volume = Mathf.Max(Mathf.Lerp(RacerSounds.volume, TTSUtils.Remap(Mathf.Abs(vInput), 0.0f, 1.0f, 0.5f, 1.0f, false) * 1.5f, 0), 0); // Needs cleaning
 		}
+	}
+
+	void Update() {
+		minimapIcon.transform.position = new Vector3(this.gameObject.transform.position.x, minimapIcon.transform.position.y, this.gameObject.transform.position.z);
 	}
 
 	#region Events

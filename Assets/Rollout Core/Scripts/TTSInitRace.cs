@@ -10,6 +10,8 @@ public class TTSInitRace : MonoBehaviour {
 	public GameObject racerGO;
 	public GameObject cameraGO;
 	public GameObject hudGO;
+	public GameObject minimapGO;
+	public GameObject playerIconGO;
 	
 	public enum Rigs {Rhino, Scorpion, Default};
 	public enum Characters {Character_Default, Character1, Character2};
@@ -62,6 +64,11 @@ public class TTSInitRace : MonoBehaviour {
 			
 			tempRacer.GetComponent<TTSRacer>().displayMeshComponent = tempChar.transform;
 			tempRacer.GetComponent<TTSRacer>().CurrentRig = tempRig;
+
+			GameObject tempIcon = (GameObject)Instantiate(playerIconGO);
+
+			tempRacer.GetComponent<TTSRacer>().minimapIcon = tempIcon;
+
 			if(i < tempNumHumanPlayers){
 				tempRacer.GetComponent<TTSRacer>().IsPlayerControlled = true;
 				tempRacer.GetComponent<TTSRacer>().player = TTSRacer.PlayerType.Player;
@@ -93,6 +100,9 @@ public class TTSInitRace : MonoBehaviour {
 				GameObject tempHUD = (GameObject)Instantiate(hudGO);
 				tempHUD.GetComponent<TTSFloatHud>().boundCamera = tempCamera.transform;
 				tempHUD.GetComponent<TTSFloatHud>().racerToFollow = tempRacer;
+
+				GameObject tempMinimap = (GameObject)Instantiate(minimapGO);
+				tempMinimap.GetComponent<TTSMinimap>().player = tempRig.transform;
 
 				//assinging the hud powerup for the racer
 
