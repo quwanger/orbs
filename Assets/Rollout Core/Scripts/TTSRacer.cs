@@ -266,6 +266,7 @@ public class TTSRacer : TTSBehaviour
 		hInput = Mathf.Lerp(hInput, netHandle.networkHInput, netHandle.networkInterpolation * 5);
 
 		bool read = false;
+		Debug.Log("Powerup Amount: " + netHandle.networkPowerupFire.Count);
 		for (int i = 0; i < netHandle.networkPowerupFire.Count; i++) {
 			read = true;
 			switch (netHandle.networkPowerupFire[i]) {
@@ -522,6 +523,7 @@ public class TTSRacerNetworkHandle : UniGoNetworkHandle
 	}
 
 	public void NetworkPowerup(float id, int type) {
+		Debug.Log("Adding Powerup " + id);
 		networkPowerupFireID.Add(id);
 		networkPowerupFire.Add(type);
 	}

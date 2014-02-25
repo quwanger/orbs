@@ -52,8 +52,8 @@ public class TTSEntropyCannonProjectile : TTSBehaviour {
 
 			if (netHandle.explode)
 				Explode(true);
-
-			netHandle.EndRead();
+			else
+				netHandle.EndRead();
 			return;
 		}
 

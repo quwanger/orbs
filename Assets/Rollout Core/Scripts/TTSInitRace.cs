@@ -41,6 +41,10 @@ public class TTSInitRace : MonoBehaviour
 		InitToMultiplayer(InstantiateRacer(), id);
 	}
 
+	public void RemoveRacer(float id) {
+
+	}
+
 	public GameObject InstantiateRacer() {
 		//finds the rig to initialize
 		foreach (GameObject rig in _rigs) {

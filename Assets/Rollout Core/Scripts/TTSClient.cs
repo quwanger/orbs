@@ -120,50 +120,64 @@ public class TTSClient : UniGoClient
 				command = (int)reader.ReadUInt32();
 
 			//if (DebugMode)
-			if(command != 2004 && command != 0 && command != 5004)
+			if (command != 2004 && command != 0 && command != 5004)
 				Debug.Log("Received Command: " + command);
 
 			float objID;
 
 			switch (command) {
+				// 0
 				case UniGoCommands.END_PACKET:
 					reading = false;
 					break;
+
+				// 2
 				case UniGoCommands.HANDSHAKE_ACKNOWLEDGE:
 					// Server connection established
 					writer.AddData(UniGoCommands.HANDSHAKE_COMPLETE);
 					isConnectionEstablished = true;
 					break;
 
+				#region Object
+				// 1004
 				case UniGoCommands.OBJECT_UPDATE:
 					objID = reader.ReadFloat();
 					networkObjects[objID].NetworkUpdate(reader.ReadVector3(), reader.ReadVector3(), reader.ReadVector3());
 					break;
 
-				case UniGoCommands.OBJECT_IS_NOT_REGISTERED:
+				//1091
 				case UniGoCommands.OBJECT_ALREADY_REGISTERED:
+				// 1092
+				case UniGoCommands.OBJECT_IS_NOT_REGISTERED:
 					objID = reader.ReadFloat();
 					networkObjects[objID].owner = false;
 					if (DebugMode)
 						Debug.Log("Server object already registered: " + objID);
 					break;
+				#endregion
 
+				#region Racer
+				// 2004
 				case TTSOrbsCommands.RACER_UPDATE:
 					objID = reader.ReadFloat();
 					networkRacers[objID].NetworkUpdate(reader.ReadVector3(), reader.ReadVector3(), reader.ReadVector3(), reader.ReadFloat(), reader.ReadFloat(), (int)reader.ReadUInt32(), (int)reader.ReadUInt32());
 					break;
 
+				// 2010
 				case TTSOrbsCommands.RACER_REGISTER:
 					objID = reader.ReadFloat();
 					spawnRacers.Add(objID);
 					break;
 
+				//2011
 				case TTSOrbsCommands.RACER_REGISTER_OK:
 					objID = reader.ReadFloat();
 					break;
 
-				case TTSOrbsCommands.RACER_IS_NOT_REGISTERED:
+				// 2091
 				case TTSOrbsCommands.RACER_ALREADY_REGISTERED:
+				// 2092
+				case TTSOrbsCommands.RACER_IS_NOT_REGISTERED:
 					objID = reader.ReadFloat();
 					DeregisterRacer(networkRacers[objID]);
 
@@ -172,6 +186,7 @@ public class TTSClient : UniGoClient
 					if (DebugMode)
 						Debug.Log("Server object registered again: " + objID);
 					break;
+				#endregion
 
 				// 5001
 				case TTSOrbsCommands.PowerupRegister:
@@ -182,22 +197,27 @@ public class TTSClient : UniGoClient
 					SpawnPowerup(objID, powerupType, racerID);
 					break;
 
+				// 5011
 				case TTSOrbsCommands.PowerupRegisterOK:
 					objID = reader.ReadFloat();
 					break;
 
+				// 5004
 				case TTSOrbsCommands.PowerupUpdate:
 					objID = reader.ReadFloat();
 					networkPowerups[objID].NetworkUpdate(reader.ReadVector3(), reader.ReadVector3(), reader.ReadVector3());
 					break;
 
+				// 5009
 				case TTSOrbsCommands.PowerupDeregister:
 					objID = reader.ReadFloat();
 					networkPowerups[objID].explode = true;
 					break;
 
-				case TTSOrbsCommands.PowerupIsNotRegistered:
+				// 5091
 				case TTSOrbsCommands.PowerupAlreadyRegistered:
+				// 5092
+				case TTSOrbsCommands.PowerupIsNotRegistered:
 					objID = reader.ReadFloat();
 					if (networkPowerups[objID] != null)
 						networkPowerups[objID].owner = false;
@@ -213,10 +233,7 @@ public class TTSClient : UniGoClient
 		writer.ClearData();
 	}
 
-	private void SpawnPowerup(float id, int type, float racerID) {
-		networkRacers[racerID].NetworkPowerup(id, type);
-	}
-
+	#region Racer Handlers
 	public void RegisterRacer(TTSRacerNetworkHandle racer) {
 
 		if (racer.owner) {
@@ -241,6 +258,11 @@ public class TTSClient : UniGoClient
 		UpdateWriter.AddData(TTSOrbsCommands.RACER_DEREGISTER);
 		UpdateWriter.AddData(racer.id);
 		networkRacers.Remove(racer.id);
+	}
+	#endregion
+
+	private void SpawnPowerup(float id, int type, float racerID) {
+		networkRacers[racerID].NetworkPowerup(id, type);
 	}
 
 	public void RegisterPowerup(TTSPowerupNetworkHandle powerup) {
@@ -271,7 +293,7 @@ public class TTSClient : UniGoClient
 	}
 
 	public void DebugFPSOutput() {
-		if (debugTimeStamp == null)
+		if (debugTimeStamp == null || !DebugMode)
 			return;
 
 		System.DateTime now = System.DateTime.Now;
