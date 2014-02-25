@@ -120,6 +120,8 @@ public class TTSLevel : MonoBehaviour {
 	public void StartRace() {
 		raceHasStarted = true;
 		
+		
+		
 		GameObject.Find("Soundtrack").GetComponent<TTSSoundtrackManager>().StartSoundtrack();
 		
 		foreach(GameObject racer in racers) {

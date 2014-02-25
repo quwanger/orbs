@@ -124,12 +124,13 @@ public class TTSPowerupPlatform : TTSBehaviour {
 	
 		Powerup powerup = GetRandomEnum<Powerup>();
 		
-		while(powerup == Powerup.None) {
-			powerup = GetRandomEnum<Powerup>();
-		}
-		
 		if(level.currentGameType != TTSLevel.Gametype.TimeTrial){
-			while(powerup == Powerup.TimeBonus) {
+			while(powerup == Powerup.TimeBonus || powerup == Powerup.None || powerup == Powerup.Lottery) {
+				powerup = GetRandomEnum<Powerup>();
+			}
+		}else{
+			//make sure that the random powerup isnt none or lottery
+			while(powerup == Powerup.None || powerup == Powerup.Lottery) {
 				powerup = GetRandomEnum<Powerup>();
 			}
 		}

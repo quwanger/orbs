@@ -14,6 +14,7 @@ public class TTSFloatHud : TTSBehaviour {
 	#region hudcomponents
 	public GameObject displayBacking;
 	public GameObject bonusTime;
+	public GameObject position;
 	#endregion
 	
 	// Use this for initialization
@@ -29,6 +30,8 @@ public class TTSFloatHud : TTSBehaviour {
 		timeDisplay.text = GameObject.Find("TTSLevel").GetComponent<TTSTimeManager>().GetCurrentTimeString();
 		
 		displayBacking.renderer.material.color = Color.Lerp(displayBacking.renderer.material.color, initialBackingColor, 0.04f);
+		
+		position.GetComponent<TextMesh>().text = (racerToFollow.GetComponent<TTSRacer>().place).ToString();
 	}
 	
 	

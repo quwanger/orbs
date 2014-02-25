@@ -1,5 +1,7 @@
 using UnityEngine;
-using System.Collections.Generic;
+using System.Collections;
+
+
 
 /***********************
  * Racer.cs - Racer Prefab Builder and Motion Handler
@@ -86,11 +88,17 @@ public class TTSRacer : TTSBehaviour
 	public bool finished = false;
 	public float distanceToFinish;
 	public int place;
+	
+	public float respawnTime = 2.0f;
+	public Vector3 respawnPoint;
+	public Quaternion respawnRotation;
 	#endregion
 	
 	public bool hasShield;
 	private float smooth;
 	private float stopSpeed = 0.05f;
+	
+	public GameObject myCamera;
 
 	#region Direction/Wrong way
 	public TTSWaypoint currentWaypoint;
@@ -149,6 +157,8 @@ public class TTSRacer : TTSBehaviour
 		Offense = CurrentRig.GetComponent<TTSRig>().rigOffense;
 		Defense = CurrentRig.GetComponent<TTSRig>().rigDefense;
 		
+		if(myCamera != null)
+			myCamera.GetComponent<TTSCameraFade>().SetScreenOverlayColor(new Color(0,0,0,0));
 	}
 	
 	void FixedUpdate () {
@@ -338,7 +348,31 @@ public class TTSRacer : TTSBehaviour
 	public void StopRacer() {
 		rigidbody.velocity = new Vector3(0, 0, 0);
 	}
-
+	
+	public void DelayedRespawn() {
+		if(myCamera != null)
+			myCamera.GetComponent<TTSCameraFade>().StartFade(new Color(0,0,0,1.0f), respawnTime);
+		
+		Invoke("DelayedRespawnPart2", respawnTime);
+	}
+	
+	private void DelayedRespawnPart2(){
+		StopRacer();
+		canMove = false;
+		this.transform.rotation = respawnRotation;
+		this.transform.position = respawnPoint;
+		Invoke("AllowPlayerControl", respawnTime);
+		if(myCamera != null)
+			myCamera.GetComponent<TTSCameraFade>().StartFade(new Color(0,0,0,0), respawnTime);
+	}
+	
+	private void AllowPlayerControl(){
+		if(!IsPlayerControlled)
+			IsPlayerControlled = true;
+		if(!canMove)
+			canMove = true;
+	}
+	
 	#endregion
 
 	public void OnDrawGizmos() {

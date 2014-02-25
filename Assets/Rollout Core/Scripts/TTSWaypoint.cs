@@ -70,6 +70,9 @@ public class TTSWaypoint : TTSBehaviour {
 				racer.GetComponent<TTSRacer>().OnWaypoint(this);
 			}
 		}
+		
+		if(other.GetComponent<TTSLeech>())
+			other.GetComponent<TTSLeech>().OnWaypoint(this);
 	}
 
 	#region Vector Calculations
@@ -123,7 +126,7 @@ public class TTSWaypoint : TTSBehaviour {
 		if(!Physics.Linecast(from, closest, TTSUtils.ExceptLayerMask(10)))
 			return closest;
 		else
-			Debug.Log("Can't see closest point");
+			//Debug.Log("Can't see closest point");
 
 		closest = position;
 		closest.y = Mathf.Clamp(from.y, position.y - boxHeight / 2, position.y - boxHeight / 2);

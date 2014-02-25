@@ -15,20 +15,27 @@ public class TTSForceField : TTSBehaviour {
 			if(collider.gameObject.tag == "Player") {
 			
 				//remove the forces from the racer
-				collider.gameObject.GetComponent<TTSRacer>().StopRacer();
+				//collider.gameObject.GetComponent<TTSRacer>().StopRacer();
 			
 				//this is a hack so that the 'wrong way' doesnt appear when respawning
 				collider.gameObject.GetComponent<TTSRacer>().goingWrongWay = true;
+			
+				collider.gameObject.GetComponent<TTSRacer>().IsPlayerControlled = false;
 			
 				//set the position of the player to their current waypoint
 				Vector3 newPosition;
 				newPosition.x = collider.gameObject.GetComponent<TTSRacer>().currentWaypoint.transform.position.x;
 				newPosition.y = collider.gameObject.GetComponent<TTSRacer>().currentWaypoint.transform.position.y - (collider.gameObject.GetComponent<TTSRacer>().currentWaypoint.GetComponent<BoxCollider>().size.y/2.0f) + (collider.gameObject.GetComponent<SphereCollider>().radius/2.0f);
 				newPosition.z = collider.gameObject.GetComponent<TTSRacer>().currentWaypoint.transform.position.z;
-				collider.gameObject.transform.position = newPosition;
 			
-				//rotate the object to face the proper direction
-				//collider.gameObject.transform.forward = collider.gameObject.GetComponent<TTSRacer>().currentWaypoint.transform.forward;
+				collider.gameObject.GetComponent<TTSRacer>().respawnPoint = newPosition;
+				collider.gameObject.GetComponent<TTSRacer>().respawnRotation = collider.gameObject.GetComponent<TTSRacer>().currentWaypoint.transform.rotation;
+			
+				collider.gameObject.GetComponent<TTSRacer>().DelayedRespawn();
+			
+				//collider.gameObject.GetComponent<TTSRacer>().StopRacer();
+				//collider.gameObject.transform.position = newPosition;
+				//collider.gameObject.transform.rotation = collider.gameObject.GetComponent<TTSRacer>().currentWaypoint.transform.rotation;
 			}
 	}
 }
