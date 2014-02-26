@@ -21,12 +21,15 @@ public class TTSLevel : MonoBehaviour {
 	private TTSScoreboard scoreboard;
 	
 	public Font[] fonts;
+
+	public TTSClient client;
 	
 	public static TTSLevel instance { get; private set;}
 	
 	#region MonoBehaviour Methods
 	void Awake() {
 		instance = this;
+		client = GetComponent<TTSClient>();
 	}
 	
 	void Start() {	

@@ -12,6 +12,7 @@ GameObject:
   - 114: {fileID: 11400002}
   - 114: {fileID: 11400004}
   - 114: {fileID: 11400006}
+  - 114: {fileID: 11400008}
   m_Layer: 0
   m_Name: TTSLevel
   m_TagString: Untagged
@@ -98,6 +99,24 @@ MonoBehaviour:
   hudGO: {fileID: 100014, guid: bf46875515a25a247a2a558437133fc4, type: 2}
   tempNumHumanPlayers: 1
   numberOfRacers: 1
+--- !u!114 &11400008
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc0ba0762728f5e4f89f9f54328eab63, type: 3}
+  m_Name: 
+  DebugMode: 1
+  SERVER_IP: 127.0.0.1
+  SERVER_RECEIVE_PORT: 6666
+  CLIENT_RECEIVE_PORT: 6969
+  CLIENT_RECEIVE_TIMEOUT: 15000
+  EnteredLobby: 0
+  InGame: 0
+  LobbyID: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

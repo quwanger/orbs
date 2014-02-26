@@ -112,6 +112,9 @@ public class TTSRacer : TTSBehaviour
 	public TTSWaypoint nextWaypoint;
 	TTSAIController AIUtil;
 
+	// Networking
+	TTSRacerNetHandler netHandler;
+
 	void Awake() {
 
 		level.RegisterRacer(gameObject);
@@ -121,9 +124,16 @@ public class TTSRacer : TTSBehaviour
 				displayMeshComponent = child;
 			}
 		}
-		
-		if(player == PlayerType.AI)
+
+		if (player == PlayerType.Player) {
+			netHandler = new TTSRacerNetHandler(level.client, true);
+		}
+		else if(player == PlayerType.AI){
 			AIUtil = gameObject.AddComponent<TTSAIController>();
+			netHandler = new TTSRacerNetHandler(level.client, true);
+		}
+		else if(player == PlayerType.Multiplayer)
+			netHandler = new TTSRacerNetHandler(level.client, false);
 
 		//lastForward = TTSUtils.FlattenVector(displayMeshComponent.forward).normalized;
 
@@ -173,7 +183,10 @@ public class TTSRacer : TTSBehaviour
 			SlowToStop();
 		}
 
-		CalculateBodyOrientation();
+		if (player != PlayerType.Multiplayer)
+			CalculateBodyOrientation();
+
+		netHandler.UpdateRacer(position, displayMeshComponent.rotation.eulerAngles, rigidbody.velocity, vInput, hInput);
 
 		resultAccel = Mathf.Lerp(resultAccel, rigidbody.velocity.magnitude - PreviousVelocity.magnitude, 0.01f);
 		PreviousVelocity = rigidbody.velocity;
@@ -189,7 +202,7 @@ public class TTSRacer : TTSBehaviour
 
 		}
 		else if (player == PlayerType.Multiplayer) {
-
+			MultiplayerInput();
 		}
 		else if (player == PlayerType.AI) {
 			AIInput();
@@ -438,68 +451,51 @@ public class TTSRacer : TTSBehaviour
 
 		Debug.DrawLine(position, destination);
 	}
-}
 
-
-/*
-public class TTSRacerAI {
-	// Waypoints
-	private List<TTSWaypoint> waypoints;
-	private TTSWaypointManager wpManager;
-	public int nextWaypoint = 0;
-	public int foresight = 3;
-
-	// Racer Vars
-	private Vector3 rForward;
-	private Vector3 rSpeed;
-	private Vector3 rPosition;
-
-	// Movement Vars
-	private Vector3 destination;
-	private Vector3 nextWaypointDir = new Vector3();
-
-	// Input
-	public float vInput = 0.0f;
-	public float hInput = 0.0f;
-
-	/// <summary> 
-	/// 
-	/// </summary> 
-	/// <param name="waypointList">List of waypoints needed</param> 
-	/// <param name="rSpeed">Reference to racer speed</param> 
-	public TTSRacerAI(List<TTSWaypoint> waypointList, Vector3 racerSpeed, TTSWaypointManager waypointManager)
-	{
-		waypoints = waypointList;
-		wpManager = waypointManager;
-		rSpeed = racerSpeed;
-	}
-
-	public void update(Vector3 position, Vector3 forward) {
-		rPosition = position;
-		rForward = forward;
-		update();
-	}
-
-	public void update() {
-		destination = waypoints[nextWaypoint].getClosestSeenPoint(rPosition, 7);
-		nextWaypointDir = TTSUtils.FlattenVector(destination - rPosition);
-
-		float sensitivity = 90.0f;
-
-		vInput = 1.0f;
-		hInput = TTSUtils.Remap(TTSUtils.GetRelativeAngle(rForward, nextWaypointDir), -sensitivity, sensitivity, -1.0f, 1.0f, true);
-	}
-
-	public void lookForward(){
-		//Debug.DrawRay()
-	}
-
-	public void drawGizmos() {
-		Gizmos.color = Color.yellow;
-		Gizmos.DrawLine(rPosition, destination);
-
-		Gizmos.color = Color.cyan;
-		Gizmos.DrawCube(destination, new Vector3(0.5f, 0.5f, 0.5f));
+	public void MultiplayerInput() {
+		transform.position = Vector3.Lerp(transform.position, netHandler.netPosition, netHandler.networkInterpolation);
+		displayMeshComponent.rotation = Quaternion.Lerp(displayMeshComponent.rotation, Quaternion.Euler(netHandler.netRotation), netHandler.networkInterpolation * 10);
+		rigidbody.velocity = netHandler.netSpeed;
 	}
 }
-*/
+
+public class TTSRacerNetHandler : TTSNetworkHandle
+{
+	public Vector3 position, rotation, speed;
+	public float vInput, hInput;
+	// public int powerUpType, powerUpTier;
+
+	// Receivers (Read data from here)
+	public Vector3 netPosition, netRotation, netSpeed;
+	public float networkVInput, networkHInput;
+	//public int networkPowerUpType, networkPowerUpTier;
+
+	public TTSRacerNetHandler(TTSClient Client, bool Owner) {
+		registerCommand = TTSCommandTypes.RacerRegister;
+		owner = Owner;
+		Client.LocalObjectRegister(this);
+	}
+
+	// Command and ID already read in packet
+	public override void ReceiveNetworkData(TTSPacketReader reader, int command) {
+		netPosition = reader.ReadVector3();
+		netRotation = reader.ReadVector3();
+		netSpeed = reader.ReadVector3();
+
+		networkVInput = reader.ReadFloat();
+		networkHInput = reader.ReadFloat();
+	}
+
+	public void UpdateRacer(Vector3 Pos, Vector3 Rot, Vector3 Speed, float VInput, float HInput) {
+		if (owner && isServerRegistered) { // Only send data if it's the owner
+			writer.ClearData();
+			writer.AddData(TTSCommandTypes.RacerUpdate);
+			writer.AddData(id);
+			writer.AddData(Pos);
+			writer.AddData(Rot);
+			writer.AddData(Speed);
+			writer.AddData(VInput);
+			writer.AddData(HInput);
+		}
+	}
+}
