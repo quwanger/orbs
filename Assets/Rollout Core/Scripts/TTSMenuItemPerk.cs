@@ -7,6 +7,8 @@ public class TTSMenuItemPerk : TTSMenuEnums {
 	public PerkMenuItem perk;
 	public PerkMenuItemB perkB;
 	public int index;
+	public string name;
+	public string description;
 
 	// Use this for initialization
 	void Start () {
