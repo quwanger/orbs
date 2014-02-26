@@ -69,8 +69,18 @@ public class TTSClient : MonoBehaviour
 
 		foreach (KeyValuePair<float, TTSNetworkHandle> pair in netHandles) {
 			TTSNetworkHandle handle = pair.Value;
-			UpdatePacket.AddData(handle.GetNetworkUpdate());
+			if (handle.isServerRegistered) {
+				// First make sure the packet won't overflow
+				byte[] tempData = handle.GetNetworkUpdate();
+				if (UpdatePacket.WillOverflow(tempData.Length)) {
+					SendPacket(UpdatePacket);
+				}
+
+				UpdatePacket.AddData(tempData);
+			}
 		}
+		SendPacket(UpdatePacket);
+		UpdatePacket.ClearData();
 	}
 	void OnApplicationQuit() {
 		isRunning = false;
@@ -107,14 +117,42 @@ public class TTSClient : MonoBehaviour
 			if (DebugMode) Debug.Log(">	Received command " + command);
 
 			switch (command) {
+				case TTSCommandTypes.RacerRegisterOK:
+					float id = packet.ReadFloat();
+					netHandles[id].isServerRegistered = true;
+					break;
+
+				case TTSCommandTypes.RacerAlreadyRegistered:
+					// Shouldn't really happen...
+					break;
+
 				case TTSCommandTypes.LobbyRegisterOK:
 					LobbyID = packet.ReadInt32();
 					EnteredLobby = true;
+					ServerAllObjectsRegister();
 					break;
 			}
 
 			command = packet.ReadInt32();
 		}
+	}
+
+	// Send all the registered objects
+	private void ServerAllObjectsRegister() {
+		TTSPacketWriter writer = new TTSPacketWriter();
+		foreach (KeyValuePair<float, TTSNetworkHandle> pair in netHandles) {
+			if (writer.WillOverflow(4 * 2)) {
+				SendPacket(writer, true);
+			}
+			ServerObjectRegister(pair.Value, writer);
+		}
+		SendPacket(writer);
+	}
+
+	// Writes the necessary register code to the given packet writer
+	private void ServerObjectRegister(TTSNetworkHandle handle, TTSPacketWriter writer) {
+		writer.AddData(handle.registerCommand);
+		writer.AddData(handle.id);
 	}
 
 	public void LocalObjectRegister(TTSNetworkHandle handler) {
@@ -123,11 +161,12 @@ public class TTSClient : MonoBehaviour
 				handler.owner = false;
 		}
 		else { // If the object must be controlled, generate a new non-zero key
-			while (netHandles.ContainsKey(handler.id) && handler.id == 0.0f) {
+			while (netHandles.ContainsKey(handler.id) || handler.id == 0.0f) {
 				handler.id = UnityEngine.Random.value * 100;
 			}
 		}
 
+		Debug.Log("Registering " + handler.id);
 		netHandles.Add(handler.id, handler);
 	}
 
@@ -141,6 +180,11 @@ public class TTSClient : MonoBehaviour
 			Debug.Log("Sending " + writer.Length + " bytes to " + endPoint.ToString());
 
 		sock.SendTo(writer.GetMinimizedData(), endPoint);
+	}
+
+	private void SendPacket(TTSPacketWriter writer, bool clear) {
+		SendPacket(writer);
+		if(clear) writer.ClearData();
 	}
 }
 
@@ -190,19 +234,23 @@ public static class TTSCommandTypes
 
 public abstract class TTSNetworkHandle
 {
-	protected TTSClient client;
-	public float id; // ID will only be stored here
-	public TTSPacketWriter writer = new TTSPacketWriter(); // Each object must use this writer to write packet data
+	public int registerCommand; // Must be set
+	public bool isServerRegistered = false;
+	public float id = 0.0f; // ID will only be stored here
 	public bool canForfeitControl = false; // Whether object can be taken control of by another client (for scene objects)
+	public float networkInterpolation = 0.5f;
+
+	protected TTSClient client;
+	public TTSPacketWriter writer = new TTSPacketWriter(); // Each object must use this writer to write packet data
 
 	public bool owner;
 
 	public TTSNetworkHandle() {
-
+		// Register yourself to the client from here.
 	}
 
-	// You must override this method.
-	public abstract void ReceiveNetworkData(TTSPacketReader reader);
+	// You must override this method. Command and ID will already be read
+	public abstract void ReceiveNetworkData(TTSPacketReader reader, int command);
 
 	// Do not override this method unless necessary
 	public byte[] GetNetworkUpdate() {
@@ -299,6 +347,10 @@ public class TTSPacketWriter
 	public void ClearData() {
 		Data = new byte[1024];
 		WriteIndex = 0;
+	}
+
+	public bool WillOverflow(int size) {
+		return (WriteIndex + size) >= 1024;
 	}
 
 	public byte[] GetMinimizedData() {

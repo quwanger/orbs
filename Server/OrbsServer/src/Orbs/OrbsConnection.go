@@ -48,6 +48,7 @@ func (this *OrbsConnection) SendPacket() {
 	}
 
 	this.OutConnection.WriteToUDP(this.OutPacket.Data[0:this.OutPacket.Size()], this.ReturnAddress)
+	this.OutPacket.Clear()
 }
 
 func (this *OrbsConnection) CheckPacketSize(dataLength int) {
