@@ -10,10 +10,15 @@ using System.Collections.Generic;
 public class TTSBehaviour : MonoBehaviour {
 	
 	//used for changing the stats of the racers based on their rig selection and perk selection
+	[HideInInspector]
 	public float accelerationIncrease = 500.0f;
+	[HideInInspector]
 	public float speedIncrease = 25.0f;
+	[HideInInspector]
 	public float handlingIncrease = 750.0f;
+	[HideInInspector]
 	public float offenseIncrease = 0.3f;
+	[HideInInspector]
 	public float defenseIncrease = 0.3f;
 
 	public enum Powerup {None, EntropyCannon, DrezzStones, TimeBonus, SuperC, Shield, Helix, Shockwave, Leech, Lottery};

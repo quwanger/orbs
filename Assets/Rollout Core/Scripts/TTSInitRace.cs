@@ -118,6 +118,12 @@ public class TTSInitRace : MonoBehaviour {
 				Transform tempHudPowerup = tempHUD.transform.Find("CurrentPowerup");
 				tempRacer.GetComponent<TTSPowerup>().hudPowerup = tempHudPowerup.gameObject;
 			
+				Transform tempPP1 = tempHUD.transform.Find("PerkPool1Icon");
+				tempPP1.GetComponent<TTSHudPerk>().InitializePerkPool1(tempRacer.GetComponent<TTSPerkManager>().equiptPerkPool1);
+			
+				Transform tempPP2 = tempHUD.transform.Find("PerkPool2Icon");
+				tempPP2.GetComponent<TTSHudPerk>().InitializePerkPool2(tempRacer.GetComponent<TTSPerkManager>().equiptPerkPool2);
+			
 				tempRacer.GetComponent<TTSRacer>().myCamera = tempCamera;
 			}else{
 				//this is for AI only

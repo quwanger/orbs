@@ -6,6 +6,8 @@ public class TTSPerkManager : TTSBehaviour {
 	//general use variables
 	public PerksPool1 equiptPerkPool1;
 	public Powerup equiptPerkPool2;
+	public GameObject hudPerkPool1;
+	public GameObject hudPerkPool2;
 	
 	//photofinish variables
 	private float distance;
