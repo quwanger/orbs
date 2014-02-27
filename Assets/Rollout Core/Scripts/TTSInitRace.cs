@@ -12,7 +12,6 @@ public class TTSInitRace : MonoBehaviour {
 	public GameObject cameraGO;
 	public GameObject hudGO;
 	public GameObject minimapGO;
-	//public GameObject playerIconGO;
 	
 	public enum Rigs {Rhino, Scorpion, Default};
 	public enum Characters {Character_Default, Character1, Character2};
@@ -70,42 +69,54 @@ public class TTSInitRace : MonoBehaviour {
 
 			GameObject tempIcon = (GameObject)Instantiate(pi);
 
-			tempRacer.GetComponent<TTSRacer>().minimapIcon = tempIcon;
-
+			//this is where the stuff for the human players
 			if(i < tempNumHumanPlayers){
 				tempRacer.GetComponent<TTSRacer>().IsPlayerControlled = true;
 				tempRacer.GetComponent<TTSRacer>().player = TTSRacer.PlayerType.Player;
+
+				tempIcon.transform.localScale = new Vector3(30.0f, 30.0f, 30.0f);
+				GameObject tempMinimap = (GameObject)Instantiate(minimapGO);
+				tempMinimap.GetComponent<TTSMinimap>().player = tempRig.transform;
 			
 				GameObject tempCamera = (GameObject)Instantiate(cameraGO);
-				if(tempNumHumanPlayers > 1){
-					if(i%2 == 0){
-						if(tempNumHumanPlayers > 3){
-							if(i%4 == 0)
-								tempCamera.camera.rect = new Rect(0, 0, 0.5f, 0.5f);
-							else
-								tempCamera.camera.rect = new Rect(0, 0.5f, 0.5f, 0.5f);
-						}else{
-							tempCamera.camera.rect = new Rect(0, 0, 1.0f, 0.5f);
-						}
-					}else{
-						if(tempNumHumanPlayers > 3){
-							if(i%3 == 0)
-								tempCamera.camera.rect = new Rect(0.5f, 0.5f, 0.5f, 0.5f);
-							else
-								tempCamera.camera.rect = new Rect(0.5f, 0, 0.5f, 0.5f);
-						}else{
+
+				switch(tempNumHumanPlayers){
+					case 2:
+						if(i==0)
 							tempCamera.camera.rect = new Rect(0, 0.5f, 1.0f, 0.5f);
-						}
-					}
+						else
+							tempCamera.camera.rect = new Rect(0, 0, 1.0f, 0.5f);
+						break;
+
+					case 3:
+						if(i==0)
+							tempCamera.camera.rect = new Rect(0, 0.5f, 1.0f, 0.5f);
+						else if(i==1)
+							tempCamera.camera.rect = new Rect(0, 0, 0.5f, 0.5f);
+						else
+							tempCamera.camera.rect = new Rect(0.5f, 0, 0.5f, 0.5f);
+						break;
+
+					case 4:
+						if(i==0)
+							tempCamera.camera.rect = new Rect(0, 0.5f, 0.5f, 0.5f);
+						else if(i==1)
+							tempCamera.camera.rect = new Rect(0.5f, 0.5f, 0.5f, 0.5f);
+						else if(i==2)
+							tempCamera.camera.rect = new Rect(0, 0, 0.5f, 0.5f);
+						else
+							tempCamera.camera.rect = new Rect(0.5f, 0, 0.5f, 0.5f);
+						break;
+
+					default:
+					break;
 				}
+
 				tempCamera.GetComponent<TTSFollowCamera>().target = tempChar.transform;
 				
 				GameObject tempHUD = (GameObject)Instantiate(hudGO);
 				tempHUD.GetComponent<TTSFloatHud>().boundCamera = tempCamera.transform;
 				tempHUD.GetComponent<TTSFloatHud>().racerToFollow = tempRacer;
-
-				GameObject tempMinimap = (GameObject)Instantiate(minimapGO);
-				tempMinimap.GetComponent<TTSMinimap>().player = tempRig.transform;
 
 				//assinging the hud powerup for the racer
 
@@ -116,6 +127,8 @@ public class TTSInitRace : MonoBehaviour {
 				tempRacer.GetComponent<TTSRacer>().IsPlayerControlled = true;
 				tempRacer.GetComponent<TTSRacer>().player = TTSRacer.PlayerType.AI;
 			}
+
+			tempRacer.GetComponent<TTSRacer>().minimapIcon = tempIcon;
 		}
 	}
 	
