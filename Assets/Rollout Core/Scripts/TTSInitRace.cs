@@ -6,12 +6,13 @@ public class TTSInitRace : MonoBehaviour {
 	public List<GameObject> _rigs = new List<GameObject>();
 	public List<GameObject> _characters = new List<GameObject>();
 	public List<GameObject> _startingpoints = new List<GameObject>();
+	public List<GameObject> _playericon = new List<GameObject>();
 	
 	public GameObject racerGO;
 	public GameObject cameraGO;
 	public GameObject hudGO;
 	public GameObject minimapGO;
-	public GameObject playerIconGO;
+	//public GameObject playerIconGO;
 	
 	public enum Rigs {Rhino, Scorpion, Default};
 	public enum Characters {Character_Default, Character1, Character2};
@@ -65,7 +66,9 @@ public class TTSInitRace : MonoBehaviour {
 			tempRacer.GetComponent<TTSRacer>().displayMeshComponent = tempChar.transform;
 			tempRacer.GetComponent<TTSRacer>().CurrentRig = tempRig;
 
-			GameObject tempIcon = (GameObject)Instantiate(playerIconGO);
+			GameObject pi = _playericon[i];
+
+			GameObject tempIcon = (GameObject)Instantiate(pi);
 
 			tempRacer.GetComponent<TTSRacer>().minimapIcon = tempIcon;
 
