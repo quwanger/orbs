@@ -114,6 +114,7 @@ public class TTSRacer : TTSBehaviour
 
 	// Networking
 	TTSRacerNetHandler netHandler;
+	public float tempRacerID; // ONLY USED FOR MULTIPLAYER
 
 	void Awake() {
 
@@ -133,7 +134,7 @@ public class TTSRacer : TTSBehaviour
 			netHandler = new TTSRacerNetHandler(level.client, true);
 		}
 		else if(player == PlayerType.Multiplayer)
-			netHandler = new TTSRacerNetHandler(level.client, false);
+			netHandler = new TTSRacerNetHandler(level.client, false, tempRacerID);
 
 		//lastForward = TTSUtils.FlattenVector(displayMeshComponent.forward).normalized;
 
@@ -409,6 +410,9 @@ public class TTSRacer : TTSBehaviour
 
 			Gizmos.color = Color.green;
 			Gizmos.DrawCube(destination, Vector3.one);
+
+			Gizmos.color = Color.white;
+			Gizmos.DrawCube(netHandler.netPosition, Vector3.one);
 		}
 
 		//if (AIControl != null)
@@ -471,6 +475,13 @@ public class TTSRacerNetHandler : TTSNetworkHandle
 	//public int networkPowerUpType, networkPowerUpTier;
 
 	public TTSRacerNetHandler(TTSClient Client, bool Owner) {
+		registerCommand = TTSCommandTypes.RacerRegister;
+		owner = Owner;
+		Client.LocalObjectRegister(this);
+	}
+
+	public TTSRacerNetHandler(TTSClient Client, bool Owner, float ID) { // For multiplayer players
+		id = ID;
 		registerCommand = TTSCommandTypes.RacerRegister;
 		owner = Owner;
 		Client.LocalObjectRegister(this);

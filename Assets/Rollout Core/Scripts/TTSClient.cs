@@ -36,6 +36,8 @@ public class TTSClient : MonoBehaviour
 	Dictionary<float, TTSNetworkHandle> netHandles = new Dictionary<float, TTSNetworkHandle>();
 	TTSPacketWriter UpdatePacket = new TTSPacketWriter();
 
+	List<float> spawnRacers = new List<float>();
+
 	// Use this for initialization
 	void Start() {
 		serverAddr = IPAddress.Parse(SERVER_IP);
@@ -73,14 +75,20 @@ public class TTSClient : MonoBehaviour
 				// First make sure the packet won't overflow
 				byte[] tempData = handle.GetNetworkUpdate();
 				if (UpdatePacket.WillOverflow(tempData.Length)) {
-					SendPacket(UpdatePacket);
+					SendPacket(UpdatePacket, true);
 				}
-
 				UpdatePacket.AddData(tempData);
 			}
 		}
-		SendPacket(UpdatePacket);
-		UpdatePacket.ClearData();
+		SendPacket(UpdatePacket, true);
+
+		// Spawn multiplayer racers
+		if (spawnRacers.Count > 0) {
+			foreach (float id in spawnRacers) {
+				GetComponent<TTSInitRace>().InitMultiplayerRacer(id);
+			}
+			spawnRacers.Clear();
+		}
 	}
 	void OnApplicationQuit() {
 		isRunning = false;
@@ -112,13 +120,25 @@ public class TTSClient : MonoBehaviour
 		TTSPacketReader packet = new TTSPacketReader(data);
 
 		int command = packet.ReadInt32();
+		float id = -1;
 
 		while (command != TTSCommandTypes.EndPacket) {
 			if (DebugMode) Debug.Log(">	Received command " + command);
 
 			switch (command) {
+				case TTSCommandTypes.RacerRegister:
+					id = packet.ReadFloat();
+					Debug.Log(">	Received a racer " + id);
+					spawnRacers.Add(id);
+					break;
+
+				case TTSCommandTypes.RacerUpdate:
+					id = packet.ReadFloat();
+					netHandles[id].ReceiveNetworkData(packet, command);
+					break;
+
 				case TTSCommandTypes.RacerRegisterOK:
-					float id = packet.ReadFloat();
+					id = packet.ReadFloat();
 					netHandles[id].isServerRegistered = true;
 					break;
 
@@ -161,12 +181,13 @@ public class TTSClient : MonoBehaviour
 				handler.owner = false;
 		}
 		else { // If the object must be controlled, generate a new non-zero key
-			while (netHandles.ContainsKey(handler.id) || handler.id == 0.0f) {
+			while (netHandles.ContainsKey(handler.id) || handler.id == 0.0f && handler.owner) {
 				handler.id = UnityEngine.Random.value * 100;
 			}
 		}
+		if(DebugMode)
+			Debug.Log("Registering " + handler.id);
 
-		Debug.Log("Registering " + handler.id);
 		netHandles.Add(handler.id, handler);
 	}
 
@@ -318,6 +339,7 @@ public class TTSPacketWriter
 
 	public void AddData(byte[] bytes) {
 		Buffer.BlockCopy(bytes, 0, Data, WriteIndex, bytes.Length);
+		WriteIndex += bytes.Length;
 	}
 
 	public void AddData(int num) {
