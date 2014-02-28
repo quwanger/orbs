@@ -134,7 +134,8 @@ public class TTSRacer : TTSBehaviour
 			netHandler = new TTSRacerNetHandler(level.client, true);
 		}
 		else if(player == PlayerType.Multiplayer)
-			netHandler = new TTSRacerNetHandler(level.client, false, tempRacerID);
+			if(netHandler != null)
+				netHandler = new TTSRacerNetHandler(level.client, false, tempRacerID);
 
 		//lastForward = TTSUtils.FlattenVector(displayMeshComponent.forward).normalized;
 
@@ -456,6 +457,10 @@ public class TTSRacer : TTSBehaviour
 		Debug.DrawLine(position, destination);
 	}
 
+	public void SetNetHandler(TTSRacerNetHandler handler) {
+		this.netHandler = handler;
+	}
+
 	public void MultiplayerInput() {
 		transform.position = Vector3.Lerp(transform.position, netHandler.netPosition, netHandler.networkInterpolation);
 		displayMeshComponent.rotation = Quaternion.Lerp(displayMeshComponent.rotation, Quaternion.Euler(netHandler.netRotation), netHandler.networkInterpolation * 10);
@@ -465,6 +470,14 @@ public class TTSRacer : TTSBehaviour
 
 public class TTSRacerNetHandler : TTSNetworkHandle
 {
+	// Racer Configuration
+	public int Index = 0;
+	public int Rig = 3;
+	public int Perk1 = 0;
+	public int Perk2 = 0;
+	public string Name = "Bob";
+	public int ControlType = 0;
+
 	public Vector3 position, rotation, speed;
 	public float vInput, hInput;
 	// public int powerUpType, powerUpTier;
@@ -485,6 +498,19 @@ public class TTSRacerNetHandler : TTSNetworkHandle
 		registerCommand = TTSCommandTypes.RacerRegister;
 		owner = Owner;
 		Client.LocalObjectRegister(this);
+	}
+
+	public override byte[] GetNetworkRegister() {
+		writer.ClearData();
+		writer.AddData(registerCommand);
+		writer.AddData(id);
+		writer.AddData(0); // Index
+		writer.AddData(Rig);
+		writer.AddData(Perk1);
+		writer.AddData(Perk2);
+		writer.AddData(Name);
+		writer.AddData(ControlType);
+		return writer.GetMinimizedData();
 	}
 
 	// Command and ID already read in packet

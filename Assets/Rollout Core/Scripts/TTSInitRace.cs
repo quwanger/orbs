@@ -36,16 +36,26 @@ public class TTSInitRace : MonoBehaviour
 		}
 	}
 
-	public void InitMultiplayerRacer(float id) {
-		InitToMultiplayer(InstantiateRacer(), id);
+	public void InitMultiplayerRacer(TTSRacerNetHandler handler) {
+		InitToMultiplayer(InstantiateRacer(handler.Rig, handler.Index), handler);
+		Debug.Log("Racer initialized " + handler.id);
 	}
 
 	public GameObject InstantiateRacer() {
+		return InstantiateRacer(-1, -1);
+	}
+
+	public GameObject InstantiateRacer(int rigID, int startPointID) {
 		//finds the rig to initialize
-		foreach (GameObject rig in _rigs) {
-			if (rig.GetComponent<TTSRig>().rigName == tempRigChoice) {
-				rigToLoad = rig;
+		if (rigID == -1) {
+			foreach (GameObject rig in _rigs) {
+				if (rig.GetComponent<TTSRig>().rigName == tempRigChoice) {
+					rigToLoad = rig;
+				}
 			}
+		}
+		else {
+			rigToLoad = _rigs[rigID];
 		}
 		//makes sure there is a rig to load if none selected
 		if (rigToLoad == null) {
@@ -62,7 +72,7 @@ public class TTSInitRace : MonoBehaviour
 		}
 
 		//gets the starting positions, sets them as taken if someone spawning on them already
-		GameObject sp = _startingpoints[startingPointIndex];
+		GameObject sp = _startingpoints[(startPointID != -1) ? startPointID : startingPointIndex];
 		sp.GetComponent<TTSStartingPoint>().isTaken = true;
 		startingPointIndex++;
 
@@ -146,10 +156,11 @@ public class TTSInitRace : MonoBehaviour
 		racer.GetComponent<TTSRacer>().player = TTSRacer.PlayerType.AI;
 	}
 
-	private void InitToMultiplayer(GameObject racer, float id) {
+	private void InitToMultiplayer(GameObject racer, TTSRacerNetHandler handler) {
 		racer.GetComponent<TTSRacer>().IsPlayerControlled = true;
-		racer.GetComponent<TTSRacer>().tempRacerID = id;
 		racer.GetComponent<TTSRacer>().player = TTSRacer.PlayerType.Multiplayer;
+		handler.position = racer.transform.position;
+		racer.GetComponent<TTSRacer>().SetNetHandler(handler);
 	}
 
 	// Update is called once per frame

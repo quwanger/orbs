@@ -36,7 +36,7 @@ public class TTSClient : MonoBehaviour
 	Dictionary<float, TTSNetworkHandle> netHandles = new Dictionary<float, TTSNetworkHandle>();
 	TTSPacketWriter UpdatePacket = new TTSPacketWriter();
 
-	List<float> spawnRacers = new List<float>();
+	List<TTSRacerNetHandler> spawnRacers = new List<TTSRacerNetHandler>();
 
 	// Use this for initialization
 	void Start() {
@@ -84,8 +84,8 @@ public class TTSClient : MonoBehaviour
 
 		// Spawn multiplayer racers
 		if (spawnRacers.Count > 0) {
-			foreach (float id in spawnRacers) {
-				GetComponent<TTSInitRace>().InitMultiplayerRacer(id);
+			foreach (TTSRacerNetHandler handler in spawnRacers) {
+				GetComponent<TTSInitRace>().InitMultiplayerRacer(handler);
 			}
 			spawnRacers.Clear();
 		}
@@ -128,8 +128,16 @@ public class TTSClient : MonoBehaviour
 			switch (command) {
 				case TTSCommandTypes.RacerRegister:
 					id = packet.ReadFloat();
+					TTSRacerNetHandler handler = new TTSRacerNetHandler(this, false, id);
+					handler.Index = packet.ReadInt32();
+					handler.Rig = packet.ReadInt32();
+					handler.Perk1 = packet.ReadInt32();
+					handler.Perk2 = packet.ReadInt32();
+					handler.Name = packet.Read16CharString();
+					handler.ControlType = packet.ReadInt32();
+
 					Debug.Log(">	Received a racer " + id);
-					spawnRacers.Add(id);
+					spawnRacers.Add(handler);
 					break;
 
 				case TTSCommandTypes.RacerUpdate:
@@ -161,9 +169,6 @@ public class TTSClient : MonoBehaviour
 	private void ServerAllObjectsRegister() {
 		TTSPacketWriter writer = new TTSPacketWriter();
 		foreach (KeyValuePair<float, TTSNetworkHandle> pair in netHandles) {
-			if (writer.WillOverflow(4 * 2)) {
-				SendPacket(writer, true);
-			}
 			ServerObjectRegister(pair.Value, writer);
 		}
 		SendPacket(writer);
@@ -171,8 +176,13 @@ public class TTSClient : MonoBehaviour
 
 	// Writes the necessary register code to the given packet writer
 	private void ServerObjectRegister(TTSNetworkHandle handle, TTSPacketWriter writer) {
-		writer.AddData(handle.registerCommand);
-		writer.AddData(handle.id);
+		byte[] data = handle.GetNetworkRegister();
+
+		if (writer.WillOverflow(data.Length)) { // Overflow check
+			SendPacket(writer, true);
+		}
+
+		writer.AddData(data);
 	}
 
 	public void LocalObjectRegister(TTSNetworkHandle handler) {
@@ -273,6 +283,14 @@ public abstract class TTSNetworkHandle
 	// You must override this method. Command and ID will already be read
 	public abstract void ReceiveNetworkData(TTSPacketReader reader, int command);
 
+	public virtual byte[] GetNetworkRegister() {
+		writer.AddData(registerCommand);
+		writer.AddData(id);
+		byte[] data = writer.GetMinimizedData();
+		writer.ClearData();
+		return data;
+	}
+
 	// Do not override this method unless necessary
 	public byte[] GetNetworkUpdate() {
 		return writer.GetMinimizedData();
@@ -286,6 +304,15 @@ public class TTSPacketReader
 
 	public TTSPacketReader(byte[] bytes) {
 		Data = bytes;
+	}
+
+	public string Read16CharString() {
+		return ReadString(16);
+	}
+
+	public string ReadString(int len) {
+		ReadIndex += len;
+		return System.Text.Encoding.UTF8.GetString(Data, ReadIndex-len, len);
 	}
 
 	public uint ReadUInt32() {
@@ -335,6 +362,10 @@ public class TTSPacketWriter
 	}
 
 	public TTSPacketWriter() {
+	}
+
+	public void AddData(string str) {
+		AddData(System.Text.Encoding.UTF8.GetBytes(str));
 	}
 
 	public void AddData(byte[] bytes) {

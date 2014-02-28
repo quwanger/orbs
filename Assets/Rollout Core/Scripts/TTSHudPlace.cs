@@ -10,10 +10,14 @@ public class TTSHudPlace : TTSBehaviour {
 	void Update () {
 		
 		if(this.GetComponent<TTSLevel>().raceHasStarted){
-		
+
+			TTSRacer racer;
 			foreach(GameObject r in racers){
-				r.GetComponent<TTSRacer>().distanceToFinish = r.GetComponent<TTSRacer>().currentWaypoint.distanceFromEnd;
-				r.GetComponent<TTSRacer>().distanceToFinish += Vector3.Distance(r.transform.position, r.GetComponent<TTSRacer>().nextWaypoint.transform.position);
+				racer = r.GetComponent<TTSRacer>();
+				if (racer.nextWaypoint != null) {
+					racer.distanceToFinish = racer.currentWaypoint.distanceFromEnd;
+					racer.distanceToFinish += Vector3.Distance(r.transform.position, racer.nextWaypoint.transform.position);
+				}
 			}
 			
 			float farthestAway = 0;
