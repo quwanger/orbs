@@ -20,9 +20,12 @@ type OrbsConnection struct {
 	OwnedObjects []float32
 	// OwnedRacers []float32
 	// OwnedPowerups []float32
+
+	DebugMode bool
 }
 
 func (this *OrbsConnection) Init(sender *net.UDPAddr, outConnection *net.UDPConn) {
+	this.DebugMode = false
 	this.IsEstablished = false
 
 	this.Address = sender
@@ -35,6 +38,10 @@ func (this *OrbsConnection) Init(sender *net.UDPAddr, outConnection *net.UDPConn
 	this.OutConnection = outConnection
 	// this.CommandSender = new(UnityCommand)
 	// this.CommandSender.Init(this.OutPacket, this.ReturnAddress, outConn)
+}
+
+func (this *OrbsConnection) AddObject(id float32) {
+	this.OwnedObjects = append(this.OwnedObjects, id)
 }
 
 func (this *OrbsConnection) WriteData(data []byte) {
@@ -50,7 +57,9 @@ func (this *OrbsConnection) SendPacket() {
 	n, _ := this.OutConnection.WriteToUDP(this.OutPacket.Data[0:this.OutPacket.Size()], this.ReturnAddress)
 	this.OutPacket.Clear()
 
-	fmt.Printf(">	Sent %v bytes to %v\n", n, this.IPAddress)
+	if this.DebugMode {
+		fmt.Printf(">	Sent %v bytes to %v\n", n, this.IPAddress)
+	}
 }
 
 func (this *OrbsConnection) CheckPacketSize(dataLength int) {

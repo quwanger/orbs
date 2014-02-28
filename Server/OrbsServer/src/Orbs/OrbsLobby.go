@@ -41,30 +41,36 @@ func (this *OrbsLobby) ProcessPacket(sender *net.UDPAddr, reader *Packets.Packet
 			fmt.Printf("	L:%v COMMAND: '%v' from %v\n", this.LobbyID, command, sender)
 		}
 
-		if this.InGame { // If the game has started
-			this.Race.ProcessPacket(sender, reader, command)
-			command = OrbsCommandTypes.EndPacket
-		} else {
+		// if this.InGame { // If the game has started
+		// } else {
 
-			switch command {
+		switch command {
 
-			// 2010
-			case OrbsCommandTypes.RacerRegister:
-				this.racerRegister(this.connections[ip], reader)
+		// 2010
+		case OrbsCommandTypes.RacerRegister:
+			this.racerRegister(this.connections[ip], reader)
 
-			// 9999
-			case OrbsCommandTypes.CloseConnection:
-				if this.connectionExists(ip) {
-					for _, value := range this.connections[ip].OwnedObjects {
-						delete(this.objToOwner, value)
-						delete(this.racers, value)
-					}
-					delete(this.connections, ip)
+		// 9999
+		case OrbsCommandTypes.CloseConnection:
+			if this.connectionExists(ip) {
+				for _, value := range this.connections[ip].OwnedObjects {
+					delete(this.objToOwner, value)
+					delete(this.racers, value)
 				}
+				delete(this.connections, ip)
+			}
+			if len(this.racers) == 0 {
+				this.Reset()
 			}
 
-			command = reader.ReadInt32()
+		default:
+			this.Race.ProcessPacket(sender, reader, command)
+			// command = OrbsCommandTypes.EndPacket
+
 		}
+
+		command = reader.ReadInt32()
+		// }
 	}
 
 	this.broadcastPacket()
@@ -87,15 +93,15 @@ func (this *OrbsLobby) racerRegister(connection *OrbsConnection, reader *Packets
 	if !this.objExists(racerID) { // Success
 
 		this.racers[racerID] = new(OrbsRacer)
-		this.racers[racerID].Init(racerIndex, racerRig, racerPerk1, racerPerk2, racerName, racerControlType, connection)
+		this.racers[racerID].Init(racerID, racerIndex, racerRig, racerPerk1, racerPerk2, racerName, racerControlType, connection)
 
-		this.InGame = true
 		if this.InGame { // Broadcast to everyone else
 			this.Race.SpawnRacer(racerID, connection)
 		}
 
 		// Return success command to the sender
 		this.objToOwner[racerID] = connection
+		connection.AddObject(racerID)
 		returnPacket.WriteInt(OrbsCommandTypes.RacerRegisterOK)
 		returnPacket.WriteFloat32(racerID)
 		fmt.Printf("	S	L:%v Racer %v registered\n", this.LobbyID, racerID)
@@ -145,11 +151,40 @@ func (this *OrbsLobby) AddConnection(newConnection *OrbsConnection) bool {
 	newConnection.OutPacket.WriteInt(this.LobbyID)
 
 	// Send the registered racers
+	for _, value := range this.racers {
+		this.SendRacer(value, newConnection)
+	}
 
 	newConnection.SendPacket()
 
 	fmt.Printf("	S	%v registered to lobby %v\n", newConnection.IPAddress, this.LobbyID)
 	return true
+}
+
+func (this *OrbsLobby) SendRacer(racer *OrbsRacer, connection *OrbsConnection) {
+	var returnPacket = new(Packets.PacketWriter)
+	returnPacket.InitPacket()
+	returnPacket.WriteInt(OrbsCommandTypes.RacerRegister)
+	returnPacket.WriteFloat32(racer.ID)
+	// returnPacket.WriteFloat32(22)
+	returnPacket.WriteInt(racer.Index)
+	// returnPacket.WriteInt(len(this.Racers))
+	returnPacket.WriteInt(racer.RigType)
+	returnPacket.WriteInt(racer.Perk1Type)
+	returnPacket.WriteInt(racer.Perk2Type)
+	returnPacket.WriteString(racer.Name)
+	returnPacket.WriteInt(racer.ControlType)
+	connection.OutPacket.WriteBytes(returnPacket.GetMinimalData())
+	// this.writeBroadcastData(returnPacket.GetMinimalData())
+}
+
+func (this *OrbsLobby) Reset() {
+	fmt.Printf("	St	L:%v Reset\n", this.LobbyID)
+	this.InGame = false
+	this.connections = make(map[string]*OrbsConnection)
+	this.objToOwner = make(map[float32]*OrbsConnection)
+	this.racers = make(map[float32]*OrbsRacer)
+	this.Race.InitRace(this.connections, this.objToOwner, this.racers)
 }
 
 // Helpers
