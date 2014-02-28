@@ -87,6 +87,7 @@ public class TTSMenu : TTSMenuEnums {
 		
 		perkDescription.guiText.font.material.color = new Color32(70, 70, 70, 255);
 		
+		
 		foreach(GameObject r in rigs)
 		{
 			_rigs.Add(r);
@@ -206,6 +207,32 @@ public class TTSMenu : TTSMenuEnums {
 	}
 
 	private void ChangeIndex(string direction, int index){	
+		
+		// 2x3 menu system
+		if(changer == 0)
+		{
+			if(direction == "left"){
+				if(index == 12 || index == 22 || index == 32)
+					index -= 1;
+			}
+			
+			else if(direction == "right"){
+				if(index == 11 || index == 21 || index == 31)
+					index += 1;
+			}
+			
+			else if(direction == "down"){
+				if(index < 30)
+					index += 10;
+			}
+			
+			else if(direction == "up"){
+				if(index > 20)
+					index -= 10;
+			}
+		}
+		
+		
 		// 3x2 menu system
 		if(changer == 3)
 		{
@@ -257,7 +284,7 @@ public class TTSMenu : TTSMenuEnums {
 		switch(changer){
 			case 0:
 				selectedLevelIndex = index;
-				//HighlightLevel();
+				HighlightLevel();
 			break;
 			
 			case 1:
@@ -286,6 +313,18 @@ public class TTSMenu : TTSMenuEnums {
 		}
 		
 		//HighlightRig();
+	}
+	
+	private void HighlightLevel(){
+		foreach(GameObject l in _levels){
+			if(l.GetComponent<TTSMenuItemLevel>().index!=selectedLevelIndex)
+				l.SetActive(false);
+			
+			else{
+				SelectedLevel = l.GetComponent<TTSMenuItemLevel>().level;
+				l.SetActive(true);
+			}
+		}
 	}
 	
 	private void HighlightPerk(){
