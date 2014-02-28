@@ -19,7 +19,9 @@ public class TTSMinimap : MonoBehaviour {
 	}
 
 	void OnGUI() {
-		if(Event.current.type == EventType.Repaint) 
+		if(Event.current.type == EventType.Repaint) {
 			Graphics.DrawTexture(new Rect(20, Screen.height - 220, 200, 200), minimapTexture, minimapMaterial);
+			Graphics.DrawTexture(new Rect(150, 150, 200, 200), minimapTexture, minimapMaterial);
+		}
 	}
 }

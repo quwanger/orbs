@@ -6,12 +6,12 @@ public class TTSInitRace : MonoBehaviour {
 	public List<GameObject> _rigs = new List<GameObject>();
 	public List<GameObject> _characters = new List<GameObject>();
 	public List<GameObject> _startingpoints = new List<GameObject>();
-	public List<GameObject> _playericon = new List<GameObject>();
 	
 	public GameObject racerGO;
 	public GameObject cameraGO;
 	public GameObject hudGO;
 	public GameObject minimapGO;
+	public GameObject playericon;
 	
 	public enum Rigs {Rhino, Scorpion, Default};
 	public enum Characters {Character_Default, Character1, Character2};
@@ -65,27 +65,27 @@ public class TTSInitRace : MonoBehaviour {
 			tempRacer.GetComponent<TTSRacer>().displayMeshComponent = tempChar.transform;
 			tempRacer.GetComponent<TTSRacer>().CurrentRig = tempRig;
 
-			GameObject pi = _playericon[i];
+			GameObject tempIcon = (GameObject)Instantiate(playericon);
 
-			GameObject tempIcon = (GameObject)Instantiate(pi);
+			tempRacer.GetComponent<TTSRacer>().minimapIcon = tempIcon;
 
 			//this is where the stuff for the human players
 			if(i < tempNumHumanPlayers){
 				tempRacer.GetComponent<TTSRacer>().IsPlayerControlled = true;
 				tempRacer.GetComponent<TTSRacer>().player = TTSRacer.PlayerType.Player;
 
-				tempIcon.transform.localScale = new Vector3(30.0f, 30.0f, 30.0f);
 				GameObject tempMinimap = (GameObject)Instantiate(minimapGO);
 				tempMinimap.GetComponent<TTSMinimap>().player = tempRig.transform;
-			
+
 				GameObject tempCamera = (GameObject)Instantiate(cameraGO);
 
 				switch(tempNumHumanPlayers){
 					case 2:
-						if(i==0)
+						if(i==0) {
 							tempCamera.camera.rect = new Rect(0, 0.5f, 1.0f, 0.5f);
-						else
+						} else {
 							tempCamera.camera.rect = new Rect(0, 0, 1.0f, 0.5f);
+						}
 						break;
 
 					case 3:
@@ -127,11 +127,9 @@ public class TTSInitRace : MonoBehaviour {
 				tempRacer.GetComponent<TTSRacer>().IsPlayerControlled = true;
 				tempRacer.GetComponent<TTSRacer>().player = TTSRacer.PlayerType.AI;
 			}
-
-			tempRacer.GetComponent<TTSRacer>().minimapIcon = tempIcon;
 		}
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 	
