@@ -184,8 +184,8 @@ public class TTSRacer : TTSBehaviour
 			return;
 
 		if (player == PlayerType.Player) {
-			vInput = Input.GetAxis("Vertical");
-			hInput = Input.GetAxis("Horizontal");
+			vInput = Input.GetAxis("L_YAxis_1");
+			hInput = Input.GetAxis("L_XAxis_1");
 
 		}
 		else if (player == PlayerType.Multiplayer) {
