@@ -39,7 +39,7 @@ public class TTSPowerup : TTSBehaviour
 			if (Input.GetKeyDown("1")) { if (this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)  DrezzStone(DebugTier); }
 			if (Input.GetKeyDown("2")) { if (this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)  EntropyCannon(DebugTier); }
 			if (Input.GetKeyDown("3")) { if (this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)  SuperCBooster(DebugTier, true); }
-			if (Input.GetKeyDown("4")) { if (this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)  TimeBonus(); }
+			if (Input.GetKeyDown("4")) { if (this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)  GiveTimeBonus(true); }
 			if (Input.GetKeyDown("5")) { if (this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)  Shield(DebugTier); }
 			if (Input.GetKeyDown("6")) { if (this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)  DeployShockwave(DebugTier, true); }
 			if (Input.GetKeyDown("7")) { if (this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)  Leech(DebugTier); }
@@ -71,7 +71,7 @@ public class TTSPowerup : TTSBehaviour
 		else if (powerup == Powerup.TimeBonus) {
 			if (AvailablePowerup == TTSBehaviour.Powerup.None)
 				tier = 0;
-			TimeBonus();
+			GiveTimeBonus(true);
 		}
 		else {
 			AvailablePowerup = powerup;
@@ -260,10 +260,6 @@ public class TTSPowerup : TTSBehaviour
 		if (owner) { SendPowerupDeploy(TTSPowerupNetworkTypes.Boost, tier); }
 	}
 
-	public void TimeBonus() {
-		GiveTimeBonus(this.gameObject);
-	}
-
 	public void Shield(float tier) {
 		DeployShield(tier, true);
 	}
@@ -308,10 +304,12 @@ public class TTSPowerup : TTSBehaviour
 		return go;
 	}
 
-	public GameObject GiveTimeBonus(GameObject effectedRacer) {
+	public GameObject GiveTimeBonus(bool owner) {
 		level.time.GiveTimeBonus(1.0f);
-		GameObject go = (GameObject)Instantiate(TimeBonusPrefab, effectedRacer.transform.position, effectedRacer.transform.rotation);
-		go.GetComponent<TTSTimeBonusPrefab>().target = effectedRacer.GetComponent<TTSRacer>().displayMeshComponent.gameObject;
+		GameObject go = (GameObject)Instantiate(TimeBonusPrefab, this.gameObject.transform.position, this.gameObject.transform.rotation);
+		go.GetComponent<TTSTimeBonusPrefab>().target = this.gameObject.GetComponent<TTSRacer>().displayMeshComponent.gameObject;
+
+		if (owner) { SendPowerupDeploy(TTSPowerupNetworkTypes.TimeBonus, 0.0f); }
 		return go;
 	}
 
