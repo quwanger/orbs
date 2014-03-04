@@ -102,7 +102,7 @@ public class TTSLeech : TTSBehaviour {
 	            hit.rigidbody.AddExplosionForce(explosionPower, explosionPos, explosionRadius, -3.0F);
 			if(hit.GetComponent<TTSRacer>())
 				//slow down racer if it is a racer
-				hit.GetComponent<TTSRacer>().DamageRacer(100.0f);
+				hit.GetComponent<TTSRacer>().DamageRacer(0.7f);
 	    }
 		
 		Destroy (this.gameObject);
