@@ -486,6 +486,10 @@ public class TTSRacer : TTSBehaviour
 				case TTSPowerupNetworkTypes.Boost:
 					powerupManager.SuperCBooster(handler.Tier, false);
 					break;
+
+				case TTSPowerupNetworkTypes.Shockwave:
+					powerupManager.DeployShockwave(handler.Tier, false);
+					break;
 			}
 		}
 		netHandler.receivedPowerups.Clear();
