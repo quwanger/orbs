@@ -10,6 +10,7 @@ public class TTSInitRace : MonoBehaviour {
 	public GameObject racerGO;
 	public GameObject cameraGO;
 	public GameObject hudGO;
+	//public GameObject indicatorGO;
 	
 	private int counter = 1;
 	
@@ -71,6 +72,10 @@ public class TTSInitRace : MonoBehaviour {
 			//parents the racer properly
 			tempChar.transform.parent = tempRacer.transform;
 			tempRig.transform.parent = tempChar.transform;
+		
+			//place the indicator
+			//GameObject tempIndicator = (GameObject)Instantiate(indicatorGO, new Vector3(tempRacer.transform.position.x, tempRacer.transform.position.y + 0.5f, tempRacer.transform.position.z), tempChar.transform.rotation);
+			//tempIndicator.transform.parent = tempChar.transform;
 			
 			//makes the sphere mesh follow the Racer2.0
 			tempRacer.GetComponent<TTSRacer>().displayMeshComponent = tempChar.transform;
