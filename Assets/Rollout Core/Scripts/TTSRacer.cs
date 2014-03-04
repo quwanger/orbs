@@ -186,16 +186,21 @@ public class TTSRacer : TTSBehaviour
 			return;
 
 		if (player == PlayerType.Player) {
-			if (playerNum == 1) {
-				vInput = Input.GetAxis("L_YAxis_1");
-				hInput = Input.GetAxis("L_XAxis_1");
-			} else if (playerNum == 2) {
-				vInput = Input.GetAxis("L_YAxis_2");
-				hInput = Input.GetAxis("L_XAxis_2");
-			} else if (playerNum == 3) {
-				
-			} else if (playerNum == 4) {
-				
+			if(level.currentGameType == TTSLevel.Gametype.SinglePlayer || level.currentGameType == TTSLevel.Gametype.TimeTrial) {
+				vInput = Input.GetAxis ("Key_YAxis");
+				hInput = Input.GetAxis ("Key_XAxis");	
+			} else {
+				if (playerNum == 1) {
+					vInput = Input.GetAxis("L_YAxis_1");
+					hInput = Input.GetAxis("L_XAxis_1");
+				} else if (playerNum == 2) {
+					vInput = Input.GetAxis("L_YAxis_2");
+					hInput = Input.GetAxis("L_XAxis_2");
+				} else if (playerNum == 3) {
+					
+				} else if (playerNum == 4) {
+					
+				}	
 			}
 		}
 		else if (player == PlayerType.Multiplayer) {
