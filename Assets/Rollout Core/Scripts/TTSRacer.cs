@@ -92,6 +92,8 @@ public class TTSRacer : TTSBehaviour
 	public float respawnTime = 2.0f;
 	public Vector3 respawnPoint;
 	public Quaternion respawnRotation;
+	
+	public int playerNum;
 	#endregion
 	
 	public bool hasShield;
@@ -184,9 +186,17 @@ public class TTSRacer : TTSBehaviour
 			return;
 
 		if (player == PlayerType.Player) {
-			vInput = Input.GetAxis("L_YAxis_1");
-			hInput = Input.GetAxis("L_XAxis_1");
-
+			if (playerNum == 1) {
+				vInput = Input.GetAxis("L_YAxis_1");
+				hInput = Input.GetAxis("L_XAxis_1");
+			} else if (playerNum == 2) {
+				vInput = Input.GetAxis("L_YAxis_2");
+				hInput = Input.GetAxis("L_XAxis_2");
+			} else if (playerNum == 3) {
+				
+			} else if (playerNum == 4) {
+				
+			}
 		}
 		else if (player == PlayerType.Multiplayer) {
 

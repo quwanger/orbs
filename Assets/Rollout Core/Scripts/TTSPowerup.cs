@@ -50,7 +50,15 @@ public class TTSPowerup : TTSBehaviour {
 		}
 
 		//if you hit space or the 'a' button on an Xbox controller
-		if(Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown("joystick 1 button 0")) ConsumePowerup();
+		if(this.gameObject.GetComponent<TTSRacer>().playerNum == 1) {
+			if(Input.GetKeyDown("joystick 1 button 0"))	ConsumePowerup();	
+		} else if(this.gameObject.GetComponent<TTSRacer>().playerNum == 2) {
+			if(Input.GetKeyDown("joystick 2 button 0"))	ConsumePowerup();
+		} else if(this.gameObject.GetComponent<TTSRacer>().playerNum == 3) {
+			if(Input.GetKeyDown("joystick 3 button 0"))	ConsumePowerup();
+		} else if(this.gameObject.GetComponent<TTSRacer>().playerNum == 4) {
+			if(Input.GetKeyDown("joystick 4 button 0"))	ConsumePowerup();
+		}
 		
 		//changes the powerup in the hud when a new powerup is picked up
 		if(AvailablePowerup != PreviouslyAvailablePowerup && this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)

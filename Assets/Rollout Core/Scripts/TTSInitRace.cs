@@ -11,6 +11,8 @@ public class TTSInitRace : MonoBehaviour {
 	public GameObject cameraGO;
 	public GameObject hudGO;
 	
+	private int counter = 1;
+	
 	public enum Rigs {Rhino, Scorpion, Default};
 	public enum Characters {Character_Default, Character1, Character2};
 	
@@ -74,7 +76,10 @@ public class TTSInitRace : MonoBehaviour {
 			tempRacer.GetComponent<TTSRacer>().displayMeshComponent = tempChar.transform;
 			//sets the currentrig variable of the racer to the rig selecte above
 			tempRacer.GetComponent<TTSRacer>().CurrentRig = tempRig;
-			
+		
+			tempRacer.GetComponent<TTSRacer>().playerNum = counter;
+			counter++;
+		
 			//do this only for human players
 			if(i < tempNumHumanPlayers){
 				//set to player controlled and set the player type to Player
