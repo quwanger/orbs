@@ -27,6 +27,7 @@ public class TTSClient : MonoBehaviour
 	#endregion
 
 	// Status
+	public bool isMultiplayer = true;
 	public bool EnteredLobby = false;
 	public bool InGame = false;
 	public int LobbyID = 0;
@@ -54,9 +55,13 @@ public class TTSClient : MonoBehaviour
 	}
 
 	private void InitConnection() {
+		ConnectToLobby(1);
+	}
+
+	public void ConnectToLobby(int lobby) {
 		TTSPacketWriter packet = new TTSPacketWriter();
 		packet.AddData(TTSCommandTypes.LobbyRegister);
-		packet.AddData(1);
+		packet.AddData(lobby);
 		SendPacket(packet);
 	}
 
@@ -136,11 +141,12 @@ public class TTSClient : MonoBehaviour
 					handler.Name = packet.Read16CharString();
 					handler.ControlType = packet.ReadInt32();
 
-					Debug.Log(">	Received a racer " + id);
+					if (DebugMode) Debug.Log(">	Received a racer " + id);
 					spawnRacers.Add(handler);
 					break;
 
 				case TTSCommandTypes.RacerUpdate:
+				case TTSCommandTypes.PowerupStaticRegister:
 					id = packet.ReadFloat();
 					netHandles[id].ReceiveNetworkData(packet, command);
 					break;
@@ -201,6 +207,14 @@ public class TTSClient : MonoBehaviour
 		netHandles.Add(handler.id, handler);
 	}
 
+	public void LocalObjectDeregister(float id) {
+		netHandles.Remove(id);
+	}
+
+	public bool IsIDTaken(float id) {
+		return netHandles.ContainsKey(id);
+	}
+
 	private void SendPacket(TTSPacketWriter writer) {
 		if (!writer.hasData)
 			return;
@@ -251,7 +265,8 @@ public static class TTSCommandTypes
 	public const int RacerIsNotRegistered   = 2092;
 
 	// Powerup
-	public const int PowerupRegister          = 5001;
+	public const int PowerupRegister		  = 5001;
+	public const int PowerupStaticRegister	  = 5002;
 	public const int PowerupRegisterOK        = 5011;
 	public const int PowerupUpdate            = 5004;
 	public const int PowerupDeregister        = 5009;
@@ -275,6 +290,7 @@ public abstract class TTSNetworkHandle
 	public TTSPacketWriter writer = new TTSPacketWriter(); // Each object must use this writer to write packet data
 
 	public bool owner;
+	public bool isUpdated = false;
 
 	public TTSNetworkHandle() {
 		// Register yourself to the client from here.
@@ -293,6 +309,7 @@ public abstract class TTSNetworkHandle
 
 	// Do not override this method unless necessary
 	public byte[] GetNetworkUpdate() {
+		isUpdated = false;
 		return writer.GetMinimizedData();
 	}
 }

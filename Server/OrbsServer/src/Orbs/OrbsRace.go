@@ -50,6 +50,11 @@ func (this *OrbsRace) ProcessPacket(sender *net.UDPAddr, reader *Packets.PacketR
 		// 2004
 		case OrbsCommandTypes.RacerUpdate:
 			this.racerUpdate(this.Connections[ip], reader)
+
+		// 5002
+		case OrbsCommandTypes.PowerupStaticRegister:
+			println(">	Powerup Received from ", ip)
+			this.staticPowerupDeploy(this.Connections[ip], reader)
 		}
 
 		command = reader.ReadInt32()
@@ -57,6 +62,23 @@ func (this *OrbsRace) ProcessPacket(sender *net.UDPAddr, reader *Packets.PacketR
 }
 
 // Command Processors
+
+func (this *OrbsRace) staticPowerupDeploy(connection *OrbsConnection, reader *Packets.PacketReader) {
+	racerID := reader.ReadFloat32()
+
+	if owner, exists := this.ObjToOwner[racerID]; exists && connection.IPAddress == owner.IPAddress {
+
+		var broadcastPacket = new(Packets.PacketWriter)
+		broadcastPacket.InitPacket()
+		broadcastPacket.WriteFloat32(racerID)
+		broadcastPacket.WriteBytes(reader.ReadBytes(4 * 2)) // PowerupType, PowerupTier
+		this.writeBroadcastDataExceptSender(broadcastPacket.GetMinimalData(), connection)
+	} else {
+		reader.EmptyReadBytes(Packets.SIZEOF_FLOAT32 * 2) // PowerupType, PowerupTier
+
+		// Just leave it.
+	}
+}
 
 func (this *OrbsRace) racerUpdate(connection *OrbsConnection, reader *Packets.PacketReader) {
 	racerID := reader.ReadFloat32()

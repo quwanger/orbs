@@ -107,6 +107,11 @@ func (this *PacketReader) ReadFloat32() float32 {
 	return value
 }
 
+func (this *PacketReader) ReadBytes(amount int) []byte {
+	this.readIndex += amount
+	return this.Data[this.readIndex-amount : this.readIndex]
+}
+
 func (this *PacketReader) handleError(err error) {
 	println(err)
 }

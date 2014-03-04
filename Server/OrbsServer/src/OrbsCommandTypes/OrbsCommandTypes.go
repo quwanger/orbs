@@ -33,6 +33,7 @@ const (
 
 	// Powerup
 	PowerupRegister          = 5001
+	PowerupStaticRegister    = 5002
 	PowerupRegisterOK        = 5011
 	PowerupUpdate            = 5004
 	PowerupDeregister        = 5009

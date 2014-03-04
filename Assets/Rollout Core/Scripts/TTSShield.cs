@@ -11,7 +11,7 @@ public class TTSShield : TTSPerishingBehaviour {
 		useKillFunctionWhenComplete = true; // Execute the kill function once complete
 	}
 	
-	public void DeployShield(int level, float def, TTSRacer tempRacer){
+	public void DeployShield(float level, float def, TTSRacer tempRacer){
 		this.duration = 4.0f * level * def;
 		racer = tempRacer;
 	}

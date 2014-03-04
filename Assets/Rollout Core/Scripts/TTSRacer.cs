@@ -100,6 +100,8 @@ public class TTSRacer : TTSBehaviour
 	
 	public GameObject myCamera;
 
+	private TTSPowerup powerupManager;
+
 	#region Direction/Wrong way
 	public TTSWaypoint currentWaypoint;
 	public TTSWaypoint previousWaypoint;
@@ -126,16 +128,22 @@ public class TTSRacer : TTSBehaviour
 			}
 		}
 
+		powerupManager = GetComponent<TTSPowerup>();
+
 		if (player == PlayerType.Player) {
 			netHandler = new TTSRacerNetHandler(level.client, true);
+			netHandler.powerupManager = powerupManager;
 		}
 		else if(player == PlayerType.AI){
 			AIUtil = gameObject.AddComponent<TTSAIController>();
 			netHandler = new TTSRacerNetHandler(level.client, true);
+			netHandler.powerupManager = powerupManager;
 		}
 		else if(player == PlayerType.Multiplayer)
-			if(netHandler != null)
+			if(netHandler == null)
 				netHandler = new TTSRacerNetHandler(level.client, false, tempRacerID);
+
+		powerupManager.SetNetHandler(netHandler);
 
 		//lastForward = TTSUtils.FlattenVector(displayMeshComponent.forward).normalized;
 
@@ -487,6 +495,9 @@ public class TTSRacerNetHandler : TTSNetworkHandle
 	public float networkVInput, networkHInput;
 	//public int networkPowerUpType, networkPowerUpTier;
 
+	// Static Powerup
+	public TTSPowerup powerupManager;
+
 	public TTSRacerNetHandler(TTSClient Client, bool Owner) {
 		registerCommand = TTSCommandTypes.RacerRegister;
 		owner = Owner;
@@ -515,17 +526,35 @@ public class TTSRacerNetHandler : TTSNetworkHandle
 
 	// Command and ID already read in packet
 	public override void ReceiveNetworkData(TTSPacketReader reader, int command) {
-		netPosition = reader.ReadVector3();
-		netRotation = reader.ReadVector3();
-		netSpeed = reader.ReadVector3();
+		if (command == TTSCommandTypes.RacerUpdate) {
+			netPosition = reader.ReadVector3();
+			netRotation = reader.ReadVector3();
+			netSpeed = reader.ReadVector3();
 
-		networkVInput = reader.ReadFloat();
-		networkHInput = reader.ReadFloat();
+			networkVInput = reader.ReadFloat();
+			networkHInput = reader.ReadFloat();
+		}
+		else if (command == TTSCommandTypes.PowerupRegister) {
+			int powerupType = reader.ReadInt32();
+			float powerupTier = reader.ReadFloat();
+
+			Debug.Log("Received: " + powerupType + " " + powerupTier);
+			return;
+
+			switch (powerupType) {
+				case TTSPowerupNetworkTypes.Shield:
+					powerupManager.Shield(powerupTier);
+					break;
+			}
+		}
 	}
 
 	public void UpdateRacer(Vector3 Pos, Vector3 Rot, Vector3 Speed, float VInput, float HInput) {
 		if (owner && isServerRegistered) { // Only send data if it's the owner
-			writer.ClearData();
+			
+			if(!isUpdated) writer.ClearData();
+			isUpdated = true;
+
 			writer.AddData(TTSCommandTypes.RacerUpdate);
 			writer.AddData(id);
 			writer.AddData(Pos);
@@ -533,6 +562,18 @@ public class TTSRacerNetHandler : TTSNetworkHandle
 			writer.AddData(Speed);
 			writer.AddData(VInput);
 			writer.AddData(HInput);
+		}
+	}
+
+	public void SendStaticPowerup(int powerupType, float powerupTier) {
+		if (owner && isServerRegistered) { // Only send data if it's the owner
+			if (!isUpdated) writer.ClearData();
+			isUpdated = true;
+
+			writer.AddData(TTSCommandTypes.PowerupStaticRegister);
+			writer.AddData(id);
+			writer.AddData(powerupType);
+			writer.AddData(powerupTier);
 		}
 	}
 }
