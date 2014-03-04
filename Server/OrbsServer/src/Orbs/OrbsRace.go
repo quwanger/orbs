@@ -65,13 +65,17 @@ func (this *OrbsRace) ProcessPacket(sender *net.UDPAddr, reader *Packets.PacketR
 
 func (this *OrbsRace) staticPowerupDeploy(connection *OrbsConnection, reader *Packets.PacketReader) {
 	racerID := reader.ReadFloat32()
+	powerupType, powerupTier := reader.ReadInt32(), reader.ReadFloat32()
+	println("#	Powerup Received ", powerupType, powerupTier)
 
 	if owner, exists := this.ObjToOwner[racerID]; exists && connection.IPAddress == owner.IPAddress {
 
 		var broadcastPacket = new(Packets.PacketWriter)
 		broadcastPacket.InitPacket()
+		broadcastPacket.WriteInt(OrbsCommandTypes.PowerupStaticRegister)
 		broadcastPacket.WriteFloat32(racerID)
-		broadcastPacket.WriteBytes(reader.ReadBytes(4 * 2)) // PowerupType, PowerupTier
+		broadcastPacket.WriteInt(powerupType)
+		broadcastPacket.WriteFloat32(powerupTier)
 		this.writeBroadcastDataExceptSender(broadcastPacket.GetMinimalData(), connection)
 	} else {
 		reader.EmptyReadBytes(Packets.SIZEOF_FLOAT32 * 2) // PowerupType, PowerupTier

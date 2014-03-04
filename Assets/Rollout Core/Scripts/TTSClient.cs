@@ -284,7 +284,7 @@ public abstract class TTSNetworkHandle
 	public bool isServerRegistered = false;
 	public float id = 0.0f; // ID will only be stored here
 	public bool canForfeitControl = false; // Whether object can be taken control of by another client (for scene objects)
-	public float networkInterpolation = 0.5f;
+	public float networkInterpolation = 0.05f;
 
 	protected TTSClient client;
 	public TTSPacketWriter writer = new TTSPacketWriter(); // Each object must use this writer to write packet data

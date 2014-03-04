@@ -395,6 +395,13 @@ public class TTSPowerupNetworkTypes
 
 public class TTSPowerupNetHandler : TTSNetworkHandle
 {
+	public int Type = -1;
+	public float Tier = -1.0f;
+
+	public TTSPowerupNetHandler() {
+		// For static powerups only.
+	}
+
 	public TTSPowerupNetHandler(TTSClient Client, bool Owner) {
 	}
 

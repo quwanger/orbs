@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 
 
@@ -132,12 +133,10 @@ public class TTSRacer : TTSBehaviour
 
 		if (player == PlayerType.Player) {
 			netHandler = new TTSRacerNetHandler(level.client, true);
-			netHandler.powerupManager = powerupManager;
 		}
 		else if(player == PlayerType.AI){
 			AIUtil = gameObject.AddComponent<TTSAIController>();
 			netHandler = new TTSRacerNetHandler(level.client, true);
-			netHandler.powerupManager = powerupManager;
 		}
 		else if(player == PlayerType.Multiplayer)
 			if(netHandler == null)
@@ -473,6 +472,19 @@ public class TTSRacer : TTSBehaviour
 		transform.position = Vector3.Lerp(transform.position, netHandler.netPosition, netHandler.networkInterpolation);
 		displayMeshComponent.rotation = Quaternion.Lerp(displayMeshComponent.rotation, Quaternion.Euler(netHandler.netRotation), netHandler.networkInterpolation * 10);
 		rigidbody.velocity = netHandler.netSpeed;
+
+		vInput = Mathf.Lerp(vInput, netHandler.networkVInput, netHandler.networkInterpolation * 5);
+		hInput = Mathf.Lerp(hInput, netHandler.networkHInput, netHandler.networkInterpolation * 5);
+
+		// Powerups
+		foreach (TTSPowerupNetHandler handler in netHandler.receivedPowerups) {
+			switch (handler.Type) {
+				case TTSPowerupNetworkTypes.Shield:
+					powerupManager.Shield(handler.Tier);
+					break;
+			}
+		}
+		netHandler.receivedPowerups.Clear();
 	}
 }
 
@@ -495,8 +507,8 @@ public class TTSRacerNetHandler : TTSNetworkHandle
 	public float networkVInput, networkHInput;
 	//public int networkPowerUpType, networkPowerUpTier;
 
-	// Static Powerup
-	public TTSPowerup powerupManager;
+	// Powerup
+	public List<TTSPowerupNetHandler> receivedPowerups = new List<TTSPowerupNetHandler>();
 
 	public TTSRacerNetHandler(TTSClient Client, bool Owner) {
 		registerCommand = TTSCommandTypes.RacerRegister;
@@ -534,16 +546,16 @@ public class TTSRacerNetHandler : TTSNetworkHandle
 			networkVInput = reader.ReadFloat();
 			networkHInput = reader.ReadFloat();
 		}
-		else if (command == TTSCommandTypes.PowerupRegister) {
+		else if (command == TTSCommandTypes.PowerupStaticRegister) {
 			int powerupType = reader.ReadInt32();
 			float powerupTier = reader.ReadFloat();
-
-			Debug.Log("Received: " + powerupType + " " + powerupTier);
-			return;
+			TTSPowerupNetHandler handler = new TTSPowerupNetHandler();
+			handler.Type = powerupType;
+			handler.Tier = powerupTier;
 
 			switch (powerupType) {
 				case TTSPowerupNetworkTypes.Shield:
-					powerupManager.Shield(powerupTier);
+					receivedPowerups.Add(handler);
 					break;
 			}
 		}
