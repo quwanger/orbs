@@ -4,6 +4,7 @@ using System.Collections.Generic;
 public class TTSRacerSpeedBoost : TTSPerishingBehaviour {
 
 	public float TargetForce = 100.0f;
+	public bool owner = true;
 	private GameObject go;
 	private List<TrailRenderer> trailRenderers = new List<TrailRenderer>();
 	private bool isPlatform;
@@ -15,6 +16,8 @@ public class TTSRacerSpeedBoost : TTSPerishingBehaviour {
 	}
 
 	protected override void OnPerishingUpdate(float progress) {
+		if (!owner)	return;
+
 		if(isPlatform){
 			rigidbody.AddForce(GetComponent<TTSRacer>().displayMeshComponent.forward * _power);
 			Debug.Log("IsPlatform!");

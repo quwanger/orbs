@@ -38,7 +38,7 @@ public class TTSPowerup : TTSBehaviour
 		if (level.DebugMode) {
 			if (Input.GetKeyDown("1")) { if (this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)  DrezzStone(DebugTier); }
 			if (Input.GetKeyDown("2")) { if (this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)  EntropyCannon(DebugTier); }
-			if (Input.GetKeyDown("3")) { if (this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)  SuperCBooster(DebugTier, this.gameObject); }
+			if (Input.GetKeyDown("3")) { if (this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)  SuperCBooster(DebugTier, true); }
 			if (Input.GetKeyDown("4")) { if (this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)  TimeBonus(); }
 			if (Input.GetKeyDown("5")) { if (this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)  Shield(DebugTier); }
 			if (Input.GetKeyDown("6")) { if (this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)  Shockwave(DebugTier); }
@@ -112,7 +112,7 @@ public class TTSPowerup : TTSBehaviour
 				break;
 
 			case Powerup.SuperC:
-				SuperCBooster(tier, this.gameObject);
+				SuperCBooster(tier, true);
 				break;
 
 			case Powerup.Shield:
@@ -247,26 +247,29 @@ public class TTSPowerup : TTSBehaviour
 		FireHelix(this.gameObject);
 	}
 
-	public void SuperCBooster(int _tier, GameObject effectedRacer) {
-		TTSRacerSpeedBoost boost = effectedRacer.AddComponent<TTSRacerSpeedBoost>();
+	public void SuperCBooster(float tier, bool owner) {
+		TTSRacerSpeedBoost boost = this.gameObject.AddComponent<TTSRacerSpeedBoost>();
+		boost.owner = owner;
 		boost.FireBoost(BoostPrefab);
 
 		//offense adds to the boost duration and target force at every level
-		if (_tier == 1) {
+		if (tier == 1.0f) {
 			boost.duration = 1.0f * this.GetComponent<TTSRacer>().Offense;
 			boost.TargetForce = 80.0f * this.GetComponent<TTSRacer>().Offense;
 			vfx.BoostEffect(1.0f);
 		}
-		if (_tier == 2) {
+		if (tier == 2.0f) {
 			boost.duration = 1.5f * this.GetComponent<TTSRacer>().Offense;
 			boost.TargetForce = 90.0f * this.GetComponent<TTSRacer>().Offense;
 			vfx.BoostEffect(1.0f);
 		}
-		if (_tier == 3) {
+		if (tier == 3.0f) {
 			boost.duration = 3.0f * this.GetComponent<TTSRacer>().Offense;
 			boost.TargetForce = 100.0f * this.GetComponent<TTSRacer>().Offense;
 			vfx.BoostEffect(1.0f);
 		}
+
+		if (owner) { SendPowerupDeploy(TTSPowerupNetworkTypes.Boost, tier); }
 	}
 
 	public void TimeBonus() {
@@ -275,10 +278,6 @@ public class TTSPowerup : TTSBehaviour
 
 	public void Shield(float tier) {
 		DeployShield(tier, true);
-	}
-
-	public void ReceiveShield(float tier) {
-		DeployShield(tier, false);
 	}
 
 	#endregion
@@ -365,10 +364,6 @@ public class TTSPowerup : TTSBehaviour
 		else {
 			// Create a nethandler and proceed
 		}
-	}
-
-	public void ReceiveStaticPowerupDeploy(int poweruptype, float tier) {
-
 	}
 	#endregion
 

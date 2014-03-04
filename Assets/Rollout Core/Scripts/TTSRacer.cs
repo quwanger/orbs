@@ -480,7 +480,11 @@ public class TTSRacer : TTSBehaviour
 		foreach (TTSPowerupNetHandler handler in netHandler.receivedPowerups) {
 			switch (handler.Type) {
 				case TTSPowerupNetworkTypes.Shield:
-					powerupManager.Shield(handler.Tier);
+					powerupManager.DeployShield(handler.Tier, false);
+					break;
+
+				case TTSPowerupNetworkTypes.Boost:
+					powerupManager.SuperCBooster(handler.Tier, false);
 					break;
 			}
 		}
