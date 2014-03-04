@@ -4,7 +4,7 @@ using System.Collections;
 public class TTSPowerup : TTSBehaviour {
 	
 	public bool debug = false;
-	public int DebugTier = 2;
+	public int DebugTier = 1;
 	
 	public Powerup AvailablePowerup;
 	public Powerup PreviouslyAvailablePowerup = Powerup.None;
@@ -297,10 +297,12 @@ public class TTSPowerup : TTSBehaviour {
 	
 	public GameObject FireHelix(GameObject effectedRacer) {
 		GameObject go = (GameObject) Instantiate(HelixPrefab);
+		go.GetComponent<TTSHelixProjectile>().currentRacer = effectedRacer.GetComponent<TTSRacer>();
 		go.GetComponent<TTSHelixProjectile>().offensiveMultiplier = effectedRacer.GetComponent<TTSRacer>().Offense;
 		go.transform.rotation = GetComponent<TTSRacer>().displayMeshComponent.transform.rotation;
 		go.transform.position = effectedRacer.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
-		go.rigidbody.velocity = effectedRacer.rigidbody.velocity.normalized * (effectedRacer.rigidbody.velocity.magnitude + go.GetComponent<TTSHelixProjectile>().ProjectileStartVelocity);
+		//go.rigidbody.velocity = effectedRacer.rigidbody.velocity.normalized * (effectedRacer.rigidbody.velocity.magnitude + go.GetComponent<TTSHelixProjectile>().ProjectileStartVelocity);
+		go.rigidbody.velocity = effectedRacer.rigidbody.velocity;
 		return go;
 	}
 	
