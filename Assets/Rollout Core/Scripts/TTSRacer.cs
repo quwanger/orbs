@@ -557,10 +557,8 @@ public class TTSRacerNetHandler : TTSNetworkHandle
 			handler.Type = powerupType;
 			handler.Tier = powerupTier;
 
-			switch (powerupType) {
-				case TTSPowerupNetworkTypes.Shield:
-					receivedPowerups.Add(handler);
-					break;
+			if (TTSPowerupNetworkTypes.isStaticType(powerupType)) {
+				receivedPowerups.Add(handler);
 			}
 		}
 	}
