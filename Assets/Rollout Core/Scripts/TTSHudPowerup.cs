@@ -5,6 +5,11 @@ public class TTSHudPowerup : MonoBehaviour {
 		
 	public Texture[] powerupImages = new Texture[9];
 	public TTSHudPowerupLevel hpl;
+	public GameObject powerupFrame;
+	public GameObject powerupLevel;
+	
+	public float frameScaleFactor = 1.05f;
+	public float frameScaleTime = 0.3f;
 	
 	// Use this for initialization
 	void Start () {
@@ -55,6 +60,30 @@ public class TTSHudPowerup : MonoBehaviour {
 			break;
 		}
 		
+		if(t!=3){
+			iTween.ScaleTo(powerupFrame,iTween.Hash("scale", new Vector3 (powerupFrame.transform.localScale.x*frameScaleFactor,powerupFrame.transform.localScale.y*frameScaleFactor,powerupFrame.transform.localScale.z*frameScaleFactor) ,"time", 0.1f, "oncomplete", "ReturnToOriginalSize", "oncompletetarget", this.gameObject));
+			iTween.ScaleTo(powerupLevel,iTween.Hash("scale", new Vector3 (powerupLevel.transform.localScale.x*frameScaleFactor,powerupLevel.transform.localScale.y*frameScaleFactor,powerupLevel.transform.localScale.z*frameScaleFactor) ,"time", 0.1f, "oncomplete", "ReturnToOriginalSize", "oncompletetarget", this.gameObject));
+			iTween.ScaleTo(this.gameObject,iTween.Hash("scale", new Vector3 (this.gameObject.transform.localScale.x*frameScaleFactor,this.gameObject.transform.localScale.y*frameScaleFactor,this.gameObject.transform.localScale.z*frameScaleFactor) ,"time", 0.1f, "oncomplete", "ReturnToOriginalSize", "oncompletetarget", this.gameObject));
+			
+			powerupFrame.renderer.material.color = Color.white;
+			powerupLevel.renderer.material.color = Color.white;
+			this.gameObject.renderer.material.color = Color.white;
+		}else{
+			iTween.ScaleTo(powerupFrame,iTween.Hash("scale", new Vector3 (powerupFrame.transform.localScale.x*frameScaleFactor*1.5f,powerupFrame.transform.localScale.y*frameScaleFactor*1.5f,powerupFrame.transform.localScale.z*frameScaleFactor*1.5f) ,"time", 0.1f, "oncomplete", "ReturnToOriginalSize", "oncompletetarget", this.gameObject));
+			iTween.ScaleTo(powerupLevel,iTween.Hash("scale", new Vector3 (powerupLevel.transform.localScale.x*frameScaleFactor*1.5f,powerupLevel.transform.localScale.y*frameScaleFactor*1.5f,powerupLevel.transform.localScale.z*frameScaleFactor*1.5f) ,"time", 0.1f, "oncomplete", "ReturnToOriginalSize", "oncompletetarget", this.gameObject));
+			iTween.ScaleTo(this.gameObject,iTween.Hash("scale", new Vector3 (this.gameObject.transform.localScale.x*frameScaleFactor*1.5f,this.gameObject.transform.localScale.y*frameScaleFactor*1.5f,this.gameObject.transform.localScale.z*frameScaleFactor*1.5f) ,"time", 0.1f, "oncomplete", "ReturnToOriginalSize", "oncompletetarget", this.gameObject));
+			
+			powerupFrame.renderer.material.color = Color.cyan;
+			powerupLevel.renderer.material.color = Color.cyan;
+			this.gameObject.renderer.material.color = Color.cyan;
+		}
+		
 		hpl.UpdatePowerupLevel(t);
+	}
+	
+	public void ReturnToOriginalSize(){
+		iTween.ScaleTo(powerupFrame,iTween.Hash("scale", new Vector3 (0.2f,0.2f,0.2f) ,"time", frameScaleTime));
+		iTween.ScaleTo(powerupLevel,iTween.Hash("scale", new Vector3 (0.2f,0.2f,0.06092709f) ,"time", frameScaleTime));
+		iTween.ScaleTo(this.gameObject,iTween.Hash("scale", new Vector3 (0.2f,0.2f,0.2f) ,"time", frameScaleTime));
 	}
 }

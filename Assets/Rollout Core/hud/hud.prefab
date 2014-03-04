@@ -49,7 +49,7 @@ GameObject:
   - 23: {fileID: 2300004}
   - 114: {fileID: 11400004}
   - 114: {fileID: 11400006}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: PowerupLevel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -68,7 +68,7 @@ GameObject:
   - 23: {fileID: 2300006}
   - 33: {fileID: 3300004}
   - 114: {fileID: 11400032}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: PerkPool2Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -88,7 +88,7 @@ GameObject:
   - 23: {fileID: 2300008}
   - 114: {fileID: 11400012}
   - 114: {fileID: 11400010}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: CurrentPowerup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -196,7 +196,7 @@ GameObject:
   - 64: {fileID: 6400008}
   - 23: {fileID: 2300018}
   - 114: {fileID: 11400018}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: PowerupFrame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -215,7 +215,7 @@ GameObject:
   - 23: {fileID: 2300020}
   - 33: {fileID: 3300010}
   - 114: {fileID: 11400030}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: PerkPool1Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -845,6 +845,10 @@ MonoBehaviour:
   - {fileID: 2800000, guid: 34d68751040e9405abd1d1e00c7c831f, type: 3}
   - {fileID: 2800000, guid: 27ecc0eea8fdf4354992f76e864460ea, type: 3}
   hpl: {fileID: 11400006}
+  powerupFrame: {fileID: 100020}
+  powerupLevel: {fileID: 100004}
+  frameScaleFactor: .25
+  frameScaleTime: .300000012
 --- !u!114 &11400012
 MonoBehaviour:
   m_ObjectHideFlags: 1
