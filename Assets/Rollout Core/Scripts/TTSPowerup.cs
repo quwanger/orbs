@@ -173,7 +173,7 @@ public class TTSPowerup : TTSBehaviour
 		}
 
 		if (_tier == 2) {
-			DropDrezzStone(this.gameObject);
+			DrezzMid();
 			Invoke("DrezzMid", 0.5f);
 		}
 		if (_tier == 3) {
@@ -186,7 +186,7 @@ public class TTSPowerup : TTSBehaviour
 	}
 
 	private void DrezzMid() {
-		DropDrezzStone(this.gameObject);
+		DropDrezzStone(true);
 	}
 
 	public void EntropyCannon(int _tier) {
@@ -279,10 +279,19 @@ public class TTSPowerup : TTSBehaviour
 		return go;
 	}
 
-	public GameObject DropDrezzStone(GameObject effectedRacer) {
-		GameObject go = (GameObject)Instantiate(DrezzStonePrefab, effectedRacer.transform.position - GetComponent<TTSRacer>().displayMeshComponent.forward * 7.0f, effectedRacer.transform.rotation);
-		go.GetComponent<TTSDrezzStone>().offensiveMultiplier = effectedRacer.GetComponent<TTSRacer>().Offense;
+	public GameObject DropDrezzStone(bool owner) {
+		return DropDrezzStone(owner, null);
+	}
+
+	public GameObject DropDrezzStone(bool owner, TTSPowerupNetHandler handle) {
+		GameObject go = (GameObject)Instantiate(DrezzStonePrefab, this.gameObject.transform.position - GetComponent<TTSRacer>().displayMeshComponent.forward * 7.0f, this.gameObject.transform.rotation);
+		go.GetComponent<TTSDrezzStone>().offensiveMultiplier = this.gameObject.GetComponent<TTSRacer>().Offense;
 		go.rigidbody.AddForce(Random.insideUnitCircle * 50f);
+
+		if (owner) { SendPowerupDeploy(TTSPowerupNetworkTypes.Drezz, go); }
+		else {
+			go.GetComponent<TTSDrezzStone>().SetNetHandler(handle);
+		}
 		return go;
 	}
 
@@ -386,6 +395,10 @@ public class TTSPowerup : TTSBehaviour
 
 				case TTSPowerupNetworkTypes.Helix:
 					powerup.GetComponent<TTSHelixProjectile>().SetNetHandler(handler);
+					break;
+
+				case TTSPowerupNetworkTypes.Drezz:
+					powerup.GetComponent<TTSDrezzStone>().SetNetHandler(handler);
 					break;
 			}
 		}

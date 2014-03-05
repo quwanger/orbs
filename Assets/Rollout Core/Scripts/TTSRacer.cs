@@ -511,6 +511,10 @@ public class TTSRacer : TTSBehaviour
 				case TTSPowerupNetworkTypes.Helix:
 					powerupManager.FireHelix(false, handler);
 					break;
+
+				case TTSPowerupNetworkTypes.Drezz:
+					powerupManager.DropDrezzStone(false, handler);
+					break;
 			}
 		}
 		netHandler.receivedPowerups.Clear();
