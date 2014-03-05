@@ -61,6 +61,9 @@ public class TTSMenu : TTSMenuEnums {
 	public List<GameObject> offense_circles = new List<GameObject>();
 	public List<GameObject> defense_circles = new List<GameObject>();
 	
+	private GameObject currentPanel;
+	private GameObject previousPanel;
+	
 	private int numAccCircles;
 	private int numSpeedCircles;
 	private int numHandlCircles;
@@ -168,9 +171,6 @@ public class TTSMenu : TTSMenuEnums {
 	
 	private void changePanels(bool direction){
 		// if direction is true, they hit enter
-		
-		GameObject currentPanel = new GameObject();
-		GameObject previousPanel = new GameObject();
 		
 		int oldChanger = 0;
 		
