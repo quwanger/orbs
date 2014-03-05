@@ -27,6 +27,8 @@ public class TTSLeech : TTSBehaviour {
 	
 	private Vector3 positionDifference;
 	
+	private AudioSource beeping;
+	
 	private bool racerFound = false;
 	private bool racerStuck = false;
 	
