@@ -77,6 +77,13 @@ public class TTSEntropyCannonProjectile : MonoBehaviour {
 			rigidbody.velocity = netHandler.netSpeed;
 
 			netHandler.isNetworkUpdated = false;
+			netHandler.framesSinceNetData = 0;
+		}
+		else {
+			netHandler.framesSinceNetData++;
+			if (netHandler.framesSinceNetData >= TTSPowerupNetHandler.ExplodeTimeout) {
+				Explode(true);
+			}
 		}
 	}
 

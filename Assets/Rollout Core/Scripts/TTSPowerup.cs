@@ -232,7 +232,7 @@ public class TTSPowerup : TTSBehaviour
 	}
 
 	private void HelixMid() {
-		FireHelix(this.gameObject);
+		FireHelix(true);
 	}
 
 	public void SuperCBooster(float tier, bool owner) {
@@ -304,12 +304,22 @@ public class TTSPowerup : TTSBehaviour
 		return go;
 	}
 
-	public GameObject FireHelix(GameObject effectedRacer) {
+	public GameObject FireHelix(bool owner) {
+		return FireHelix(owner, null);
+	}
+
+	public GameObject FireHelix(bool owner, TTSPowerupNetHandler handle) {
 		GameObject go = (GameObject)Instantiate(HelixPrefab);
-		go.GetComponent<TTSHelixProjectile>().offensiveMultiplier = effectedRacer.GetComponent<TTSRacer>().Offense;
+		go.GetComponent<TTSHelixProjectile>().offensiveMultiplier = this.gameObject.GetComponent<TTSRacer>().Offense;
 		go.transform.rotation = GetComponent<TTSRacer>().displayMeshComponent.transform.rotation;
-		go.transform.position = effectedRacer.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
-		go.rigidbody.velocity = effectedRacer.rigidbody.velocity.normalized * (effectedRacer.rigidbody.velocity.magnitude + go.GetComponent<TTSHelixProjectile>().ProjectileStartVelocity);
+		go.transform.position = this.gameObject.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
+		go.rigidbody.velocity = this.gameObject.rigidbody.velocity.normalized * (this.gameObject.rigidbody.velocity.magnitude + go.GetComponent<TTSHelixProjectile>().ProjectileStartVelocity);
+
+		if (owner) { SendPowerupDeploy(TTSPowerupNetworkTypes.Helix, go); }
+		else {
+			go.GetComponent<TTSHelixProjectile>().SetNetHandler(handle);
+		}
+
 		return go;
 	}
 
@@ -373,6 +383,10 @@ public class TTSPowerup : TTSBehaviour
 				case TTSPowerupNetworkTypes.Entropy:
 					powerup.GetComponent<TTSEntropyCannonProjectile>().SetNetHandler(handler);
 					break;
+
+				case TTSPowerupNetworkTypes.Helix:
+					powerup.GetComponent<TTSHelixProjectile>().SetNetHandler(handler);
+					break;
 			}
 		}
 	}
@@ -404,6 +418,9 @@ public class TTSPowerupNetHandler : TTSNetworkHandle
 	public Vector3 position, rotation, speed;
 	public Vector3 netPosition, netRotation, netSpeed;
 
+	public int framesSinceNetData = 0;
+	public const int ExplodeTimeout = 10;
+
 	public int Type = -1;
 	public float Tier = -1.0f;
 
@@ -430,6 +447,7 @@ public class TTSPowerupNetHandler : TTSNetworkHandle
 		RacerID = racerID;
 		client = Client;
 		networkInterpolation = 0.5f;
+		client.LocalObjectRegister(this);
 	}
 
 	public override byte[] GetNetworkRegister() {

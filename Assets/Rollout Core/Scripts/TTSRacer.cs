@@ -505,8 +505,11 @@ public class TTSRacer : TTSBehaviour
 					break;
 
 				case TTSPowerupNetworkTypes.Entropy:
-					level.client.LocalObjectRegister(handler);
 					powerupManager.FireEntropyCannon(false, handler);
+					break;
+
+				case TTSPowerupNetworkTypes.Helix:
+					powerupManager.FireHelix(false, handler);
 					break;
 			}
 		}
