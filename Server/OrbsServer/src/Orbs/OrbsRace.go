@@ -67,6 +67,8 @@ func (this *OrbsRace) ProcessPacket(sender *net.UDPAddr, reader *Packets.PacketR
 
 		command = reader.ReadInt32()
 	}
+
+	reader.Rewind4Bytes()
 }
 
 // Command Processors
