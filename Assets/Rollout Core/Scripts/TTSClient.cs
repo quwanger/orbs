@@ -157,6 +157,7 @@ public class TTSClient : MonoBehaviour
 				case TTSCommandTypes.RacerUpdate:
 				case TTSCommandTypes.PowerupStaticRegister:
 				case TTSCommandTypes.PowerupRegister:
+				case TTSCommandTypes.PowerupUpdate:
 					id = packet.ReadFloat();
 					netHandles[id].ReceiveNetworkData(packet, command);
 					break;
@@ -332,7 +333,7 @@ public abstract class TTSNetworkHandle
 	}
 
 	// Do not override this method unless necessary
-	public byte[] GetNetworkUpdate() {
+	public virtual byte[] GetNetworkUpdate() {
 		isWriterUpdated = false;
 		return writer.GetMinimizedData();
 	}
@@ -342,6 +343,7 @@ public abstract class TTSNetworkHandle
 	}
 }
 
+#region packets
 public class TTSPacketReader
 {
 	public byte[] Data;
@@ -466,3 +468,4 @@ public class TTSPacketWriter
 		return str;
 	}
 }
+#endregion

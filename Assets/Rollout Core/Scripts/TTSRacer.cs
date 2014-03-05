@@ -476,14 +476,14 @@ public class TTSRacer : TTSBehaviour
 			if (netHandler.netPosition != Vector3.zero) {
 				transform.position = Vector3.Lerp(transform.position, netHandler.netPosition, netHandler.networkInterpolation);
 			}
-			displayMeshComponent.rotation = Quaternion.Lerp(displayMeshComponent.rotation, Quaternion.Euler(netHandler.netRotation), netHandler.networkInterpolation * 10);
-			rigidbody.velocity = netHandler.netSpeed;
-
-			vInput = Mathf.Lerp(vInput, netHandler.networkVInput, netHandler.networkInterpolation * 5);
-			hInput = Mathf.Lerp(hInput, netHandler.networkHInput, netHandler.networkInterpolation * 5);
-
-			netHandler.isNetworkUpdated = false;
 		}
+		displayMeshComponent.rotation = Quaternion.Lerp(displayMeshComponent.rotation, Quaternion.Euler(netHandler.netRotation), netHandler.networkInterpolation * 10);
+		rigidbody.velocity = netHandler.netSpeed;
+
+		vInput = Mathf.Lerp(vInput, netHandler.networkVInput, netHandler.networkInterpolation * 5);
+		hInput = Mathf.Lerp(hInput, netHandler.networkHInput, netHandler.networkInterpolation * 5);
+
+		netHandler.isNetworkUpdated = false;
 
 		// Powerups
 		foreach (TTSPowerupNetHandler handler in netHandler.receivedPowerups) {
