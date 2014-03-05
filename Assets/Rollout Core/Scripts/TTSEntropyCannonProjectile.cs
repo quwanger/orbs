@@ -132,15 +132,5 @@ public class TTSEntropyCannonProjectile : MonoBehaviour {
 		this.GetComponent<SphereCollider>().enabled = false;
 		this.rigidbody.velocity = new Vector3(0f,0f,0f);
 	}
-	public void OnDrawGizmos() {
-		if (netHandler == null)
-			return;
-
-		Gizmos.color = Color.cyan;
-		Gizmos.DrawLine(transform.position, netHandler.netPosition);
-
-		Gizmos.color = Color.white;
-		Gizmos.DrawCube(netHandler.netPosition, Vector3.one);
-	}
 
 }

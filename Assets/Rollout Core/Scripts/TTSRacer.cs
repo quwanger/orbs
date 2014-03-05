@@ -515,6 +515,10 @@ public class TTSRacer : TTSBehaviour
 				case TTSPowerupNetworkTypes.Drezz:
 					powerupManager.DropDrezzStone(false, handler);
 					break;
+
+				case TTSPowerupNetworkTypes.Leech:
+					powerupManager.DeployLeech(false, handler);
+					break;
 			}
 		}
 		netHandler.receivedPowerups.Clear();

@@ -152,17 +152,17 @@ public class TTSPowerup : TTSBehaviour
 	public void Leech(int _tier) {
 		if (_tier == 1) {
 			for (int i = 0; i < 2; i++) {
-				DeployLeech(this.gameObject);
+				DeployLeech(true);
 			}
 		}
 		else if (_tier == 2) {
 			for (int i = 0; i < 4; i++) {
-				DeployLeech(this.gameObject);
+				DeployLeech(true);
 			}
 		}
 		else if (_tier == 3) {
 			for (int i = 0; i < 8; i++) {
-				DeployLeech(this.gameObject);
+				DeployLeech(true);
 			}
 		}
 	}
@@ -354,12 +354,22 @@ public class TTSPowerup : TTSBehaviour
 		return go;
 	}
 
-	public GameObject DeployLeech(GameObject effectedRacer) {
-		GameObject go = (GameObject)Instantiate(LeechPrefab, effectedRacer.transform.position, Quaternion.identity);
-		go.GetComponent<TTSLeech>().currentRacer = effectedRacer.GetComponent<TTSRacer>();
+	public GameObject DeployLeech(bool owner) {
+		return DeployLeech(owner, null);
+	}
+
+	public GameObject DeployLeech(bool owner, TTSPowerupNetHandler handle) {
+		GameObject go = (GameObject)Instantiate(LeechPrefab, this.gameObject.transform.position, Quaternion.identity);
+		go.GetComponent<TTSLeech>().currentRacer = this.gameObject.GetComponent<TTSRacer>();
 		go.transform.rotation = GetComponent<TTSRacer>().displayMeshComponent.transform.rotation;
-		go.transform.position = effectedRacer.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
-		go.rigidbody.velocity = effectedRacer.rigidbody.velocity;
+		go.transform.position = this.gameObject.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
+		go.rigidbody.velocity = this.gameObject.rigidbody.velocity;
+
+		if (owner) { SendPowerupDeploy(TTSPowerupNetworkTypes.Leech, go); }
+		else {
+			go.GetComponent<TTSLeech>().SetNetHandler(handle);
+		}
+
 		return go;
 	}
 	#endregion
@@ -399,6 +409,10 @@ public class TTSPowerup : TTSBehaviour
 
 				case TTSPowerupNetworkTypes.Drezz:
 					powerup.GetComponent<TTSDrezzStone>().SetNetHandler(handler);
+					break;
+
+				case TTSPowerupNetworkTypes.Leech:
+					powerup.GetComponent<TTSLeech>().SetNetHandler(handler);
 					break;
 			}
 		}
