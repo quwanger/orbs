@@ -51,7 +51,13 @@ public class TTSPowerup : TTSBehaviour {
 
 		//if you hit space or the 'a' button on an Xbox controller
 		if(this.gameObject.GetComponent<TTSRacer>().playerNum == 1) {
-			if(Input.GetKeyDown("joystick 1 button 0"))	ConsumePowerup();	
+			if(level.useKeyboard){
+				if(Input.GetKeyDown("space")){
+					ConsumePowerup();
+				}
+			}else if(Input.GetKeyDown("joystick 1 button 0")){
+				ConsumePowerup();
+			}
 		} else if(this.gameObject.GetComponent<TTSRacer>().playerNum == 2) {
 			if(Input.GetKeyDown("joystick 2 button 0"))	ConsumePowerup();
 		} else if(this.gameObject.GetComponent<TTSRacer>().playerNum == 3) {
@@ -325,7 +331,7 @@ public class TTSPowerup : TTSBehaviour {
 		GameObject go = (GameObject) Instantiate(ShockwavePrefab, effectedRacer.transform.position, Quaternion.identity);
 		go.GetComponent<TTSExplosiveForce>().power = go.GetComponent<TTSExplosiveForce>().power * _power * effectedRacer.GetComponent<TTSRacer>().Offense;
 		go.GetComponent<TTSExplosiveForce>().radius = go.GetComponent<TTSExplosiveForce>().radius * _power * effectedRacer.GetComponent<TTSRacer>().Offense;
-		go.GetComponent<TTSExplosiveForce>().Activate();
+		go.GetComponent<TTSExplosiveForce>().Activate(false, this.gameObject);
 		return go;
 	}
 	

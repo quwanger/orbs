@@ -12,6 +12,8 @@ public class TTSLevel : MonoBehaviour {
 	public enum Gametype {SinglePlayer, MultiplayerLocal, MultiplayerOnline, TimeTrial};
 	public Gametype currentGameType = Gametype.MultiplayerLocal;
 	
+	public bool useKeyboard = true;
+	
 	public bool raceHasStarted = false;
 	public bool raceHasFinished = false;
 	public GameObject countdown;
@@ -119,8 +121,6 @@ public class TTSLevel : MonoBehaviour {
 	
 	public void StartRace() {
 		raceHasStarted = true;
-		
-		
 		
 		GameObject.Find("Soundtrack").GetComponent<TTSSoundtrackManager>().StartSoundtrack();
 		
