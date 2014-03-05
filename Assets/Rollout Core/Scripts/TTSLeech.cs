@@ -102,7 +102,6 @@ public class TTSLeech : TTSBehaviour
 
 	private void LeechExplosion() {
 		if (netHandler != null) {
-			Debug.Log("DESTROY LEECH");
 			netHandler.DeregisterFromClient();
 			netHandler = null;
 		}
