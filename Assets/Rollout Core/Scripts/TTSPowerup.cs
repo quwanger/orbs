@@ -445,6 +445,8 @@ public class TTSPowerupNetHandler : TTSNetworkHandle
 		netPosition = reader.ReadVector3();
 		netRotation = reader.ReadVector3();
 		netSpeed = reader.ReadVector3();
+
+		isNetworkUpdated = true;
 	}
 
 	public void UpdatePowerup(Vector3 Pos, Vector3 Rot, Vector3 Speed) {

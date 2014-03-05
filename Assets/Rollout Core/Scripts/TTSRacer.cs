@@ -575,6 +575,8 @@ public class TTSRacerNetHandler : TTSNetworkHandle
 
 			networkVInput = reader.ReadFloat();
 			networkHInput = reader.ReadFloat();
+
+			isNetworkUpdated = true;
 		}
 		else if (command == TTSCommandTypes.PowerupStaticRegister) {
 			int powerupType = reader.ReadInt32();
