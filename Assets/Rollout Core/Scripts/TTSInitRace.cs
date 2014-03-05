@@ -285,6 +285,11 @@ public class TTSInitRace : MonoBehaviour {
 						break;
 
 					default:
+						foreach (Transform child in tempIconBig.transform) { child.gameObject.layer = 11; }
+						tempIconBig.layer = 11;
+				
+						foreach (Transform child in tempHUD.transform) { child.gameObject.layer = 12; }
+						tempHUD.layer = 12;
 					break;
 				}
 
