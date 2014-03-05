@@ -21,7 +21,10 @@ public class TTSMenu : TTSMenuEnums {
 	public Camera hubCamera;
 	
 	//Containers
-	public GUITexture backPanel;
+	public GameObject multiplayerPanel;
+	public GameObject levelPanel;
+	public GameObject perkPanel;
+	public GameObject rigPanel;
 	
 	//Fade Variables
 	private float alphaFadeValue = 0.0f;
@@ -75,8 +78,8 @@ public class TTSMenu : TTSMenuEnums {
 
 		//The menu background
 		//Rect tempInset = new Rect(-1920, -360, 4960, 720);
-		Rect tempInset = new Rect(-640, -360, 4960, 720);
-		backPanel.pixelInset = tempInset;
+		//Rect tempInset = new Rect(-640, -360, 4960, 720);
+		//backPanel.pixelInset = tempInset;
 		
 		//Initiate indices
 		GameObject[] perks = GameObject.FindGameObjectsWithTag("PerkMenuItem");
@@ -130,7 +133,7 @@ public class TTSMenu : TTSMenuEnums {
 				changer -= 1;
 				if(changer != 1){
 					isTweening = true;
-					iTween.MoveBy(backPanel.gameObject, iTween.Hash("x", -0.73, "time", 2.0f, "onComplete", "stoppedTweening", "onCompleteTarget", gameObject));
+					changePanels(true);
 				}
 			}	
 		}
@@ -140,8 +143,7 @@ public class TTSMenu : TTSMenuEnums {
 				changer += 1;
 				if(changer !=2){
 					isTweening = true;
-					iTween.MoveBy(backPanel.gameObject, iTween.Hash("x", 0.73, "time", 2.0f, "onComplete", "stoppedTweening", "onCompleteTarget", gameObject));
-					//
+					changePanels(false);
 				}
 			}
 		}
@@ -156,12 +158,86 @@ public class TTSMenu : TTSMenuEnums {
 			menuCamera.enabled = true;
 			hubCamera.enabled = false;
 			
-			if(alphaFadeValue < 1.0f)
-				alphaFadeValue += transitionTimeIn;
-		}else if(unzone){
+			/*if(alphaFadeValue < 1.0f)
+				alphaFadeValue += transitionTimeIn;*/
+		}/*else if(unzone){
 			if(alphaFadeValue > 0)
 				alphaFadeValue -= transitionTimeIn;
+		}*/
+	}
+	
+	private void changePanels(bool direction){
+		// if direction is true, they hit enter
+		
+		GameObject currentPanel = new GameObject();
+		GameObject previousPanel = new GameObject();
+		
+		int oldChanger = 0;
+		
+		if(direction)
+			oldChanger = changer+1;
+		
+		else if(!direction)
+			oldChanger = changer-1;
+					
+		switch(changer){
+			case 0:
+				currentPanel = levelPanel;
+			break;
+			
+			case 1:
+				currentPanel = perkPanel;
+			break;
+			
+			case 2:
+				currentPanel = perkPanel;
+			break;
+						
+			case 3:
+				currentPanel = rigPanel;
+			break;
+						
+			case 4:
+				currentPanel = multiplayerPanel;
+			break;
+						
+			default:
+						//Play a sound?
+			break;
 		}
+		
+		switch(oldChanger){
+			case 0:
+				previousPanel = levelPanel;
+			break;
+			
+			case 1:
+				previousPanel = perkPanel;
+			break;
+			
+			case 2:
+				previousPanel = perkPanel;
+			break;
+						
+			case 3:
+				previousPanel = rigPanel;
+			break;
+						
+			case 4:
+				previousPanel = multiplayerPanel;
+			break;
+						
+			default:
+						//Play a sound?
+			break;
+		}
+		
+		
+		//current
+		iTween.MoveTo(currentPanel, iTween.Hash("x", 0.5, "time", 2.0f, "onComplete", "stoppedTweening", "onCompleteTarget", gameObject));
+				
+		//previous
+		iTween.MoveTo(previousPanel, iTween.Hash("x", -5, "time", 2.0f, "onComplete", "stoppedTweening", "onCompleteTarget", gameObject));
 	}
 	
 	private void menuControls(){
