@@ -1,5 +1,7 @@
 using UnityEngine;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using System.Collections.Generic;
 
 [RequireComponent (typeof (BoxCollider))]
@@ -190,8 +192,10 @@ public class TTSWaypoint : TTSBehaviour {
 		if(!Application.isPlaying){
 			Gizmos.color = Color.yellow;
 			Gizmos.DrawWireSphere(transform.position, 0.5f);
-
+			
+#if UNITY_EDITOR
 			Handles.Label(transform.position, index.ToString());
+#endif
 
 			foreach(TTSWaypoint wp in nextWaypoints){
 				Gizmos.DrawLine(position, wp.position);
