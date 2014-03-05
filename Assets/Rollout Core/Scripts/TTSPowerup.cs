@@ -332,6 +332,7 @@ public class TTSPowerup : TTSBehaviour {
 		go.GetComponent<TTSExplosiveForce>().power = go.GetComponent<TTSExplosiveForce>().power * _power * effectedRacer.GetComponent<TTSRacer>().Offense;
 		go.GetComponent<TTSExplosiveForce>().radius = go.GetComponent<TTSExplosiveForce>().radius * _power * effectedRacer.GetComponent<TTSRacer>().Offense;
 		go.GetComponent<TTSExplosiveForce>().Activate(false, this.gameObject);
+		go.transform.parent = this.transform;
 		return go;
 	}
 	
