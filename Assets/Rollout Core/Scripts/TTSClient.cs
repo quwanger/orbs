@@ -313,7 +313,8 @@ public abstract class TTSNetworkHandle
 	public TTSPacketWriter writer = new TTSPacketWriter(); // Each object must use this writer to write packet data
 
 	public bool owner;
-	public bool isUpdated = false;
+	public bool isWriterUpdated = false;
+	public bool isNetworkUpdated = false;
 
 	public TTSNetworkHandle() {
 		// Register yourself to the client from here.
@@ -332,7 +333,7 @@ public abstract class TTSNetworkHandle
 
 	// Do not override this method unless necessary
 	public byte[] GetNetworkUpdate() {
-		isUpdated = false;
+		isWriterUpdated = false;
 		return writer.GetMinimizedData();
 	}
 

@@ -401,6 +401,9 @@ public class TTSPowerupNetworkTypes
 
 public class TTSPowerupNetHandler : TTSNetworkHandle
 {
+	public Vector3 position, rotation, speed;
+	public Vector3 netPosition, netRotation, netSpeed;
+
 	public int Type = -1;
 	public float Tier = -1.0f;
 
@@ -439,6 +442,22 @@ public class TTSPowerupNetHandler : TTSNetworkHandle
 	}
 
 	public override void ReceiveNetworkData(TTSPacketReader reader, int command) {
-		// Implement
+		netPosition = reader.ReadVector3();
+		netRotation = reader.ReadVector3();
+		netSpeed = reader.ReadVector3();
+	}
+
+	public void UpdatePowerup(Vector3 Pos, Vector3 Rot, Vector3 Speed) {
+		if (owner && isServerRegistered) { // Only send data if it's the owner
+
+			if (!isWriterUpdated) writer.ClearData();
+			isWriterUpdated = true;
+
+			writer.AddData(TTSCommandTypes.PowerupUpdate);
+			writer.AddData(id);
+			writer.AddData(Pos);
+			writer.AddData(Rot);
+			writer.AddData(Speed);
+		}
 	}
 }

@@ -38,25 +38,46 @@ public class TTSEntropyCannonProjectile : MonoBehaviour {
 		if(Time.time - birth > Timeout) {
 			Explode(false);
 		}
-		
-		float distanceToGround = checkDistanceToGround();
-		
-		if(distanceToGround < initialDistanceToGround){
-			//while(distanceToGround < initialDistanceToGround){
+
+		if (netHandler == null || netHandler.owner) {
+			float distanceToGround = checkDistanceToGround();
+
+			if (distanceToGround < initialDistanceToGround) {
+				//while(distanceToGround < initialDistanceToGround){
 				float tempY = this.transform.position.y;
 				tempY += (initialDistanceToGround - distanceToGround);
 				this.transform.position = new Vector3(this.transform.position.x, tempY, this.transform.position.z);
 				//distanceToGround = checkDistanceToGround();
-			//}
-		}else if(distanceToGround > initialDistanceToGround){
-			//while(distanceToGround > initialDistanceToGround){
+				//}
+			}
+			else if (distanceToGround > initialDistanceToGround) {
+				//while(distanceToGround > initialDistanceToGround){
 				float tempY = this.transform.position.y;
 				tempY -= (distanceToGround - initialDistanceToGround);
 				this.transform.position = new Vector3(this.transform.position.x, tempY, this.transform.position.z);
 				//distanceToGround = checkDistanceToGround();
-			//}
+				//}
+			}
+
+			if(netHandler != null)
+				netHandler.UpdatePowerup(transform.position, transform.rotation.eulerAngles, rigidbody.velocity);
+		}
+		else if(!netHandler.owner) {
+			GetNetworkUpdate();
 		}
 		
+	}
+
+	private void GetNetworkUpdate() {
+		if (netHandler.isNetworkUpdated) {
+			if (netHandler.netPosition != Vector3.zero) {
+				transform.position = Vector3.Lerp(transform.position, netHandler.netPosition, netHandler.networkInterpolation);
+			}
+			transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(netHandler.netRotation), netHandler.networkInterpolation * 10);
+			rigidbody.velocity = netHandler.netSpeed;
+
+			netHandler.isNetworkUpdated = false;
+		}
 	}
 
 	private float checkDistanceToGround(){

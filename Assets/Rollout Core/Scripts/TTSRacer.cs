@@ -472,14 +472,18 @@ public class TTSRacer : TTSBehaviour
 	}
 
 	public void MultiplayerInput() {
-		if (netHandler.netPosition != Vector3.zero) {
-			transform.position = Vector3.Lerp(transform.position, netHandler.netPosition, netHandler.networkInterpolation);
-		}
-		displayMeshComponent.rotation = Quaternion.Lerp(displayMeshComponent.rotation, Quaternion.Euler(netHandler.netRotation), netHandler.networkInterpolation * 10);
-		rigidbody.velocity = netHandler.netSpeed;
+		if (netHandler.isNetworkUpdated) {
+			if (netHandler.netPosition != Vector3.zero) {
+				transform.position = Vector3.Lerp(transform.position, netHandler.netPosition, netHandler.networkInterpolation);
+			}
+			displayMeshComponent.rotation = Quaternion.Lerp(displayMeshComponent.rotation, Quaternion.Euler(netHandler.netRotation), netHandler.networkInterpolation * 10);
+			rigidbody.velocity = netHandler.netSpeed;
 
-		vInput = Mathf.Lerp(vInput, netHandler.networkVInput, netHandler.networkInterpolation * 5);
-		hInput = Mathf.Lerp(hInput, netHandler.networkHInput, netHandler.networkInterpolation * 5);
+			vInput = Mathf.Lerp(vInput, netHandler.networkVInput, netHandler.networkInterpolation * 5);
+			hInput = Mathf.Lerp(hInput, netHandler.networkHInput, netHandler.networkInterpolation * 5);
+
+			netHandler.isNetworkUpdated = false;
+		}
 
 		// Powerups
 		foreach (TTSPowerupNetHandler handler in netHandler.receivedPowerups) {
@@ -597,9 +601,9 @@ public class TTSRacerNetHandler : TTSNetworkHandle
 
 	public void UpdateRacer(Vector3 Pos, Vector3 Rot, Vector3 Speed, float VInput, float HInput) {
 		if (owner && isServerRegistered) { // Only send data if it's the owner
-			
-			if(!isUpdated) writer.ClearData();
-			isUpdated = true;
+
+			if (!isWriterUpdated) writer.ClearData();
+			isWriterUpdated = true;
 
 			writer.AddData(TTSCommandTypes.RacerUpdate);
 			writer.AddData(id);
@@ -613,8 +617,8 @@ public class TTSRacerNetHandler : TTSNetworkHandle
 
 	public void SendStaticPowerup(int powerupType, float powerupTier) {
 		if (owner && isServerRegistered) { // Only send data if it's the owner
-			if (!isUpdated) writer.ClearData();
-			isUpdated = true;
+			if (!isWriterUpdated) writer.ClearData();
+			isWriterUpdated = true;
 
 			writer.AddData(TTSCommandTypes.PowerupStaticRegister);
 			writer.AddData(id);
