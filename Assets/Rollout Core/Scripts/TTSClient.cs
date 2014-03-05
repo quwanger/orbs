@@ -35,9 +35,11 @@ public class TTSClient : MonoBehaviour
 	// Game networking
 	// One global collection of IDs and handles
 	Dictionary<float, TTSNetworkHandle> netHandles = new Dictionary<float, TTSNetworkHandle>();
+	Dictionary<float, TTSNetworkHandle> racerHandles = new Dictionary<float, TTSNetworkHandle>();
 	TTSPacketWriter UpdatePacket = new TTSPacketWriter();
 
 	List<TTSRacerNetHandler> spawnRacers = new List<TTSRacerNetHandler>();
+	List<TTSPowerupNetHandler> spawnPowerups = new List<TTSPowerupNetHandler>();
 
 	// Use this for initialization
 	void Start() {
@@ -74,6 +76,7 @@ public class TTSClient : MonoBehaviour
 			return;
 		}
 
+		// Code to run during lobby
 		foreach (KeyValuePair<float, TTSNetworkHandle> pair in netHandles) {
 			TTSNetworkHandle handle = pair.Value;
 			if (handle.isServerRegistered) {
@@ -87,10 +90,15 @@ public class TTSClient : MonoBehaviour
 		}
 		SendPacket(UpdatePacket, true);
 
+		if (!InGame)
+			return;
+		// Code to run during in game.
+
 		// Spawn multiplayer racers
 		if (spawnRacers.Count > 0) {
+			TTSInitRace race = GetComponent<TTSInitRace>();
 			foreach (TTSRacerNetHandler handler in spawnRacers) {
-				GetComponent<TTSInitRace>().InitMultiplayerRacer(handler);
+				race.InitMultiplayerRacer(handler);
 			}
 			spawnRacers.Clear();
 		}
@@ -128,7 +136,8 @@ public class TTSClient : MonoBehaviour
 		float id = -1;
 
 		while (command != TTSCommandTypes.EndPacket) {
-			if (DebugMode) Debug.Log(">	Received command " + command);
+			if (DebugMode)
+				Debug.Log(">	Received command " + command);
 
 			switch (command) {
 				case TTSCommandTypes.RacerRegister:
@@ -147,11 +156,13 @@ public class TTSClient : MonoBehaviour
 
 				case TTSCommandTypes.RacerUpdate:
 				case TTSCommandTypes.PowerupStaticRegister:
+				case TTSCommandTypes.PowerupRegister:
 					id = packet.ReadFloat();
 					netHandles[id].ReceiveNetworkData(packet, command);
 					break;
 
 				case TTSCommandTypes.RacerRegisterOK:
+				case TTSCommandTypes.PowerupRegisterOK:
 					id = packet.ReadFloat();
 					netHandles[id].isServerRegistered = true;
 					break;
@@ -163,6 +174,7 @@ public class TTSClient : MonoBehaviour
 				case TTSCommandTypes.LobbyRegisterOK:
 					LobbyID = packet.ReadInt32();
 					EnteredLobby = true;
+					InGame = true;		// REMOVE THIS LATER
 					ServerAllObjectsRegister();
 					break;
 			}
@@ -175,7 +187,8 @@ public class TTSClient : MonoBehaviour
 	private void ServerAllObjectsRegister() {
 		TTSPacketWriter writer = new TTSPacketWriter();
 		foreach (KeyValuePair<float, TTSNetworkHandle> pair in netHandles) {
-			ServerObjectRegister(pair.Value, writer);
+			if(pair.Value.owner)
+				ServerObjectRegister(pair.Value, writer);
 		}
 		SendPacket(writer);
 	}
@@ -191,6 +204,11 @@ public class TTSClient : MonoBehaviour
 		writer.AddData(data);
 	}
 
+	public void LocalRacerRegister(TTSRacerNetHandler handler) {
+		racerHandles.Add(handler.id, handler);
+		LocalObjectRegister(handler);
+	}
+
 	public void LocalObjectRegister(TTSNetworkHandle handler) {
 		if (handler.canForfeitControl) {
 			if (netHandles.ContainsKey(handler.id)) // Someone else is controlling object
@@ -203,6 +221,10 @@ public class TTSClient : MonoBehaviour
 		}
 		if(DebugMode)
 			Debug.Log("Registering " + handler.id);
+
+		if (InGame && handler.inGameRegistration && handler.owner) {
+			ServerObjectRegister(handler, UpdatePacket);
+		}
 
 		netHandles.Add(handler.id, handler);
 	}
@@ -285,6 +307,7 @@ public abstract class TTSNetworkHandle
 	public float id = 0.0f; // ID will only be stored here
 	public bool canForfeitControl = false; // Whether object can be taken control of by another client (for scene objects)
 	public float networkInterpolation = 0.05f;
+	public bool inGameRegistration = false; // Whether it should be registered in game or in lobby.
 
 	protected TTSClient client;
 	public TTSPacketWriter writer = new TTSPacketWriter(); // Each object must use this writer to write packet data
@@ -311,6 +334,10 @@ public abstract class TTSNetworkHandle
 	public byte[] GetNetworkUpdate() {
 		isUpdated = false;
 		return writer.GetMinimizedData();
+	}
+
+	public virtual void DeregisterFromClient() {
+		client.LocalObjectDeregister(id);
 	}
 }
 

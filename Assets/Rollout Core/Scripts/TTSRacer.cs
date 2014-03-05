@@ -468,6 +468,10 @@ public class TTSRacer : TTSBehaviour
 		this.netHandler = handler;
 	}
 
+	public float GetNetworkID() {
+		return this.netHandler.id;
+	}
+
 	public void MultiplayerInput() {
 		transform.position = Vector3.Lerp(transform.position, netHandler.netPosition, netHandler.networkInterpolation);
 		displayMeshComponent.rotation = Quaternion.Lerp(displayMeshComponent.rotation, Quaternion.Euler(netHandler.netRotation), netHandler.networkInterpolation * 10);
@@ -478,6 +482,7 @@ public class TTSRacer : TTSBehaviour
 
 		// Powerups
 		foreach (TTSPowerupNetHandler handler in netHandler.receivedPowerups) {
+			Debug.Log("Powerup Register " + handler);
 			switch (handler.Type) {
 				case TTSPowerupNetworkTypes.Shield:
 					powerupManager.DeployShield(handler.Tier, false);
@@ -493,6 +498,12 @@ public class TTSRacer : TTSBehaviour
 
 				case TTSPowerupNetworkTypes.TimeBonus:
 					powerupManager.GiveTimeBonus(false);
+					break;
+
+				case TTSPowerupNetworkTypes.Entropy:
+					Debug.Log("Entropy Cannon Received");
+					level.client.LocalObjectRegister(handler);
+					powerupManager.FireEntropyCannon(false, handler);
 					break;
 			}
 		}
@@ -525,14 +536,14 @@ public class TTSRacerNetHandler : TTSNetworkHandle
 	public TTSRacerNetHandler(TTSClient Client, bool Owner) {
 		registerCommand = TTSCommandTypes.RacerRegister;
 		owner = Owner;
-		Client.LocalObjectRegister(this);
+		Client.LocalRacerRegister(this);
 	}
 
 	public TTSRacerNetHandler(TTSClient Client, bool Owner, float ID) { // For multiplayer players
 		id = ID;
 		registerCommand = TTSCommandTypes.RacerRegister;
 		owner = Owner;
-		Client.LocalObjectRegister(this);
+		Client.LocalRacerRegister(this);
 	}
 
 	public override byte[] GetNetworkRegister() {
@@ -566,6 +577,16 @@ public class TTSRacerNetHandler : TTSNetworkHandle
 			handler.Tier = powerupTier;
 
 			if (TTSPowerupNetworkTypes.isStaticType(powerupType)) {
+				receivedPowerups.Add(handler);
+			}
+		}
+		else if (command == TTSCommandTypes.PowerupRegister) {
+			float powerupID = reader.ReadFloat();
+			int powerupType = reader.ReadInt32();
+
+			TTSPowerupNetHandler handler = new TTSPowerupNetHandler(client, false, powerupID, powerupType, id);
+
+			if (!TTSPowerupNetworkTypes.isStaticType(powerupType)) {
 				receivedPowerups.Add(handler);
 			}
 		}

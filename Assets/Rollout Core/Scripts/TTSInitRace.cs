@@ -38,7 +38,6 @@ public class TTSInitRace : MonoBehaviour
 
 	public void InitMultiplayerRacer(TTSRacerNetHandler handler) {
 		InitToMultiplayer(InstantiateRacer(handler.Rig, handler.Index), handler);
-		Debug.Log("Racer initialized " + handler.id);
 	}
 
 	public GameObject InstantiateRacer() {

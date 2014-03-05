@@ -79,11 +79,21 @@ public class TTSEntropyCannonProjectile : MonoBehaviour {
 	}
 #endregion
 
+	#region networking
+	TTSPowerupNetHandler netHandler;
+
+	public void SetNetHandler(TTSPowerupNetHandler handler) {
+		this.netHandler = handler;
+	}
+	#endregion
+
 	private void Explode(bool actually) {
-		if(actually) {
-			 Instantiate(explosion,this.transform.position,this.transform.rotation);
+		netHandler.DeregisterFromClient();
+		netHandler = null;
+
+		if (actually) {
+			Instantiate(explosion, this.transform.position, this.transform.rotation);
 		}
-			
 			
 		foreach(Transform child in transform) {
 				Destroy(child.gameObject);

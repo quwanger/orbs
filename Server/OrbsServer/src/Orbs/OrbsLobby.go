@@ -68,7 +68,6 @@ func (this *OrbsLobby) ProcessPacket(sender *net.UDPAddr, reader *Packets.Packet
 		}
 
 		command = reader.ReadInt32()
-		// }
 	}
 
 	this.broadcastPacket()

@@ -51,6 +51,10 @@ func (this *OrbsRace) ProcessPacket(sender *net.UDPAddr, reader *Packets.PacketR
 		case OrbsCommandTypes.RacerUpdate:
 			this.racerUpdate(this.Connections[ip], reader)
 
+		// 5001
+		case OrbsCommandTypes.PowerupRegister:
+			this.powerupDeploy(this.Connections[ip], reader)
+
 		// 5002
 		case OrbsCommandTypes.PowerupStaticRegister:
 			println(">	Powerup Received from ", ip)
@@ -63,10 +67,31 @@ func (this *OrbsRace) ProcessPacket(sender *net.UDPAddr, reader *Packets.PacketR
 
 // Command Processors
 
+func (this *OrbsRace) powerupDeploy(connection *OrbsConnection, reader *Packets.PacketReader) {
+	racerID := reader.ReadFloat32()
+	powerupID := reader.ReadFloat32()
+	powerupType := reader.ReadInt32()
+
+	println("#	Powerup Received ", powerupID, powerupType)
+
+	if owner, exists := this.ObjToOwner[racerID]; exists && connection.IPAddress == owner.IPAddress {
+		var broadcastPacket = new(Packets.PacketWriter)
+		broadcastPacket.InitPacket()
+		broadcastPacket.WriteInt(OrbsCommandTypes.PowerupRegister)
+		broadcastPacket.WriteFloat32(racerID)
+		broadcastPacket.WriteFloat32(powerupID)
+		broadcastPacket.WriteInt(powerupType)
+		this.writeBroadcastDataExceptSender(broadcastPacket.GetMinimalData(), connection)
+	} else {
+		// Just leave it.
+	}
+
+}
+
 func (this *OrbsRace) staticPowerupDeploy(connection *OrbsConnection, reader *Packets.PacketReader) {
 	racerID := reader.ReadFloat32()
 	powerupType, powerupTier := reader.ReadInt32(), reader.ReadFloat32()
-	println("#	Powerup Received ", powerupType, powerupTier)
+	// println("#	Powerup Received ", powerupType, powerupTier)
 
 	if owner, exists := this.ObjToOwner[racerID]; exists && connection.IPAddress == owner.IPAddress {
 
@@ -78,8 +103,6 @@ func (this *OrbsRace) staticPowerupDeploy(connection *OrbsConnection, reader *Pa
 		broadcastPacket.WriteFloat32(powerupTier)
 		this.writeBroadcastDataExceptSender(broadcastPacket.GetMinimalData(), connection)
 	} else {
-		reader.EmptyReadBytes(Packets.SIZEOF_FLOAT32 * 2) // PowerupType, PowerupTier
-
 		// Just leave it.
 	}
 }

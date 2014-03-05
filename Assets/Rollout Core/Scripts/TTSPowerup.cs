@@ -209,7 +209,7 @@ public class TTSPowerup : TTSBehaviour
 	}
 
 	private void EntropyMid() {
-		FireEntropyCannon(this.gameObject);
+		FireEntropyCannon(true);
 	}
 
 	public void Helix(int _tier) {
@@ -257,7 +257,7 @@ public class TTSPowerup : TTSBehaviour
 			if (owner) vfx.BoostEffect(1.0f);
 		}
 
-		if (owner) { SendPowerupDeploy(TTSPowerupNetworkTypes.Boost, tier); }
+		if (owner) { SendStaticPowerupDeploy(TTSPowerupNetworkTypes.Boost, tier); }
 	}
 
 	public void Shield(float tier) {
@@ -274,7 +274,7 @@ public class TTSPowerup : TTSBehaviour
 		//defense stat effects to the duration of the shield
 		go.GetComponent<TTSShield>().DeployShield(tier, gameObject.GetComponent<TTSRacer>().Defense, gameObject.GetComponent<TTSRacer>());
 
-		if (owner) { SendPowerupDeploy(TTSPowerupNetworkTypes.Shield, tier); }
+		if (owner) { SendStaticPowerupDeploy(TTSPowerupNetworkTypes.Shield, tier); }
 
 		return go;
 	}
@@ -286,12 +286,21 @@ public class TTSPowerup : TTSBehaviour
 		return go;
 	}
 
-	public GameObject FireEntropyCannon(GameObject effectedRacer) {
+	public GameObject FireEntropyCannon(bool owner) {
+		return FireEntropyCannon(owner, null);
+	}
+
+	public GameObject FireEntropyCannon(bool owner, TTSPowerupNetHandler handle) {
 		GameObject go = (GameObject)Instantiate(EntropyCannonPrefab);
-		go.GetComponent<TTSEntropyCannonProjectile>().offensiveMultiplier = effectedRacer.GetComponent<TTSRacer>().Offense;
+		go.GetComponent<TTSEntropyCannonProjectile>().offensiveMultiplier = this.gameObject.GetComponent<TTSRacer>().Offense;
 		go.transform.rotation = GetComponent<TTSRacer>().displayMeshComponent.transform.rotation;
-		go.transform.position = effectedRacer.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
-		go.rigidbody.velocity = effectedRacer.rigidbody.velocity.normalized * (effectedRacer.rigidbody.velocity.magnitude + go.GetComponent<TTSEntropyCannonProjectile>().ProjectileStartVelocity);
+		go.transform.position = this.gameObject.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
+		go.rigidbody.velocity = this.gameObject.rigidbody.velocity.normalized * (this.gameObject.rigidbody.velocity.magnitude + go.GetComponent<TTSEntropyCannonProjectile>().ProjectileStartVelocity);
+
+		if (owner) { SendPowerupDeploy(TTSPowerupNetworkTypes.Entropy, go); }
+		else {
+			go.GetComponent<TTSEntropyCannonProjectile>().SetNetHandler(handle);
+		}
 		return go;
 	}
 
@@ -309,7 +318,7 @@ public class TTSPowerup : TTSBehaviour
 		GameObject go = (GameObject)Instantiate(TimeBonusPrefab, this.gameObject.transform.position, this.gameObject.transform.rotation);
 		go.GetComponent<TTSTimeBonusPrefab>().target = this.gameObject.GetComponent<TTSRacer>().displayMeshComponent.gameObject;
 
-		if (owner) { SendPowerupDeploy(TTSPowerupNetworkTypes.TimeBonus, 0.0f); }
+		if (owner) { SendStaticPowerupDeploy(TTSPowerupNetworkTypes.TimeBonus, 0.0f); }
 		return go;
 	}
 
@@ -321,7 +330,7 @@ public class TTSPowerup : TTSBehaviour
 		explosion.radius = explosion.radius * tier * this.gameObject.GetComponent<TTSRacer>().Offense;
 		explosion.Activate();
 
-		if (owner) { SendPowerupDeploy(TTSPowerupNetworkTypes.Shockwave, tier); }
+		if (owner) { SendStaticPowerupDeploy(TTSPowerupNetworkTypes.Shockwave, tier); }
 
 		return go;
 	}
@@ -344,16 +353,27 @@ public class TTSPowerup : TTSBehaviour
 		netHandler = handler;
 	}
 
-	public void SendPowerupDeploy(int poweruptype, float tier) {
+	public void SendStaticPowerupDeploy(int poweruptype, float tier) {
 		if (!level.client.isMultiplayer) return;
-
 		if (TTSPowerupNetworkTypes.isStaticType(poweruptype)) {
 			// Send through racer's net handler
 			netHandler.SendStaticPowerup(poweruptype, tier);
 		}
+	}
 
-		else {
+	public void SendPowerupDeploy(int poweruptype, GameObject powerup) {
+		if (!level.client.isMultiplayer) return;
+
+		if (!TTSPowerupNetworkTypes.isStaticType(poweruptype)) {
 			// Create a nethandler and proceed
+
+			TTSPowerupNetHandler handler = new TTSPowerupNetHandler(level.client, true, poweruptype, GetComponent<TTSRacer>().GetNetworkID());
+
+			switch (poweruptype) {
+				case TTSPowerupNetworkTypes.Entropy:
+					powerup.GetComponent<TTSEntropyCannonProjectile>().SetNetHandler(handler);
+					break;
+			}
 		}
 	}
 	#endregion
@@ -384,14 +404,38 @@ public class TTSPowerupNetHandler : TTSNetworkHandle
 	public int Type = -1;
 	public float Tier = -1.0f;
 
+	public float RacerID = -1.0f;
+
 	public TTSPowerupNetHandler() {
-		// For static powerups only.
+		// For static powerups only. Class is used only for storage.
 	}
 
-	public TTSPowerupNetHandler(TTSClient Client, bool Owner) {
+	public TTSPowerupNetHandler(TTSClient Client, bool Owner, int PowerupType, float racerID) {
+		Type = PowerupType;
+		owner = Owner;
+		RacerID = racerID;
+		registerCommand = TTSCommandTypes.PowerupRegister;
+		client = Client;
+		inGameRegistration = true;
+		client.LocalObjectRegister(this);
 	}
 
-	public TTSPowerupNetHandler(TTSClient Client, bool Owner, float ID) { // For multiplayer
+	public TTSPowerupNetHandler(TTSClient Client, bool Owner, float ID, int PowerupType, float racerID) { // For multiplayer
+		Type = PowerupType;
+		owner = Owner;
+		RacerID = racerID;
+		client = Client;
+	}
+
+	public override byte[] GetNetworkRegister() {
+		writer.AddData(registerCommand);
+		writer.AddData(RacerID);
+		writer.AddData(id);
+		writer.AddData(Type);
+
+		byte[] data = writer.GetMinimizedData();
+		writer.ClearData();
+		return data;
 	}
 
 	public override void ReceiveNetworkData(TTSPacketReader reader, int command) {
