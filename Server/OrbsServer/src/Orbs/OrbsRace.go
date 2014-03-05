@@ -59,6 +59,10 @@ func (this *OrbsRace) ProcessPacket(sender *net.UDPAddr, reader *Packets.PacketR
 		case OrbsCommandTypes.PowerupStaticRegister:
 			println(">	Powerup Received from ", ip)
 			this.staticPowerupDeploy(this.Connections[ip], reader)
+
+		// 5004
+		case OrbsCommandTypes.PowerupUpdate:
+			this.powerupUpdate(this.Connections[ip], reader)
 		}
 
 		command = reader.ReadInt32()
@@ -70,28 +74,24 @@ func (this *OrbsRace) ProcessPacket(sender *net.UDPAddr, reader *Packets.PacketR
 func (this *OrbsRace) powerupUpdate(connection *OrbsConnection, reader *Packets.PacketReader) {
 	powerupID := reader.ReadFloat32()
 
-	if owner, exists := this.ObjToOwner[powerupID]; exists && connection.IPAddress == owner.IPAddress {
+	println("#	Powerup Update Received ", powerupID)
 
-		// Pull all the packet data
-		position, rotation, speed := new(Vector3), new(Vector3), new(Vector3)
+	// Pull all the packet data
+	position, rotation, speed := new(Vector3), new(Vector3), new(Vector3)
 
-		position.Set(reader.ReadFloat32(), reader.ReadFloat32(), reader.ReadFloat32())
-		rotation.Set(reader.ReadFloat32(), reader.ReadFloat32(), reader.ReadFloat32())
-		speed.Set(reader.ReadFloat32(), reader.ReadFloat32(), reader.ReadFloat32())
+	position.Set(reader.ReadFloat32(), reader.ReadFloat32(), reader.ReadFloat32())
+	rotation.Set(reader.ReadFloat32(), reader.ReadFloat32(), reader.ReadFloat32())
+	speed.Set(reader.ReadFloat32(), reader.ReadFloat32(), reader.ReadFloat32())
 
-		var broadcastPacket = new(Packets.PacketWriter)
-		broadcastPacket.InitPacket()
-		broadcastPacket.WriteUInt32(OrbsCommandTypes.PowerupUpdate)
-		broadcastPacket.WriteFloat32(powerupID)
-		broadcastPacket.WriteVector3(position.X, position.Y, position.Z)
-		broadcastPacket.WriteVector3(rotation.X, rotation.Y, rotation.Z)
-		broadcastPacket.WriteVector3(speed.X, speed.Y, speed.Z)
+	var broadcastPacket = new(Packets.PacketWriter)
+	broadcastPacket.InitPacket()
+	broadcastPacket.WriteUInt32(OrbsCommandTypes.PowerupUpdate)
+	broadcastPacket.WriteFloat32(powerupID)
+	broadcastPacket.WriteVector3(position.X, position.Y, position.Z)
+	broadcastPacket.WriteVector3(rotation.X, rotation.Y, rotation.Z)
+	broadcastPacket.WriteVector3(speed.X, speed.Y, speed.Z)
 
-		this.writeBroadcastData(broadcastPacket.GetMinimalData())
-
-	} else {
-		reader.EmptyReadBytes(Packets.SIZEOF_FLOAT32 * 3 * 3) // Vector3
-	}
+	this.writeBroadcastData(broadcastPacket.GetMinimalData())
 }
 
 func (this *OrbsRace) powerupDeploy(connection *OrbsConnection, reader *Packets.PacketReader) {
