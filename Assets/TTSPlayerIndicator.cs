@@ -16,6 +16,7 @@ public class TTSPlayerIndicator : TTSBehaviour {
 				Debug.Log(racers[i] + " and " + this.camera + " are a pair.");
 			}else{
 				_racersToFollow.Add(racers[i]);
+				Debug.Log(racers[i] + " is now being tracked.");
 				GameObject tempIndicator = (GameObject)Instantiate(indicator);
 				tempIndicator.GetComponent<TTSIndicator>().racerToIndicate = racers[i];
 				tempIndicator.GetComponent<TTSIndicator>().myCamera = this.camera;
