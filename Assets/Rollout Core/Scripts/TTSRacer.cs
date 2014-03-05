@@ -537,6 +537,7 @@ public class TTSRacerNetHandler : TTSNetworkHandle
 	public TTSRacerNetHandler(TTSClient Client, bool Owner) {
 		registerCommand = TTSCommandTypes.RacerRegister;
 		owner = Owner;
+		client = Client;
 		Client.LocalRacerRegister(this);
 	}
 
@@ -544,6 +545,7 @@ public class TTSRacerNetHandler : TTSNetworkHandle
 		id = ID;
 		registerCommand = TTSCommandTypes.RacerRegister;
 		owner = Owner;
+		client = Client;
 		Client.LocalRacerRegister(this);
 	}
 

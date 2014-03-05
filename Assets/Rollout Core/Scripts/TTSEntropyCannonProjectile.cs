@@ -88,8 +88,10 @@ public class TTSEntropyCannonProjectile : MonoBehaviour {
 	#endregion
 
 	private void Explode(bool actually) {
-		netHandler.DeregisterFromClient();
-		netHandler = null;
+		if (netHandler != null) {
+			netHandler.DeregisterFromClient();
+			netHandler = null;
+		}
 
 		if (actually) {
 			Instantiate(explosion, this.transform.position, this.transform.rotation);
