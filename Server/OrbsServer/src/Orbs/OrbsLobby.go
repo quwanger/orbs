@@ -51,6 +51,7 @@ func (this *OrbsLobby) ProcessPacket(sender *net.UDPAddr, reader *Packets.Packet
 		case OrbsCommandTypes.CloseConnection:
 			if this.connectionExists(ip) {
 				for _, value := range this.connections[ip].OwnedObjects {
+					this.racerDeregister(this.connections[ip], value)
 					delete(this.objToOwner, value)
 					delete(this.racers, value)
 				}
@@ -109,6 +110,20 @@ func (this *OrbsLobby) racerRegister(connection *OrbsConnection, reader *Packets
 		fmt.Printf("	X	L:%v Racer %v already registered\n", this.LobbyID, racerID)
 	}
 	connection.WriteData(returnPacket.GetMinimalData())
+}
+
+func (this *OrbsLobby) racerDeregister(connection *OrbsConnection, racerID float32) {
+	if this.debugMode {
+		fmt.Printf("	S	L:%v Racer %v deregistered\n", this.LobbyID, racerID)
+	}
+
+	packet := new(Packets.PacketWriter)
+	packet.InitPacket()
+
+	packet.WriteInt(OrbsCommandTypes.RacerDeregister)
+	packet.WriteFloat32(racerID)
+
+	this.writeBroadcastDataExceptSender(packet.GetMinimalData(), connection)
 }
 
 // Initialization functions

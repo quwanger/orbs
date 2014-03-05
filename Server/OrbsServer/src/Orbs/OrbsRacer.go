@@ -23,5 +23,5 @@ func (this *OrbsRacer) Init(id float32, index int, rig int, perk1 int, perk2 int
 	this.ControlType = controlType
 	this.Owner = owner
 
-	println("Racer has been initialized: ", index, rig, perk1, perk2, name, controlType)
+	println("Racer", name, "has been initialized: ", rig)
 }
