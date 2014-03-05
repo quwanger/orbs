@@ -168,6 +168,12 @@ public class TTSClient : MonoBehaviour
 					netHandles[id].isServerRegistered = true;
 					break;
 
+				case TTSCommandTypes.RacerDeregister:
+					id = packet.ReadFloat();
+					Debug.Log("DEREGISTER RACER " + id);
+					// IMPLMENTE THIS
+					break;
+
 				case TTSCommandTypes.RacerAlreadyRegistered:
 					// Shouldn't really happen...
 					break;

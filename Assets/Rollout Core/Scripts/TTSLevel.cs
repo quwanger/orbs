@@ -23,6 +23,7 @@ public class TTSLevel : MonoBehaviour {
 	public Font[] fonts;
 
 	public TTSClient client;
+	public TTSInitRace initRace;
 	
 	public static TTSLevel instance { get; private set;}
 	
@@ -30,6 +31,7 @@ public class TTSLevel : MonoBehaviour {
 	void Awake() {
 		instance = this;
 		client = GetComponent<TTSClient>();
+		initRace = GetComponent<TTSInitRace>();
 	}
 	
 	void Start() {	

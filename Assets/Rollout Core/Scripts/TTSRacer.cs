@@ -117,7 +117,7 @@ public class TTSRacer : TTSBehaviour
 
 	// Networking
 	TTSRacerNetHandler netHandler;
-	public float tempRacerID; // ONLY USED FOR MULTIPLAYER
+	public int rigID;
 
 	void Awake() {
 
@@ -127,19 +127,6 @@ public class TTSRacer : TTSBehaviour
 			if (child.gameObject.tag == "RacerDisplayMesh") {
 				displayMeshComponent = child;
 			}
-		}
-
-		powerupManager = GetComponent<TTSPowerup>();
-
-		if (player == PlayerType.Player) {
-			SetNetHandler(new TTSRacerNetHandler(level.client, true));
-		}
-		else if(player == PlayerType.AI){
-			AIUtil = gameObject.AddComponent<TTSAIController>();
-			SetNetHandler(new TTSRacerNetHandler(level.client, true));
-		}
-		else if (player == PlayerType.Multiplayer) {
-
 		}
 
 		//lastForward = TTSUtils.FlattenVector(displayMeshComponent.forward).normalized;
@@ -176,9 +163,26 @@ public class TTSRacer : TTSBehaviour
 		
 		if(myCamera != null)
 			myCamera.GetComponent<TTSCameraFade>().SetScreenOverlayColor(new Color(0,0,0,0));
-		
-		if(AIUtil == null)
-				AIUtil = gameObject.AddComponent<TTSAIController>();
+	}
+
+	// Runs after the racer is initialized with the rigs
+	public void Initialized() {
+
+		powerupManager = GetComponent<TTSPowerup>();
+
+		if (player == PlayerType.Player) {
+			SetNetHandler(new TTSRacerNetHandler(level.client, true, rigID));
+		}
+		else if (player == PlayerType.AI) {
+			AIUtil = gameObject.AddComponent<TTSAIController>();
+			SetNetHandler(new TTSRacerNetHandler(level.client, true, rigID));
+		}
+		else if (player == PlayerType.Multiplayer) {
+
+		}
+
+		if (AIUtil == null)
+			AIUtil = gameObject.AddComponent<TTSAIController>();
 	}
 	
 	void FixedUpdate () {
@@ -547,10 +551,11 @@ public class TTSRacerNetHandler : TTSNetworkHandle
 	// Powerup
 	public List<TTSPowerupNetHandler> receivedPowerups = new List<TTSPowerupNetHandler>();
 
-	public TTSRacerNetHandler(TTSClient Client, bool Owner) {
+	public TTSRacerNetHandler(TTSClient Client, bool Owner, int rigID) {
 		registerCommand = TTSCommandTypes.RacerRegister;
 		owner = Owner;
 		client = Client;
+		Rig = rigID;
 		Client.LocalRacerRegister(this);
 	}
 
@@ -566,7 +571,7 @@ public class TTSRacerNetHandler : TTSNetworkHandle
 		writer.ClearData();
 		writer.AddData(registerCommand);
 		writer.AddData(id);
-		writer.AddData(0); // Index
+		writer.AddData(-1); // Index
 		writer.AddData(Rig);
 		writer.AddData(Perk1);
 		writer.AddData(Perk2);

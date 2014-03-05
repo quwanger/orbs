@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class TTSInitRace : MonoBehaviour
 {
 
-	public List<GameObject> _rigs = new List<GameObject>();
+	public List<GameObject> rigs = new List<GameObject>();
 	public List<GameObject> _characters = new List<GameObject>();
 	public List<GameObject> _startingpoints = new List<GameObject>();
 
@@ -47,18 +47,19 @@ public class TTSInitRace : MonoBehaviour
 	public GameObject InstantiateRacer(int rigID, int startPointID) {
 		//finds the rig to initialize
 		if (rigID == -1) {
-			foreach (GameObject rig in _rigs) {
+			foreach (GameObject rig in rigs) {
 				if (rig.GetComponent<TTSRig>().rigName == tempRigChoice) {
 					rigToLoad = rig;
 				}
 			}
 		}
 		else {
-			rigToLoad = _rigs[rigID];
+			rigToLoad = rigs[rigID];
 		}
 		//makes sure there is a rig to load if none selected
 		if (rigToLoad == null) {
-			rigToLoad = _rigs[Random.Range(0, _rigs.Count)];
+			rigID = Random.Range(0, rigs.Count);
+			rigToLoad = rigs[rigID];
 		}
 
 		//checks for the character (in this case, default sphere)
@@ -93,6 +94,9 @@ public class TTSInitRace : MonoBehaviour
 		tempRacer.GetComponent<TTSRacer>().displayMeshComponent = tempChar.transform;
 		//sets the currentrig variable of the racer to the rig selecte above
 		tempRacer.GetComponent<TTSRacer>().CurrentRig = tempRig;
+		tempRacer.GetComponent<TTSRacer>().rigID = rigID;
+
+		tempRacer.GetComponent<TTSRacer>().Initialized();
 
 		return tempRacer;
 	}
