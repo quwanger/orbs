@@ -132,17 +132,15 @@ public class TTSRacer : TTSBehaviour
 		powerupManager = GetComponent<TTSPowerup>();
 
 		if (player == PlayerType.Player) {
-			netHandler = new TTSRacerNetHandler(level.client, true);
+			SetNetHandler(new TTSRacerNetHandler(level.client, true));
 		}
 		else if(player == PlayerType.AI){
 			AIUtil = gameObject.AddComponent<TTSAIController>();
-			netHandler = new TTSRacerNetHandler(level.client, true);
+			SetNetHandler(new TTSRacerNetHandler(level.client, true));
 		}
-		else if(player == PlayerType.Multiplayer)
-			if(netHandler == null)
-				netHandler = new TTSRacerNetHandler(level.client, false, tempRacerID);
+		else if (player == PlayerType.Multiplayer) {
 
-		powerupManager.SetNetHandler(netHandler);
+		}
 
 		//lastForward = TTSUtils.FlattenVector(displayMeshComponent.forward).normalized;
 
@@ -466,6 +464,7 @@ public class TTSRacer : TTSBehaviour
 
 	public void SetNetHandler(TTSRacerNetHandler handler) {
 		this.netHandler = handler;
+		powerupManager.SetNetHandler(netHandler);
 	}
 
 	public float GetNetworkID() {
@@ -473,7 +472,9 @@ public class TTSRacer : TTSBehaviour
 	}
 
 	public void MultiplayerInput() {
-		transform.position = Vector3.Lerp(transform.position, netHandler.netPosition, netHandler.networkInterpolation);
+		if (netHandler.netPosition != Vector3.zero) {
+			transform.position = Vector3.Lerp(transform.position, netHandler.netPosition, netHandler.networkInterpolation);
+		}
 		displayMeshComponent.rotation = Quaternion.Lerp(displayMeshComponent.rotation, Quaternion.Euler(netHandler.netRotation), netHandler.networkInterpolation * 10);
 		rigidbody.velocity = netHandler.netSpeed;
 

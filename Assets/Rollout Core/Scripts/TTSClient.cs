@@ -205,8 +205,8 @@ public class TTSClient : MonoBehaviour
 	}
 
 	public void LocalRacerRegister(TTSRacerNetHandler handler) {
-		racerHandles.Add(handler.id, handler);
 		LocalObjectRegister(handler);
+		racerHandles.Add(handler.id, handler);
 	}
 
 	public void LocalObjectRegister(TTSNetworkHandle handler) {
