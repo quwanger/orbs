@@ -36,7 +36,7 @@ using System.Collections;
 [RequireComponent(typeof(MeshRenderer))]
 public class TTSRacer : TTSBehaviour
 {
-
+	public GameObject minimapIcon;
 
 	#region serialized settings
 	public bool IsPlayerControlled = true;
@@ -198,9 +198,11 @@ public class TTSRacer : TTSBehaviour
 				vInput = Input.GetAxis("L_YAxis_2");
 				hInput = Input.GetAxis("L_XAxis_2");
 			} else if (playerNum == 3) {
-				
+				vInput = Input.GetAxis("L_YAxis_3");
+				hInput = Input.GetAxis("L_XAxis_3");
 			} else if (playerNum == 4) {
-				
+				vInput = Input.GetAxis("L_YAxis_4");
+				hInput = Input.GetAxis("L_XAxis_4");
 			}	
 		}
 		else if (player == PlayerType.Multiplayer) {
@@ -299,6 +301,10 @@ public class TTSRacer : TTSBehaviour
 			RacerSounds.pitch = Mathf.Max(Mathf.Lerp(RacerSounds.pitch, TTSUtils.Remap(Mathf.Abs(vInput), 0.0f, 1.0f, 0.5f, 1.0f, false), 0.1f), 0);
 			RacerSounds.volume = Mathf.Max(Mathf.Lerp(RacerSounds.volume, TTSUtils.Remap(Mathf.Abs(vInput), 0.0f, 1.0f, 0.5f, 1.0f, false) * 1.5f, 0), 0); // Needs cleaning
 		}
+	}
+
+	void Update() {
+		minimapIcon.transform.position = new Vector3(this.gameObject.transform.position.x, minimapIcon.transform.position.y, this.gameObject.transform.position.z);
 	}
 
 	#region Events

@@ -10,9 +10,11 @@ public class TTSInitRace : MonoBehaviour {
 	public GameObject racerGO;
 	public GameObject cameraGO;
 	public GameObject hudGO;
-	//public GameObject indicatorGO;
-	
+
 	private int counter = 1;
+
+	public GameObject minimapGO;
+	public GameObject playericon;
 	
 	public enum Rigs {Rhino, Scorpion, Default};
 	public enum Characters {Character_Default, Character1, Character2};
@@ -86,34 +88,52 @@ public class TTSInitRace : MonoBehaviour {
 			counter++;
 		
 			//do this only for human players
+			GameObject tempIcon = (GameObject)Instantiate(playericon);
+
+			tempRacer.GetComponent<TTSRacer>().minimapIcon = tempIcon;
+
+			//this is where the stuff for the human players
 			if(i < tempNumHumanPlayers){
 				//set to player controlled and set the player type to Player
 				tempRacer.GetComponent<TTSRacer>().IsPlayerControlled = true;
 				tempRacer.GetComponent<TTSRacer>().player = TTSRacer.PlayerType.Player;
-			
-				//instantiate a camera for the player
+
+				GameObject tempMinimap = (GameObject)Instantiate(minimapGO);
+				tempMinimap.GetComponent<TTSMinimap>().player = tempRig.transform;
+
 				GameObject tempCamera = (GameObject)Instantiate(cameraGO);
-				//handles splitting the screen for splitscreen
-				if(tempNumHumanPlayers > 1){
-					if(i%2 == 0){
-						if(tempNumHumanPlayers > 3){
-							if(i%4 == 0)
-								tempCamera.camera.rect = new Rect(0, 0, 0.5f, 0.5f);
-							else
-								tempCamera.camera.rect = new Rect(0, 0.5f, 0.5f, 0.5f);
-						}else{
+
+				switch(tempNumHumanPlayers){
+					case 2:
+						if(i==0) {
+							tempCamera.camera.rect = new Rect(0, 0.5f, 1.0f, 0.5f);
+						} else {
 							tempCamera.camera.rect = new Rect(0, 0, 1.0f, 0.5f);
 						}
-					}else{
-						if(tempNumHumanPlayers > 3){
-							if(i%3 == 0)
-								tempCamera.camera.rect = new Rect(0.5f, 0.5f, 0.5f, 0.5f);
-							else
-								tempCamera.camera.rect = new Rect(0.5f, 0, 0.5f, 0.5f);
-						}else{
+						break;
+
+					case 3:
+						if(i==0)
 							tempCamera.camera.rect = new Rect(0, 0.5f, 1.0f, 0.5f);
-						}
-					}
+						else if(i==1)
+							tempCamera.camera.rect = new Rect(0, 0, 0.5f, 0.5f);
+						else
+							tempCamera.camera.rect = new Rect(0.5f, 0, 0.5f, 0.5f);
+						break;
+
+					case 4:
+						if(i==0)
+							tempCamera.camera.rect = new Rect(0, 0.5f, 0.5f, 0.5f);
+						else if(i==1)
+							tempCamera.camera.rect = new Rect(0.5f, 0.5f, 0.5f, 0.5f);
+						else if(i==2)
+							tempCamera.camera.rect = new Rect(0, 0, 0.5f, 0.5f);
+						else
+							tempCamera.camera.rect = new Rect(0.5f, 0, 0.5f, 0.5f);
+						break;
+
+					default:
+					break;
 				}
 				
 				//tells the camera which racer to follow
@@ -142,7 +162,7 @@ public class TTSInitRace : MonoBehaviour {
 				tempRacer.GetComponent<TTSRacer>().player = TTSRacer.PlayerType.AI;
 			}
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 	
