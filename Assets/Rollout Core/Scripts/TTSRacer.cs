@@ -487,7 +487,6 @@ public class TTSRacer : TTSBehaviour
 
 		// Powerups
 		foreach (TTSPowerupNetHandler handler in netHandler.receivedPowerups) {
-			Debug.Log("Powerup Register " + handler);
 			switch (handler.Type) {
 				case TTSPowerupNetworkTypes.Shield:
 					powerupManager.DeployShield(handler.Tier, false);
@@ -506,7 +505,6 @@ public class TTSRacer : TTSBehaviour
 					break;
 
 				case TTSPowerupNetworkTypes.Entropy:
-					Debug.Log("Entropy Cannon Received");
 					level.client.LocalObjectRegister(handler);
 					powerupManager.FireEntropyCannon(false, handler);
 					break;

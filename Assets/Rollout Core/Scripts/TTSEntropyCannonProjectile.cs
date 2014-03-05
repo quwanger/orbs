@@ -73,7 +73,7 @@ public class TTSEntropyCannonProjectile : MonoBehaviour {
 			if (netHandler.netPosition != Vector3.zero) {
 				transform.position = Vector3.Lerp(transform.position, netHandler.netPosition, netHandler.networkInterpolation);
 			}
-			transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(netHandler.netRotation), netHandler.networkInterpolation * 10);
+			transform.rotation = Quaternion.Euler(netHandler.netRotation);
 			rigidbody.velocity = netHandler.netSpeed;
 
 			netHandler.isNetworkUpdated = false;
@@ -124,6 +124,16 @@ public class TTSEntropyCannonProjectile : MonoBehaviour {
 		//stop motion so the trail can end and destroy the parent GO.
 		this.GetComponent<SphereCollider>().enabled = false;
 		this.rigidbody.velocity = new Vector3(0f,0f,0f);
+	}
+	public void OnDrawGizmos() {
+		if (netHandler == null)
+			return;
+
+		Gizmos.color = Color.cyan;
+		Gizmos.DrawLine(transform.position, netHandler.netPosition);
+
+		Gizmos.color = Color.white;
+		Gizmos.DrawCube(netHandler.netPosition, Vector3.one);
 	}
 
 }

@@ -426,8 +426,10 @@ public class TTSPowerupNetHandler : TTSNetworkHandle
 	public TTSPowerupNetHandler(TTSClient Client, bool Owner, float ID, int PowerupType, float racerID) { // For multiplayer
 		Type = PowerupType;
 		owner = Owner;
+		id = ID;
 		RacerID = racerID;
 		client = Client;
+		networkInterpolation = 0.5f;
 	}
 
 	public override byte[] GetNetworkRegister() {
@@ -461,5 +463,10 @@ public class TTSPowerupNetHandler : TTSNetworkHandle
 			writer.AddData(Rot);
 			writer.AddData(Speed);
 		}
+	}
+
+	public override byte[] GetNetworkUpdate() {
+		isWriterUpdated = false;
+		return writer.GetMinimizedData();
 	}
 }
