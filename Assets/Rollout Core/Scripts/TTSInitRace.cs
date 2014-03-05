@@ -14,7 +14,8 @@ public class TTSInitRace : MonoBehaviour {
 	private int counter = 1;
 
 	public GameObject minimapGO;
-	public GameObject playericon;
+	public GameObject playericonSmall;
+	public GameObject playericonBig;
 	
 	public enum Rigs {Rhino, Scorpion, Default};
 	public enum Characters {Character_Default, Character1, Character2};
@@ -28,12 +29,16 @@ public class TTSInitRace : MonoBehaviour {
 	GameObject rigToLoad;
 	GameObject characterToLoad;
 	
+	public bool levelInitialized = false;
+	
 	// Use this for initialization
 	void Start () {
 		
 		for(int i = 0; i < numberOfRacers; i++){
 			InstantiateRacers(i);
 		}
+		
+		levelInitialized = true;
 	}
 	
 	public void InstantiateRacers(int i){
@@ -87,10 +92,12 @@ public class TTSInitRace : MonoBehaviour {
 			tempRacer.GetComponent<TTSRacer>().playerNum = counter;
 			counter++;
 		
-			//do this only for human players
-			GameObject tempIcon = (GameObject)Instantiate(playericon);
+			GameObject tempIconSmall = (GameObject)Instantiate(playericonSmall);
+			GameObject tempIconBig = (GameObject)Instantiate(playericonBig);
+			
 
-			tempRacer.GetComponent<TTSRacer>().minimapIcon = tempIcon;
+			tempRacer.GetComponent<TTSRacer>().minimapIconSmall = tempIconSmall;
+			tempRacer.GetComponent<TTSRacer>().minimapIconBig = tempIconBig;
 
 			//this is where the stuff for the human players
 			if(i < tempNumHumanPlayers){
@@ -99,43 +106,13 @@ public class TTSInitRace : MonoBehaviour {
 				tempRacer.GetComponent<TTSRacer>().player = TTSRacer.PlayerType.Player;
 
 				GameObject tempMinimap = (GameObject)Instantiate(minimapGO);
-				tempMinimap.GetComponent<TTSMinimap>().player = tempRig.transform;
+				TTSMinimap miniWin = tempMinimap.GetComponent<TTSMinimap>();
+				miniWin.player = tempRig.transform;
+			
+				miniWin.minimapID = i;
 
 				GameObject tempCamera = (GameObject)Instantiate(cameraGO);
-
-				switch(tempNumHumanPlayers){
-					case 2:
-						if(i==0) {
-							tempCamera.camera.rect = new Rect(0, 0.5f, 1.0f, 0.5f);
-						} else {
-							tempCamera.camera.rect = new Rect(0, 0, 1.0f, 0.5f);
-						}
-						break;
-
-					case 3:
-						if(i==0)
-							tempCamera.camera.rect = new Rect(0, 0.5f, 1.0f, 0.5f);
-						else if(i==1)
-							tempCamera.camera.rect = new Rect(0, 0, 0.5f, 0.5f);
-						else
-							tempCamera.camera.rect = new Rect(0.5f, 0, 0.5f, 0.5f);
-						break;
-
-					case 4:
-						if(i==0)
-							tempCamera.camera.rect = new Rect(0, 0.5f, 0.5f, 0.5f);
-						else if(i==1)
-							tempCamera.camera.rect = new Rect(0.5f, 0.5f, 0.5f, 0.5f);
-						else if(i==2)
-							tempCamera.camera.rect = new Rect(0, 0, 0.5f, 0.5f);
-						else
-							tempCamera.camera.rect = new Rect(0.5f, 0, 0.5f, 0.5f);
-						break;
-
-					default:
-					break;
-				}
-				
+			
 				//tells the camera which racer to follow
 				tempCamera.GetComponent<TTSFollowCamera>().target = tempChar.transform;
 				
@@ -143,6 +120,173 @@ public class TTSInitRace : MonoBehaviour {
 				GameObject tempHUD = (GameObject)Instantiate(hudGO);
 				tempHUD.GetComponent<TTSFloatHud>().boundCamera = tempCamera.transform;
 				tempHUD.GetComponent<TTSFloatHud>().racerToFollow = tempRacer;
+			
+				tempCamera.camera.cullingMask &= ~ (1 << 9);
+			
+				switch(tempNumHumanPlayers){
+					case 2:
+						if(i==0) {
+							tempCamera.camera.rect = new Rect(0, 0.5f, 1.0f, 0.5f);
+							tempMinimap.camera.rect = new Rect(0.02f, 0.52f, 0.125f, 0.25f);
+							tempMinimap.camera.cullingMask |= (1 << 12);
+					
+							foreach (Transform child in tempIconBig.transform) { child.gameObject.layer = 12; }
+							tempIconBig.layer = 12;
+					
+							foreach (Transform child in tempHUD.transform) { child.gameObject.layer = 12; }
+							tempHUD.layer = 12;
+					
+							foreach (Transform child in tempMinimap.transform) { child.gameObject.layer = 12; }
+							tempMinimap.layer = 12;
+					
+							tempCamera.camera.cullingMask &= ~(1 << 13);
+						} else {
+							tempCamera.camera.rect = new Rect(0, 0, 1.0f, 0.5f);
+							tempMinimap.camera.rect = new Rect(0.02f, 0.02f, 0.125f, 0.25f);
+							tempMinimap.camera.cullingMask |= (1 << 13);
+							
+							foreach (Transform child in tempIconBig.transform) { child.gameObject.layer = 13; }
+							tempIconBig.layer = 13;
+					
+							foreach (Transform child in tempHUD.transform) {
+								child.gameObject.layer = 13;
+							}
+							foreach (Transform child in tempMinimap.transform) {
+								child.gameObject.layer = 13;
+							}
+							tempHUD.layer = 13;
+							tempMinimap.layer = 13;
+							tempCamera.camera.cullingMask &= ~(1 << 12);
+						}
+						break;
+
+					case 3:
+						if(i==0) {
+							tempCamera.camera.rect = new Rect(0, 0.5f, 1.0f, 0.5f);
+							tempMinimap.camera.rect = new Rect(0.02f, 0.52f, 0.25f, 0.50f);
+							tempMinimap.camera.cullingMask |= (1 << 12);
+					
+							foreach (Transform child in tempIconBig.transform) { child.gameObject.layer = 12; }
+							tempIconBig.layer = 12;
+					
+							foreach (Transform child in tempHUD.transform) { child.gameObject.layer = 12; }
+							tempHUD.layer = 12;
+					
+							foreach (Transform child in tempMinimap.transform) { child.gameObject.layer = 12; }
+							tempMinimap.layer = 12;
+					
+							tempCamera.camera.cullingMask &= ~(1 << 13);
+							tempCamera.camera.cullingMask &= ~(1 << 14);
+						} else if(i==1) {
+							tempCamera.camera.rect = new Rect(0, 0, 0.5f, 0.5f);
+							tempMinimap.camera.rect = new Rect(0.02f, 0.02f, 0.125f, 0.25f);
+							tempMinimap.camera.cullingMask |= (1 << 13);
+					
+							foreach (Transform child in tempIconBig.transform) { child.gameObject.layer = 13; }
+							tempIconBig.layer = 13;
+					
+							foreach (Transform child in tempHUD.transform) { child.gameObject.layer = 13; }
+							tempHUD.layer = 13;
+					
+							foreach (Transform child in tempMinimap.transform) { child.gameObject.layer = 13; }
+							tempMinimap.layer = 13;
+					
+							tempCamera.camera.cullingMask &= ~(1 << 12);
+							tempCamera.camera.cullingMask &= ~(1 << 14);
+						} else { 
+							tempCamera.camera.rect = new Rect(0.5f, 0, 0.5f, 0.5f);
+							tempMinimap.camera.rect = new Rect(0.52f, 0.02f, 0.125f, 0.25f);
+							tempMinimap.camera.cullingMask |= (1 << 14);
+					
+							foreach (Transform child in tempIconBig.transform) { child.gameObject.layer = 14; }
+							tempIconBig.layer = 14;
+					
+							foreach (Transform child in tempHUD.transform) { child.gameObject.layer = 14; }
+							tempHUD.layer = 14;
+					
+							foreach (Transform child in tempMinimap.transform) { child.gameObject.layer = 14; }
+							tempMinimap.layer = 14;
+					
+							tempCamera.camera.cullingMask &= ~(1 << 12);
+							tempCamera.camera.cullingMask &= ~(1 << 13);
+						}
+						break;
+
+					case 4:
+						if(i==0) {
+							tempCamera.camera.rect = new Rect(0, 0.5f, 0.5f, 0.5f);
+							tempMinimap.camera.rect = new Rect(0.02f, 0.52f, 0.125f, 0.25f);
+							tempMinimap.camera.cullingMask |= (1 << 12);
+					
+							foreach (Transform child in tempIconBig.transform) { child.gameObject.layer = 12; }
+							tempIconBig.layer = 12;
+					
+							foreach (Transform child in tempHUD.transform) { child.gameObject.layer = 12; }
+							tempHUD.layer = 12;
+					
+							foreach (Transform child in tempMinimap.transform) { child.gameObject.layer = 12; }
+							tempMinimap.layer = 12;
+					
+							tempCamera.camera.cullingMask &= ~(1 << 13);
+							tempCamera.camera.cullingMask &= ~(1 << 14);
+							tempCamera.camera.cullingMask &= ~(1 << 15);
+						} else if(i==1) {
+							tempCamera.camera.rect = new Rect(0.5f, 0.5f, 0.5f, 0.5f);
+							tempMinimap.camera.rect = new Rect(0.52f, 0.52f, 0.125f, 0.25f);
+							tempMinimap.camera.cullingMask |= (1 << 13);
+					
+							foreach (Transform child in tempIconBig.transform) { child.gameObject.layer = 13; }
+							tempIconBig.layer = 13;
+					
+							foreach (Transform child in tempHUD.transform) { child.gameObject.layer = 13; }
+							tempHUD.layer = 13;
+					
+							foreach (Transform child in tempMinimap.transform) { child.gameObject.layer = 13; }
+							tempMinimap.layer = 13;
+					
+							tempCamera.camera.cullingMask &= ~(1 << 12);
+							tempCamera.camera.cullingMask &= ~(1 << 14);
+							tempCamera.camera.cullingMask &= ~(1 << 15);
+						} else if(i==2) {
+							tempCamera.camera.rect = new Rect(0, 0, 0.5f, 0.5f);
+							tempMinimap.camera.rect = new Rect(0.02f, 0.02f, 0.125f, 0.25f);
+							tempMinimap.camera.cullingMask |= (1 << 14);
+					
+							foreach (Transform child in tempIconBig.transform) { child.gameObject.layer = 14; }
+							tempIconBig.layer = 14;
+					
+							foreach (Transform child in tempHUD.transform) { child.gameObject.layer = 14; }
+							tempHUD.layer = 14;
+					
+							foreach (Transform child in tempMinimap.transform) { child.gameObject.layer = 14; }
+							tempMinimap.layer = 14;
+					
+							tempCamera.camera.cullingMask &= ~(1 << 13);
+							tempCamera.camera.cullingMask &= ~(1 << 12);
+							tempCamera.camera.cullingMask &= ~(1 << 15);
+						} else {
+							tempCamera.camera.rect = new Rect(0.5f, 0, 0.5f, 0.5f);
+							tempMinimap.camera.rect = new Rect(0.52f, 0.02f, 0.125f, 0.25f);
+							tempMinimap.camera.cullingMask |= (1 << 15);
+					
+							foreach (Transform child in tempIconBig.transform) { child.gameObject.layer = 15; }
+							tempIconBig.layer = 15;
+					
+							foreach (Transform child in tempHUD.transform) { child.gameObject.layer = 15; }
+							tempHUD.layer = 15;
+					
+							foreach (Transform child in tempMinimap.transform) { child.gameObject.layer = 15; }
+							tempMinimap.layer = 15;
+					
+							tempCamera.camera.cullingMask &= ~(1 << 13);
+							tempCamera.camera.cullingMask &= ~(1 << 14);
+							tempCamera.camera.cullingMask &= ~(1 << 12);
+						}
+						break;
+
+					default:
+					break;
+				}
 
 				//assinging the hud powerup for the racer
 				Transform tempHudPowerup = tempHUD.transform.Find("CurrentPowerup");

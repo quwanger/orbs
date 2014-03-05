@@ -36,7 +36,8 @@ using System.Collections;
 [RequireComponent(typeof(MeshRenderer))]
 public class TTSRacer : TTSBehaviour
 {
-	public GameObject minimapIcon;
+	public GameObject minimapIconSmall;
+	public GameObject minimapIconBig;
 
 	#region serialized settings
 	public bool IsPlayerControlled = true;
@@ -304,7 +305,8 @@ public class TTSRacer : TTSBehaviour
 	}
 
 	void Update() {
-		minimapIcon.transform.position = new Vector3(this.gameObject.transform.position.x, minimapIcon.transform.position.y, this.gameObject.transform.position.z);
+		minimapIconSmall.transform.position = new Vector3(this.gameObject.transform.position.x, minimapIconSmall.transform.position.y, this.gameObject.transform.position.z);
+		minimapIconBig.transform.position = new Vector3(this.gameObject.transform.position.x, minimapIconBig.transform.position.y, this.gameObject.transform.position.z);
 	}
 
 	#region Events
