@@ -9,6 +9,8 @@ public class TTSIndicator : MonoBehaviour {
 	
 	public Camera myCamera;
 	
+	public int myCameraNumber;
+	
 	public float myScale = 0.1f;
 	
 	float ratioW = Screen.width;
@@ -18,6 +20,54 @@ public class TTSIndicator : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		ratio =  ratioW/ratioH;
+		
+		TTSFollowCamera tempCamera = myCamera.GetComponent<TTSFollowCamera>();
+		
+		myCameraNumber = tempCamera.cameraNumber;
+		
+		switch(tempCamera.cameraNumber){
+		case 1:
+			this.gameObject.layer = 18;
+			tempCamera.camera.cullingMask &= ~(1 << 19);
+			tempCamera.camera.cullingMask &= ~(1 << 20);
+			tempCamera.camera.cullingMask &= ~(1 << 21);
+			tempCamera.camera.cullingMask &= ~(1 << 22);
+			tempCamera.camera.cullingMask &= ~(1 << 23);
+			break;
+		case 2:
+			this.gameObject.layer = 19;
+			tempCamera.camera.cullingMask &= ~(1 << 18);
+			tempCamera.camera.cullingMask &= ~(1 << 20);
+			tempCamera.camera.cullingMask &= ~(1 << 21);
+			tempCamera.camera.cullingMask &= ~(1 << 22);
+			tempCamera.camera.cullingMask &= ~(1 << 23);
+			break;
+		case 3:
+			this.gameObject.layer = 20;
+			tempCamera.camera.cullingMask &= ~(1 << 18);
+			tempCamera.camera.cullingMask &= ~(1 << 19);
+			tempCamera.camera.cullingMask &= ~(1 << 21);
+			tempCamera.camera.cullingMask &= ~(1 << 22);
+			tempCamera.camera.cullingMask &= ~(1 << 23);
+			break;
+		case 4:
+			this.gameObject.layer = 21;
+			tempCamera.camera.cullingMask &= ~(1 << 18);
+			tempCamera.camera.cullingMask &= ~(1 << 19);
+			tempCamera.camera.cullingMask &= ~(1 << 20);
+			tempCamera.camera.cullingMask &= ~(1 << 22);
+			tempCamera.camera.cullingMask &= ~(1 << 23);
+			break;
+		case 5:
+			this.gameObject.layer = 22;
+			break;
+		case 6:
+			this.gameObject.layer = 23;
+			break;
+		default:
+			break;
+		}
+		
 	}
 	
 	// Update is called once per frame

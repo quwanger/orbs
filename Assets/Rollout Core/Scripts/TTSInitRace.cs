@@ -90,7 +90,6 @@ public class TTSInitRace : MonoBehaviour {
 			tempRacer.GetComponent<TTSRacer>().CurrentRig = tempRig;
 		
 			tempRacer.GetComponent<TTSRacer>().playerNum = counter;
-			counter++;
 		
 			GameObject tempIconSmall = (GameObject)Instantiate(playericonSmall);
 			GameObject tempIconBig = (GameObject)Instantiate(playericonBig);
@@ -304,12 +303,17 @@ public class TTSInitRace : MonoBehaviour {
 				tempPP2.GetComponent<TTSHudPerk>().InitializePerkPool2(tempRacer.GetComponent<TTSPerkManager>().equiptPerkPool2);
 			
 				tempRacer.GetComponent<TTSRacer>().myCamera = tempCamera;
+			
+				tempCamera.GetComponent<TTSFollowCamera>().cameraNumber = counter;
+			
 			}else{
 				//this is for AI only
 				//set the player type to AI
 				tempRacer.GetComponent<TTSRacer>().IsPlayerControlled = true;
 				tempRacer.GetComponent<TTSRacer>().player = TTSRacer.PlayerType.AI;
 			}
+		
+		counter++;
 	}
 
 	// Update is called once per frame

@@ -11,6 +11,8 @@ public class TTSFollowCamera : TTSBehaviour
 	};
 
 	public cameraModes CameraMode;
+	
+	public int cameraNumber;
 
 	// The target we are following
 	public Transform target;
