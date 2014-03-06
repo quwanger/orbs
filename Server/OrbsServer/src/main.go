@@ -9,7 +9,7 @@ import (
 	"strconv"
 )
 
-var DebugMode bool
+var DebugMode bool = true
 var inConn, outConn *net.UDPConn
 var Lobbies []*Orbs.OrbsLobby
 var IPToLobby map[string]*Orbs.OrbsLobby
@@ -69,6 +69,10 @@ func ProcessPacket(sender *net.UDPAddr, reader *Packets.PacketReader) {
 				}
 			}
 
+		// 8005
+		case OrbsCommandTypes.RequestAllLobbies:
+			ReturnAllLobbyInfo(sender)
+
 		// Send the packet to it's respective lobby
 		default:
 			if value, keyExists := IPToLobby[sender.IP.String()]; keyExists {
@@ -78,6 +82,41 @@ func ProcessPacket(sender *net.UDPAddr, reader *Packets.PacketReader) {
 		}
 
 		command = reader.ReadInt32()
+	}
+}
+
+func ReturnAllLobbyInfo(sender *net.UDPAddr) {
+	println("Lobby Info Requested")
+	var returnPacket = new(Packets.PacketWriter)
+	returnPacket.InitPacket()
+	returnPacket.WriteInt(OrbsCommandTypes.ReturnAllLobbies)
+	returnPacket.WriteInt(len(Lobbies))
+
+	var returnAddr *net.UDPAddr = &net.UDPAddr{IP: sender.IP, Port: 6969}
+
+	for _, value := range Lobbies {
+		returnPacket.WriteInt(value.LobbyID)
+		returnPacket.WriteString(Packets.ConvertTo16String(value.Name))
+		returnPacket.WriteInt(value.GetNumRacers())
+		returnPacket.WriteInt(value.PlayerLimit)
+		returnPacket.WriteBool(value.InGame)
+		returnPacket.WriteBool(value.BotsEnabled)
+		returnPacket.WriteInt(value.Level)
+	}
+
+	SendPacket(returnPacket, returnAddr)
+}
+
+func SendPacket(packet *Packets.PacketWriter, returnAddress *net.UDPAddr) {
+	if packet.Size() == 0 {
+		return
+	}
+
+	n, _ := outConn.WriteToUDP(packet.Data[0:packet.Size()], returnAddress)
+	packet.Clear()
+
+	if DebugMode {
+		fmt.Printf(">	Sent %v bytes to %v\n", n, returnAddress.IP.String())
 	}
 }
 

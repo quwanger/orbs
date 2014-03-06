@@ -12,6 +12,8 @@ type OrbsLobby struct {
 	Name        string
 	LobbyID     int
 	PlayerLimit int
+	BotsEnabled bool
+	Level       int
 
 	debugMode bool
 
@@ -229,4 +231,8 @@ func (this *OrbsLobby) connectionExists(ipAddress string) bool {
 func (this *OrbsLobby) objExists(objID float32) bool {
 	_, exists := this.objToOwner[objID]
 	return exists
+}
+
+func (this *OrbsLobby) GetNumRacers() int {
+	return len(this.racers)
 }

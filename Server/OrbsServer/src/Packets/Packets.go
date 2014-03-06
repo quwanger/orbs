@@ -8,6 +8,12 @@ import (
 	"math"
 )
 
+func ConvertTo16String(str string) string {
+	var arr [16]byte
+	copy(arr[:], str)
+	return string(arr[:])
+}
+
 const (
 	SIZEOF_INT32   = 4
 	SIZEOF_UINT32  = 4
@@ -158,6 +164,15 @@ func (this *PacketWriter) WriteVector3(x float32, y float32, z float32) {
 
 func (this *PacketWriter) WriteString(data string) {
 	this.WriteBytes([]byte(data))
+}
+
+func (this *PacketWriter) WriteBool(data bool) {
+	if data {
+		this.Data[this.readIndex] = byte(255)
+	} else {
+		this.Data[this.readIndex] = byte(0)
+	}
+	this.readIndex++
 }
 
 func (this *PacketWriter) WriteBytes(data []byte) {

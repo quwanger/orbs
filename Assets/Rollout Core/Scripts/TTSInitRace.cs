@@ -26,14 +26,45 @@ public class TTSInitRace : MonoBehaviour
 	GameObject rigToLoad;
 	GameObject characterToLoad;
 
+	TTSLevel level;
+
 	// Use this for initialization
 	void Start() {
+		level = GetComponent<TTSLevel>();
+		if (level.currentGameType == TTSLevel.Gametype.MultiplayerOnline) {
+			NetworkGameInitialize();
+		}
+		else if(level.currentGameType != TTSLevel.Gametype.Lobby){
+			LocalGameInitialize();
+		}
+		else {
+			LobbyInitialize();
+		}
+	}
+
+	private void LocalGameInitialize() {
 		for (int i = 0; i < tempNumHumanPlayers; i++) {
 			InitRacerToHuman(InstantiateRacer());
 		}
 		for (int i = 0; i < tempNumAIPlayers; i++) {
 			InitToAI(InstantiateRacer());
 		}
+	}
+
+	private void LobbyInitialize() {
+		InitRacerToHuman(InstantiateRacer());
+	}
+
+	public struct RacerData
+	{
+		int RigType;
+		int Perk1;
+		int Perk2;
+
+	}
+
+	private void NetworkGameInitialize() {
+
 	}
 
 	public void InitMultiplayerRacer(TTSRacerNetHandler handler) {

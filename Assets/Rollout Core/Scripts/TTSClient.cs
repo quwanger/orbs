@@ -26,8 +26,14 @@ public class TTSClient : MonoBehaviour
 	private bool isRunning = true;
 	#endregion
 
+	TTSLevel level;
+
 	// Status
-	public bool isMultiplayer = true;
+	public bool isMultiplayer{
+		get{
+			return level.currentGameType == TTSLevel.Gametype.MultiplayerOnline;
+		}
+	}
 	public bool EnteredLobby = false;
 	public bool InGame = false;
 	public int LobbyID = 0;
@@ -43,6 +49,8 @@ public class TTSClient : MonoBehaviour
 
 	// Use this for initialization
 	void Start() {
+		level = GetComponent<TTSLevel>();
+
 		serverAddr = IPAddress.Parse(SERVER_IP);
 		endPoint = new IPEndPoint(serverAddr, SERVER_RECEIVE_PORT);
 
@@ -58,6 +66,32 @@ public class TTSClient : MonoBehaviour
 
 	private void InitConnection() {
 		ConnectToLobby(1);
+		RequestLobbyInfo();
+	}
+
+	public void RequestLobbyInfo() {
+		TTSPacketWriter packet = new TTSPacketWriter();
+		packet.AddData(TTSCommandTypes.RequestAllLobbies);
+		SendPacket(packet);
+	}
+
+	public void ReceiveLobbyInfo(TTSPacketReader reader) {
+		int numLobbies = reader.ReadInt32();
+		Debug.Log(numLobbies + " Lobbies. " + reader.Data.Length);
+
+		List<TTSLobby> lobbies = new List<TTSLobby>();
+
+		for (int i = 0; i < numLobbies; i++) {
+			int lobbyID = reader.ReadInt32();
+			string lobbyName = reader.Read16CharString();
+			int numRacers = reader.ReadInt32();
+			int maxRacers = reader.ReadInt32();
+			bool inGame = reader.ReadBool();
+			bool botsEnabled = reader.ReadBool();
+			int levelID = reader.ReadInt32();
+
+			lobbies.Add(new TTSLobby(lobbyID, lobbyName, numRacers, maxRacers, inGame, botsEnabled, levelID));
+		}
 	}
 
 	public void ConnectToLobby(int lobby) {
@@ -69,7 +103,7 @@ public class TTSClient : MonoBehaviour
 
 	// Unity update. Used to send values
 	void Update() {
-		if (!EnteredLobby) {
+		if (!EnteredLobby || !isMultiplayer) {
 			foreach (KeyValuePair<float, TTSNetworkHandle> pair in netHandles) {
 				pair.Value.writer.ClearData();
 			}
@@ -140,6 +174,20 @@ public class TTSClient : MonoBehaviour
 				Debug.Log(">	Received command " + command);
 
 			switch (command) {
+
+				case TTSCommandTypes.LobbyRegisterOK:
+					LobbyID = packet.ReadInt32();
+					EnteredLobby = true;
+					InGame = true;		// REMOVE THIS LATER
+					ServerAllObjectsRegister();
+					break;
+
+				case TTSCommandTypes.ReturnAllLobbies:
+					ReceiveLobbyInfo(packet);
+
+					break;
+
+				#region racers and powerups
 				case TTSCommandTypes.RacerRegister:
 					id = packet.ReadFloat();
 					TTSRacerNetHandler handler = new TTSRacerNetHandler(this, false, id);
@@ -177,19 +225,14 @@ public class TTSClient : MonoBehaviour
 				case TTSCommandTypes.RacerAlreadyRegistered:
 					// Shouldn't really happen...
 					break;
-
-				case TTSCommandTypes.LobbyRegisterOK:
-					LobbyID = packet.ReadInt32();
-					EnteredLobby = true;
-					InGame = true;		// REMOVE THIS LATER
-					ServerAllObjectsRegister();
-					break;
+				#endregion
 			}
 
 			command = packet.ReadInt32();
 		}
 	}
 
+	#region InGame
 	// Send all the registered objects
 	private void ServerAllObjectsRegister() {
 		TTSPacketWriter writer = new TTSPacketWriter();
@@ -240,6 +283,8 @@ public class TTSClient : MonoBehaviour
 		netHandles.Remove(id);
 	}
 
+	#endregion
+
 	public bool IsIDTaken(float id) {
 		return netHandles.ContainsKey(id);
 	}
@@ -259,6 +304,42 @@ public class TTSClient : MonoBehaviour
 	private void SendPacket(TTSPacketWriter writer, bool clear) {
 		SendPacket(writer);
 		if(clear) writer.ClearData();
+	}
+}
+
+public class TTSLobby
+{
+	public TTSLevel.LevelType Level;
+
+	public int ID = -1;
+	public string Name = "";
+	public int NumRacers = 0;
+	public int MaxNumRacers = 6;
+	public bool InProgress = false;
+	public bool BotsEnabled = true;
+	public int LevelID {
+		get {
+			return (int)Level;
+		}
+		set {
+			SetLevel(value);
+		}
+	}
+
+	public TTSLobby(int id, string name, int numRacers, int maxRacers, bool inProgress, bool botsEnabled, int levelID) {
+		ID = id;
+		Name = name;
+		NumRacers = numRacers;
+		MaxNumRacers = maxRacers;
+		InProgress = inProgress;
+		BotsEnabled = botsEnabled;
+		LevelID = levelID;
+
+		Debug.Log("Lobby Received " + id + " " + Name);
+	}
+
+	public void SetLevel(int levelID) {
+		Level = (TTSLevel.LevelType)levelID;
 	}
 }
 
@@ -305,6 +386,8 @@ public static class TTSCommandTypes
 	// General
 	public const int RequestNumRacers = 8001;
 	public const int ReturnNumRacers = 8002;
+	public const int RequestAllLobbies = 8005;
+	public const int ReturnAllLobbies = 8006;
 }
 
 public abstract class TTSNetworkHandle
@@ -357,6 +440,10 @@ public class TTSPacketReader
 
 	public TTSPacketReader(byte[] bytes) {
 		Data = bytes;
+	}
+
+	public bool ReadBool() {
+		return Convert.ToBoolean(Data[ReadIndex++]);
 	}
 
 	public string Read16CharString() {
@@ -419,6 +506,11 @@ public class TTSPacketWriter
 
 	public void AddData(string str) {
 		AddData(System.Text.Encoding.UTF8.GetBytes(str));
+	}
+
+	public void AddData(bool b) {
+		Data[WriteIndex] = Convert.ToByte(b);
+		WriteIndex++;
 	}
 
 	public void AddData(byte[] bytes) {

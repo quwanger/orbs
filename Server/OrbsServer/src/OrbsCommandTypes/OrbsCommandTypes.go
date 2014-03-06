@@ -41,6 +41,8 @@ const (
 	PowerupIsNotRegistered   = 5092
 
 	// General
-	RequestNumRacers = 8001
-	ReturnNumRacers  = 8002
+	RequestNumRacers  = 8001
+	ReturnNumRacers   = 8002
+	RequestAllLobbies = 8005
+	ReturnAllLobbies  = 8006
 )
