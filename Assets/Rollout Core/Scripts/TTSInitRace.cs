@@ -28,6 +28,8 @@ public class TTSInitRace : MonoBehaviour
 
 	TTSLevel level;
 
+	Dictionary<float, TTSRacer.RacerConfig> networkRacers = new Dictionary<float,TTSRacer.RacerConfig>();
+
 	// Use this for initialization
 	void Start() {
 		level = GetComponent<TTSLevel>();
@@ -55,16 +57,8 @@ public class TTSInitRace : MonoBehaviour
 		InitRacerToHuman(InstantiateRacer());
 	}
 
-	public struct RacerData
-	{
-		int RigType;
-		int Perk1;
-		int Perk2;
-
-	}
-
 	private void NetworkGameInitialize() {
-
+		// Send racers to server
 	}
 
 	public void InitMultiplayerRacer(TTSRacerNetHandler handler) {

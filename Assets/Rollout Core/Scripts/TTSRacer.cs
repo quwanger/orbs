@@ -119,6 +119,17 @@ public class TTSRacer : TTSBehaviour
 	TTSRacerNetHandler netHandler;
 	public int rigID;
 
+	public struct RacerConfig
+	{
+		float netID;
+		int Index;
+		int RigType;
+		int Perk1;
+		int Perk2;
+		string Name;
+		int ControlType;
+	}
+
 	void Awake() {
 
 		level.RegisterRacer(gameObject);
