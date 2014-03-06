@@ -47,6 +47,12 @@ public class TTSFollowCamera : TTSBehaviour
 	public float fovStartEffect = 0.6f;
 	public float shakeStartEffect = 0.7f;
 
+	//Width, height, x and y of camera
+	public float fadeWidth;
+	public float fadeHeight;
+	public float fadeX;
+	public float fadeY;
+
 	void Start ()
 	{
 		level.RegisterCamera(this.camera, false);
