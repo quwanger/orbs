@@ -95,6 +95,8 @@ public class TTSRacer : TTSBehaviour
 	public Quaternion respawnRotation;
 	
 	public int playerNum;
+	
+	public int numHelix = 0;
 	#endregion
 	
 	public bool hasShield;

@@ -36,7 +36,7 @@ public class TTSHelixProjectile : TTSBehaviour {
 #region unity functions
 	void Start () {
 		
-		ProjectileStartVelocity = Random.Range(80.0f, 120.0f);
+		ProjectileStartVelocity = Random.Range(80.0f, 140.0f);
 		
 		birth = Time.time;
 		audio.PlayOneShot(fire);
@@ -73,11 +73,14 @@ public class TTSHelixProjectile : TTSBehaviour {
 			Collider[] colliders = Physics.OverlapSphere(this.transform.position, homingRadius);
 		    foreach (Collider hit in colliders) {
 		        if (hit.GetComponent<TTSRacer>() && hit.gameObject != currentRacer.gameObject){
-					Debug.Log("Helix - Racer Found");
-					racerFound = true;
-					homedRacer = hit.gameObject;
-		            destinationPosition = hit.transform.position;
-					break;
+					if(hit.GetComponent<TTSRacer>().numHelix < 3){
+						Debug.Log("Helix - Racer Found");
+						racerFound = true;
+						homedRacer = hit.gameObject;
+						homedRacer.GetComponent<TTSRacer>().numHelix++;
+			            destinationPosition = hit.transform.position;
+						break;
+					}
 				}
 		    }
 		}else{

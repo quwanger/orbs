@@ -23,7 +23,7 @@ public class TTSLeech : TTSBehaviour {
 	public TTSWaypoint previousWaypoint;
 	public TTSWaypoint nextWaypoint;
 	public Vector3 destinationPosition;
-	private float leechVelocity = 80.0f;
+	private float leechVelocity = 120.0f;
 	
 	private Vector3 positionDifference;
 	
@@ -150,22 +150,29 @@ public class TTSLeech : TTSBehaviour {
 			
 		}
 		
+		if(nextWaypoint.getDifferenceFromEnd(this.transform.position) < 7.0f){
+			resetWaypoints(nextWaypoint);
+		}
 	}
 	
 	public void OnWaypoint(TTSWaypoint hit) {
 		if(!racerFound && !racerStuck){
-			previousWaypoint = currentWaypoint;
-			currentWaypoint = hit;
-		
-			if(AIUtil == null)
-				AIUtil = gameObject.AddComponent<TTSAIController>();	
-				
-			//this must be done for the player as well so that we can get the distance of all racers from the finish line
-			nextWaypoint = AIUtil.getClosestWaypoint(currentWaypoint.nextWaypoints, this.transform.position);
-				
-			//this.destinationPosition = nextWaypoint.gameObject.transform.position;
-			randomizeTarget();
+			resetWaypoints(hit);
 		}
+	}
+
+	private void resetWaypoints(TTSWaypoint hit){
+		previousWaypoint = currentWaypoint;
+		currentWaypoint = hit;
+		
+		if(AIUtil == null)
+			AIUtil = gameObject.AddComponent<TTSAIController>();	
+				
+		//this must be done for the player as well so that we can get the distance of all racers from the finish line
+		nextWaypoint = AIUtil.getClosestWaypoint(currentWaypoint.nextWaypoints, this.transform.position);
+				
+		//this.destinationPosition = nextWaypoint.gameObject.transform.position;
+		randomizeTarget();
 	}
 	
 	private void randomizeTarget(){

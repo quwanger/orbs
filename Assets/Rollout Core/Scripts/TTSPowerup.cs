@@ -163,11 +163,11 @@ public class TTSPowerup : TTSBehaviour {
 				DeployLeech(this.gameObject);
 			}
 		}else if(_tier==2){
-			for(int i=0; i<4; i++){
+			for(int i=0; i<5; i++){
 				DeployLeech(this.gameObject);
 			}
 		}else if(_tier==3){
-			for(int i=0; i<8; i++){
+			for(int i=0; i<15; i++){
 				DeployLeech(this.gameObject);
 			}
 		}
@@ -175,11 +175,11 @@ public class TTSPowerup : TTSBehaviour {
 	
 	public void Shockwave(int _tier) {
 		if(_tier==1){
-			DeployShockwave(1.0f, this.gameObject);
+			DeployShockwave(1.0f, 0.02f, this.gameObject);
 		}else if(_tier==2){
-			DeployShockwave(2.0f, this.gameObject);
+			DeployShockwave(2.0f, 0.04f, this.gameObject);
 		}else if(_tier==3){
-			DeployShockwave(3.0f, this.gameObject);
+			DeployShockwave(10.0f, 0.1f, this.gameObject);
 		}
 	}
 	
@@ -189,12 +189,13 @@ public class TTSPowerup : TTSBehaviour {
 		}
 		
 		if(_tier == 2) {
-			DropDrezzStone(this.gameObject);
-			Invoke("DrezzMid", 0.5f);
+			for(int i = 0; i < 3; i++) {
+				Invoke("DrezzMid", i * 0.3f);
+			}
 		}
 		if(_tier == 3) {
-			for(int i = 0; i < 5; i++) {
-				Invoke("DrezzMid", i * 0.5f);
+			for(int i = 0; i < 6; i++) {
+				Invoke("DrezzMid", i * 0.3f);
 			}
 		}
 		//it is only active while firing
@@ -294,7 +295,7 @@ public class TTSPowerup : TTSBehaviour {
 	}
 	
 	public GameObject DropDrezzStone(GameObject effectedRacer) {
-		GameObject go = (GameObject) Instantiate(DrezzStonePrefab, effectedRacer.transform.position - GetComponent<TTSRacer>().displayMeshComponent.forward * 7.0f, effectedRacer.transform.rotation);
+		GameObject go = (GameObject) Instantiate(DrezzStonePrefab, effectedRacer.transform.position - GetComponent<TTSRacer>().displayMeshComponent.forward * 2.0f, effectedRacer.transform.rotation);
 		go.GetComponent<TTSDrezzStone>().offensiveMultiplier = effectedRacer.GetComponent<TTSRacer>().Offense;
 		go.rigidbody.AddForce(Random.insideUnitCircle * 50f);
 		return go;
@@ -327,11 +328,13 @@ public class TTSPowerup : TTSBehaviour {
 		return go;
 	}
 	
-	public GameObject DeployShockwave(float _power, GameObject effectedRacer){
+	public GameObject DeployShockwave(float _power, float _startSize, GameObject effectedRacer){
 		GameObject go = (GameObject) Instantiate(ShockwavePrefab, effectedRacer.transform.position, Quaternion.identity);
-		go.GetComponent<TTSExplosiveForce>().power = go.GetComponent<TTSExplosiveForce>().power * _power * effectedRacer.GetComponent<TTSRacer>().Offense;
-		go.GetComponent<TTSExplosiveForce>().radius = go.GetComponent<TTSExplosiveForce>().radius * _power * effectedRacer.GetComponent<TTSRacer>().Offense;
-		go.GetComponent<TTSExplosiveForce>().Activate(false, this.gameObject);
+		go.GetComponent<ParticleSystem>().startSize = _startSize;
+		go.GetComponent<TTSShockwave>().power = go.GetComponent<TTSShockwave>().power * _power * effectedRacer.GetComponent<TTSRacer>().Offense;
+		go.GetComponent<TTSShockwave>().radius = go.GetComponent<TTSShockwave>().radius * _power * effectedRacer.GetComponent<TTSRacer>().Offense;
+		go.GetComponent<TTSShockwave>().upwardsForce = go.GetComponent<TTSShockwave>().upwardsForce * _power * effectedRacer.GetComponent<TTSRacer>().Offense;
+		go.GetComponent<TTSShockwave>().Activate(this.gameObject);
 		go.transform.parent = this.transform;
 		return go;
 	}
