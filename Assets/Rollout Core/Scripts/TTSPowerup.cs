@@ -237,12 +237,12 @@ public class TTSPowerup : TTSBehaviour {
 		}
 		
 		if(_tier == 2) {
-			for(int i = 0; i < 5; i++) {
+			for(int i = 0; i < 3; i++) {
 				Invoke("HelixMid", i * 0.1f);
 			}
 		}
 		if(_tier == 3) {
-			for(int i = 0; i < 10; i++) {
+			for(int i = 0; i < 8; i++) {
 				Invoke("HelixMid", i * 0.1f);
 			}
 		}
@@ -316,6 +316,21 @@ public class TTSPowerup : TTSBehaviour {
 		GameObject go = (GameObject) Instantiate(HelixPrefab);
 		go.GetComponent<TTSHelixProjectile>().currentRacer = effectedRacer.GetComponent<TTSRacer>();
 		go.GetComponent<TTSHelixProjectile>().offensiveMultiplier = effectedRacer.GetComponent<TTSRacer>().Offense;
+		go.GetComponent<TTSHelixProjectile>().racersInFront = (this.GetComponent<TTSRacer>().place - 1);
+		switch(tier){
+			case 1:
+				go.GetComponent<TTSHelixProjectile>().helixInBatch = 1;
+				break;
+			case 2:
+				go.GetComponent<TTSHelixProjectile>().helixInBatch = 3;
+				break;
+			case 3:
+				go.GetComponent<TTSHelixProjectile>().helixInBatch = 8;
+				break;
+			default:
+				go.GetComponent<TTSHelixProjectile>().helixInBatch = 1;
+				break;
+		}
 		go.transform.rotation = GetComponent<TTSRacer>().displayMeshComponent.transform.rotation;
 		go.transform.position = effectedRacer.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
 		//go.rigidbody.velocity = effectedRacer.rigidbody.velocity.normalized * (effectedRacer.rigidbody.velocity.magnitude + go.GetComponent<TTSHelixProjectile>().ProjectileStartVelocity);

@@ -73,7 +73,8 @@ public class TTSEntropyCannonProjectile : MonoBehaviour {
 	void OnCollisionEnter(Collision other) {
 		//damage racer if racer is hit
 		if(other.gameObject.GetComponent<TTSRacer>()){
-			other.gameObject.GetComponent<TTSRacer>().DamageRacer(offensiveMultiplier * 0.7f);
+			if(!other.gameObject.GetComponent<TTSRacer>().hasShield)
+				other.gameObject.GetComponent<TTSRacer>().DamageRacer(offensiveMultiplier * 0.7f);
 		}
 		Explode(true);
 	}
@@ -83,7 +84,6 @@ public class TTSEntropyCannonProjectile : MonoBehaviour {
 		if(actually) {
 			 Instantiate(explosion,this.transform.position,this.transform.rotation);
 		}
-			
 			
 		foreach(Transform child in transform) {
 				Destroy(child.gameObject);

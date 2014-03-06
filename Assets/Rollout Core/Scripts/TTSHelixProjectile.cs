@@ -9,7 +9,7 @@ public class TTSHelixProjectile : TTSBehaviour {
 #region configuration fields
 	public GameObject explosion;
 	public AudioClip fire;
-	public float Timeout = 5.0f;
+	public float Timeout = 15.0f;
 	public float ProjectileAcceleration = 10.0f;
 	public float ProjectileStartVelocity = 100.0f;
 	
@@ -25,6 +25,9 @@ public class TTSHelixProjectile : TTSBehaviour {
 	public TTSWaypoint previousWaypoint;
 	public TTSWaypoint nextWaypoint;
 	public Vector3 destinationPosition;
+
+	public int racersInFront;
+	public int helixInBatch;
 	
 	private bool racerFound = false;
 	private GameObject homedRacer;
@@ -55,9 +58,9 @@ public class TTSHelixProjectile : TTSBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		/*if(Time.time - birth > Timeout) {
+		if(Time.time - birth > Timeout) {
 			Explode(false);
-		}*/
+		}
 		
 		//make sure the projectile doesnt hit the ground
 		//GroundPositionCheck();
@@ -73,7 +76,7 @@ public class TTSHelixProjectile : TTSBehaviour {
 			Collider[] colliders = Physics.OverlapSphere(this.transform.position, homingRadius);
 		    foreach (Collider hit in colliders) {
 		        if (hit.GetComponent<TTSRacer>() && hit.gameObject != currentRacer.gameObject){
-					if(hit.GetComponent<TTSRacer>().numHelix < 3){
+					if(hit.GetComponent<TTSRacer>().numHelix < Mathf.Ceil(helixInBatch/racersInFront)){
 						Debug.Log("Helix - Racer Found");
 						racerFound = true;
 						homedRacer = hit.gameObject;
