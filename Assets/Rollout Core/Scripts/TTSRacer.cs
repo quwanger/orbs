@@ -88,6 +88,7 @@ public class TTSRacer : TTSBehaviour
 
 	public bool finished = false;
 	public float distanceToFinish;
+	public float previousDistanceToFinish;
 	public int place;
 	
 	public float respawnTime = 2.0f;
@@ -183,6 +184,8 @@ public class TTSRacer : TTSBehaviour
 		resultAccel = Mathf.Lerp(resultAccel, rigidbody.velocity.magnitude - PreviousVelocity.magnitude, 0.01f);
 		PreviousVelocity = rigidbody.velocity;
 	}
+
+
 
 	private void CalculateInputForces() {
 		if (finished && !level.DebugMode) // No input when race is finished
@@ -309,6 +312,9 @@ public class TTSRacer : TTSBehaviour
 	void Update() {
 		minimapIconSmall.transform.position = new Vector3(this.gameObject.transform.position.x, minimapIconSmall.transform.position.y, this.gameObject.transform.position.z);
 		minimapIconBig.transform.position = new Vector3(this.gameObject.transform.position.x, minimapIconBig.transform.position.y, this.gameObject.transform.position.z);
+	
+		if(nextWaypoint)
+			goingWrongWay = CheckWrongWay();
 	}
 
 	#region Events
@@ -337,18 +343,28 @@ public class TTSRacer : TTSBehaviour
 		onGround = false;
 	}
 
+	private bool CheckWrongWay(){
+
+		Vector3 toWaypoint = nextWaypoint.getClosestPoint(position) - position;
+
+		float angle = Vector3.Angle(toWaypoint, lastForward);
+
+		return (angle>100.0f);
+	}
+
 	public void WrongWay() {
-		//if (goingWrongWay == true) 
-			//Debug.Log("WRONG WAY");
-		//else 
-			//Debug.Log("RIGHT WAY");
+		if (goingWrongWay == true){
+			//going the wrong way
+		}else{
+			//going the right way
+		} 
 	}
 
 	public void OnWaypoint(TTSWaypoint hit) {
 		previousWaypoint = currentWaypoint;
 		currentWaypoint = hit;
 
-		if (previousWaypoint == currentWaypoint) {
+		/*if (previousWaypoint == currentWaypoint) {
 			if (goingWrongWay == true) {
 				goingWrongWay = false;
 				WrongWay();
@@ -357,12 +373,11 @@ public class TTSRacer : TTSBehaviour
 				goingWrongWay = true;
 				WrongWay();
 			}
-		}
+		}*/
+		
 
-		//if(player == PlayerType.AI && !waypointManager.EndPoints.Contains(currentWaypoint)){
-			if(AIUtil == null)
-				AIUtil = gameObject.AddComponent<TTSAIController>();	
-		//}
+		if(AIUtil == null)
+			AIUtil = gameObject.AddComponent<TTSAIController>();	
 		
 		//this must be done for the player as well so that we can get the distance of all racers from the finish line
 		nextWaypoint = AIUtil.getClosestWaypoint(currentWaypoint.nextWaypoints, position);

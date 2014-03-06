@@ -50,20 +50,22 @@ public class TTSPowerup : TTSBehaviour {
 		}
 
 		//if you hit space or the 'a' button on an Xbox controller
-		if(this.gameObject.GetComponent<TTSRacer>().playerNum == 1) {
-			if(level.useKeyboard){
-				if(Input.GetKeyDown("space")){
+		if(AvailablePowerup != Powerup.None){
+			if(this.gameObject.GetComponent<TTSRacer>().playerNum == 1) {
+				if(level.useKeyboard){
+					if(Input.GetKeyDown("space")){
+						ConsumePowerup();
+					}
+				}else if(Input.GetKeyDown("joystick 1 button 0")){
 					ConsumePowerup();
 				}
-			}else if(Input.GetKeyDown("joystick 1 button 0")){
-				ConsumePowerup();
+			} else if(this.gameObject.GetComponent<TTSRacer>().playerNum == 2) {
+				if(Input.GetKeyDown("joystick 2 button 0"))	ConsumePowerup();
+			} else if(this.gameObject.GetComponent<TTSRacer>().playerNum == 3) {
+				if(Input.GetKeyDown("joystick 3 button 0"))	ConsumePowerup();
+			} else if(this.gameObject.GetComponent<TTSRacer>().playerNum == 4) {
+				if(Input.GetKeyDown("joystick 4 button 0"))	ConsumePowerup();
 			}
-		} else if(this.gameObject.GetComponent<TTSRacer>().playerNum == 2) {
-			if(Input.GetKeyDown("joystick 2 button 0"))	ConsumePowerup();
-		} else if(this.gameObject.GetComponent<TTSRacer>().playerNum == 3) {
-			if(Input.GetKeyDown("joystick 3 button 0"))	ConsumePowerup();
-		} else if(this.gameObject.GetComponent<TTSRacer>().playerNum == 4) {
-			if(Input.GetKeyDown("joystick 4 button 0"))	ConsumePowerup();
 		}
 		
 		//changes the powerup in the hud when a new powerup is picked up

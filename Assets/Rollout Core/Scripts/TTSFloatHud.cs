@@ -17,6 +17,7 @@ public class TTSFloatHud : TTSBehaviour {
 	public GameObject displayBacking;
 	public GameObject bonusTime;
 	public GameObject position;
+	public GameObject wrongway;
 	
 	public int previousPlace;
 	#endregion
@@ -35,6 +36,14 @@ public class TTSFloatHud : TTSBehaviour {
 		
 		displayBacking.renderer.material.color = Color.Lerp(displayBacking.renderer.material.color, initialBackingColor, 0.04f);
 		
+		if(racerToFollow.GetComponent<TTSRacer>().goingWrongWay){
+			if(!wrongway.active)
+				wrongway.active = true;
+		}else{
+			if(wrongway.active)
+				wrongway.active = false;
+		}	
+
 		if(previousPlace != racerToFollow.GetComponent<TTSRacer>().place){
 			//if the racer is in a new position
 			position.GetComponent<TextMesh>().text = (racerToFollow.GetComponent<TTSRacer>().place).ToString();

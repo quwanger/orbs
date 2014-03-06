@@ -13,10 +13,10 @@ public class TTSPlayerIndicator : TTSBehaviour {
 		//creates a list of all OTHER racers (not the current racer)
 		for(int i=0; i < racers.Length; i++){
 			if(racers[i].GetComponent<TTSRacer>().myCamera == this.gameObject){
-				Debug.Log("Racer " + racers[i].GetComponent<TTSRacer>().playerNum + " and Camera " + this.GetComponent<TTSFollowCamera>().cameraNumber + " are a pair.");
+				//Debug.Log("Racer " + racers[i].GetComponent<TTSRacer>().playerNum + " and Camera " + this.GetComponent<TTSFollowCamera>().cameraNumber + " are a pair.");
 			}else{
 				_racersToFollow.Add(racers[i]);
-				Debug.Log("Racer " + racers[i].GetComponent<TTSRacer>().playerNum + " is now being tracked by Camera " + this.GetComponent<TTSFollowCamera>().cameraNumber + ".");
+				//Debug.Log("Racer " + racers[i].GetComponent<TTSRacer>().playerNum + " is now being tracked by Camera " + this.GetComponent<TTSFollowCamera>().cameraNumber + ".");
 				GameObject tempIndicator = (GameObject)Instantiate(indicator);
 				tempIndicator.GetComponent<TTSIndicator>().racerToIndicate = racers[i];
 				tempIndicator.GetComponent<TTSIndicator>().myCamera = this.camera;
