@@ -4,6 +4,8 @@ using System.Collections;
 
 public class TTSMenu : TTSMenuEnums {
 	
+	
+	
 	public List<GameObject> _rigs = new List<GameObject>();
 	public RigMenuItem SelectedRig;
 	
@@ -17,14 +19,17 @@ public class TTSMenu : TTSMenuEnums {
 	public LevelMenuItem SelectedLevel;
 	
 	//Cameras
-	public Camera menuCamera;
-	public Camera hubCamera;
+	public Camera mainCamera;
+	public Camera hubCamera3D;
+	public Camera hubCameraGUI;
 	
 	//Containers
 	public GameObject multiplayerPanel;
 	public GameObject levelPanel;
 	public GameObject perkPanel;
 	public GameObject rigPanel;
+	public GameObject lobbyPanel;
+	public GameObject racerStats;
 	
 	//Fade Variables
 	private float alphaFadeValue = 0.0f;
@@ -48,10 +53,13 @@ public class TTSMenu : TTSMenuEnums {
 	public int selectedPerkIndex = 11;
 	public int selectedPerkBIndex = 11;
 	public int selectedLevelIndex = 11;
+	public int selectedLobbyIndex = 1;
 	public int selectedMultiplayerIndex = 11;
 	public int changer = 3;
 	private bool isTweening = false;
 	private GameObject[] rigs;
+	
+	//public GameObject go3D;
 	
 	public Texture2D image;
 	
@@ -76,8 +84,9 @@ public class TTSMenu : TTSMenuEnums {
 	
 	void Start() {
 		//Turn off the main camera and enable menu cam
-		menuCamera.enabled = false;
-		hubCamera.enabled = true;
+		mainCamera.enabled = true;
+		hubCameraGUI.enabled = false;
+		hubCamera3D.enabled = false;
 
 		//The menu background
 		//Rect tempInset = new Rect(-1920, -360, 4960, 720);
@@ -125,10 +134,18 @@ public class TTSMenu : TTSMenuEnums {
 		HighlightPerkB();
 		HighlightPerk();
 		
+		
+		//go3D.transform.localScale = new Vector3(Screen.width / 3200.0f,Screen.width / 3200.0f,Screen.width / 3200.0f);
+		
 	}
 
 	// Update is called once per frame
-	void Update () {		
+	void Update () {
+		if(rigPanel.transform.position.x == 0.5 || perkPanel.transform.position.x == 0.5 || levelPanel.transform.position.x == 0.5)
+			racerStats.SetActive(true);
+		else
+			racerStats.SetActive(false);
+			
 		menuControls();
 		
 		if(Input.GetKeyDown(KeyCode.Return)) {
@@ -142,7 +159,7 @@ public class TTSMenu : TTSMenuEnums {
 		}
 		
 		if(Input.GetKeyDown(KeyCode.Backspace)) {
-			if(changer<4&&!isTweening){	
+			if(changer<5&&!isTweening){	
 				changer += 1;
 				if(changer !=2){
 					isTweening = true;
@@ -158,8 +175,9 @@ public class TTSMenu : TTSMenuEnums {
 			racer.ManualOrientation(new Vector3(spawn_sp.transform.position.x, spawn_sp.transform.position.y, spawn_sp.transform.position.z));
 			racer.SlowToStopToPosition(spawn_mp);
 			
-			menuCamera.enabled = true;
-			hubCamera.enabled = false;
+			mainCamera.enabled = false;
+			hubCamera3D.enabled = true;
+			hubCameraGUI.enabled = true;
 			
 			/*if(alphaFadeValue < 1.0f)
 				alphaFadeValue += transitionTimeIn;*/
@@ -200,6 +218,10 @@ public class TTSMenu : TTSMenuEnums {
 			case 4:
 				currentPanel = multiplayerPanel;
 			break;
+					
+			case 5:
+				currentPanel = lobbyPanel;
+			break;
 						
 			default:
 						//Play a sound?
@@ -225,6 +247,10 @@ public class TTSMenu : TTSMenuEnums {
 						
 			case 4:
 				previousPanel = multiplayerPanel;
+			break;
+						
+			case 5:
+				previousPanel = lobbyPanel;
 			break;
 						
 			default:
@@ -261,6 +287,10 @@ public class TTSMenu : TTSMenuEnums {
 			
 			case 4:
 				index = selectedMultiplayerIndex;
+			break;
+			
+			case 5:
+				index = selectedLobbyIndex;
 			break;
 			
 			default:
@@ -382,13 +412,22 @@ public class TTSMenu : TTSMenuEnums {
 				selectedMultiplayerIndex = index;
 				HighlightMultiplayer ();
 			break;
-			
+						
+			case 5:
+				selectedLobbyIndex = index;
+				HighlightLobby();
+			break;
+
 			default:
 			//Play a sound?
 			break;
 		}
 		
 		//HighlightRig();
+	}
+	
+	private void HighlightLobby(){
+		Debug.Log("Got to Lobby");
 	}
 	
 	private void HighlightLevel(){
