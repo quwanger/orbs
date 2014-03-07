@@ -14,7 +14,10 @@ public class TTSRacerSpeedBoost : TTSPerishingBehaviour {
 		destroyWhenLifecycleComplete = false; // Once duration has passed, the class will stop running and self-destruct
 		useKillFunctionWhenComplete = true; // Execute the kill function once complete
 
-		Debug.Log("Boost Activated!");
+		TTSRacer racer = GetComponent<TTSRacer>();
+		if(racer.player == TTSRacer.PlayerType.Player)
+			racer.myCamera.GetComponent<TTSCameraEffects>().BoostEffect(1.4f);
+
 	}
 
 	protected override void OnPerishingUpdate(float progress) {
@@ -22,10 +25,8 @@ public class TTSRacerSpeedBoost : TTSPerishingBehaviour {
 			if(isPlatform){
 				//racerBeingBoosted.rigidbody.AddForce(racerBeingBoosted.rigidbody.velocity.normalized * 2.0f);
 				racerBeingBoosted.rigidbody.AddForce(racerBeingBoosted.GetComponent<TTSRacer>().displayMeshComponent.forward * _power);
-				Debug.Log(racerBeingBoosted.GetComponent<TTSRacer>().player + " racer " + racerBeingBoosted.GetComponent<TTSRacer>().playerNum + " is receiving a boost.");
 			}else{
 				racerBeingBoosted.rigidbody.AddForce(racerBeingBoosted.GetComponent<TTSRacer>().displayMeshComponent.forward * Mathf.Lerp (TargetForce, 0.0f, progress));
-				Debug.Log(racerBeingBoosted.GetComponent<TTSRacer>().player + " racer " + racerBeingBoosted.GetComponent<TTSRacer>().playerNum + " is receiving a boost.");
 			}
 		}
 	}

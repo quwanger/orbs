@@ -56,15 +56,16 @@ public class TTSPowerup : TTSBehaviour {
 					if(Input.GetKeyDown("space")){
 						ConsumePowerup();
 					}
-				}else if(Input.GetKeyDown("joystick 1 button 0")){
+				}else if(Input.GetKeyDown("joystick 1 button 0") || Input.GetKeyDown("joystick 1 button 16")){
+					Debug.Log("A pressed");
 					ConsumePowerup();
 				}
 			} else if(this.gameObject.GetComponent<TTSRacer>().playerNum == 2) {
-				if(Input.GetKeyDown("joystick 2 button 0"))	ConsumePowerup();
+				if(Input.GetKeyDown("joystick 2 button 0") || Input.GetKeyDown("joystick 2 button 16")){Debug.Log("A pressed");	ConsumePowerup();}
 			} else if(this.gameObject.GetComponent<TTSRacer>().playerNum == 3) {
-				if(Input.GetKeyDown("joystick 3 button 0"))	ConsumePowerup();
+				if(Input.GetKeyDown("joystick 3 button 0") || Input.GetKeyDown("joystick 3 button 16"))	ConsumePowerup();
 			} else if(this.gameObject.GetComponent<TTSRacer>().playerNum == 4) {
-				if(Input.GetKeyDown("joystick 4 button 0"))	ConsumePowerup();
+				if(Input.GetKeyDown("joystick 4 button 0") || Input.GetKeyDown("joystick 4 button 16"))	ConsumePowerup();
 			}
 		}
 		
@@ -263,15 +264,12 @@ public class TTSPowerup : TTSBehaviour {
 		if(_tier == 1) {
 			boost.duration = 1.0f * this.GetComponent<TTSRacer>().Offense;
 			boost.TargetForce = 80.0f * this.GetComponent<TTSRacer>().Offense;
-			vfx.BoostEffect(1.0f);
 		}else if(_tier == 2) {
 			boost.duration = 1.5f * this.GetComponent<TTSRacer>().Offense;
 			boost.TargetForce = 90.0f * this.GetComponent<TTSRacer>().Offense;
-			vfx.BoostEffect(1.0f);
 		}else if(_tier == 3) {
 			boost.duration = 3.0f * this.GetComponent<TTSRacer>().Offense;
 			boost.TargetForce = 100.0f * this.GetComponent<TTSRacer>().Offense;
-			vfx.BoostEffect(1.0f);
 		}
 
 		boost.FireBoost(BoostPrefab, this.gameObject);
