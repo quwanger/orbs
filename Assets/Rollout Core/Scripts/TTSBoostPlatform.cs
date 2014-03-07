@@ -20,11 +20,12 @@ public class TTSBoostPlatform : TTSBehaviour {
 		foreach(GameObject racer in racers) {
 			if(collider.gameObject == racer) {
 				TTSRacerSpeedBoost boost = racer.AddComponent<TTSRacerSpeedBoost>();
-				boost.FireBoost(BoostPrefab, BoostPower);
-		
+				Debug.Log(racer.GetComponent<TTSRacer>().player + " racer " + racer.GetComponent<TTSRacer>().playerNum + " hit a boost platform.");
 				boost.duration = 1.0f;
 				boost.TargetForce = 35.0f;
 				vfx.BoostEffect(1.4f);
+
+				boost.FireBoost(BoostPrefab, BoostPower, racer);
 			}
 		}
 	}

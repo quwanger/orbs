@@ -64,7 +64,7 @@ public class TTSPerkManager : TTSBehaviour {
 		if(distance < 170 && !hasBoosted){
 			hasBoosted = true;
 			TTSRacerSpeedBoost boost = gameObject.AddComponent<TTSRacerSpeedBoost>();	
-			boost.FireBoost(BoostPrefab);
+			boost.FireBoost(BoostPrefab, this.gameObject);
 			boost.duration = 2.0f;
 			boost.TargetForce = 80.0f;
 			vfx.BoostEffect(1.0f);
