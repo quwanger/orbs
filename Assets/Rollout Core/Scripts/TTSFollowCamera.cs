@@ -21,7 +21,7 @@ public class TTSFollowCamera : TTSBehaviour
 	public float distance = 5.0f; 
 
 	// the height we want the camera to be above the target
-	private float height = 4.0f;  			
+	//private float height = 4.0f;  			
 	public float heightDamping = 2.0f;			
 	public float rotationDamping = 3.0f;		
 	
@@ -36,10 +36,8 @@ public class TTSFollowCamera : TTSBehaviour
 	// Camera Effects handles
 	public float baseDistance = 5.0f; // 							
 	public float maxDistance = 7.0f; //							
- 	public float baseHeight = 3.5f; //								
-	public float minHeight = 2.0f;
 	public float Base_FOV = 72.9f;
-	public float Max_FOV = 77.0f;
+	public float Max_FOV = 80.0f;
 
 	// Start effect percentages
 	public float distanceStartEffect = 0.0f;
@@ -82,8 +80,11 @@ public class TTSFollowCamera : TTSBehaviour
 	public float cameraBaseDistance = 7.0f; // 							
 	public float cameraMinDistance = 5.0f; //						
 	public float cameraMaxDistance = 9.0f; //	
-	public float cameraHeight = 2.0f;
-	public float heightFromTarget = 0.5f;
+
+	public float height = 2.0f;
+	public float baseHeight = 2.3f;
+	public float minHeight = 1.75f;
+	public float heightFromTarget = 0.5f; // Height parented
 
 	Vector3 position {
 		get {
@@ -122,7 +123,7 @@ public class TTSFollowCamera : TTSBehaviour
 
 		transform.up = Vector3.Lerp(Vector3.up, target.up, 0.3f);
 		transform.LookAt(target);
-		position = position + target.up * heightFromTarget + Vector3.up * cameraHeight;
+		position = position + target.up * heightFromTarget + Vector3.up * height;
 
 		tiltAngle = Mathf.Lerp(tiltAngle, Mathf.Clamp(GetTargetTilt() * 0.7f, -Mathf.PI / 2, Mathf.PI / 2), 0.05f);
 		transform.RotateAround(transform.forward, tiltAngle);
@@ -136,8 +137,10 @@ public class TTSFollowCamera : TTSBehaviour
 			}
 		}
 
-		// Camera Distance according to speed
-		cameraDistance = Mathf.Lerp(cameraDistance, Mathf.Clamp(cameraBaseDistance + racerAccel*2.0f, cameraMinDistance, cameraMaxDistance), 0.05f);
+		// Camera Distance according to accel
+		cameraDistance = Mathf.Lerp(cameraDistance, Mathf.Clamp(cameraBaseDistance + racerAccel * 2.0f, cameraMinDistance, cameraMaxDistance), 0.05f);
+
+		height = Mathf.Lerp(height, Mathf.Max(baseHeight - racerVelocity.magnitude * 0.01f, minHeight), 0.1f);
 
 		// Camera FOV according to speed
 		camera.fov = Mathf.Lerp(camera.fov, TTSUtils.Remap(racerVelocity.magnitude, 40, racerTopSpeed * fovStartEffect, Base_FOV, Max_FOV, true), 0.05f);
