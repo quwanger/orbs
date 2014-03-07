@@ -56,15 +56,16 @@ public class TTSPowerup : TTSBehaviour {
 					if(Input.GetKeyDown("space")){
 						ConsumePowerup();
 					}
-				}else if(Input.GetKeyDown("joystick 1 button 0")){
+				}else if(Input.GetKeyDown("joystick 1 button 0") || Input.GetKeyDown("joystick 1 button 16")){
+					Debug.Log("A pressed");
 					ConsumePowerup();
 				}
 			} else if(this.gameObject.GetComponent<TTSRacer>().playerNum == 2) {
-				if(Input.GetKeyDown("joystick 2 button 0"))	ConsumePowerup();
+				if(Input.GetKeyDown("joystick 2 button 0") || Input.GetKeyDown("joystick 2 button 16")){Debug.Log("A pressed");	ConsumePowerup();}
 			} else if(this.gameObject.GetComponent<TTSRacer>().playerNum == 3) {
-				if(Input.GetKeyDown("joystick 3 button 0"))	ConsumePowerup();
+				if(Input.GetKeyDown("joystick 3 button 0") || Input.GetKeyDown("joystick 3 button 16"))	ConsumePowerup();
 			} else if(this.gameObject.GetComponent<TTSRacer>().playerNum == 4) {
-				if(Input.GetKeyDown("joystick 4 button 0"))	ConsumePowerup();
+				if(Input.GetKeyDown("joystick 4 button 0") || Input.GetKeyDown("joystick 4 button 16"))	ConsumePowerup();
 			}
 		}
 		
@@ -95,7 +96,7 @@ public class TTSPowerup : TTSBehaviour {
 				float temp = Random.Range(0, 1.0f);
 				if(temp <= lotteryChance){
 					if(level.DebugMode == true)
-						Debug.Log("Lottery Winner");
+						//Debug.Log("Lottery Winner");
 					tier = 2;
 				}else{
 					tier = 1;
@@ -210,17 +211,19 @@ public class TTSPowerup : TTSBehaviour {
 	
 	public void EntropyCannon(int _tier) {
 		if(_tier == 1) {
-			EntropyMid();
+			for(int i = 0; i < 3; i++) {
+				Invoke("EntropyMid", i * 0.075f);
+			}
 		}
 		
 		if(_tier == 2) {
-			for(int i = 0; i < 5; i++) {
-				Invoke("EntropyMid", i * 0.1f);
+			for(int i = 0; i < 8; i++) {
+				Invoke("EntropyMid", i * 0.075f);
 			}
 		}
 		if(_tier == 3) {
-			for(int i = 0; i < 10; i++) {
-				Invoke("EntropyMid", i * 0.1f);
+			for(int i = 0; i < 20; i++) {
+				Invoke("EntropyMid", i * 0.075f);
 			}
 		}
 		//it is only active while firing
@@ -237,12 +240,12 @@ public class TTSPowerup : TTSBehaviour {
 		}
 		
 		if(_tier == 2) {
-			for(int i = 0; i < 5; i++) {
+			for(int i = 0; i < 3; i++) {
 				Invoke("HelixMid", i * 0.1f);
 			}
 		}
 		if(_tier == 3) {
-			for(int i = 0; i < 10; i++) {
+			for(int i = 0; i < 8; i++) {
 				Invoke("HelixMid", i * 0.1f);
 			}
 		}
@@ -256,24 +259,20 @@ public class TTSPowerup : TTSBehaviour {
 
 	public void SuperCBooster(int _tier, GameObject effectedRacer) {
 		TTSRacerSpeedBoost boost = effectedRacer.AddComponent<TTSRacerSpeedBoost>();
-		boost.FireBoost(BoostPrefab);
 		
 		//offense adds to the boost duration and target force at every level
 		if(_tier == 1) {
 			boost.duration = 1.0f * this.GetComponent<TTSRacer>().Offense;
 			boost.TargetForce = 80.0f * this.GetComponent<TTSRacer>().Offense;
-			vfx.BoostEffect(1.0f);
-		}
-		if(_tier == 2) {
+		}else if(_tier == 2) {
 			boost.duration = 1.5f * this.GetComponent<TTSRacer>().Offense;
 			boost.TargetForce = 90.0f * this.GetComponent<TTSRacer>().Offense;
-			vfx.BoostEffect(1.0f);
-		}
-		if(_tier == 3) {
+		}else if(_tier == 3) {
 			boost.duration = 3.0f * this.GetComponent<TTSRacer>().Offense;
 			boost.TargetForce = 100.0f * this.GetComponent<TTSRacer>().Offense;
-			vfx.BoostEffect(1.0f);
 		}
+
+		boost.FireBoost(BoostPrefab, this.gameObject);
 	}
 
 	public void TimeBonus() {
@@ -308,7 +307,7 @@ public class TTSPowerup : TTSBehaviour {
 		go.GetComponent<TTSEntropyCannonProjectile>().offensiveMultiplier = effectedRacer.GetComponent<TTSRacer>().Offense;
 		go.transform.rotation = GetComponent<TTSRacer>().displayMeshComponent.transform.rotation;
 		go.transform.position = effectedRacer.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
-		go.rigidbody.velocity = effectedRacer.rigidbody.velocity.normalized * (effectedRacer.rigidbody.velocity.magnitude + go.GetComponent<TTSEntropyCannonProjectile>().ProjectileStartVelocity);
+		go.rigidbody.velocity = this.rigidbody.velocity.normalized * Random.Range(effectedRacer.rigidbody.velocity.magnitude + 50.0f, effectedRacer.rigidbody.velocity.magnitude + 150.0f);
 		return go;
 	}
 	
@@ -316,6 +315,21 @@ public class TTSPowerup : TTSBehaviour {
 		GameObject go = (GameObject) Instantiate(HelixPrefab);
 		go.GetComponent<TTSHelixProjectile>().currentRacer = effectedRacer.GetComponent<TTSRacer>();
 		go.GetComponent<TTSHelixProjectile>().offensiveMultiplier = effectedRacer.GetComponent<TTSRacer>().Offense;
+		go.GetComponent<TTSHelixProjectile>().racersInFront = (this.GetComponent<TTSRacer>().place - 1);
+		switch(tier){
+			case 1:
+				go.GetComponent<TTSHelixProjectile>().helixInBatch = 1;
+				break;
+			case 2:
+				go.GetComponent<TTSHelixProjectile>().helixInBatch = 3;
+				break;
+			case 3:
+				go.GetComponent<TTSHelixProjectile>().helixInBatch = 8;
+				break;
+			default:
+				go.GetComponent<TTSHelixProjectile>().helixInBatch = 1;
+				break;
+		}
 		go.transform.rotation = GetComponent<TTSRacer>().displayMeshComponent.transform.rotation;
 		go.transform.position = effectedRacer.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
 		//go.rigidbody.velocity = effectedRacer.rigidbody.velocity.normalized * (effectedRacer.rigidbody.velocity.magnitude + go.GetComponent<TTSHelixProjectile>().ProjectileStartVelocity);

@@ -146,6 +146,7 @@ public class TTSRacer : TTSBehaviour
 		//Setup Audio Channel for Pitched Racer Sounds
 		RacerSounds = gameObject.AddComponent<AudioSource>();
 		RacerSounds.clip = RollingSound;
+		RacerSounds.volume = 0.5f;
 		RacerSounds.loop = true;
 		RacerSounds.rolloffMode = AudioRolloffMode.Linear;
 		RacerSounds.Play();
@@ -349,7 +350,7 @@ public class TTSRacer : TTSBehaviour
 
 		float angle = Vector3.Angle(toWaypoint, lastForward);
 
-		return (angle>100.0f);
+		return (angle>110.0f);
 	}
 
 	public void WrongWay() {
