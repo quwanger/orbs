@@ -15,14 +15,14 @@ public class TTSPersistenceManager : MonoBehaviour {
 	{
 		if(Application.loadedLevel.ToString() == "city1-1")
 		{
-			chosenPerk = controller.GetComponent<TTSMenuController>().chosenPerk.ToString();
+			/*chosenPerk = controller.GetComponent<TTSMenuController>().chosenPerk.ToString();
 			PlayerPrefs.SetString("Perk", chosenPerk);
 			chosenCharacter = controller.GetComponent<TTSMenuController>().chosenCharacter.ToString();
 			PlayerPrefs.SetString("Character", chosenCharacter);
 			chosenLevel = controller.GetComponent<TTSMenuController>().chosenLevel.ToString();
 			PlayerPrefs.SetString("Level", chosenLevel);
 			numHumans = controller.GetComponent<TTSMenuController>().numHumans.ToString();
-			PlayerPrefs.SetString("Players", numHumans);
+			PlayerPrefs.SetString("Players", numHumans);*/
 		}
 		PlayerPrefs.SetString("Next Scene", NextScene);
 	}

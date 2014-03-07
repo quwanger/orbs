@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
-
-
+using System.Collections.Generic;
 
 /***********************
  * Racer.cs - Racer Prefab Builder and Motion Handler
@@ -73,6 +72,8 @@ public class TTSRacer : TTSBehaviour
 			return transform.position;
 		}
 	}
+	
+	public bool calcOrientation = true;
 	#endregion
 
 	#region gameplay vars
@@ -193,8 +194,10 @@ public class TTSRacer : TTSBehaviour
 			return;
 
 		if (player == PlayerType.Player) {
+
 			if (playerNum == 1) {
 				if(level.useKeyboard){
+					Debug.Log("OOOO");
 					vInput = Input.GetAxis ("Key_YAxis");
 					hInput = Input.GetAxis ("Key_XAxis");
 				}else{
@@ -271,7 +274,9 @@ public class TTSRacer : TTSBehaviour
 	}
 
 	void CalculateBodyOrientation() {
-
+		if(!calcOrientation)
+			return;
+		
 		//Facing Direction...
 		if (new Vector2(rigidbody.velocity.x, rigidbody.velocity.z).magnitude > MinimumVelocityToAnimateSteering) {
 			//based on rigidbody velocity.
@@ -292,7 +297,12 @@ public class TTSRacer : TTSBehaviour
 			lastForward = TTSUtils.FlattenVector(displayMeshComponent.forward).normalized;
 		}
 	}
-
+	
+	public void ManualOrientation(Vector3 faceTowards){
+		displayMeshComponent.forward = faceTowards - position;
+		transform.LookAt(faceTowards);
+	}
+	
 	public float GetTiltAngle() {
 		return TiltAngle;
 	}
@@ -388,6 +398,19 @@ public class TTSRacer : TTSBehaviour
 	public void SlowToStop() {
 		rigidbody.velocity = Vector3.Lerp(rigidbody.velocity, new Vector3(0, 0, 0), stopSpeed);
 	}
+
+	public void SlowToStopToPosition(GameObject pos)
+    {
+		rigidbody.velocity = Vector3.Lerp(rigidbody.velocity, new Vector3(0, 0, 0), stopSpeed);
+    	StartCoroutine(pause(pos));
+    }
+	
+	// the pause for SlowToStopToPosition
+	IEnumerator pause(GameObject pos)
+    {
+    	yield return new WaitForSeconds(2.0f);
+		this.transform.position = new Vector3(pos.transform.position.x, this.transform.position.y, pos.transform.position.z);
+    }
 
 	public void StopRacer() {
 		rigidbody.velocity = new Vector3(0, 0, 0);
