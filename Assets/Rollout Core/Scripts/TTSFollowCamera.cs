@@ -55,6 +55,7 @@ public class TTSFollowCamera : TTSBehaviour
 	{
 		racer = GetComponent<TTSRacer>();
 		racerTopSpeed = target.parent.GetComponent<TTSRacer>().TopSpeed;
+		cameraToTarget = target.forward * cameraDistance;
 
 		level.RegisterCamera(this.camera, false);
 	}
@@ -113,9 +114,12 @@ public class TTSFollowCamera : TTSBehaviour
 
 	Vector3 posBehindTarget;
 
+	Vector3 cameraToTarget;
+
 	Vector3 hitPos;
 	void ThirdPersonv2() {
-		Vector3 temp = targetPos - target.forward * (cameraDistance);
+		cameraToTarget = Vector3.Lerp(cameraToTarget, target.forward * cameraDistance, 0.7f);
+		Vector3 temp = targetPos - cameraToTarget;
 		posBehindTarget.x = Mathf.Lerp(posBehindTarget.x, temp.x, 0.8f);
 		posBehindTarget.y = Mathf.Lerp(posBehindTarget.y, temp.y, 0.1f);
 		posBehindTarget.z = Mathf.Lerp(posBehindTarget.z, temp.z, 0.8f);
@@ -130,10 +134,10 @@ public class TTSFollowCamera : TTSBehaviour
 
 		//Linecast and solve camera clipping.
 		RaycastHit hit = new RaycastHit();
-		if (Physics.Linecast(targetPos, position, out hit, TTSUtils.ExceptLayerMask(10))) {
+		if (Physics.Linecast(targetPos, position, out hit, TTSUtils.ExceptLayerMask(new int[]{10, 2}))) {
 			if (hit.collider.gameObject.rigidbody == null) {
 				Vector3 buffer = (hit.point - position).normalized * 2.5f;
-				position =hit.point;
+				position = hit.point;
 			}
 		}
 

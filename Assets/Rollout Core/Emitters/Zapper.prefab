@@ -10,7 +10,7 @@ GameObject:
   - 4: {fileID: 400000}
   - 114: {fileID: 11400000}
   - 135: {fileID: 13500000}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Zapper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,6 +41,7 @@ MonoBehaviour:
   Emitters: []
   EmitterToSpawn: {fileID: 100000, guid: c4439dd5aa89449ef9cdb0c70b2bafbc, type: 2}
   RegisteredTargets: {fileID: 0}
+  offensiveMultiplier: 0
 --- !u!135 &13500000
 SphereCollider:
   m_ObjectHideFlags: 1
