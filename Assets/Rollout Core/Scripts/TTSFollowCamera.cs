@@ -55,22 +55,107 @@ public class TTSFollowCamera : TTSBehaviour
 
 	void Start ()
 	{
+		racer = GetComponent<TTSRacer>();
+		racerTopSpeed = target.parent.GetComponent<TTSRacer>().TopSpeed;
+
 		level.RegisterCamera(this.camera, false);
 	}
 
 	void FixedUpdate ()
 	{
 		if (CameraMode == cameraModes.THIRD_PERSON) {
-			ThirdPerson ();
+			ThirdPersonv2();
 		}
 		if (CameraMode == cameraModes.FIRST_PERSON) {
 			this.transform.position = target.transform.position + transform.forward * 2;
 			this.transform.rotation = target.transform.rotation;
 
-			if (target.parent.GetComponent<TTSRacer> ().rigidbody.velocity.sqrMagnitude > 3000) {
+			if (target.parent.GetComponent<TTSRacer>().rigidbody.velocity.sqrMagnitude > 3000) {
 				transform.position += Random.insideUnitSphere * 0.06f;
 			}
 		}
+		prevVelocity = racerVelocity;
+	}
+
+	TTSRacer racer;
+	public float cameraDistance = 7.0f;
+	public float cameraBaseDistance = 7.0f; // 							
+	public float cameraMinDistance = 5.0f; //						
+	public float cameraMaxDistance = 9.0f; //	
+	public float cameraHeight = 2.0f;
+	public float heightFromTarget = 0.5f;
+
+	Vector3 position {
+		get {
+			return transform.position;
+		}
+		set {
+			transform.position = value;
+		}
+	}
+	Vector3 targetPos {
+		get {
+			return target.position;
+		}
+	}
+	Vector3 racerVelocity {
+		get {
+			return target.parent.rigidbody.velocity;
+		}
+	}
+	Vector3 prevVelocity;
+	float racerAccel {
+		get {
+			return racerVelocity.magnitude - prevVelocity.magnitude;
+		}
+	}
+
+	Vector3 posBehindTarget;
+
+	Vector3 hitPos;
+	void ThirdPersonv2() {
+		Vector3 temp = targetPos - target.forward * (cameraDistance);
+		posBehindTarget.x = Mathf.Lerp(posBehindTarget.x, temp.x, 0.8f);
+		posBehindTarget.y = Mathf.Lerp(posBehindTarget.y, temp.y, 0.1f);
+		posBehindTarget.z = Mathf.Lerp(posBehindTarget.z, temp.z, 0.8f);
+		position = posBehindTarget;
+
+		transform.up = Vector3.Lerp(Vector3.up, target.up, 0.3f);
+		transform.LookAt(target);
+		position = position + target.up * heightFromTarget + Vector3.up * cameraHeight;
+
+		tiltAngle = Mathf.Lerp(tiltAngle, Mathf.Clamp(GetTargetTilt() * 0.7f, -Mathf.PI / 2, Mathf.PI / 2), 0.05f);
+		transform.RotateAround(transform.forward, tiltAngle);
+
+		//Linecast and solve camera clipping.
+		RaycastHit hit = new RaycastHit();
+		if (Physics.Linecast(targetPos, position, out hit, TTSUtils.ExceptLayerMask(10))) {
+			if (hit.collider.gameObject.rigidbody == null) {
+				Vector3 buffer = (hit.point - position).normalized * 2.5f;
+				position =hit.point;
+			}
+		}
+
+		// Camera Distance according to speed
+		cameraDistance = Mathf.Lerp(cameraDistance, Mathf.Clamp(cameraBaseDistance + racerAccel*2.0f, cameraMinDistance, cameraMaxDistance), 0.05f);
+
+		// Camera FOV according to speed
+		camera.fov = Mathf.Lerp(camera.fov, TTSUtils.Remap(racerVelocity.magnitude, 40, racerTopSpeed * fovStartEffect, Base_FOV, Max_FOV, true), 0.05f);
+
+		if (GetComponent<Vignetting>().chromaticAberration > 0.0f) {
+			GetComponent<Vignetting>().chromaticAberration = Mathf.Lerp(GetComponent<Vignetting>().chromaticAberration, 0.0f, 0.07f);
+		}
+	}
+
+	private float GetTargetTilt() {
+		Vector3 right = TTSUtils.FlattenVector(target.right).normalized;
+		float angle = Vector3.Angle(target.up, right) - 90.0f;
+		return Mathf.Deg2Rad * angle;
+	}
+
+	public void OnDrawGizmos() {
+		Gizmos.color = Color.green;
+		Gizmos.DrawCube(hitPos, Vector3.one);
 	}
 
 	void ThirdPerson ()
