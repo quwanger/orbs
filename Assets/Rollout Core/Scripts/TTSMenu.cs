@@ -9,13 +9,22 @@ public class TTSMenu : TTSMenuEnums {
 	public RigMenuItem SelectedRig;
 	
 	public List<GameObject> _perks = new List<GameObject>();
-	public PerkMenuItem SelectedPerk;
+	public PerksPool1 SelectedPerk;
 	
 	public List<GameObject> _perksB = new List<GameObject>();
-	public PerkMenuItemB SelectedPerkB;
+	public Powerup SelectedPerkB;
 	
 	public List<GameObject> _levels = new List<GameObject>();
 	public LevelMenuItem SelectedLevel;
+	
+	public List<GameObject> players = new List<GameObject>();
+	public GameObject playerPackage;
+	
+	public string[] playersRigs;
+	public string[] playersPerkA;
+	public string[] playersPerkB;
+	
+	public GameObject dtp;
 	
 	// cameras
 	// mainCamera		0
@@ -26,12 +35,18 @@ public class TTSMenu : TTSMenuEnums {
 	// player statistics gameObject folder
 	public GameObject playerStatistics;
 	
+	public int[] playerID;
+	public int[] ID;
+	
+	
+	public bool[] playerReady;
+	
 	// dynamic text fields for name and description of perk
 	public GameObject perkName;
 	public GameObject perkDescription;
 	
 	// prevent menus from tweening at the same time
-	private bool isTweening = false;
+	public bool isTweening = false;
 	
 	// rigs
 	private GameObject[] rigs;
@@ -45,6 +60,8 @@ public class TTSMenu : TTSMenuEnums {
 	public List<GameObject> offense_circles = new List<GameObject>();
 	public List<GameObject> defense_circles = new List<GameObject>();
 	
+	public GameObject[] playerText;
+	
 	// to control the orbs physics
 	public TTSRacer racer;
 	
@@ -52,6 +69,9 @@ public class TTSMenu : TTSMenuEnums {
 	private float alphaFadeValue = 0.0f;
     private float transitionTimeIn = 0.1f;
 	//public Texture Overlay;
+	
+	public GameObject[] readyUp;
+	public GameObject[] readyUpB;
 	
 	//Spawn zones
 	public GameObject spawn_mp;
@@ -64,7 +84,7 @@ public class TTSMenu : TTSMenuEnums {
 	// defense		4
 	public int[] numCircles;
 	
-	// 0 MP Select	1		2x1
+	// 0 MP Select	1		1x2
 	// 1 MP MENU	1		2x1
 	// 2 MP LOBBY	1		2x1
 	// 3 READYUP	
@@ -77,20 +97,25 @@ public class TTSMenu : TTSMenuEnums {
 	// indices for each panel
 	public int[] indices;
 	
+	public GameObject topHighlighter;
+	public GameObject botHighlighter;
+	
 	// visible panel and the previously visible one
 	public int activePanel;
 	public int previousPanel;
 	
 	// how many players, and how many have selected orbs
-	public int numPlayers = 3;
+	public int numPlayers = 0;
 	public int chosenOrb = 1;
 	
 	// Is either a string saying multiplayer or singleplayer
 	public string gameMode;
 
 	// Use this for initialization
-	void Start () {
+	void Start () {		
 		previousPanel = 7;
+		
+		playerText = GameObject.FindGameObjectsWithTag("playerText");
 		
 		cameras[0].enabled = true;
 		cameras[1].enabled = false;
@@ -101,6 +126,8 @@ public class TTSMenu : TTSMenuEnums {
 		GameObject[] perksB = GameObject.FindGameObjectsWithTag("PerkMenuItemB");
 		GameObject[] levels = GameObject.FindGameObjectsWithTag("LevelMenuItem");
 		rigs = GameObject.FindGameObjectsWithTag("RigMenuItem");
+		
+		botHighlighter.SetActive(false);
 		
 		foreach(GameObject r in rigs)
 			_rigs.Add(r);
@@ -131,15 +158,21 @@ public class TTSMenu : TTSMenuEnums {
 		createCircles("Offense", -455, 98);
 		createCircles("Defense", -455, 128);
 		
+		
 		HighlightRig();
 		HighlightPerk();
 		HighlightPerkB();
+		HighlightLevel();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		
 		if(gameMode == "singleplayer" || gameMode == "splitscreen" || gameMode == "online"){
+			
+			playerText[0].guiText.text = ("Player" + (chosenOrb));
+			playerText[1].guiText.text = ("Player" + (chosenOrb));
+			
 			if(Input.GetKeyDown(KeyCode.Return))
 				changePanels("right");
 			
@@ -163,6 +196,60 @@ public class TTSMenu : TTSMenuEnums {
 			cameras[0].enabled = false;
 			cameras[1].enabled = true;
 			cameras[2].enabled = true;
+		}
+		
+		if(gameMode == "splitscreen" && activePanel == 3){
+			if(Input.GetKeyDown("joystick 1 button 0") && playerReady[0] == false){
+				playerReady[0] = true;
+				playerID[numPlayers] = 1;
+				readyUpB[numPlayers].SetActive(false);
+				readyUp[numPlayers].SetActive(true);
+				numPlayers++;
+				
+				GameObject tempPP = (GameObject)Instantiate(playerPackage);
+				tempPP.GetComponent<TTSPlayerInfo>().playerID = numPlayers;
+				
+				players.Add(tempPP);
+			}
+			
+			if(Input.GetKeyDown("joystick 2 button 0") && playerReady[1] == false){
+				playerReady[1] = true;
+				playerID[numPlayers] = 2;
+				readyUpB[numPlayers].SetActive(false);
+				readyUp[numPlayers].SetActive(true);
+				numPlayers++;
+				
+				GameObject tempPP = (GameObject)Instantiate(playerPackage);
+				tempPP.GetComponent<TTSPlayerInfo>().playerID = numPlayers;
+				
+				players.Add(tempPP);
+			}
+			
+			if(Input.GetKeyDown("joystick 3 button 0") && playerReady[2] == false){
+				playerReady[2] = true;
+				playerID[numPlayers] = 3;
+				readyUpB[numPlayers].SetActive(false);
+				readyUp[numPlayers].SetActive(true);
+				numPlayers++;
+				
+				GameObject tempPP = (GameObject)Instantiate(playerPackage);
+				tempPP.GetComponent<TTSPlayerInfo>().playerID = numPlayers;
+				
+				players.Add(tempPP);
+			}
+			
+			if(Input.GetKeyDown("joystick 4 button 0") && playerReady[3] == false){
+				playerReady[3] = true;
+				playerID[numPlayers] = 4;
+				readyUpB[numPlayers].SetActive(false);
+				readyUp[numPlayers].SetActive(true);
+				numPlayers++;
+				
+				GameObject tempPP = (GameObject)Instantiate(playerPackage);
+				tempPP.GetComponent<TTSPlayerInfo>().playerID = numPlayers;
+				
+				players.Add(tempPP);
+			}
 		}
 	}
 	
@@ -263,7 +350,7 @@ public class TTSMenu : TTSMenuEnums {
 		}
 		
 		// 2x1
-		if(activePanel == 0 || activePanel == 1 || activePanel == 2){
+		if(activePanel == 1 || activePanel == 2){
 			if(direction == "right"){
 				if(index == 1){
 					index = 2;
@@ -277,6 +364,21 @@ public class TTSMenu : TTSMenuEnums {
 			}
 		}
 		
+		// 1x2
+		if(activePanel == 0){
+			if(direction == "up"){
+				if(index == 2){
+					index = 1;
+				}
+			}
+				
+			if(direction == "down"){
+				if(index == 1){
+					index = 2;
+				}
+			}
+		}
+
 		// update the indice
 		indices[activePanel] = index;
 				
@@ -324,30 +426,34 @@ public class TTSMenu : TTSMenuEnums {
 		
 		if(direction == "right"){
 			if(gameMode == "singleplayer"){
-				if(activePanel < 7){
+				if(activePanel < 7 && !isTweening){
 					activePanel++;
-					if(activePanel == 5 || activePanel == 7 && !isTweening){
-						previousPanel = (activePanel-1);
-						isTweening = true;
-						movePanel();
+					if(activePanel == 5 || activePanel == 7){
+						if(!isTweening){
+							previousPanel = (activePanel-1);
+							isTweening = true;
+							movePanel();
+						}
 					}
 				}
 			}	
 			
 			else if(gameMode == "splitscreen"){
-				if(activePanel == 0){
+				if(activePanel == 0 && !isTweening){
 					activePanel += 3;
 					previousPanel = (activePanel - 3);
 					isTweening = true;
 					movePanel();
 				}
 				
-				else if(activePanel < 7){
+				else if(activePanel < 7 && !isTweening){
 					activePanel++;
-					if(activePanel == 4 || activePanel == 5 && !isTweening){
-						previousPanel = (activePanel-1);
-						isTweening = true;
-						movePanel();
+					if(activePanel == 4 || activePanel == 5){
+						if(!isTweening){
+							previousPanel = (activePanel-1);
+							isTweening = true;
+							movePanel();
+						}
 					}
 					
 					
@@ -356,14 +462,33 @@ public class TTSMenu : TTSMenuEnums {
 						if(chosenOrb == numPlayers){
 							previousPanel = (activePanel-1);;
 							isTweening = true;
+							
+							foreach(GameObject go in players){
+								if(go.GetComponent<TTSPlayerInfo>().playerID == chosenOrb){
+									go.GetComponent<TTSPlayerInfo>().perkA = SelectedPerk;
+									go.GetComponent<TTSPlayerInfo>().perkB = SelectedPerkB;
+									go.GetComponent<TTSPlayerInfo>().rig = SelectedRig.ToString();
+								}
+							}
+							
+							dtp.GetComponent<TSSDataToPass>().players = this.players;
+							dtp.GetComponent<TSSDataToPass>().gametype = gameMode;
 							movePanel();
 						}
 						
 						// go to rigMenu
-						else if(chosenOrb != numPlayers){
+						else if(chosenOrb != numPlayers && !isTweening){
 							activePanel = 4;
 							previousPanel = 6;
 							isTweening = true;
+							
+							foreach(GameObject go in players){
+								if(go.GetComponent<TTSPlayerInfo>().playerID == chosenOrb){
+									go.GetComponent<TTSPlayerInfo>().perkA = SelectedPerk;
+									go.GetComponent<TTSPlayerInfo>().perkB = SelectedPerkB;
+									go.GetComponent<TTSPlayerInfo>().rig = SelectedRig.ToString();
+								}
+							}
 							chosenOrb++;
 							movePanel();
 						}
@@ -417,11 +542,17 @@ public class TTSMenu : TTSMenuEnums {
 	}
 	
 	private void HighlightMPSelect(){
-		if(indices[0] == 1)
-			gameMode = "splitscreen";
-		
-		else if(indices[0] == 2)
+		if(indices[0] == 1){
 			gameMode = "online";
+			topHighlighter.SetActive(true);
+			botHighlighter.SetActive(false);
+		}
+		
+		else if(indices[0] == 2){
+			gameMode = "splitscreen";
+			topHighlighter.SetActive(false);
+			botHighlighter.SetActive(true);
+		}
 	}
 	
 	private void HighlightLevel(){

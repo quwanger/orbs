@@ -4,13 +4,16 @@ using System.Collections;
 public class TTSPlayerInfo : TTSBehaviour { 
 	//public GameObject TTSLevel;
 	public string rig;
-	public string perkA;
-	public string perkB;
+	//public string perkA;
+	//public string perkB;
+	public int playerID;
+	
+	public PerksPool1 perkA;
+	public Powerup perkB;
+	
 	// Use this for initialization
 	void Start () {
-		rig = level.GetComponent<TTSMenu>().SelectedRig.ToString();
-		perkA = level.GetComponent<TTSMenu>().SelectedPerk.ToString();
-		perkB = level.GetComponent<TTSMenu>().SelectedPerkB.ToString();
+		//rig = level.GetComponent<TTSMenu>().SelectedRig.ToString();
 	}
 	
 	// Update is called once per frame

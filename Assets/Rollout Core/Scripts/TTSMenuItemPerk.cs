@@ -4,8 +4,8 @@ using System.Collections;
 public class TTSMenuItemPerk : TTSMenuEnums {
 	
 	public bool isSelected = false;
-	public PerkMenuItem perk;
-	public PerkMenuItemB perkB;
+	public PerksPool1 perk;
+	public Powerup perkB;
 	public int index;
 	public string name;
 	public string description;
