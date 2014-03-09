@@ -194,24 +194,22 @@ public class TTSRacer : TTSBehaviour
 			return;
 
 		if (player == PlayerType.Player) {
-
 			if (playerNum == 1) {
 				if(level.useKeyboard){
-					Debug.Log("OOOO");
 					vInput = Input.GetAxis ("Key_YAxis");
 					hInput = Input.GetAxis ("Key_XAxis");
 				}else{
-					vInput = Input.GetAxis("L_YAxis_1");
+					vInput = Input.GetAxis("TriggersR_1");
 					hInput = Input.GetAxis("L_XAxis_1");
 				}
 			} else if (playerNum == 2) {
-				vInput = Input.GetAxis("L_YAxis_2");
+				vInput = Input.GetAxis("TriggersR_2");
 				hInput = Input.GetAxis("L_XAxis_2");
 			} else if (playerNum == 3) {
-				vInput = Input.GetAxis("L_YAxis_3");
+				vInput = Input.GetAxis("TriggersR_3");
 				hInput = Input.GetAxis("L_XAxis_3");
 			} else if (playerNum == 4) {
-				vInput = Input.GetAxis("L_YAxis_4");
+				vInput = Input.GetAxis("TriggersR_4");
 				hInput = Input.GetAxis("L_XAxis_4");
 			}	
 		}
