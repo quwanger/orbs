@@ -173,10 +173,10 @@ public class TTSMenu : TTSMenuEnums {
 			playerText[0].guiText.text = ("Player" + (chosenOrb));
 			playerText[1].guiText.text = ("Player" + (chosenOrb));
 			
-			if(Input.GetKeyDown(KeyCode.Return))
+			if(Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown("joystick 1 button 0" ) || Input.GetKeyDown("joystick 1 button 16"))
 				changePanels("right");
 			
-			if(Input.GetKeyDown(KeyCode.Backspace))
+			if(Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown("joystick 1 button 0" ) || Input.GetKeyDown("joystick 1 button 17"))
 				changePanels("left");			
 
 			if(panels[4].transform.position.x == 0.5 || panels[5].transform.position.x == 0.5 || 
