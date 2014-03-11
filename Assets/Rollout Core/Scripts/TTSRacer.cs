@@ -38,7 +38,6 @@ using System.Collections.Generic;
 public class TTSRacer : TTSBehaviour
 {
 
-
 	#region serialized settings
 	public bool IsPlayerControlled = true;
 	#endregion
@@ -59,7 +58,7 @@ public class TTSRacer : TTSBehaviour
 	private float TiltAngle = 0.0f;
 	public AudioClip[] DamageSounds;
 	public GameObject SparksEmitter;
-	public GameObject CurrentRig;
+	public TTSRig CurrentRig;
 	public bool canMove = false;
 	private float MinimumVelocityToAnimateSteering = 1.0f;
 
@@ -121,16 +120,27 @@ public class TTSRacer : TTSBehaviour
 
 	public struct RacerConfig
 	{
-		float netID;
-		int Index;
-		int RigType;
-		int Perk1;
-		int Perk2;
-		string Name;
-		int ControlType;
+		public float netID;
+		public int Index;
+		public int RigType;
+		public int Perk1;
+		public int Perk2;
+		public string Name;
+
+		/// <summary>
+		/// Can either be Player, AI, or Multiplayer
+		/// </summary>
+		public int LocalControlType;
+
+		/// <summary>
+		/// Can be either Player or AI
+		/// </summary>
+		public int ControlType;
+
+		public int CharacterType;
 	}
 
-	void Awake() {
+	void Start() {
 
 		level.RegisterRacer(gameObject);
 		//Get the body via tag.
@@ -165,12 +175,12 @@ public class TTSRacer : TTSBehaviour
 		RacerSfx.volume = 0.5f;
 
 		//Apply Attributes
-		TopSpeed = TopSpeed + (speedIncrease * CurrentRig.GetComponent<TTSRig>().rigSpeed);
-		Acceleration = Acceleration + (accelerationIncrease * CurrentRig.GetComponent<TTSRig>().rigAcceleration);
-		Handling = Handling + (handlingIncrease * CurrentRig.GetComponent<TTSRig>().rigHandling);
+		TopSpeed = TopSpeed + (speedIncrease * CurrentRig.rigSpeed);
+		Acceleration = Acceleration + (accelerationIncrease * CurrentRig.rigAcceleration);
+		Handling = Handling + (handlingIncrease * CurrentRig.rigHandling);
 		
-		Offense = CurrentRig.GetComponent<TTSRig>().rigOffense;
-		Defense = CurrentRig.GetComponent<TTSRig>().rigDefense;
+		Offense = CurrentRig.rigOffense;
+		Defense = CurrentRig.rigDefense;
 		
 		if(myCamera != null)
 			myCamera.GetComponent<TTSCameraFade>().SetScreenOverlayColor(new Color(0,0,0,0));
@@ -221,7 +231,6 @@ public class TTSRacer : TTSBehaviour
 		if (player == PlayerType.Player) {
 			vInput = Input.GetAxis("Vertical");
 			hInput = Input.GetAxis("Horizontal");
-
 		}
 		else if (player == PlayerType.Multiplayer) {
 			MultiplayerInput();

@@ -27,6 +27,7 @@ public class TTSClient : MonoBehaviour
 	#endregion
 
 	TTSLevel level;
+	TTSInitRace initRace;
 
 	// Status
 	public bool isMultiplayer{
@@ -47,9 +48,12 @@ public class TTSClient : MonoBehaviour
 	List<TTSRacerNetHandler> spawnRacers = new List<TTSRacerNetHandler>();
 	List<TTSPowerupNetHandler> spawnPowerups = new List<TTSPowerupNetHandler>();
 
+	public List<TTSRacer.RacerConfig> RegisteredRacerConfigs = new List<TTSRacer.RacerConfig>();
+
 	// Use this for initialization
 	void Start() {
 		level = GetComponent<TTSLevel>();
+		initRace = GetComponent<TTSInitRace>();
 
 		serverAddr = IPAddress.Parse(SERVER_IP);
 		endPoint = new IPEndPoint(serverAddr, SERVER_RECEIVE_PORT);
@@ -129,13 +133,12 @@ public class TTSClient : MonoBehaviour
 		// Code to run during in game.
 
 		// Spawn multiplayer racers
-		if (spawnRacers.Count > 0) {
-			TTSInitRace race = GetComponent<TTSInitRace>();
-			foreach (TTSRacerNetHandler handler in spawnRacers) {
-				race.InitMultiplayerRacer(handler);
-			}
-			spawnRacers.Clear();
-		}
+		//if (spawnRacers.Count > 0) {
+		//	foreach (TTSRacerNetHandler handler in spawnRacers) {
+		//		initRace.InitMultiplayerRacer(handler);
+		//	}
+		//	spawnRacers.Clear();
+		//}
 	}
 	void OnApplicationQuit() {
 		isRunning = false;
@@ -175,6 +178,7 @@ public class TTSClient : MonoBehaviour
 
 			switch (command) {
 
+				#region Lobby
 				case TTSCommandTypes.LobbyRegisterOK:
 					LobbyID = packet.ReadInt32();
 					EnteredLobby = true;
@@ -187,19 +191,31 @@ public class TTSClient : MonoBehaviour
 
 					break;
 
+				#endregion
+
 				#region racers and powerups
 				case TTSCommandTypes.RacerRegister:
-					id = packet.ReadFloat();
-					TTSRacerNetHandler handler = new TTSRacerNetHandler(this, false, id);
-					handler.Index = packet.ReadInt32();
-					handler.Rig = packet.ReadInt32();
-					handler.Perk1 = packet.ReadInt32();
-					handler.Perk2 = packet.ReadInt32();
-					handler.Name = packet.Read16CharString();
-					handler.ControlType = packet.ReadInt32();
+					TTSRacer.RacerConfig config = new TTSRacer.RacerConfig();
+					id = config.netID = packet.ReadFloat();
+					config.Index = packet.ReadInt32();
+					config.RigType = packet.ReadInt32();
+					config.Perk1 = packet.ReadInt32();
+					config.Perk2 = packet.ReadInt32();
+					config.Name = packet.Read16CharString();
+					config.ControlType = packet.ReadInt32();
+					config.LocalControlType = TTSUtils.EnumToInt(TTSRacer.PlayerType.Multiplayer);
+					RegisteredRacerConfigs.Add(config);
+
+					//TTSRacerNetHandler handler = new TTSRacerNetHandler(this, false, id);
+					//handler.Index = packet.ReadInt32();
+					//handler.Rig = packet.ReadInt32();
+					//handler.Perk1 = packet.ReadInt32();
+					//handler.Perk2 = packet.ReadInt32();
+					//handler.Name = packet.Read16CharString();
+					//handler.ControlType = packet.ReadInt32();
 
 					if (DebugMode) Debug.Log(">	Received a racer " + id);
-					spawnRacers.Add(handler);
+					//spawnRacers.Add(handler);
 					break;
 
 				case TTSCommandTypes.RacerUpdate:
@@ -211,6 +227,10 @@ public class TTSClient : MonoBehaviour
 					break;
 
 				case TTSCommandTypes.RacerRegisterOK:
+					id = packet.ReadFloat();
+					int index = packet.ReadInt32();
+					break;
+
 				case TTSCommandTypes.PowerupRegisterOK:
 					id = packet.ReadFloat();
 					netHandles[id].isServerRegistered = true;
