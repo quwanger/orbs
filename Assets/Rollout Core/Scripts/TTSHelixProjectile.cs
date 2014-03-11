@@ -47,8 +47,6 @@ public class TTSHelixProjectile : TTSBehaviour {
 		RaycastHit hit;
         if (Physics.Raycast(transform.position, -Vector3.up, out hit, 100.0F)){
             initialDistanceToGround = hit.distance;
-			//this is how you get the item is collides with
-			//Debug.Log (hit.collider);
 		}
 		
 		currentWaypoint = currentRacer.GetComponent<TTSRacer>().currentWaypoint;
@@ -58,13 +56,14 @@ public class TTSHelixProjectile : TTSBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(Time.time - birth > Timeout) {
+		/*if(Time.time - birth > Timeout) {
 			Explode(false);
-		}
+		}*/
 		
-		//make sure the projectile doesnt hit the ground
-		//GroundPositionCheck();
-		
+		//if the helix reaches the end, kill it
+		if(nextWaypoint == null)
+			Explode(false);
+
 		//move the projectile
 		this.rigidbody.velocity = (destinationPosition - this.transform.position).normalized * ProjectileStartVelocity;
 		//check for the projectile's next destination
@@ -76,56 +75,26 @@ public class TTSHelixProjectile : TTSBehaviour {
 			Collider[] colliders = Physics.OverlapSphere(this.transform.position, homingRadius);
 		    foreach (Collider hit in colliders) {
 		        if (hit.GetComponent<TTSRacer>() && hit.gameObject != currentRacer.gameObject){
-					if(hit.GetComponent<TTSRacer>().numHelix < Mathf.Ceil(helixInBatch/racersInFront)){
-						Debug.Log("Helix - Racer Found");
+					//if(hit.GetComponent<TTSRacer>().numHelix < Mathf.Ceil(helixInBatch/racersInFront)){
+						//Debug.Log("Helix - Racer Found");
 						racerFound = true;
 						homedRacer = hit.gameObject;
-						homedRacer.GetComponent<TTSRacer>().numHelix++;
+						//homedRacer.GetComponent<TTSRacer>().numHelix++;
 			            destinationPosition = hit.transform.position;
 						break;
-					}
+					//}
 				}
 		    }
+
+		    if(nextWaypoint.getDifferenceFromEnd(this.transform.position) < 7.0f){
+				resetWaypoints(nextWaypoint);
+			}
 		}else{
 			destinationPosition = homedRacer.transform.position;
 		}
 		
-		if(nextWaypoint.getDifferenceFromEnd(this.transform.position) < 7.0f){
-			resetWaypoints(nextWaypoint);
-		}
-	}
-	
-	private void GroundPositionCheck(){
-		float distanceToGround = checkDistanceToGround();
-		
-		if(distanceToGround < initialDistanceToGround){
-			//while(distanceToGround < initialDistanceToGround){
-				float tempY = this.transform.position.y;
-				tempY += (initialDistanceToGround - distanceToGround);
-				this.transform.position = new Vector3(this.transform.position.x, tempY, this.transform.position.z);
-				//distanceToGround = checkDistanceToGround();
-			//}
-		}else if(distanceToGround > initialDistanceToGround){
-			//while(distanceToGround > initialDistanceToGround){
-				float tempY = this.transform.position.y;
-				tempY -= (distanceToGround - initialDistanceToGround);
-				this.transform.position = new Vector3(this.transform.position.x, tempY, this.transform.position.z);
-				//distanceToGround = checkDistanceToGround();
-			//}
-		}
 	}
 
-	private float checkDistanceToGround(){
-		RaycastHit hit;
-		float distanceToGround;
-        if (Physics.Raycast(transform.position, -Vector3.up, out hit, 100.0F)){
-            distanceToGround = hit.distance;
-			return distanceToGround;
-		}else{
-			return 0.0f;
-		}
-	}
-	
 	void OnCollisionEnter(Collision other) {
 		//damage racer if racer is hit
 		if(other.gameObject.GetComponent<TTSWaypoint>() || other.gameObject.GetComponent<TTSHelixProjectile>()){
@@ -151,23 +120,21 @@ public class TTSHelixProjectile : TTSBehaviour {
 		
 		if(AIUtil == null)
 			AIUtil = gameObject.AddComponent<TTSAIController>();	
-				
-		//this must be done for the player as well so that we can get the distance of all racers from the finish line
+
 		nextWaypoint = AIUtil.getClosestWaypoint(currentWaypoint.nextWaypoints, this.transform.position);
 			
 		destinationPosition = nextWaypoint.transform.position;
-			
-		//randomizeTarget();
 	}
 
 	private void Explode(bool actually) {
 		if(actually) {
 			 Instantiate(explosion,this.transform.position,this.transform.rotation);
 		}
-			
+		
+		//homedRacer.GetComponent<TTSRacer>().numHelix--;
 			
 		foreach(Transform child in transform) {
-				Destroy(child.gameObject);
+			Destroy(child.gameObject);
 		}
 		//stop motion so the trail can end and destroy the parent GO.
 		this.GetComponent<SphereCollider>().enabled = false;
@@ -175,11 +142,6 @@ public class TTSHelixProjectile : TTSBehaviour {
 		
 		Destroy (this.gameObject);
 		Destroy (this);
-	}
-	
-	private void randomizeTarget(){
-		this.destinationPosition = nextWaypoint.getPointOn(Random.Range(0f,1.0f)) + nextWaypoint.transform.up * (Random.Range(-0.5f,0.5f) * nextWaypoint.boxHeight);
-		//this.destinationPosition.z -= 10.0f;
 	}
 
 }

@@ -214,7 +214,7 @@ public class TTSRacer : TTSBehaviour
 			}	
 		}
 		else if (player == PlayerType.Multiplayer) {
-
+			//if the player is a multiplayer player
 		}
 		else if (player == PlayerType.AI) {
 			AIInput();
@@ -252,6 +252,7 @@ public class TTSRacer : TTSBehaviour
 		if (canMove) {
 			rigidbody.AddForce(displayMeshComponent.right * hInput * Time.deltaTime * Handling);
 		}
+
 	}
 
 	public void DamageRacer(float dmgLevel){

@@ -235,6 +235,7 @@ public class TTSPowerup : TTSBehaviour {
 	}
 	
 	public void Helix(int _tier) {
+
 		if(_tier == 1) {
 			HelixMid();
 		}
@@ -316,23 +317,8 @@ public class TTSPowerup : TTSBehaviour {
 		go.GetComponent<TTSHelixProjectile>().currentRacer = effectedRacer.GetComponent<TTSRacer>();
 		go.GetComponent<TTSHelixProjectile>().offensiveMultiplier = effectedRacer.GetComponent<TTSRacer>().Offense;
 		go.GetComponent<TTSHelixProjectile>().racersInFront = (this.GetComponent<TTSRacer>().place - 1);
-		switch(tier){
-			case 1:
-				go.GetComponent<TTSHelixProjectile>().helixInBatch = 1;
-				break;
-			case 2:
-				go.GetComponent<TTSHelixProjectile>().helixInBatch = 3;
-				break;
-			case 3:
-				go.GetComponent<TTSHelixProjectile>().helixInBatch = 8;
-				break;
-			default:
-				go.GetComponent<TTSHelixProjectile>().helixInBatch = 1;
-				break;
-		}
 		go.transform.rotation = GetComponent<TTSRacer>().displayMeshComponent.transform.rotation;
 		go.transform.position = effectedRacer.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
-		//go.rigidbody.velocity = effectedRacer.rigidbody.velocity.normalized * (effectedRacer.rigidbody.velocity.magnitude + go.GetComponent<TTSHelixProjectile>().ProjectileStartVelocity);
 		go.rigidbody.velocity = effectedRacer.rigidbody.velocity;
 		return go;
 	}
