@@ -41,9 +41,10 @@ public class TTSMenu : TTSMenuEnums {
 	
 	public bool[] playerReady;
 	
-	// dynamic text fields for name and description of perk
+	// dynamic text fields for name and description of perk and rigs
 	public GameObject perkName;
 	public GameObject perkDescription;
+	public GameObject rigName;
 	
 	// prevent menus from tweening at the same time
 	public bool isTweening = false;
@@ -173,10 +174,10 @@ public class TTSMenu : TTSMenuEnums {
 			playerText[0].guiText.text = ("Player" + (chosenOrb));
 			playerText[1].guiText.text = ("Player" + (chosenOrb));
 			
-			if(Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown("joystick 1 button 0" ) || Input.GetKeyDown("joystick 1 button 16"))
+			if(Input.GetKeyDown(KeyCode.Return))
 				changePanels("right");
 			
-			if(Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown("joystick 1 button 0" ) || Input.GetKeyDown("joystick 1 button 17"))
+			if(Input.GetKeyDown(KeyCode.Backspace))
 				changePanels("left");			
 
 			if(panels[4].transform.position.x == 0.5 || panels[5].transform.position.x == 0.5 || 
@@ -256,13 +257,13 @@ public class TTSMenu : TTSMenuEnums {
 	private void menuControls(){
 		int index = indices[activePanel];
 		
-		if(Input.GetKeyDown(KeyCode.W))
+		if(Input.GetKeyDown(KeyCode.W) || Input.GetAxis("DPad_YAxis_1") == 1)
 			ChangeIndex("up", index);
-		else if(Input.GetKeyDown(KeyCode.S))
+		else if(Input.GetKeyDown(KeyCode.S) || Input.GetAxis("DPad_YAxis_1") == -1)
 			ChangeIndex("down", index);
-		else if(Input.GetKeyDown(KeyCode.A))
+		else if(Input.GetKeyDown(KeyCode.A) || Input.GetAxis("DPad_XAxis_1") == -1)
 			ChangeIndex("left", index);
-		else if(Input.GetKeyDown(KeyCode.D))
+		else if(Input.GetKeyDown(KeyCode.D) || Input.GetAxis("DPad_XAxis_1") == 1)
 			ChangeIndex("right", index);
 	}
 	
@@ -446,7 +447,7 @@ public class TTSMenu : TTSMenuEnums {
 					movePanel();
 				}
 				
-				else if(activePanel < 7 && !isTweening){
+				else if(activePanel < 8 && !isTweening){
 					activePanel++;
 					if(activePanel == 4 || activePanel == 5){
 						if(!isTweening){
@@ -456,6 +457,20 @@ public class TTSMenu : TTSMenuEnums {
 						}
 					}
 					
+										
+					else if(activePanel == 8 && !isTweening){
+						if(SelectedLevel.ToString() == "level1")
+							Application.LoadLevel("city1-1");
+						
+						else if(SelectedLevel.ToString() == "level2")
+							Application.LoadLevel("city1-2");
+						
+						else if(SelectedLevel.ToString() == "level3")
+							Application.LoadLevel("rural1-1");
+						
+						else if(SelectedLevel.ToString() == "level4")
+							Application.LoadLevel("cliffsidechaos");
+					}
 					
 					else if(activePanel == 7 && !isTweening){
 						// go to levelSelect
@@ -471,8 +486,8 @@ public class TTSMenu : TTSMenuEnums {
 								}
 							}
 							
-							dtp.GetComponent<TSSDataToPass>().players = this.players;
-							dtp.GetComponent<TSSDataToPass>().gametype = gameMode;
+							dtp.GetComponent<TTSDataToPass>().players = this.players;
+							dtp.GetComponent<TTSDataToPass>().gametype = gameMode;
 							movePanel();
 						}
 						
@@ -636,6 +651,8 @@ public class TTSMenu : TTSMenuEnums {
 				numCircles[3]  = r.GetComponent<TTSMenuItemRig>().offense;
 				numCircles[4]  = r.GetComponent<TTSMenuItemRig>().defense;
 				
+				rigName.guiText.text = SelectedRig.ToString();	
+				
 				toggleAllCircles();
 			}	
 		}
@@ -693,7 +710,7 @@ public class TTSMenu : TTSMenuEnums {
 			GameObject obj = new GameObject("circle_" + parent + "_" + i.ToString());
 			obj.AddComponent("GUITexture");
 			obj.transform.parent = GameObject.Find(parent).transform;
-			obj.layer = 11;
+			obj.layer = 24;
 			obj.transform.localPosition = new Vector3(0,0,5);
 			obj.transform.localScale = Vector3.zero;
 			obj.guiTexture.pixelInset = new Rect((x+(i*15)), y, 10, 10);

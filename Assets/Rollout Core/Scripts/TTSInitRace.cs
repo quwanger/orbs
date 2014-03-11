@@ -21,10 +21,14 @@ public class TTSInitRace : MonoBehaviour {
 	
 	public enum Rigs {Rhino, Scorpion, Default};
 	public enum Characters {Character_Default, Character1, Character2};
-
+	
+	public List<GameObject> _playerBundles;
+	public string gameType;
+	
 	private string tempRigChoice = null;
 	private string tempCharacterChoice = "Character_Default";
 	public int tempNumHumanPlayers = 1;
+	public int numHumanPlayers;
 	public int numberOfRacers = 1;
 	
 	GameObject rigToLoad;
@@ -32,15 +36,51 @@ public class TTSInitRace : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
+		
+		if(GameObject.Find("DataToPass")){
+			_playerBundles = GameObject.Find("DataToPass").GetComponent<TTSDataToPass>().players;
+			gameType = GameObject.Find("DataToPass").GetComponent<TTSDataToPass>().gametype;
+		}
+		
+		numHumanPlayers = _playerBundles.Count;
+		
 		//Loop thru racers and create all the cameras, huds...etc.
 		for(int i = 0; i < numberOfRacers; i++){
+			if(i < numHumanPlayers){
+				switch(_playerBundles[i].GetComponent<TTSPlayerInfo>().rig){
+				case("Rhino"):
+					rigToLoad = _rigs[0];
+					break;
+				case("Spider"):
+					rigToLoad = _rigs[1];
+					break;
+				case("Dragon"):
+					rigToLoad = _rigs[2];
+					break;
+				case("NextGen"):
+					rigToLoad = _rigs[3];
+					break;
+				case("Antique"):
+					rigToLoad = _rigs[4];
+					break;
+				case("Scorpion"):
+					rigToLoad = _rigs[5];
+					break;
+				default:
+					rigToLoad = _rigs[Random.Range(0, _rigs.Count)];
+					break;
+				}
+			}else{
+				//load random rig for AI racers
+				rigToLoad = _rigs[Random.Range(0, _rigs.Count)];
+			}
 			InstantiateRacers(i);
 		}
 	}
 	
 	public void InstantiateRacers(int i){
 		//finds the rig to initialize
-		foreach(GameObject rig in _rigs){
+		/*foreach(GameObject rig in _rigs){
 			if(rig.GetComponent<TTSRig>().rigName == tempRigChoice){
 				rigToLoad = rig;
 			}
@@ -49,7 +89,7 @@ public class TTSInitRace : MonoBehaviour {
 		//makes sure there is a rig to load if none selected
 		if(rigToLoad == null){
 			rigToLoad = _rigs[Random.Range(0, _rigs.Count)];
-		}
+		}*/
 		
 		//checks for the character (in this case, default sphere)
 		foreach(GameObject character in _characters){
@@ -100,10 +140,14 @@ public class TTSInitRace : MonoBehaviour {
 		tempRacer.GetComponent<TTSRacer>().minimapIconBig = tempIconBig;
 
 		//this is where the stuff for the human players
-		if(i < tempNumHumanPlayers){
+		if(i < numHumanPlayers){
 			//set to player controlled and set the player type to Player
 			tempRacer.GetComponent<TTSRacer>().IsPlayerControlled = true;
 			tempRacer.GetComponent<TTSRacer>().player = TTSRacer.PlayerType.Player;
+			
+			//add perks
+			tempRacer.GetComponent<TTSPerkManager>().equiptPerkPool1 = _playerBundles[i].GetComponent<TTSPlayerInfo>().perkA;
+			tempRacer.GetComponent<TTSPerkManager>().equiptPerkPool2 = _playerBundles[i].GetComponent<TTSPlayerInfo>().perkB;
 
 			//Instantiates a minimap for each human player and sets it to follow a racer
 			GameObject tempMinimap = (GameObject)Instantiate(minimapGO);
@@ -129,7 +173,7 @@ public class TTSInitRace : MonoBehaviour {
 			//Splitscreen handling, case 2 for 2 player, 3 for 3 player...etc.
 			//Places the cam, minimap, fadeout and icon for each case by changing the layers
 			//and changing what each camera sees
-			switch(tempNumHumanPlayers){
+			switch(numHumanPlayers){
 				case 2:
 					if(i==0) {
 						//Set the position for the camera, minimap and fadeout
