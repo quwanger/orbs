@@ -27,6 +27,10 @@ public class TTSPowerup : TTSBehaviour {
 	public GameObject LeechPrefab;
 	public GameObject HelixPrefab;
 	#endregion
+
+	#region Tier3 Specialty Variables
+	public int numberOfEntropyCannonsAvailable = 0;
+	#endregion
 	
 	void Awake() {
 		pp2 = this.GetComponent<TTSPerkManager>().equiptPerkPool2;
@@ -82,6 +86,10 @@ public class TTSPowerup : TTSBehaviour {
 		if(powerup == AvailablePowerup) {
 			if(tier < 3){
 				tier++;
+			}
+			//deal with tier 3 entropy
+			if(powerup == Powerup.EntropyCannon && tier == 3){
+				numberOfEntropyCannonsAvailable = 10;
 			}
 		} else if(powerup == Powerup.TimeBonus) {
 			if(AvailablePowerup == TTSBehaviour.Powerup.None)
@@ -148,9 +156,16 @@ public class TTSPowerup : TTSBehaviour {
 		}
 		
 		this.ActivePowerup = this.AvailablePowerup;
-		this.AvailablePowerup = Powerup.None;
-		
-		this.tier = 0;
+
+		if(this.AvailablePowerup == Powerup.EntropyCannon && tier == 3){
+			if(numberOfEntropyCannonsAvailable == 0){
+				this.AvailablePowerup = Powerup.None;
+				this.tier = 0;
+			}
+		}else{
+			this.AvailablePowerup = Powerup.None;
+			this.tier = 0;
+		}
 		
 		if(this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)
 			hudPowerup.GetComponent<TTSHudPowerup>().UpdateHudPowerup(this.AvailablePowerup, this.tier);
@@ -221,10 +236,15 @@ public class TTSPowerup : TTSBehaviour {
 				Invoke("EntropyMid", i * 0.075f);
 			}
 		}
-		if(_tier == 3) {
+		/*if(_tier == 3) {
 			for(int i = 0; i < 20; i++) {
 				Invoke("EntropyMid", i * 0.075f);
 			}
+		}*/
+		if(_tier == 3){
+			EntropyMid();
+			numberOfEntropyCannonsAvailable--;
+			Debug.Log("Remaining Entropy Cannons: " + numberOfEntropyCannonsAvailable);
 		}
 		//it is only active while firing
 		this.ActivePowerup = TTSBehaviour.Powerup.None;
@@ -307,8 +327,16 @@ public class TTSPowerup : TTSBehaviour {
 		GameObject go = (GameObject) Instantiate(EntropyCannonPrefab);
 		go.GetComponent<TTSEntropyCannonProjectile>().offensiveMultiplier = effectedRacer.GetComponent<TTSRacer>().Offense;
 		go.transform.rotation = GetComponent<TTSRacer>().displayMeshComponent.transform.rotation;
-		go.transform.position = effectedRacer.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
-		go.rigidbody.velocity = this.rigidbody.velocity.normalized * Random.Range(effectedRacer.rigidbody.velocity.magnitude + 50.0f, effectedRacer.rigidbody.velocity.magnitude + 150.0f);
+
+		if(CheckForwardAnalog()){
+			//shoot forward
+			go.transform.position = effectedRacer.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
+			go.rigidbody.velocity = this.rigidbody.velocity.normalized * Random.Range(effectedRacer.rigidbody.velocity.magnitude + 50.0f, effectedRacer.rigidbody.velocity.magnitude + 150.0f);
+		}else{
+			//shoot backwards
+			go.transform.position = effectedRacer.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * -3.5f;
+			go.rigidbody.velocity = this.rigidbody.velocity.normalized * Random.Range(effectedRacer.rigidbody.velocity.magnitude + 50.0f, effectedRacer.rigidbody.velocity.magnitude + 150.0f) * -1.0f;
+		}
 		return go;
 	}
 	
@@ -350,5 +378,25 @@ public class TTSPowerup : TTSBehaviour {
 		return go;
 	}
 	#endregion
+
+	public bool CheckForwardAnalog(){
+		if(this.gameObject.GetComponent<TTSRacer>().playerNum == 1) {
+			if(level.useKeyboard){
+				if(Input.GetKeyDown("down") || Input.GetKeyDown("s")){
+					return false;
+				}
+			}else if(Input.GetAxis("L_YAxis_1") == -1.0f){
+				return false;
+			}
+		} else if(this.gameObject.GetComponent<TTSRacer>().playerNum == 2) {
+			if(Input.GetAxis("L_YAxis_2") == -1.0f){return false;}
+		} else if(this.gameObject.GetComponent<TTSRacer>().playerNum == 3) {
+			if(Input.GetAxis("L_YAxis_3") == -1.0f){return false;}
+		} else if(this.gameObject.GetComponent<TTSRacer>().playerNum == 4) {
+			if(Input.GetAxis("L_YAxis_4") == -1.0f){return false;}
+		}
+
+		return true;
+	}
 	
 }

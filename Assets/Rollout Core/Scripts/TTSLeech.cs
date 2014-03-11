@@ -92,6 +92,7 @@ public class TTSLeech : TTSBehaviour {
 		    foreach (Collider hit in colliders) {
 		        if (hit.GetComponent<TTSRacer>() && hit.gameObject != stuckRacer.gameObject){
 					racerStuck = false;
+					currentRacer = stuckRacer.GetComponent<TTSRacer>();
 					destinationPosition = hit.gameObject.transform.position;
 					if(level.DebugMode)
 						Debug.Log("Leech jump to: " + hit.gameObject);

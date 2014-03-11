@@ -77,9 +77,12 @@ public class TTSRacer : TTSBehaviour
 	#endregion
 
 	#region gameplay vars
-	public float TopSpeed = 250.0f;
-	public float Acceleration = 8000.0f;
-	public float Handling = 11000.0f;
+	public float TopSpeedInit = 250.0f;
+	public float AccelerationInit = 8000.0f;
+	public float HandlingInit = 11000.0f;
+	public float TopSpeed;
+	public float Acceleration;
+	public float Handling;
 	
 	public enum PlayerType { Player, AI, Multiplayer };
 	public PlayerType player = PlayerType.Player;
@@ -158,9 +161,9 @@ public class TTSRacer : TTSBehaviour
 		RacerSfx.volume = 0.5f;
 
 		//Apply Attributes
-		TopSpeed = TopSpeed + (speedIncrease * CurrentRig.GetComponent<TTSRig>().rigSpeed);
-		Acceleration = Acceleration + (accelerationIncrease * CurrentRig.GetComponent<TTSRig>().rigAcceleration);
-		Handling = Handling + (handlingIncrease * CurrentRig.GetComponent<TTSRig>().rigHandling);
+		TopSpeedInit = TopSpeedInit + (speedIncrease * CurrentRig.GetComponent<TTSRig>().rigSpeed);
+		AccelerationInit = AccelerationInit + (accelerationIncrease * CurrentRig.GetComponent<TTSRig>().rigAcceleration);
+		HandlingInit = HandlingInit + (handlingIncrease * CurrentRig.GetComponent<TTSRig>().rigHandling);
 		
 		Offense = CurrentRig.GetComponent<TTSRig>().rigOffense;
 		Defense = CurrentRig.GetComponent<TTSRig>().rigDefense;
@@ -173,6 +176,13 @@ public class TTSRacer : TTSBehaviour
 	}
 	
 	void FixedUpdate () {
+
+		TopSpeed = TopSpeedInit + (place * speedIncrease);
+		Acceleration = AccelerationInit + (place * accelerationIncrease);
+		Handling = HandlingInit + (place * handlingIncrease);
+
+		//Debug.Log("Rig " + this.CurrentRig + " stats: Speed = " + TopSpeed + ", Acceleration = " + Acceleration + ", Handling = " + Handling);
+
 		if(!level.raceHasFinished){
 			if(IsPlayerControlled){ 
 				CalculateInputForces();
