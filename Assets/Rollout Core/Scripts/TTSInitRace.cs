@@ -41,7 +41,15 @@ public class TTSInitRace : MonoBehaviour
 		level = GetComponent<TTSLevel>();
 
 		racerConfigs = new List<TTSRacer.RacerConfig>();
-		racerConfigs.Add(testRacerConfig(true));
+
+		for (int i = 0; i < numHumanPlayers; i++) {
+			racerConfigs.Add(testRacerConfig(true));
+		}
+
+		for (int i = 0; i < numAIPlayers; i++) {
+			racerConfigs.Add(testRacerConfig(false));
+		}
+
 		//racerConfigs.Add(testRacerConfig(false));
 		//racerConfigs.Add(testRacerConfig(false));
 
@@ -82,8 +90,8 @@ public class TTSInitRace : MonoBehaviour
 
 	private TTSRacer.RacerConfig testRacerConfig(bool Human) {
 		TTSRacer.RacerConfig config = new TTSRacer.RacerConfig();
-		config.Index = 0;
-		config.RigType = 1;
+		config.Index = 99; // So that the racers will use the starting point index.
+		config.RigType = Random.Range(0, Rigs.Count);
 		config.Perk1 = 0;
 		config.Perk2 = 0;
 		if (Human) {
