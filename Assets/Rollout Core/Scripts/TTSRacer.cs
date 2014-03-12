@@ -147,9 +147,11 @@ public class TTSRacer : TTSBehaviour
 		public int CharacterType;
 	}
 
-	void Start() {
-
+	void Awake() {
 		level.RegisterRacer(gameObject);
+	}
+
+	void Start() {
 		//Get the body via tag.
 		foreach (Transform child in transform) {
 			if (child.gameObject.tag == "RacerDisplayMesh") {
