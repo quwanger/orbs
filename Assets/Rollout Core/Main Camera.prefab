@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &100002
 GameObject:
   m_ObjectHideFlags: 0
@@ -42,6 +42,7 @@ GameObject:
   - 114: {fileID: 11400020}
   - 81: {fileID: 8100000}
   - 114: {fileID: 11400022}
+  - 114: {fileID: 11400024}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -96,7 +97,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 4294965247
   m_RenderingPath: 2
   m_TargetTexture: {fileID: 0}
   m_HDR: 1
@@ -118,7 +119,7 @@ AudioListener:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100002}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!82 &8200000
 AudioSource:
   m_ObjectHideFlags: 1
@@ -293,6 +294,11 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4b46f3f7b30265e49bd919bacfa89ed7, type: 3}
   m_Name: 
+  accelerationIncrease: 500
+  speedIncrease: 25
+  handlingIncrease: 750
+  offenseIncrease: .300000012
+  defenseIncrease: .300000012
   LOAD_RANDOM_TRACK: 0
   songToPlay: {fileID: 8300000, guid: 5c10cce97f5404543993159e3424eeaf, type: 3}
   tracks: []
@@ -344,6 +350,7 @@ MonoBehaviour:
   offenseIncrease: .300000012
   defenseIncrease: .300000012
   CameraMode: 0
+  cameraNumber: 0
   target: {fileID: 0}
   distance: 5
   heightDamping: 2
@@ -563,7 +570,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100002}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f7db9ec1392f34265817a55853e6ab07, type: 3}
   m_Name: 
@@ -653,6 +660,24 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 626f08fcb2c45487f9299504ffcef1b5, type: 3}
   m_Name: 
+--- !u!114 &11400024
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 606ad38e2aa1349eb97bb70ede650920, type: 3}
+  m_Name: 
+  accelerationIncrease: 500
+  speedIncrease: 25
+  handlingIncrease: 750
+  offenseIncrease: .300000012
+  defenseIncrease: .300000012
+  indicator: {fileID: 100000, guid: 5740d03fc0a6643608c329260b9fac6e, type: 2}
+  _indicators: []
+  _racersToFollow: []
 --- !u!124 &12400000
 Behaviour:
   m_ObjectHideFlags: 1

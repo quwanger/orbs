@@ -30,6 +30,7 @@ GameObject:
   - 114: {fileID: 11400000}
   - 136: {fileID: 13600000}
   - 82: {fileID: 8200000}
+  - 54: {fileID: 5400000}
   m_Layer: 0
   m_Name: PowerupPlatform2.0
   m_TagString: Untagged
@@ -43,8 +44,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100002}
-  m_LocalRotation: {x: -.00589799741, y: .0342299864, z: .000478999777, w: .999396503}
-  m_LocalPosition: {x: 65.3149414, y: -361.20874, z: -1335.41528}
+  m_LocalRotation: {x: .0233230013, y: -.435711354, z: .048427254, w: .898480117}
+  m_LocalPosition: {x: -674.463928, y: -126.091873, z: 109.049286}
   m_LocalScale: {x: 1, y: 2, z: 1}
   m_Children:
   - {fileID: 400002}
@@ -85,6 +86,21 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100002}
   m_Mesh: {fileID: 4300000, guid: 27955d77016c9ae43a9d9530b2b5ac87, type: 3}
+--- !u!54 &5400000
+Rigidbody:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100002}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: .0500000007
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!82 &8200000
 AudioSource:
   m_ObjectHideFlags: 1
@@ -101,7 +117,7 @@ AudioSource:
   Mute: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 1
+  MinDistance: 10
   MaxDistance: 100
   Pan2D: 0
   rolloffMode: 1
@@ -198,7 +214,12 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dd3dced3becc8334c886dd1833d5be6c, type: 3}
   m_Name: 
-  currentPowerup: 0
+  accelerationIncrease: 500
+  speedIncrease: 25
+  handlingIncrease: 750
+  offenseIncrease: .300000012
+  defenseIncrease: .300000012
+  currentPowerup: 1
   respawnTime: 5
   clip: {fileID: 8300000, guid: 5196e9f5655d57e4da1ba784341c313e, type: 3}
   isRandom: 1

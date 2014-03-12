@@ -2,8 +2,6 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-
-
 /***********************
  * Racer.cs - Racer Prefab Builder and Motion Handler
  * 
@@ -37,6 +35,8 @@ using System.Collections.Generic;
 [RequireComponent(typeof(MeshRenderer))]
 public class TTSRacer : TTSBehaviour
 {
+	public GameObject minimapIconSmall;
+	public GameObject minimapIconBig;
 
 	#region serialized settings
 	public bool IsPlayerControlled = true;
@@ -72,6 +72,8 @@ public class TTSRacer : TTSBehaviour
 			return transform.position;
 		}
 	}
+	
+	public bool calcOrientation = true;
 	#endregion
 
 	#region gameplay vars
@@ -87,11 +89,16 @@ public class TTSRacer : TTSBehaviour
 
 	public bool finished = false;
 	public float distanceToFinish;
+	public float previousDistanceToFinish;
 	public int place;
 	
 	public float respawnTime = 2.0f;
 	public Vector3 respawnPoint;
 	public Quaternion respawnRotation;
+	
+	public int playerNum;
+	
+	public int numHelix = 0;
 	#endregion
 	
 	public bool hasShield;
@@ -165,6 +172,7 @@ public class TTSRacer : TTSBehaviour
 		//Setup Audio Channel for Pitched Racer Sounds
 		RacerSounds = gameObject.AddComponent<AudioSource>();
 		RacerSounds.clip = RollingSound;
+		RacerSounds.volume = 0.5f;
 		RacerSounds.loop = true;
 		RacerSounds.rolloffMode = AudioRolloffMode.Linear;
 		RacerSounds.Play();
@@ -224,13 +232,31 @@ public class TTSRacer : TTSBehaviour
 		PreviousVelocity = rigidbody.velocity;
 	}
 
+
+
 	private void CalculateInputForces() {
 		if (finished && !level.DebugMode) // No input when race is finished
 			return;
 
 		if (player == PlayerType.Player) {
-			vInput = Input.GetAxis("Vertical");
-			hInput = Input.GetAxis("Horizontal");
+			if (playerNum == 1) {
+				if(level.useKeyboard){
+					vInput = Input.GetAxis ("Key_YAxis");
+					hInput = Input.GetAxis ("Key_XAxis");
+				}else{
+					vInput = Input.GetAxis("TriggersR_1");
+					hInput = Input.GetAxis("L_XAxis_1");
+				}
+			} else if (playerNum == 2) {
+				vInput = Input.GetAxis("TriggersR_2");
+				hInput = Input.GetAxis("L_XAxis_2");
+			} else if (playerNum == 3) {
+				vInput = Input.GetAxis("TriggersR_3");
+				hInput = Input.GetAxis("L_XAxis_3");
+			} else if (playerNum == 4) {
+				vInput = Input.GetAxis("TriggersR_4");
+				hInput = Input.GetAxis("L_XAxis_4");
+			}
 		}
 		else if (player == PlayerType.Multiplayer) {
 			MultiplayerInput();
@@ -291,7 +317,9 @@ public class TTSRacer : TTSBehaviour
 	}
 
 	void CalculateBodyOrientation() {
-
+		if(!calcOrientation)
+			return;
+		
 		//Facing Direction...
 		if (new Vector2(rigidbody.velocity.x, rigidbody.velocity.z).magnitude > MinimumVelocityToAnimateSteering) {
 			//based on rigidbody velocity.
@@ -312,7 +340,12 @@ public class TTSRacer : TTSBehaviour
 			lastForward = TTSUtils.FlattenVector(displayMeshComponent.forward).normalized;
 		}
 	}
-
+	
+	public void ManualOrientation(Vector3 faceTowards){
+		displayMeshComponent.forward = faceTowards - position;
+		transform.LookAt(faceTowards);
+	}
+	
 	public float GetTiltAngle() {
 		return TiltAngle;
 	}
@@ -328,6 +361,14 @@ public class TTSRacer : TTSBehaviour
 			RacerSounds.pitch = Mathf.Max(Mathf.Lerp(RacerSounds.pitch, TTSUtils.Remap(Mathf.Abs(vInput), 0.0f, 1.0f, 0.5f, 1.0f, false), 0.1f), 0);
 			RacerSounds.volume = Mathf.Max(Mathf.Lerp(RacerSounds.volume, TTSUtils.Remap(Mathf.Abs(vInput), 0.0f, 1.0f, 0.5f, 1.0f, false) * 1.5f, 0), 0); // Needs cleaning
 		}
+	}
+
+	void Update() {
+		minimapIconSmall.transform.position = new Vector3(this.gameObject.transform.position.x, minimapIconSmall.transform.position.y, this.gameObject.transform.position.z);
+		minimapIconBig.transform.position = new Vector3(this.gameObject.transform.position.x, minimapIconBig.transform.position.y, this.gameObject.transform.position.z);
+	
+		if(nextWaypoint)
+			goingWrongWay = CheckWrongWay();
 	}
 
 	#region Events
@@ -356,18 +397,28 @@ public class TTSRacer : TTSBehaviour
 		onGround = false;
 	}
 
+	private bool CheckWrongWay(){
+
+		Vector3 toWaypoint = nextWaypoint.getClosestPoint(position) - position;
+
+		float angle = Vector3.Angle(toWaypoint, lastForward);
+
+		return (angle>110.0f);
+	}
+
 	public void WrongWay() {
-		//if (goingWrongWay == true) 
-			//Debug.Log("WRONG WAY");
-		//else 
-			//Debug.Log("RIGHT WAY");
+		if (goingWrongWay == true){
+			//going the wrong way
+		}else{
+			//going the right way
+		} 
 	}
 
 	public void OnWaypoint(TTSWaypoint hit) {
 		previousWaypoint = currentWaypoint;
 		currentWaypoint = hit;
 
-		if (previousWaypoint == currentWaypoint) {
+		/*if (previousWaypoint == currentWaypoint) {
 			if (goingWrongWay == true) {
 				goingWrongWay = false;
 				WrongWay();
@@ -376,12 +427,11 @@ public class TTSRacer : TTSBehaviour
 				goingWrongWay = true;
 				WrongWay();
 			}
-		}
+		}*/
+		
 
-		//if(player == PlayerType.AI && !waypointManager.EndPoints.Contains(currentWaypoint)){
-			if(AIUtil == null)
-				AIUtil = gameObject.AddComponent<TTSAIController>();	
-		//}
+		if(AIUtil == null)
+			AIUtil = gameObject.AddComponent<TTSAIController>();	
 		
 		//this must be done for the player as well so that we can get the distance of all racers from the finish line
 		nextWaypoint = AIUtil.getClosestWaypoint(currentWaypoint.nextWaypoints, position);
@@ -391,6 +441,19 @@ public class TTSRacer : TTSBehaviour
 	public void SlowToStop() {
 		rigidbody.velocity = Vector3.Lerp(rigidbody.velocity, new Vector3(0, 0, 0), stopSpeed);
 	}
+
+	public void SlowToStopToPosition(GameObject pos)
+    {
+		rigidbody.velocity = Vector3.Lerp(rigidbody.velocity, new Vector3(0, 0, 0), stopSpeed);
+    	StartCoroutine(pause(pos));
+    }
+	
+	// the pause for SlowToStopToPosition
+	IEnumerator pause(GameObject pos)
+    {
+    	yield return new WaitForSeconds(2.0f);
+		this.transform.position = new Vector3(pos.transform.position.x, this.transform.position.y, pos.transform.position.z);
+    }
 
 	public void StopRacer() {
 		rigidbody.velocity = new Vector3(0, 0, 0);

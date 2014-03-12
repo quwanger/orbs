@@ -24,7 +24,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_LocalRotation: {x: 0, y: .799416482, z: 0, w: .600777268}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -35,7 +35,7 @@ AudioListener:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_Enabled: 0
+  m_Enabled: 1
 --- !u!82 &8200000
 AudioSource:
   m_ObjectHideFlags: 1
@@ -48,7 +48,7 @@ AudioSource:
   m_PlayOnAwake: 0
   m_Volume: .25
   m_Pitch: 1
-  Loop: 1
+  Loop: 0
   Mute: 0
   Priority: 128
   DopplerLevel: 1
@@ -102,8 +102,13 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4b46f3f7b30265e49bd919bacfa89ed7, type: 3}
   m_Name: 
-  LOAD_RANDOM_TRACK: 0
-  songToPlay: {fileID: 8300000, guid: 5c10cce97f5404543993159e3424eeaf, type: 3}
+  accelerationIncrease: 500
+  speedIncrease: 25
+  handlingIncrease: 750
+  offenseIncrease: .300000012
+  defenseIncrease: .300000012
+  LOAD_RANDOM_TRACK: 1
+  songToPlay: {fileID: 0}
   tracks:
   - {fileID: 8300000, guid: 1fc0a401b899f49d89c843f38712539d, type: 3}
   - {fileID: 8300000, guid: 04b7d214f83824a07a7ce3a833e70926, type: 3}

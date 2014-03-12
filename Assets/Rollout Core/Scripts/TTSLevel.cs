@@ -14,6 +14,8 @@ public class TTSLevel : MonoBehaviour {
 	
 	public enum LevelType { cliff, night, backroad, downtown, future1, future2 };
 	public LevelType currentLevel = LevelType.backroad;
+
+	public bool useKeyboard = true;
 	
 	public bool raceHasStarted = false;
 	public bool raceHasFinished = false;
@@ -22,6 +24,8 @@ public class TTSLevel : MonoBehaviour {
 	public bool PerksEnabled = true;
 	
 	private TTSScoreboard scoreboard;
+
+	private string levelSelected = null;
 	
 	public Font[] fonts;
 
@@ -47,6 +51,17 @@ public class TTSLevel : MonoBehaviour {
 			}
 		}else{
 			StartCountdown();
+		}
+	}
+
+	void Update() {
+		if(DebugMode) {
+			if(Input.GetKeyDown(KeyCode.T))	Application.LoadLevel("city1-1");
+			if(Input.GetKeyDown(KeyCode.Y)) Application.LoadLevel("city1-2");
+			if(Input.GetKeyDown(KeyCode.U)) Application.LoadLevel("rural1-1");
+			if(Input.GetKeyDown(KeyCode.I)) Application.LoadLevel("cliffsidechoas");
+			if(Input.GetKeyDown(KeyCode.O)) Debug.Log("O");
+			if(Input.GetKeyDown(KeyCode.P)) Debug.Log("P");
 		}
 	}
 	#endregion
@@ -128,12 +143,10 @@ public class TTSLevel : MonoBehaviour {
 	public void StartRace() {
 		raceHasStarted = true;
 		
-		
-		
 		GameObject.Find("Soundtrack").GetComponent<TTSSoundtrackManager>().StartSoundtrack();
 		
 		foreach(GameObject racer in racers) {
-			racer.GetComponent<Rigidbody>().useGravity = true;
+			racer.rigidbody.constraints = RigidbodyConstraints.None;
 			racer.GetComponent<TTSRacer>().canMove = true;
 		}
 		

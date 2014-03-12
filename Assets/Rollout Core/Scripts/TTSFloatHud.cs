@@ -11,10 +11,15 @@ public class TTSFloatHud : TTSBehaviour {
 	private Color initialBackingColor;
 	public Color flashColor;
 	
+	public float frameScaleTime = 0.3f;
+	
 	#region hudcomponents
 	public GameObject displayBacking;
 	public GameObject bonusTime;
 	public GameObject position;
+	public GameObject wrongway;
+	
+	public int previousPlace;
 	#endregion
 	
 	// Use this for initialization
@@ -31,10 +36,27 @@ public class TTSFloatHud : TTSBehaviour {
 		
 		displayBacking.renderer.material.color = Color.Lerp(displayBacking.renderer.material.color, initialBackingColor, 0.04f);
 		
-		position.GetComponent<TextMesh>().text = (racerToFollow.GetComponent<TTSRacer>().place).ToString();
+		if(racerToFollow.GetComponent<TTSRacer>().goingWrongWay){
+			if(!wrongway.active)
+				wrongway.active = true;
+		}else{
+			if(wrongway.active)
+				wrongway.active = false;
+		}	
+
+		if(previousPlace != racerToFollow.GetComponent<TTSRacer>().place){
+			//if the racer is in a new position
+			position.GetComponent<TextMesh>().text = (racerToFollow.GetComponent<TTSRacer>().place).ToString();
+			iTween.ScaleTo(position,iTween.Hash("scale", new Vector3 (1.5f, 1.5f, 1.5f) ,"time", 0.1f, "oncomplete", "ReturnToOriginalSize", "oncompletetarget", this.gameObject));
+		}else{
+		}
+			
+		previousPlace = racerToFollow.GetComponent<TTSRacer>().place;
 	}
 	
-	
+	public void ReturnToOriginalSize(){
+		iTween.ScaleTo(position,iTween.Hash("scale", new Vector3 (1.0f,1.0f,1.0f) ,"time", frameScaleTime));
+	}
 	
 #region vfx
 	public void FlashTimeForBonus() {

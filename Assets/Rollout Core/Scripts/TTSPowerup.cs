@@ -5,7 +5,7 @@ public class TTSPowerup : TTSBehaviour
 {
 
 	public bool debug = false;
-	public int DebugTier = 2;
+	public int DebugTier = 1;
 
 	public Powerup AvailablePowerup;
 	public Powerup PreviouslyAvailablePowerup = Powerup.None;
@@ -51,7 +51,24 @@ public class TTSPowerup : TTSBehaviour
 		}
 
 		//if you hit space or the 'a' button on an Xbox controller
-		if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown("joystick button 0")) ConsumePowerup();
+		if(AvailablePowerup != Powerup.None){
+			if(this.gameObject.GetComponent<TTSRacer>().playerNum == 1) {
+				if(level.useKeyboard){
+					if(Input.GetKeyDown("space")){
+						ConsumePowerup();
+					}
+				}else if(Input.GetKeyDown("joystick 1 button 0") || Input.GetKeyDown("joystick 1 button 16")){
+					Debug.Log("A pressed");
+					ConsumePowerup();
+				}
+			} else if(this.gameObject.GetComponent<TTSRacer>().playerNum == 2) {
+				if(Input.GetKeyDown("joystick 2 button 0") || Input.GetKeyDown("joystick 2 button 16")){Debug.Log("A pressed");	ConsumePowerup();}
+			} else if(this.gameObject.GetComponent<TTSRacer>().playerNum == 3) {
+				if(Input.GetKeyDown("joystick 3 button 0") || Input.GetKeyDown("joystick 3 button 16"))	ConsumePowerup();
+			} else if(this.gameObject.GetComponent<TTSRacer>().playerNum == 4) {
+				if(Input.GetKeyDown("joystick 4 button 0") || Input.GetKeyDown("joystick 4 button 16"))	ConsumePowerup();
+			}
+		}
 
 		//changes the powerup in the hud when a new powerup is picked up
 		if (AvailablePowerup != PreviouslyAvailablePowerup && this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)
@@ -81,9 +98,7 @@ public class TTSPowerup : TTSBehaviour
 			else if (pp2 == Powerup.Lottery) {
 				//deals with the lottery perk
 				float temp = Random.Range(0, 1.0f);
-				if (temp <= lotteryChance) {
-					if (level.DebugMode == true)
-						Debug.Log("Lottery Winner");
+				if(temp <= lotteryChance){
 					tier = 2;
 				}
 				else {
@@ -156,12 +171,12 @@ public class TTSPowerup : TTSBehaviour
 			}
 		}
 		else if (_tier == 2) {
-			for (int i = 0; i < 4; i++) {
+			for (int i = 0; i < 5; i++) {
 				DeployLeech(true);
 			}
 		}
 		else if (_tier == 3) {
-			for (int i = 0; i < 8; i++) {
+			for (int i = 0; i < 15; i++) {
 				DeployLeech(true);
 			}
 		}
@@ -171,59 +186,54 @@ public class TTSPowerup : TTSBehaviour
 		if (_tier == 1) {
 			DrezzMid();
 		}
-
-		if (_tier == 2) {
-			DrezzMid();
-			Invoke("DrezzMid", 0.5f);
+		
+		if(_tier == 2) {
+			for(int i = 0; i < 3; i++) {
+				Invoke("DrezzMid", i * 0.3f);
+			}
 		}
-		if (_tier == 3) {
-			for (int i = 0; i < 5; i++) {
-				Invoke("DrezzMid", i * 0.5f);
+		if(_tier == 3) {
+			for(int i = 0; i < 6; i++) {
+				Invoke("DrezzMid", i * 0.3f);
 			}
 		}
 		//it is only active while firing
 		this.ActivePowerup = TTSBehaviour.Powerup.None;
-	}
-
-	private void DrezzMid() {
-		DropDrezzStone(true);
 	}
 
 	public void EntropyCannon(int _tier) {
-		if (_tier == 1) {
-			EntropyMid();
-		}
-
-		if (_tier == 2) {
-			for (int i = 0; i < 5; i++) {
-				Invoke("EntropyMid", i * 0.1f);
+		if(_tier == 1) {
+			for(int i = 0; i < 3; i++) {
+				Invoke("EntropyMid", i * 0.075f);
 			}
 		}
-		if (_tier == 3) {
-			for (int i = 0; i < 10; i++) {
-				Invoke("EntropyMid", i * 0.1f);
+		
+		if(_tier == 2) {
+			for(int i = 0; i < 8; i++) {
+				Invoke("EntropyMid", i * 0.075f);
+			}
+		}
+		if(_tier == 3) {
+			for(int i = 0; i < 20; i++) {
+				Invoke("EntropyMid", i * 0.075f);
 			}
 		}
 		//it is only active while firing
 		this.ActivePowerup = TTSBehaviour.Powerup.None;
-	}
-
-	private void EntropyMid() {
-		FireEntropyCannon(true);
 	}
 
 	public void Helix(int _tier) {
 		if (_tier == 1) {
 			HelixMid();
 		}
-
-		if (_tier == 2) {
-			for (int i = 0; i < 5; i++) {
+		
+		if(_tier == 2) {
+			for(int i = 0; i < 3; i++) {
 				Invoke("HelixMid", i * 0.1f);
 			}
 		}
-		if (_tier == 3) {
-			for (int i = 0; i < 10; i++) {
+		if(_tier == 3) {
+			for(int i = 0; i < 8; i++) {
 				Invoke("HelixMid", i * 0.1f);
 			}
 		}
@@ -231,15 +241,25 @@ public class TTSPowerup : TTSBehaviour
 		this.ActivePowerup = TTSBehaviour.Powerup.None;
 	}
 
+	#region timed handler functions
+	private void DrezzMid() {
+		DropDrezzStone(true);
+	}
+
+	private void EntropyMid() {
+		FireEntropyCannon(true);
+	}
+
 	private void HelixMid() {
 		FireHelix(true);
 	}
+
+	#endregion
 
 	public void SuperCBooster(float tier, bool owner) {
 		TTSRacerSpeedBoost boost = this.gameObject.AddComponent<TTSRacerSpeedBoost>();
 		boost.owner = owner;
 		boost.FireBoost(BoostPrefab);
-
 		//offense adds to the boost duration and target force at every level
 		if (tier == 1.0f) {
 			boost.duration = 1.0f * this.GetComponent<TTSRacer>().Offense;
@@ -284,7 +304,7 @@ public class TTSPowerup : TTSBehaviour
 	}
 
 	public GameObject DropDrezzStone(bool owner, TTSPowerupNetHandler handle) {
-		GameObject go = (GameObject)Instantiate(DrezzStonePrefab, this.gameObject.transform.position - GetComponent<TTSRacer>().displayMeshComponent.forward * 7.0f, this.gameObject.transform.rotation);
+		GameObject go = (GameObject)Instantiate(DrezzStonePrefab, this.gameObject.transform.position - GetComponent<TTSRacer>().displayMeshComponent.forward * 2.0f, this.gameObject.transform.rotation);
 		go.GetComponent<TTSDrezzStone>().offensiveMultiplier = this.gameObject.GetComponent<TTSRacer>().Offense;
 		go.rigidbody.AddForce(Random.insideUnitCircle * 50f);
 
@@ -331,6 +351,32 @@ public class TTSPowerup : TTSBehaviour
 
 		return go;
 	}
+	
+	//public GameObject FireHelix(GameObject effectedRacer) {
+	//	GameObject go = (GameObject) Instantiate(HelixPrefab);
+	//	go.GetComponent<TTSHelixProjectile>().currentRacer = effectedRacer.GetComponent<TTSRacer>();
+	//	go.GetComponent<TTSHelixProjectile>().offensiveMultiplier = effectedRacer.GetComponent<TTSRacer>().Offense;
+	//	go.GetComponent<TTSHelixProjectile>().racersInFront = (this.GetComponent<TTSRacer>().place - 1);
+	//	switch(tier){
+	//		case 1:
+	//			go.GetComponent<TTSHelixProjectile>().helixInBatch = 1;
+	//			break;
+	//		case 2:
+	//			go.GetComponent<TTSHelixProjectile>().helixInBatch = 3;
+	//			break;
+	//		case 3:
+	//			go.GetComponent<TTSHelixProjectile>().helixInBatch = 8;
+	//			break;
+	//		default:
+	//			go.GetComponent<TTSHelixProjectile>().helixInBatch = 1;
+	//			break;
+	//	}
+	//	go.transform.rotation = GetComponent<TTSRacer>().displayMeshComponent.transform.rotation;
+	//	go.transform.position = effectedRacer.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
+	//	//go.rigidbody.velocity = effectedRacer.rigidbody.velocity.normalized * (effectedRacer.rigidbody.velocity.magnitude + go.GetComponent<TTSHelixProjectile>().ProjectileStartVelocity);
+	//	go.rigidbody.velocity = effectedRacer.rigidbody.velocity;
+	//	return go;
+	//}
 
 	public GameObject GiveTimeBonus(bool owner) {
 		level.time.GiveTimeBonus(1.0f);
@@ -341,16 +387,43 @@ public class TTSPowerup : TTSBehaviour
 		return go;
 	}
 
-	public GameObject DeployShockwave(float tier, bool owner) {
-		GameObject go = (GameObject)Instantiate(ShockwavePrefab, this.gameObject.transform.position, Quaternion.identity);
-		TTSExplosiveForce explosion = go.GetComponent<TTSExplosiveForce>();
+	//public GameObject DeployShockwave(float tier, bool owner) {
+	//	GameObject go = (GameObject)Instantiate(ShockwavePrefab, this.gameObject.transform.position, Quaternion.identity);
+	//	TTSExplosiveForce explosion = go.GetComponent<TTSExplosiveForce>();
 
-		explosion.power = explosion.power * tier * this.gameObject.GetComponent<TTSRacer>().Offense;
-		explosion.radius = explosion.radius * tier * this.gameObject.GetComponent<TTSRacer>().Offense;
-		explosion.Activate();
+	//	explosion.power = explosion.power * tier * this.gameObject.GetComponent<TTSRacer>().Offense;
+	//	explosion.radius = explosion.radius * tier * this.gameObject.GetComponent<TTSRacer>().Offense;
+	//	go.GetComponent<TTSShockwave>().Activate(this.gameObject);
+
+	//	if (owner) { SendStaticPowerupDeploy(TTSPowerupNetworkTypes.Shockwave, tier); }
+	//	return go;
+	//}
+
+	public GameObject DeployShockwave(float tier, bool owner) {
+		float power = 0, startSize = 0;
+
+		if (tier == 1f) {
+			power = 1.0f;
+			startSize = 0.02f;
+		}
+		else if (tier == 2f) {
+			power = 2.0f;
+			startSize = 0.04f;
+		}
+		else if (tier == 3f) {
+			power = 10.0f;
+			startSize = 0.01f;
+		}
+
+		GameObject go = (GameObject) Instantiate(ShockwavePrefab, this.gameObject.transform.position, Quaternion.identity);
+		go.GetComponent<ParticleSystem>().startSize = startSize;
+		go.GetComponent<TTSShockwave>().power = go.GetComponent<TTSShockwave>().power * power * this.gameObject.GetComponent<TTSRacer>().Offense;
+		go.GetComponent<TTSShockwave>().radius = go.GetComponent<TTSShockwave>().radius * power * this.gameObject.GetComponent<TTSRacer>().Offense;
+		go.GetComponent<TTSShockwave>().upwardsForce = go.GetComponent<TTSShockwave>().upwardsForce * power * this.gameObject.GetComponent<TTSRacer>().Offense;
+		go.GetComponent<TTSShockwave>().Activate(this.gameObject);
+		go.transform.parent = this.transform;
 
 		if (owner) { SendStaticPowerupDeploy(TTSPowerupNetworkTypes.Shockwave, tier); }
-
 		return go;
 	}
 

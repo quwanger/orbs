@@ -24,9 +24,12 @@ public class TTSLeech : TTSBehaviour
 	public TTSWaypoint previousWaypoint;
 	public TTSWaypoint nextWaypoint;
 	public Vector3 destinationPosition;
-	private float leechVelocity = 80.0f;
-
+	private float leechVelocity = 120.0f;
+	
 	private Vector3 positionDifference;
+	
+	private AudioSource leechSFX;
+	public AudioClip beeping;
 
 	private bool racerFound = false;
 	private bool racerStuck = false;
@@ -46,6 +49,10 @@ public class TTSLeech : TTSBehaviour
 		randY = Random.Range(1.0f, 10.0f);
 
 		newPosition = new Vector3(transform.position.x + randX, transform.position.y + randY, transform.position.z);
+		
+		leechSFX = gameObject.AddComponent<AudioSource>();
+		leechSFX.rolloffMode = AudioRolloffMode.Linear;
+		leechSFX.minDistance = 25f;
 
 		currentWaypoint = currentRacer.GetComponent<TTSRacer>().currentWaypoint;
 		nextWaypoint = currentRacer.GetComponent<TTSRacer>().nextWaypoint;
@@ -107,20 +114,25 @@ public class TTSLeech : TTSBehaviour
 		}
 
 		Vector3 explosionPos = transform.position;
-		Collider[] colliders = Physics.OverlapSphere(explosionPos, explosionRadius);
-
-		Instantiate(explosion, this.transform.position, this.transform.rotation);
-
-		foreach (Collider hit in colliders) {
-			if (hit && hit.rigidbody)
-				hit.rigidbody.AddExplosionForce(explosionPower, explosionPos, explosionRadius, -3.0F);
-			if (hit.GetComponent<TTSRacer>())
-				//slow down racer if it is a racer
-				hit.GetComponent<TTSRacer>().DamageRacer(100.0f);
-		}
-
-		Destroy(this.gameObject);
-		Destroy(this);
+	    Collider[] colliders = Physics.OverlapSphere(explosionPos, explosionRadius);
+		
+		Instantiate(explosion,this.transform.position,this.transform.rotation);
+		
+	    foreach (Collider hit in colliders) {
+	        if (hit && hit.rigidbody){
+	        	if(hit.GetComponent<TTSRacer>()){
+	        		if(!hit.GetComponent<TTSRacer>().hasShield){
+	        			hit.GetComponent<TTSRacer>().DamageRacer(0.7f * currentRacer.Offense);
+	        			hit.rigidbody.AddExplosionForce(explosionPower * currentRacer.Offense, explosionPos, explosionRadius * currentRacer.Offense, -3.0F);
+	        		}
+	        	}else{
+	            	hit.rigidbody.AddExplosionForce(explosionPower * currentRacer.Offense, explosionPos, explosionRadius * currentRacer.Offense, -3.0F);
+	            }
+	        }
+	    }
+		
+		Destroy (this.gameObject);
+		Destroy (this);
 	}
 
 	private void ActivateHoming() {
@@ -152,6 +164,7 @@ public class TTSLeech : TTSBehaviour
 					stuckRacer = hit.gameObject;
 					positionDifference = this.transform.position - stuckRacer.transform.position;
 					racerStuck = true;
+					leechSFX.PlayOneShot(beeping);
 					Invoke("LeechExplosion", 3);
 					this.GetComponentInChildren<MeshRenderer>().material = stuckMaterial;
 					break;
@@ -161,23 +174,30 @@ public class TTSLeech : TTSBehaviour
 			destinationPosition = homedRacer.transform.position;
 
 		}
-
+		
+		if(nextWaypoint.getDifferenceFromEnd(this.transform.position) < 7.0f){
+			resetWaypoints(nextWaypoint);
+		}
 	}
 
 	public void OnWaypoint(TTSWaypoint hit) {
-		if (!racerFound && !racerStuck) {
-			previousWaypoint = currentWaypoint;
-			currentWaypoint = hit;
-
-			if (AIUtil == null)
-				AIUtil = gameObject.AddComponent<TTSAIController>();
-
-			//this must be done for the player as well so that we can get the distance of all racers from the finish line
-			nextWaypoint = AIUtil.getClosestWaypoint(currentWaypoint.nextWaypoints, this.transform.position);
-
-			//this.destinationPosition = nextWaypoint.gameObject.transform.position;
-			randomizeTarget();
+		if(!racerFound && !racerStuck){
+			resetWaypoints(hit);
 		}
+	}
+
+	private void resetWaypoints(TTSWaypoint hit){
+		previousWaypoint = currentWaypoint;
+		currentWaypoint = hit;
+		
+		if(AIUtil == null)
+			AIUtil = gameObject.AddComponent<TTSAIController>();	
+				
+		//this must be done for the player as well so that we can get the distance of all racers from the finish line
+		nextWaypoint = AIUtil.getClosestWaypoint(currentWaypoint.nextWaypoints, this.transform.position);
+				
+		//this.destinationPosition = nextWaypoint.gameObject.transform.position;
+		randomizeTarget();
 	}
 
 	private void randomizeTarget() {
@@ -226,30 +246,4 @@ public class TTSLeech : TTSBehaviour
 		}
 	}
 	#endregion
-
-	/*private void sortRacers(){
-		for(int i=0; i<racers.Length; i++){
-			int highestRacer = -1;
-			
-			for(int j=i; j<racers.Length; j++){
-				if(highestRacer < 0){
-					highestRacer = j;
-				}
-				else{
-					float distanceFrom = (racers[j].transform.position - transform.position).magnitude;
-					float distanceFromTemp = (racers[highestRacer].transform.position - transform.position).magnitude;
-					
-					if(distanceFrom < distanceFromTemp)
-						highestRacer = j;
-				}
-			}
-			
-			// Switch objects in array
-			GameObject tempRacer = racers[highestRacer];
-			racers[highestRacer] = racers[i];
-			racers[i] = tempRacer;
-			
-			highestRacer = -1;
-		}
-	}*/
 }

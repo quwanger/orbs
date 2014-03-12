@@ -1,5 +1,7 @@
 using UnityEngine;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using System.Collections.Generic;
 
 [RequireComponent (typeof (BoxCollider))]
@@ -73,6 +75,9 @@ public class TTSWaypoint : TTSBehaviour {
 		
 		if(other.GetComponent<TTSLeech>())
 			other.GetComponent<TTSLeech>().OnWaypoint(this);
+		
+		if(other.GetComponent<TTSHelixProjectile>())
+			other.GetComponent<TTSHelixProjectile>().OnWaypoint(this);
 	}
 
 	#region Vector Calculations
@@ -112,6 +117,19 @@ public class TTSWaypoint : TTSBehaviour {
 
 	public float getDistanceFromEnd(Vector3 from) {
 		return getDistanceFrom(from) + distanceFromEnd;
+	}
+	
+	public bool objectPassedWaypoint(Vector3 from){
+		Debug.Log("Distance From End of Waypoint: " + getDistanceFromEnd(this.transform.position) + ", Distance from End of Helix: " + getDistanceFromEnd(from));
+		if(getDistanceFromEnd(this.transform.position) > getDistanceFromEnd(from))
+			return true;
+		else
+			return false;
+	}
+	
+	public float getDifferenceFromEnd(Vector3 from){
+		float d = getDistanceFromEnd(from) - getDistanceFromEnd(this.transform.position);
+		return d;
 	}
 	
 	/// <summary>
@@ -174,8 +192,10 @@ public class TTSWaypoint : TTSBehaviour {
 		if(!Application.isPlaying){
 			Gizmos.color = Color.yellow;
 			Gizmos.DrawWireSphere(transform.position, 0.5f);
-
+			
+#if UNITY_EDITOR
 			Handles.Label(transform.position, index.ToString());
+#endif
 
 			foreach(TTSWaypoint wp in nextWaypoints){
 				Gizmos.DrawLine(position, wp.position);

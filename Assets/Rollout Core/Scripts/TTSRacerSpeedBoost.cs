@@ -13,24 +13,29 @@ public class TTSRacerSpeedBoost : TTSPerishingBehaviour {
 	void Awake(){
 		destroyWhenLifecycleComplete = false; // Once duration has passed, the class will stop running and self-destruct
 		useKillFunctionWhenComplete = true; // Execute the kill function once complete
+
+		TTSRacer racer = GetComponent<TTSRacer>();
+		if(racer.player == TTSRacer.PlayerType.Player)
+			racer.myCamera.GetComponent<TTSCameraEffects>().BoostEffect(1.4f);
+
 	}
 
 	protected override void OnPerishingUpdate(float progress) {
 		if (!owner)	return;
 
 		if(isPlatform){
-			rigidbody.AddForce(GetComponent<TTSRacer>().displayMeshComponent.forward * _power);
-			Debug.Log("IsPlatform!");
+			//racerBeingBoosted.rigidbody.AddForce(racerBeingBoosted.rigidbody.velocity.normalized * 2.0f);
+			this.rigidbody.AddForce(GetComponent<TTSRacer>().displayMeshComponent.forward * _power);
 		}else{
-			rigidbody.AddForce(GetComponent<TTSRacer>().displayMeshComponent.forward * Mathf.Lerp (TargetForce, 0.0f, progress));
+			this.rigidbody.AddForce(GetComponent<TTSRacer>().displayMeshComponent.forward * Mathf.Lerp(TargetForce, 0.0f, progress));
 		}
 	}
 	
 	public void FireBoost(GameObject booster){
 		isPlatform = false;
 		go = (GameObject) Instantiate(booster);
-		go.transform.parent = GetComponent<TTSRacer>().transform;
-		go.transform.position = GetComponent<TTSRacer>().displayMeshComponent.position;
+		go.transform.parent = this.gameObject.transform;
+		go.transform.position = this.gameObject.GetComponent<TTSRacer>().displayMeshComponent.position;
 		
 		foreach(Transform child in go.transform){
 			if(child.gameObject.GetComponent<TrailRenderer>()){
@@ -39,11 +44,11 @@ public class TTSRacerSpeedBoost : TTSPerishingBehaviour {
 		}
 	}
 	
-	public void FireBoost(GameObject booster, float power){
+	public void FireBoost(GameObject booster, float power, GameObject effectedRacer){
 		isPlatform = true;
 		_power = power;
 		go = (GameObject) Instantiate(booster);
-		go.transform.parent = GetComponent<TTSRacer>().transform;
+		go.transform.parent = transform;
 		go.transform.position = GetComponent<TTSRacer>().displayMeshComponent.position;
 		
 		foreach(Transform child in go.transform){
