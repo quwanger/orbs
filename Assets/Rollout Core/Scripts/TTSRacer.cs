@@ -228,7 +228,8 @@ public class TTSRacer : TTSBehaviour
 		if (player != PlayerType.Multiplayer)
 			CalculateBodyOrientation();
 
-		netHandler.UpdateRacer(position, displayMeshComponent.rotation.eulerAngles, rigidbody.velocity, vInput, hInput);
+		if(netHandler != null)
+			netHandler.UpdateRacer(position, displayMeshComponent.rotation.eulerAngles, rigidbody.velocity, vInput, hInput);
 
 		resultAccel = Mathf.Lerp(resultAccel, rigidbody.velocity.magnitude - PreviousVelocity.magnitude, 0.01f);
 		PreviousVelocity = rigidbody.velocity;
@@ -507,8 +508,10 @@ public class TTSRacer : TTSBehaviour
 			Gizmos.color = Color.green;
 			Gizmos.DrawCube(destination, Vector3.one);
 
-			Gizmos.color = Color.white;
-			Gizmos.DrawCube(netHandler.netPosition, Vector3.one);
+			if (netHandler != null) {
+				Gizmos.color = Color.white;
+				Gizmos.DrawCube(netHandler.netPosition, Vector3.one);
+			}
 		}
 
 		//if (AIControl != null)

@@ -328,7 +328,7 @@ public class TTSPowerup : TTSBehaviour
 		go.GetComponent<TTSEntropyCannonProjectile>().offensiveMultiplier = this.gameObject.GetComponent<TTSRacer>().Offense;
 		go.transform.rotation = GetComponent<TTSRacer>().displayMeshComponent.transform.rotation;
 		go.transform.position = this.gameObject.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
-		go.rigidbody.velocity = this.gameObject.rigidbody.velocity.normalized * (this.gameObject.rigidbody.velocity.magnitude + go.GetComponent<TTSEntropyCannonProjectile>().ProjectileStartVelocity);
+		go.rigidbody.velocity = rigidbody.velocity;
 
 		if (owner) { SendPowerupDeploy(TTSPowerupNetworkTypes.Entropy, go); }
 		else {
