@@ -24,7 +24,7 @@ public class TTSBoostPlatform : TTSBehaviour {
 				boost.duration = 1.0f;
 				boost.TargetForce = 35.0f;
 
-				boost.FireBoost(BoostPrefab, BoostPower, racer);
+				boost.FireBoost(BoostPrefab, BoostPower);
 			}
 		}
 	}

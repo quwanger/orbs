@@ -44,7 +44,7 @@ public class TTSRacerSpeedBoost : TTSPerishingBehaviour {
 		}
 	}
 	
-	public void FireBoost(GameObject booster, float power, GameObject effectedRacer){
+	public void FireBoost(GameObject booster, float power){
 		isPlatform = true;
 		_power = power;
 		go = (GameObject) Instantiate(booster);
