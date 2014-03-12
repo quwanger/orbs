@@ -1,14 +1,13 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class TTSInitRace : MonoBehaviour {
-	
-	//Storing GO info
-	public List<GameObject> _rigs = new List<GameObject>();
-	public List<GameObject> _characters = new List<GameObject>();
-	public List<GameObject> _startingpoints = new List<GameObject>();
-	
-	//For instantiation
+public class TTSInitRace : MonoBehaviour
+{
+
+	public List<GameObject> Rigs = new List<GameObject>();
+	public List<GameObject> Characters = new List<GameObject>();
+	public List<GameObject> StartingPoints = new List<GameObject>();
+
 	public GameObject racerGO;
 	public GameObject cameraGO;
 	public GameObject hudGO;
@@ -18,110 +17,227 @@ public class TTSInitRace : MonoBehaviour {
 
 	//For minimap ID and camera ID
 	private int counter = 1;
-	
-	public enum Rigs {Rhino, Scorpion, Default};
-	public enum Characters {Character_Default, Character1, Character2};
 
-	private string tempRigChoice = null;
+	private int startingPointIndex = 0;
+
+	public enum RigTypes { Rhino, Scorpion, Default };
+	public enum CharacterTypes { Character_Default, Character1, Character2 };
+
+	//private string tempRigChoice = "Rig_Rhino";
+	private string tempRigChoice;
 	private string tempCharacterChoice = "Character_Default";
-	public int tempNumHumanPlayers = 1;
-	public int numberOfRacers = 1;
-	
+	public int numHumanPlayers = 1;
+	public int numAIPlayers = 0;
+
 	GameObject rigToLoad;
 	GameObject characterToLoad;
-	
+
+	TTSLevel level;
+
+	public List<TTSRacer.RacerConfig> racerConfigs;
+
 	// Use this for initialization
-	void Start () {
-		//Loop thru racers and create all the cameras, huds...etc.
-		for(int i = 0; i < numberOfRacers; i++){
-			InstantiateRacers(i);
+	void Start() {
+		level = GetComponent<TTSLevel>();
+
+		racerConfigs = new List<TTSRacer.RacerConfig>();
+		racerConfigs.Add(testRacerConfig(true));
+		//racerConfigs.Add(testRacerConfig(false));
+		//racerConfigs.Add(testRacerConfig(false));
+
+		numHumanPlayers = racerConfigs.FindAll(IsHuman).Count;
+		
+		if (level.currentGameType == TTSLevel.Gametype.Lobby) {
+			LobbyInitialize();
+		}
+		else {
+			InitializeRacers(racerConfigs);
 		}
 	}
-	
-	public void InstantiateRacers(int i){
-		//finds the rig to initialize
-		foreach(GameObject rig in _rigs){
-			if(rig.GetComponent<TTSRig>().rigName == tempRigChoice){
-				rigToLoad = rig;
+
+	private bool IsHuman(TTSRacer.RacerConfig config) {
+		if (config.LocalControlType == (int)TTSRacer.PlayerType.Player) return true;
+		return false;
+	}
+
+	private void InitializeRacers(List<TTSRacer.RacerConfig> racerConfigs) {
+		foreach (TTSRacer.RacerConfig config in racerConfigs) {
+
+			switch ((TTSRacer.PlayerType)config.LocalControlType) {
+
+				case TTSRacer.PlayerType.Player:
+					InitToHuman(InstantiateRacer(config));
+					break;
+
+				case TTSRacer.PlayerType.AI:
+					InitToAI(InstantiateRacer(config));
+					break;
+
+				case TTSRacer.PlayerType.Multiplayer:
+					break;
+
 			}
+		}
+	}
+
+	private TTSRacer.RacerConfig testRacerConfig(bool Human) {
+		TTSRacer.RacerConfig config = new TTSRacer.RacerConfig();
+		config.Index = 0;
+		config.RigType = 1;
+		config.Perk1 = 0;
+		config.Perk2 = 0;
+		if (Human) {
+			config.LocalControlType = TTSUtils.EnumToInt(TTSRacer.PlayerType.Player);
+		}
+		else{
+			config.LocalControlType = TTSUtils.EnumToInt(TTSRacer.PlayerType.AI);
+		}
+
+		config.CharacterType = 0;
+
+		return config;
+	}
+
+	private void LobbyInitialize() {
+		InitToHuman(InstantiateRacer(testRacerConfig(true)));
+	}
+
+	public GameObject InstantiateRacer() {
+		return InstantiateRacer(-1, -1);
+	}
+
+	public GameObject InstantiateRacer(TTSRacer.RacerConfig config) {
+		// Make sure that the rig type isn't out of range
+		config.RigType = (Rigs.Count > config.RigType) ? config.RigType : 0;
+		config.CharacterType = (Characters.Count > config.CharacterType) ? config.CharacterType : 0;
+		config.Index = (StartingPoints.Count > config.Index) ? config.Index : startingPointIndex;
+
+		//gets the starting positions, sets them as taken if someone spawning on them already
+		TTSStartingPoint startPoint = StartingPoints[config.Index].GetComponent<TTSStartingPoint>();
+		startPoint.isTaken = true;
+		startingPointIndex = (config.Index + 1) % StartingPoints.Count; // Always the next starting position. Loop around if array out of bounds.
+
+		// Instantiate the gameobjects.
+		GameObject rig = (GameObject)Instantiate(Rigs[config.RigType], startPoint.transform.position, startPoint.transform.rotation);
+		GameObject character = (GameObject)Instantiate(Characters[config.CharacterType], startPoint.transform.position, startPoint.transform.rotation);
+		GameObject racer = (GameObject)Instantiate(racerGO, startPoint.transform.position, startPoint.transform.rotation);
+
+		//parents the racer properly
+		character.transform.parent = racer.transform;
+		rig.transform.parent = character.transform;
+
+		//makes the sphere mesh follow the Racer2.0
+		racer.GetComponent<TTSRacer>().displayMeshComponent = character.transform;
+
+		//sets the currentrig variable of the racer to the rig selecte above
+		racer.GetComponent<TTSRacer>().CurrentRig = rig.GetComponent<TTSRig>();
+		racer.GetComponent<TTSRacer>().rigID = config.RigType;
+	
+		//sets an id for each racer
+		racer.GetComponent<TTSRacer>().playerNum = counter;
+
+		//instantiates minimap icon
+		GameObject iconSmall = (GameObject)Instantiate(playericonSmall);
+		GameObject iconBig = (GameObject)Instantiate(playericonBig);
+		
+		//assigns the icon to correct racer
+		racer.GetComponent<TTSRacer>().minimapIconSmall = iconSmall;
+		racer.GetComponent<TTSRacer>().minimapIconBig = iconBig;
+
+		racer.GetComponent<TTSRacer>().Initialized();
+
+		if (level.DebugMode)
+			racer.GetComponent<TTSRacer>().canMove = true;
+
+		counter++;
+
+		return racer;
+	}
+
+	public GameObject InstantiateRacer(int rigID, int startPointID) {
+
+		//finds the rig to initialize
+		if (rigID == -1) {
+			foreach (GameObject rig in Rigs) {
+				if (rig.GetComponent<TTSRig>().rigName == tempRigChoice) {
+					rigToLoad = rig;
+				}
+			}
+		}
+		else {
+			rigToLoad = Rigs[rigID];
 		}
 
 		//makes sure there is a rig to load if none selected
-		if(rigToLoad == null){
-			rigToLoad = _rigs[Random.Range(0, _rigs.Count)];
+		if (rigToLoad == null) {
+			rigID = Random.Range(0, Rigs.Count);
+			rigToLoad = Rigs[rigID];
 		}
-		
+
 		//checks for the character (in this case, default sphere)
-		foreach(GameObject character in _characters){
-			if(character.name == tempCharacterChoice)
+		foreach (GameObject character in Characters) {
+			if (character.name == tempCharacterChoice)
 				characterToLoad = character;
 		}
-		if(characterToLoad == null){
-			characterToLoad = _characters[0];
+		if (characterToLoad == null) {
+			characterToLoad = Characters[0];
 		}
-		
+
 		//gets the starting positions, sets them as taken if someone spawning on them already
-		GameObject sp = _startingpoints[i];
+		GameObject sp = StartingPoints[(startPointID != -1) ? startPointID : startingPointIndex];
 		sp.GetComponent<TTSStartingPoint>().isTaken = true;
-		
+		startingPointIndex++;
+
 		//instantiates the rig
-		GameObject tempRig = (GameObject)Instantiate(rigToLoad, sp.transform.position, sp.transform.rotation );
+		GameObject tempRig = (GameObject)Instantiate(rigToLoad, sp.transform.position, sp.transform.rotation);
 		rigToLoad = null;
-		
+
 		//instantiates the character mesh (sphere)
 		GameObject tempChar = (GameObject)Instantiate(characterToLoad, sp.transform.position, sp.transform.rotation);
-		
+
 		//instantiates Racer2.0
 		GameObject tempRacer = (GameObject)Instantiate(racerGO, sp.transform.position, sp.transform.rotation);
 
-		//instantiates minimap icon
-		GameObject tempIconSmall = (GameObject)Instantiate(playericonSmall);
-		GameObject tempIconBig = (GameObject)Instantiate(playericonBig);
-		
 		//parents the racer properly
 		tempChar.transform.parent = tempRacer.transform;
 		tempRig.transform.parent = tempChar.transform;
-	
-		//place the indicator
-		//GameObject tempIndicator = (GameObject)Instantiate(indicatorGO, new Vector3(tempRacer.transform.position.x, tempRacer.transform.position.y + 0.5f, tempRacer.transform.position.z), tempChar.transform.rotation);
-		//tempIndicator.transform.parent = tempChar.transform;
-		
+
 		//makes the sphere mesh follow the Racer2.0
 		tempRacer.GetComponent<TTSRacer>().displayMeshComponent = tempChar.transform;
-		
 		//sets the currentrig variable of the racer to the rig selecte above
-		tempRacer.GetComponent<TTSRacer>().CurrentRig = tempRig;
-	
-		//sets an id for each racer
-		tempRacer.GetComponent<TTSRacer>().playerNum = counter;
+		tempRacer.GetComponent<TTSRacer>().CurrentRig = tempRig.GetComponent<TTSRig>();
+		tempRacer.GetComponent<TTSRacer>().rigID = rigID;
+
+		tempRacer.GetComponent<TTSRacer>().Initialized();
+
+		return tempRacer;
+	}
+
+	private void InitToHuman(GameObject racer) {
+		//set to player controlled and set the player type to Player
+		TTSRacer racerControl = racer.GetComponent<TTSRacer>();
+
+		racerControl.IsPlayerControlled = true;
+		racerControl.player = TTSRacer.PlayerType.Player;
+
+		//Instantiates a minimap for each human player and sets it to follow a racer
+		GameObject tempMinimap = (GameObject)Instantiate(minimapGO);
+		TTSMinimap miniWin = tempMinimap.GetComponent<TTSMinimap>();
+		miniWin.player = racerControl.CurrentRig.transform;
 		
-		//assigns the icon to correct racer
-		tempRacer.GetComponent<TTSRacer>().minimapIconSmall = tempIconSmall;
-		tempRacer.GetComponent<TTSRacer>().minimapIconBig = tempIconBig;
+		//sets the minimap id
+		miniWin.minimapID = counter;
 
-		//this is where the stuff for the human players
-		if(i < tempNumHumanPlayers){
-			//set to player controlled and set the player type to Player
-			tempRacer.GetComponent<TTSRacer>().IsPlayerControlled = true;
-			tempRacer.GetComponent<TTSRacer>().player = TTSRacer.PlayerType.Player;
-
-			//Instantiates a minimap for each human player and sets it to follow a racer
-			GameObject tempMinimap = (GameObject)Instantiate(minimapGO);
-			TTSMinimap miniWin = tempMinimap.GetComponent<TTSMinimap>();
-			miniWin.player = tempRig.transform;
-		
-			//sets the minimap id
-			miniWin.minimapID = i;
-
-			GameObject tempCamera = (GameObject)Instantiate(cameraGO);
+		//instantiate a camera for the player
+		GameObject tempCamera = (GameObject)Instantiate(cameraGO);
 		
 			//tells the camera which racer to follow
-			tempCamera.GetComponent<TTSFollowCamera>().target = tempChar.transform;
+			tempCamera.GetComponent<TTSFollowCamera>().target = racerControl.displayMeshComponent;
 			
 			//instantiate a hud for the human racer and get it to follow the camera and racer
 			GameObject tempHUD = (GameObject)Instantiate(hudGO);
 			tempHUD.GetComponent<TTSFloatHud>().boundCamera = tempCamera.transform;
-			tempHUD.GetComponent<TTSFloatHud>().racerToFollow = tempRacer;
+			tempHUD.GetComponent<TTSFloatHud>().racerToFollow = racer;
 		
 			//Forces it to turn off layer 9 for the camera, but leave everything else as is
 			tempCamera.camera.cullingMask &= ~ (1 << 9);
@@ -129,9 +245,9 @@ public class TTSInitRace : MonoBehaviour {
 			//Splitscreen handling, case 2 for 2 player, 3 for 3 player...etc.
 			//Places the cam, minimap, fadeout and icon for each case by changing the layers
 			//and changing what each camera sees
-			switch(tempNumHumanPlayers){
+			switch(numHumanPlayers){
 				case 2:
-					if(i==0) {
+					if(counter==0) {
 						//Set the position for the camera, minimap and fadeout
 						tempCamera.camera.rect = new Rect(0, 0.5f, 1.0f, 0.5f);
 						tempMinimap.camera.rect = new Rect(0.02f, 0.52f, 0.125f, 0.25f);
@@ -143,8 +259,8 @@ public class TTSInitRace : MonoBehaviour {
 				
 						//Foreach goes through each child GO to change the layer to display.
 						//Used to hide huds/minimap/icon depending on which player you are
-						foreach (Transform child in tempIconBig.transform) { child.gameObject.layer = 12; }
-						tempIconBig.layer = 12;
+						foreach (Transform child in racerControl.minimapIconBig.transform) { child.gameObject.layer = 12; }
+						racerControl.minimapIconBig.layer = 12;
 				
 						foreach (Transform child in tempHUD.transform) { child.gameObject.layer = 12; }
 						tempHUD.layer = 12;
@@ -163,8 +279,8 @@ public class TTSInitRace : MonoBehaviour {
 						tempCamera.GetComponent<TTSFollowCamera>().fadeWidth = Screen.width + 10.0f;
 						tempCamera.GetComponent<TTSFollowCamera>().fadeHeight = (Screen.height / 2) + 10.0f;
 						
-						foreach (Transform child in tempIconBig.transform) { child.gameObject.layer = 13; }
-						tempIconBig.layer = 13;
+						foreach (Transform child in racerControl.minimapIconBig.transform) { child.gameObject.layer = 13; }
+						racerControl.minimapIconBig.layer = 13;
 				
 						foreach (Transform child in tempHUD.transform) {
 							child.gameObject.layer = 13;
@@ -181,7 +297,7 @@ public class TTSInitRace : MonoBehaviour {
 					break;
 
 				case 3:
-					if(i==0) {
+					if(counter==0) {
 						tempCamera.camera.rect = new Rect(0, 0.5f, 1.0f, 0.5f);
 						tempMinimap.camera.rect = new Rect(0.02f, 0.52f, 0.25f, 0.50f);
 						tempMinimap.camera.cullingMask |= (1 << 12);
@@ -190,8 +306,8 @@ public class TTSInitRace : MonoBehaviour {
 						tempCamera.GetComponent<TTSFollowCamera>().fadeWidth = Screen.width;
 						tempCamera.GetComponent<TTSFollowCamera>().fadeHeight = Screen.height / 2;
 				
-						foreach (Transform child in tempIconBig.transform) { child.gameObject.layer = 12; }
-						tempIconBig.layer = 12;
+						foreach (Transform child in racerControl.minimapIconBig.transform) { child.gameObject.layer = 12; }
+						racerControl.minimapIconBig.layer = 12;
 				
 						foreach (Transform child in tempHUD.transform) { child.gameObject.layer = 12; }
 						tempHUD.layer = 12;
@@ -201,7 +317,7 @@ public class TTSInitRace : MonoBehaviour {
 				
 						tempCamera.camera.cullingMask &= ~(1 << 13);
 						tempCamera.camera.cullingMask &= ~(1 << 14);
-					} else if(i==1) {
+					} else if(counter==1) {
 						tempCamera.camera.rect = new Rect(0, 0, 0.5f, 0.5f);
 						tempMinimap.camera.rect = new Rect(0.02f, 0.02f, 0.125f, 0.25f);
 						tempMinimap.camera.cullingMask |= (1 << 13);
@@ -210,8 +326,8 @@ public class TTSInitRace : MonoBehaviour {
 						tempCamera.GetComponent<TTSFollowCamera>().fadeWidth = (Screen.width / 2);
 						tempCamera.GetComponent<TTSFollowCamera>().fadeHeight = (Screen.height / 2) + 10.0f;
 				
-						foreach (Transform child in tempIconBig.transform) { child.gameObject.layer = 13; }
-						tempIconBig.layer = 13;
+						foreach (Transform child in racerControl.minimapIconBig.transform) { child.gameObject.layer = 13; }
+						racerControl.minimapIconBig.layer = 13;
 				
 						foreach (Transform child in tempHUD.transform) { child.gameObject.layer = 13; }
 						tempHUD.layer = 13;
@@ -230,8 +346,8 @@ public class TTSInitRace : MonoBehaviour {
 						tempCamera.GetComponent<TTSFollowCamera>().fadeWidth = (Screen.width / 2) + 10.0f;
 						tempCamera.GetComponent<TTSFollowCamera>().fadeHeight = (Screen.height / 2) + 10.0f;
 				
-						foreach (Transform child in tempIconBig.transform) { child.gameObject.layer = 14; }
-						tempIconBig.layer = 14;
+						foreach (Transform child in racerControl.minimapIconBig.transform) { child.gameObject.layer = 14; }
+						racerControl.minimapIconBig.layer = 14;
 				
 						foreach (Transform child in tempHUD.transform) { child.gameObject.layer = 14; }
 						tempHUD.layer = 14;
@@ -245,7 +361,7 @@ public class TTSInitRace : MonoBehaviour {
 					break;
 
 				case 4:
-					if(i==0) {
+					if(counter==0) {
 						tempCamera.camera.rect = new Rect(0, 0.5f, 0.5f, 0.5f);
 						tempMinimap.camera.rect = new Rect(0.02f, 0.52f, 0.125f, 0.25f);
 						tempMinimap.camera.cullingMask |= (1 << 12);
@@ -254,8 +370,8 @@ public class TTSInitRace : MonoBehaviour {
 						tempCamera.GetComponent<TTSFollowCamera>().fadeWidth = (Screen.width / 2);
 						tempCamera.GetComponent<TTSFollowCamera>().fadeHeight = (Screen.height / 2);
 				
-						foreach (Transform child in tempIconBig.transform) { child.gameObject.layer = 12; }
-						tempIconBig.layer = 12;
+						foreach (Transform child in racerControl.minimapIconBig.transform) { child.gameObject.layer = 12; }
+						racerControl.minimapIconBig.layer = 12;
 				
 						foreach (Transform child in tempHUD.transform) { child.gameObject.layer = 12; }
 						tempHUD.layer = 12;
@@ -266,7 +382,7 @@ public class TTSInitRace : MonoBehaviour {
 						tempCamera.camera.cullingMask &= ~(1 << 13);
 						tempCamera.camera.cullingMask &= ~(1 << 14);
 						tempCamera.camera.cullingMask &= ~(1 << 15);
-					} else if(i==1) {
+					} else if(counter==1) {
 						tempCamera.camera.rect = new Rect(0.5f, 0.5f, 0.5f, 0.5f);
 						tempMinimap.camera.rect = new Rect(0.52f, 0.52f, 0.125f, 0.25f);
 						tempMinimap.camera.cullingMask |= (1 << 13);
@@ -275,8 +391,8 @@ public class TTSInitRace : MonoBehaviour {
 						tempCamera.GetComponent<TTSFollowCamera>().fadeWidth = (Screen.width / 2);
 						tempCamera.GetComponent<TTSFollowCamera>().fadeHeight = (Screen.height / 2);
 				
-						foreach (Transform child in tempIconBig.transform) { child.gameObject.layer = 13; }
-						tempIconBig.layer = 13;
+						foreach (Transform child in racerControl.minimapIconBig.transform) { child.gameObject.layer = 13; }
+						racerControl.minimapIconBig.layer = 13;
 				
 						foreach (Transform child in tempHUD.transform) { child.gameObject.layer = 13; }
 						tempHUD.layer = 13;
@@ -287,7 +403,7 @@ public class TTSInitRace : MonoBehaviour {
 						tempCamera.camera.cullingMask &= ~(1 << 12);
 						tempCamera.camera.cullingMask &= ~(1 << 14);
 						tempCamera.camera.cullingMask &= ~(1 << 15);
-					} else if(i==2) {
+					} else if(counter==2) {
 						tempCamera.camera.rect = new Rect(0, 0, 0.5f, 0.5f);
 						tempMinimap.camera.rect = new Rect(0.02f, 0.02f, 0.125f, 0.25f);
 						tempMinimap.camera.cullingMask |= (1 << 14);
@@ -296,8 +412,8 @@ public class TTSInitRace : MonoBehaviour {
 						tempCamera.GetComponent<TTSFollowCamera>().fadeWidth = (Screen.width / 2);
 						tempCamera.GetComponent<TTSFollowCamera>().fadeHeight = (Screen.height / 2) + 10.0f;
 				
-						foreach (Transform child in tempIconBig.transform) { child.gameObject.layer = 14; }
-						tempIconBig.layer = 14;
+						foreach (Transform child in racerControl.minimapIconBig.transform) { child.gameObject.layer = 14; }
+						racerControl.minimapIconBig.layer = 14;
 				
 						foreach (Transform child in tempHUD.transform) { child.gameObject.layer = 14; }
 						tempHUD.layer = 14;
@@ -317,8 +433,8 @@ public class TTSInitRace : MonoBehaviour {
 						tempCamera.GetComponent<TTSFollowCamera>().fadeWidth = (Screen.width / 2) + 10.0f;
 						tempCamera.GetComponent<TTSFollowCamera>().fadeHeight = (Screen.height / 2) + 10.0f;
 				
-						foreach (Transform child in tempIconBig.transform) { child.gameObject.layer = 15; }
-						tempIconBig.layer = 15;
+						foreach (Transform child in racerControl.minimapIconBig.transform) { child.gameObject.layer = 15; }
+						racerControl.minimapIconBig.layer = 15;
 				
 						foreach (Transform child in tempHUD.transform) { child.gameObject.layer = 15; }
 						tempHUD.layer = 15;
@@ -333,8 +449,8 @@ public class TTSInitRace : MonoBehaviour {
 					break;
 
 				default:
-					foreach (Transform child in tempIconBig.transform) { child.gameObject.layer = 11; }
-					tempIconBig.layer = 11;
+					foreach (Transform child in racerControl.minimapIconBig.transform) { child.gameObject.layer = 11; }
+					racerControl.minimapIconBig.layer = 11;
 			
 					foreach (Transform child in tempHUD.transform) { child.gameObject.layer = 12; }
 					tempHUD.layer = 12;
@@ -348,30 +464,37 @@ public class TTSInitRace : MonoBehaviour {
 
 			//assinging the hud powerup for the racer
 			Transform tempHudPowerup = tempHUD.transform.Find("CurrentPowerup");
-			tempRacer.GetComponent<TTSPowerup>().hudPowerup = tempHudPowerup.gameObject;
+			racer.GetComponent<TTSPowerup>().hudPowerup = tempHudPowerup.gameObject;
 		
 			Transform tempPP1 = tempHUD.transform.Find("PerkPool1Icon");
-			tempPP1.GetComponent<TTSHudPerk>().InitializePerkPool1(tempRacer.GetComponent<TTSPerkManager>().equiptPerkPool1);
+			tempPP1.GetComponent<TTSHudPerk>().InitializePerkPool1(racer.GetComponent<TTSPerkManager>().equiptPerkPool1);
 		
 			Transform tempPP2 = tempHUD.transform.Find("PerkPool2Icon");
-			tempPP2.GetComponent<TTSHudPerk>().InitializePerkPool2(tempRacer.GetComponent<TTSPerkManager>().equiptPerkPool2);
+			tempPP2.GetComponent<TTSHudPerk>().InitializePerkPool2(racer.GetComponent<TTSPerkManager>().equiptPerkPool2);
 		
-			tempRacer.GetComponent<TTSRacer>().myCamera = tempCamera;
+			racerControl.myCamera = tempCamera;
 		
 			tempCamera.GetComponent<TTSFollowCamera>().cameraNumber = counter;
-		
-		}else{
-			//this is for AI only
-			//set the player type to AI
-			tempRacer.GetComponent<TTSRacer>().IsPlayerControlled = true;
-			tempRacer.GetComponent<TTSRacer>().player = TTSRacer.PlayerType.AI;
-		}
-		
-		counter++;
+	}
+
+	private void InitToAI(GameObject racer) {
+		//this is for AI only
+		//set the player type to AI
+		racer.GetComponent<TTSRacer>().IsPlayerControlled = true;
+		racer.GetComponent<TTSRacer>().player = TTSRacer.PlayerType.AI;
+	}
+
+	private void InitToMultiplayer(GameObject racer, TTSRacer.RacerConfig config) {
+		racer.GetComponent<TTSRacer>().IsPlayerControlled = true;
+		racer.GetComponent<TTSRacer>().player = TTSRacer.PlayerType.Multiplayer;
+
+		TTSRacerNetHandler handler = new TTSRacerNetHandler(level.client, false, config.netID);
+		handler.position = racer.transform.position;
+		racer.GetComponent<TTSRacer>().SetNetHandler(handler);
 	}
 
 	// Update is called once per frame
-	void Update () {
-	
+	void Update() {
+
 	}
 }

@@ -38,25 +38,53 @@ public class TTSEntropyCannonProjectile : MonoBehaviour {
 		if(Time.time - birth > Timeout) {
 			Explode(false);
 		}
-		
-		float distanceToGround = checkDistanceToGround();
-		
-		if(distanceToGround < initialDistanceToGround){
-			//while(distanceToGround < initialDistanceToGround){
+
+		if (netHandler == null || netHandler.owner) {
+			float distanceToGround = checkDistanceToGround();
+
+			if (distanceToGround < initialDistanceToGround) {
+				//while(distanceToGround < initialDistanceToGround){
 				float tempY = this.transform.position.y;
 				tempY += (initialDistanceToGround - distanceToGround);
 				this.transform.position = new Vector3(this.transform.position.x, tempY, this.transform.position.z);
 				//distanceToGround = checkDistanceToGround();
-			//}
-		}else if(distanceToGround > initialDistanceToGround){
-			//while(distanceToGround > initialDistanceToGround){
+				//}
+			}
+			else if (distanceToGround > initialDistanceToGround) {
+				//while(distanceToGround > initialDistanceToGround){
 				float tempY = this.transform.position.y;
 				tempY -= (distanceToGround - initialDistanceToGround);
 				this.transform.position = new Vector3(this.transform.position.x, tempY, this.transform.position.z);
 				//distanceToGround = checkDistanceToGround();
-			//}
+				//}
+			}
+
+			if(netHandler != null)
+				netHandler.UpdatePowerup(transform.position, transform.rotation.eulerAngles, rigidbody.velocity);
+		}
+		else if(!netHandler.owner) {
+			GetNetworkUpdate();
 		}
 		
+	}
+
+	private void GetNetworkUpdate() {
+		if (netHandler.isNetworkUpdated) {
+			if (netHandler.netPosition != Vector3.zero) {
+				transform.position = Vector3.Lerp(transform.position, netHandler.netPosition, netHandler.networkInterpolation);
+			}
+			transform.rotation = Quaternion.Euler(netHandler.netRotation);
+			rigidbody.velocity = netHandler.netSpeed;
+
+			netHandler.isNetworkUpdated = false;
+			netHandler.framesSinceNetData = 0;
+		}
+		else {
+			netHandler.framesSinceNetData++;
+			if (netHandler.framesSinceNetData >= TTSPowerupNetHandler.ExplodeTimeout) {
+				Explode(true);
+			}
+		}
 	}
 
 	private float checkDistanceToGround(){
@@ -80,9 +108,22 @@ public class TTSEntropyCannonProjectile : MonoBehaviour {
 	}
 #endregion
 
+	#region networking
+	TTSPowerupNetHandler netHandler;
+
+	public void SetNetHandler(TTSPowerupNetHandler handler) {
+		this.netHandler = handler;
+	}
+	#endregion
+
 	private void Explode(bool actually) {
-		if(actually) {
-			 Instantiate(explosion,this.transform.position,this.transform.rotation);
+		if (netHandler != null) {
+			netHandler.DeregisterFromClient();
+			netHandler = null;
+		}
+
+		if (actually) {
+			Instantiate(explosion, this.transform.position, this.transform.rotation);
 		}
 			
 		foreach(Transform child in transform) {

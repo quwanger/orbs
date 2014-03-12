@@ -61,4 +61,8 @@ public static class TTSUtils {
 
 		return mask;
 	}
+
+	public static int EnumToInt(object e){
+		return System.Convert.ToInt32(e);
+	}
 }

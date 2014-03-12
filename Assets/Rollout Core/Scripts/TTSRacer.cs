@@ -58,7 +58,7 @@ public class TTSRacer : TTSBehaviour
 	private float TiltAngle = 0.0f;
 	public AudioClip[] DamageSounds;
 	public GameObject SparksEmitter;
-	public GameObject CurrentRig;
+	public TTSRig CurrentRig;
 	public bool canMove = false;
 	private float MinimumVelocityToAnimateSteering = 1.0f;
 
@@ -107,6 +107,8 @@ public class TTSRacer : TTSBehaviour
 	
 	public GameObject myCamera;
 
+	private TTSPowerup powerupManager;
+
 	#region Direction/Wrong way
 	public TTSWaypoint currentWaypoint;
 	public TTSWaypoint previousWaypoint;
@@ -119,18 +121,43 @@ public class TTSRacer : TTSBehaviour
 	public TTSWaypoint nextWaypoint;
 	TTSAIController AIUtil;
 
-	void Awake() {
+	// Networking
+	TTSRacerNetHandler netHandler;
+	public int rigID;
 
+	public struct RacerConfig
+	{
+		public float netID;
+		public int Index;
+		public int RigType;
+		public int Perk1;
+		public int Perk2;
+		public string Name;
+
+		/// <summary>
+		/// Can either be Player, AI, or Multiplayer
+		/// </summary>
+		public int LocalControlType;
+
+		/// <summary>
+		/// Can be either Player or AI
+		/// </summary>
+		public int ControlType;
+
+		public int CharacterType;
+	}
+
+	void Awake() {
 		level.RegisterRacer(gameObject);
+	}
+
+	void Start() {
 		//Get the body via tag.
 		foreach (Transform child in transform) {
 			if (child.gameObject.tag == "RacerDisplayMesh") {
 				displayMeshComponent = child;
 			}
 		}
-		
-		if(player == PlayerType.AI)
-			AIUtil = gameObject.AddComponent<TTSAIController>();
 
 		//lastForward = TTSUtils.FlattenVector(displayMeshComponent.forward).normalized;
 
@@ -158,18 +185,35 @@ public class TTSRacer : TTSBehaviour
 		RacerSfx.volume = 0.5f;
 
 		//Apply Attributes
-		TopSpeed = TopSpeed + (speedIncrease * CurrentRig.GetComponent<TTSRig>().rigSpeed);
-		Acceleration = Acceleration + (accelerationIncrease * CurrentRig.GetComponent<TTSRig>().rigAcceleration);
-		Handling = Handling + (handlingIncrease * CurrentRig.GetComponent<TTSRig>().rigHandling);
+		TopSpeed = TopSpeed + (speedIncrease * CurrentRig.rigSpeed);
+		Acceleration = Acceleration + (accelerationIncrease * CurrentRig.rigAcceleration);
+		Handling = Handling + (handlingIncrease * CurrentRig.rigHandling);
 		
-		Offense = CurrentRig.GetComponent<TTSRig>().rigOffense;
-		Defense = CurrentRig.GetComponent<TTSRig>().rigDefense;
+		Offense = CurrentRig.rigOffense;
+		Defense = CurrentRig.rigDefense;
 		
 		if(myCamera != null)
 			myCamera.GetComponent<TTSCameraFade>().SetScreenOverlayColor(new Color(0,0,0,0));
-		
-		if(AIUtil == null)
-				AIUtil = gameObject.AddComponent<TTSAIController>();
+	}
+
+	// Runs after the racer is initialized with the rigs
+	public void Initialized() {
+
+		powerupManager = GetComponent<TTSPowerup>();
+
+		if (player == PlayerType.Player) {
+			SetNetHandler(new TTSRacerNetHandler(level.client, true, rigID));
+		}
+		else if (player == PlayerType.AI) {
+			AIUtil = gameObject.AddComponent<TTSAIController>();
+			SetNetHandler(new TTSRacerNetHandler(level.client, true, rigID));
+		}
+		else if (player == PlayerType.Multiplayer) {
+
+		}
+
+		if (AIUtil == null)
+			AIUtil = gameObject.AddComponent<TTSAIController>();
 	}
 	
 	void FixedUpdate () {
@@ -181,7 +225,10 @@ public class TTSRacer : TTSBehaviour
 			SlowToStop();
 		}
 
-		CalculateBodyOrientation();
+		if (player != PlayerType.Multiplayer)
+			CalculateBodyOrientation();
+
+		netHandler.UpdateRacer(position, displayMeshComponent.rotation.eulerAngles, rigidbody.velocity, vInput, hInput);
 
 		resultAccel = Mathf.Lerp(resultAccel, rigidbody.velocity.magnitude - PreviousVelocity.magnitude, 0.01f);
 		PreviousVelocity = rigidbody.velocity;
@@ -211,10 +258,10 @@ public class TTSRacer : TTSBehaviour
 			} else if (playerNum == 4) {
 				vInput = Input.GetAxis("TriggersR_4");
 				hInput = Input.GetAxis("L_XAxis_4");
-			}	
+			}
 		}
 		else if (player == PlayerType.Multiplayer) {
-			//if the player is a multiplayer player
+			MultiplayerInput();
 		}
 		else if (player == PlayerType.AI) {
 			AIInput();
@@ -459,6 +506,9 @@ public class TTSRacer : TTSBehaviour
 
 			Gizmos.color = Color.green;
 			Gizmos.DrawCube(destination, Vector3.one);
+
+			Gizmos.color = Color.white;
+			Gizmos.DrawCube(netHandler.netPosition, Vector3.one);
 		}
 
 		//if (AIControl != null)
@@ -501,68 +551,181 @@ public class TTSRacer : TTSBehaviour
 
 		Debug.DrawLine(position, destination);
 	}
+
+	public void SetNetHandler(TTSRacerNetHandler handler) {
+		this.netHandler = handler;
+		powerupManager.SetNetHandler(netHandler);
+	}
+
+	public float GetNetworkID() {
+		return this.netHandler.id;
+	}
+
+	public void MultiplayerInput() {
+		if (netHandler.isNetworkUpdated) {
+			if (netHandler.netPosition != Vector3.zero) {
+				transform.position = Vector3.Lerp(transform.position, netHandler.netPosition, netHandler.networkInterpolation);
+			}
+		}
+		displayMeshComponent.rotation = Quaternion.Lerp(displayMeshComponent.rotation, Quaternion.Euler(netHandler.netRotation), netHandler.networkInterpolation * 10);
+		rigidbody.velocity = netHandler.netSpeed;
+
+		vInput = Mathf.Lerp(vInput, netHandler.networkVInput, netHandler.networkInterpolation * 5);
+		hInput = Mathf.Lerp(hInput, netHandler.networkHInput, netHandler.networkInterpolation * 5);
+
+		netHandler.isNetworkUpdated = false;
+
+		// Powerups
+		foreach (TTSPowerupNetHandler handler in netHandler.receivedPowerups) {
+			switch (handler.Type) {
+				case TTSPowerupNetworkTypes.Shield:
+					powerupManager.DeployShield(handler.Tier, false);
+					break;
+
+				case TTSPowerupNetworkTypes.Boost:
+					powerupManager.SuperCBooster(handler.Tier, false);
+					break;
+
+				case TTSPowerupNetworkTypes.Shockwave:
+					powerupManager.DeployShockwave(handler.Tier, false);
+					break;
+
+				case TTSPowerupNetworkTypes.TimeBonus:
+					powerupManager.GiveTimeBonus(false);
+					break;
+
+				case TTSPowerupNetworkTypes.Entropy:
+					powerupManager.FireEntropyCannon(false, handler);
+					break;
+
+				case TTSPowerupNetworkTypes.Helix:
+					powerupManager.FireHelix(false, handler);
+					break;
+
+				case TTSPowerupNetworkTypes.Drezz:
+					powerupManager.DropDrezzStone(false, handler);
+					break;
+
+				case TTSPowerupNetworkTypes.Leech:
+					powerupManager.DeployLeech(false, handler);
+					break;
+			}
+		}
+		netHandler.receivedPowerups.Clear();
+	}
 }
 
+public class TTSRacerNetHandler : TTSNetworkHandle
+{
+	// Racer Configuration
+	public int Index = 0;
+	public int Rig = 3;
+	public int Perk1 = 0;
+	public int Perk2 = 0;
+	public string Name = "Bob";
+	public int ControlType = 0;
 
-/*
-public class TTSRacerAI {
-	// Waypoints
-	private List<TTSWaypoint> waypoints;
-	private TTSWaypointManager wpManager;
-	public int nextWaypoint = 0;
-	public int foresight = 3;
+	public Vector3 position, rotation, speed;
+	public float vInput, hInput;
+	// public int powerUpType, powerUpTier;
 
-	// Racer Vars
-	private Vector3 rForward;
-	private Vector3 rSpeed;
-	private Vector3 rPosition;
+	// Receivers (Read data from here)
+	public Vector3 netPosition, netRotation, netSpeed;
+	public float networkVInput, networkHInput;
+	//public int networkPowerUpType, networkPowerUpTier;
 
-	// Movement Vars
-	private Vector3 destination;
-	private Vector3 nextWaypointDir = new Vector3();
+	// Powerup
+	public List<TTSPowerupNetHandler> receivedPowerups = new List<TTSPowerupNetHandler>();
 
-	// Input
-	public float vInput = 0.0f;
-	public float hInput = 0.0f;
-
-	/// <summary> 
-	/// 
-	/// </summary> 
-	/// <param name="waypointList">List of waypoints needed</param> 
-	/// <param name="rSpeed">Reference to racer speed</param> 
-	public TTSRacerAI(List<TTSWaypoint> waypointList, Vector3 racerSpeed, TTSWaypointManager waypointManager)
-	{
-		waypoints = waypointList;
-		wpManager = waypointManager;
-		rSpeed = racerSpeed;
+	public TTSRacerNetHandler(TTSClient Client, bool Owner, int rigID) {
+		registerCommand = TTSCommandTypes.RacerRegister;
+		owner = Owner;
+		client = Client;
+		Rig = rigID;
+		Client.LocalRacerRegister(this);
 	}
 
-	public void update(Vector3 position, Vector3 forward) {
-		rPosition = position;
-		rForward = forward;
-		update();
+	public TTSRacerNetHandler(TTSClient Client, bool Owner, float ID) { // For multiplayer players
+		id = ID;
+		registerCommand = TTSCommandTypes.RacerRegister;
+		owner = Owner;
+		client = Client;
+		Client.LocalRacerRegister(this);
 	}
 
-	public void update() {
-		destination = waypoints[nextWaypoint].getClosestSeenPoint(rPosition, 7);
-		nextWaypointDir = TTSUtils.FlattenVector(destination - rPosition);
-
-		float sensitivity = 90.0f;
-
-		vInput = 1.0f;
-		hInput = TTSUtils.Remap(TTSUtils.GetRelativeAngle(rForward, nextWaypointDir), -sensitivity, sensitivity, -1.0f, 1.0f, true);
+	public override byte[] GetNetworkRegister() {
+		writer.ClearData();
+		writer.AddData(registerCommand);
+		writer.AddData(id);
+		writer.AddData(-1); // Index
+		writer.AddData(Rig);
+		writer.AddData(Perk1);
+		writer.AddData(Perk2);
+		writer.AddData(Name);
+		writer.AddData(ControlType);
+		return writer.GetMinimizedData();
 	}
 
-	public void lookForward(){
-		//Debug.DrawRay()
+	// Command and ID already read in packet
+	public override void ReceiveNetworkData(TTSPacketReader reader, int command) {
+		if (command == TTSCommandTypes.RacerUpdate) {
+			netPosition = reader.ReadVector3();
+			netRotation = reader.ReadVector3();
+			netSpeed = reader.ReadVector3();
+
+			networkVInput = reader.ReadFloat();
+			networkHInput = reader.ReadFloat();
+
+			isNetworkUpdated = true;
+		}
+		else if (command == TTSCommandTypes.PowerupStaticRegister) {
+			int powerupType = reader.ReadInt32();
+			float powerupTier = reader.ReadFloat();
+			TTSPowerupNetHandler handler = new TTSPowerupNetHandler();
+			handler.Type = powerupType;
+			handler.Tier = powerupTier;
+
+			if (TTSPowerupNetworkTypes.isStaticType(powerupType)) {
+				receivedPowerups.Add(handler);
+			}
+		}
+		else if (command == TTSCommandTypes.PowerupRegister) {
+			float powerupID = reader.ReadFloat();
+			int powerupType = reader.ReadInt32();
+
+			TTSPowerupNetHandler handler = new TTSPowerupNetHandler(client, false, powerupID, powerupType, id);
+
+			if (!TTSPowerupNetworkTypes.isStaticType(powerupType)) {
+				receivedPowerups.Add(handler);
+			}
+		}
 	}
 
-	public void drawGizmos() {
-		Gizmos.color = Color.yellow;
-		Gizmos.DrawLine(rPosition, destination);
+	public void UpdateRacer(Vector3 Pos, Vector3 Rot, Vector3 Speed, float VInput, float HInput) {
+		if (owner && isServerRegistered) { // Only send data if it's the owner
 
-		Gizmos.color = Color.cyan;
-		Gizmos.DrawCube(destination, new Vector3(0.5f, 0.5f, 0.5f));
+			if (!isWriterUpdated) writer.ClearData();
+			isWriterUpdated = true;
+
+			writer.AddData(TTSCommandTypes.RacerUpdate);
+			writer.AddData(id);
+			writer.AddData(Pos);
+			writer.AddData(Rot);
+			writer.AddData(Speed);
+			writer.AddData(VInput);
+			writer.AddData(HInput);
+		}
+	}
+
+	public void SendStaticPowerup(int powerupType, float powerupTier) {
+		if (owner && isServerRegistered) { // Only send data if it's the owner
+			if (!isWriterUpdated) writer.ClearData();
+			isWriterUpdated = true;
+
+			writer.AddData(TTSCommandTypes.PowerupStaticRegister);
+			writer.AddData(id);
+			writer.AddData(powerupType);
+			writer.AddData(powerupTier);
+		}
 	}
 }
-*/

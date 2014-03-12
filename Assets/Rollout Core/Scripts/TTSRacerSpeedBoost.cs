@@ -4,11 +4,11 @@ using System.Collections.Generic;
 public class TTSRacerSpeedBoost : TTSPerishingBehaviour {
 
 	public float TargetForce = 100.0f;
+	public bool owner = true;
 	private GameObject go;
 	private List<TrailRenderer> trailRenderers = new List<TrailRenderer>();
 	private bool isPlatform;
 	private float _power;
-	private GameObject racerBeingBoosted;
 	
 	void Awake(){
 		destroyWhenLifecycleComplete = false; // Once duration has passed, the class will stop running and self-destruct
@@ -21,22 +21,21 @@ public class TTSRacerSpeedBoost : TTSPerishingBehaviour {
 	}
 
 	protected override void OnPerishingUpdate(float progress) {
-		if(racerBeingBoosted != null){
-			if(isPlatform){
-				//racerBeingBoosted.rigidbody.AddForce(racerBeingBoosted.rigidbody.velocity.normalized * 2.0f);
-				racerBeingBoosted.rigidbody.AddForce(racerBeingBoosted.GetComponent<TTSRacer>().displayMeshComponent.forward * _power);
-			}else{
-				racerBeingBoosted.rigidbody.AddForce(racerBeingBoosted.GetComponent<TTSRacer>().displayMeshComponent.forward * Mathf.Lerp (TargetForce, 0.0f, progress));
-			}
+		if (!owner)	return;
+
+		if(isPlatform){
+			//racerBeingBoosted.rigidbody.AddForce(racerBeingBoosted.rigidbody.velocity.normalized * 2.0f);
+			this.rigidbody.AddForce(GetComponent<TTSRacer>().displayMeshComponent.forward * _power);
+		}else{
+			this.rigidbody.AddForce(GetComponent<TTSRacer>().displayMeshComponent.forward * Mathf.Lerp(TargetForce, 0.0f, progress));
 		}
 	}
 	
-	public void FireBoost(GameObject booster, GameObject effectedRacer){
-		racerBeingBoosted = effectedRacer;
+	public void FireBoost(GameObject booster){
 		isPlatform = false;
 		go = (GameObject) Instantiate(booster);
-		go.transform.parent = racerBeingBoosted.transform;
-		go.transform.position = racerBeingBoosted.GetComponent<TTSRacer>().displayMeshComponent.position;
+		go.transform.parent = this.gameObject.transform;
+		go.transform.position = this.gameObject.GetComponent<TTSRacer>().displayMeshComponent.position;
 		
 		foreach(Transform child in go.transform){
 			if(child.gameObject.GetComponent<TrailRenderer>()){
@@ -45,13 +44,12 @@ public class TTSRacerSpeedBoost : TTSPerishingBehaviour {
 		}
 	}
 	
-	public void FireBoost(GameObject booster, float power, GameObject effectedRacer){
-		racerBeingBoosted = effectedRacer;
+	public void FireBoost(GameObject booster, float power){
 		isPlatform = true;
 		_power = power;
 		go = (GameObject) Instantiate(booster);
-		go.transform.parent = racerBeingBoosted.transform;
-		go.transform.position = racerBeingBoosted.GetComponent<TTSRacer>().displayMeshComponent.position;
+		go.transform.parent = transform;
+		go.transform.position = GetComponent<TTSRacer>().displayMeshComponent.position;
 		
 		foreach(Transform child in go.transform){
 			if(child.gameObject.GetComponent<TrailRenderer>()){

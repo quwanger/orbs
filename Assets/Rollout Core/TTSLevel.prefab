@@ -13,6 +13,7 @@ GameObject:
   - 114: {fileID: 11400004}
   - 114: {fileID: 11400006}
   - 114: {fileID: 11400008}
+  - 114: {fileID: 11400010}
   m_Layer: 0
   m_Name: TTSLevel
   m_TagString: Untagged
@@ -55,6 +56,7 @@ MonoBehaviour:
   _maincameras: []
   _otherCameras: []
   currentGameType: 1
+  currentLevel: 2
   useKeyboard: 1
   raceHasStarted: 0
   raceHasFinished: 0
@@ -63,6 +65,8 @@ MonoBehaviour:
   PerksEnabled: 1
   fonts:
   - {fileID: 12800000, guid: f9929be8a43d15b408cb23dd53efaaa4, type: 3}
+  client: {fileID: 0}
+  initRace: {fileID: 0}
 --- !u!114 &11400004
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -85,31 +89,25 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 594730c6d405c439c9a166e2348e236c, type: 3}
   m_Name: 
-  _rigs:
-  - {fileID: 100000, guid: c20b079c5fcdf46f2aa9e3af0af3c542, type: 2}
-  - {fileID: 100000, guid: cac4f45fdecaa41c6b3049591ead6a42, type: 2}
-  - {fileID: 100000, guid: f7c902cd5131d4d60b9f82066c72d03e, type: 2}
-  - {fileID: 100000, guid: 86fcc84505238442bb7ecd6d5b3594da, type: 2}
+  Rigs:
+  - {fileID: 100000, guid: 4222a4c25048c4676885fb09d185cfcc, type: 2}
   - {fileID: 100000, guid: 3d695fc3acab5411a989ff39de826674, type: 2}
+  - {fileID: 100000, guid: 86fcc84505238442bb7ecd6d5b3594da, type: 2}
+  - {fileID: 100000, guid: c20b079c5fcdf46f2aa9e3af0af3c542, type: 2}
+  - {fileID: 100000, guid: f7c902cd5131d4d60b9f82066c72d03e, type: 2}
+  - {fileID: 100000, guid: cac4f45fdecaa41c6b3049591ead6a42, type: 2}
   - {fileID: 100000, guid: 26f3bdb906e294cf6b3a76f23cc527b2, type: 2}
-  _characters:
+  Characters:
   - {fileID: 100000, guid: 189d21dfc47334c93b9485bb32b654c4, type: 2}
-  _startingpoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  StartingPoints: []
   racerGO: {fileID: 100000, guid: 32f9bdadaccd84b44ae9856e8195bf9b, type: 2}
   cameraGO: {fileID: 100002, guid: 6ae8ef38693b84fc1bf2f43164d7cf3b, type: 2}
   hudGO: {fileID: 100014, guid: bf46875515a25a247a2a558437133fc4, type: 2}
   minimapGO: {fileID: 100000, guid: 427cc4e8f2e15b949ab8e2df99a0b486, type: 2}
   playericonSmall: {fileID: 100000, guid: 3635d8ce9f9159c43acbd463f00cc399, type: 2}
   playericonBig: {fileID: 100000, guid: 43ed54951cf5c48d4b58e3cead59c7a0, type: 2}
-  tempNumHumanPlayers: 1
-  numberOfRacers: 3
-  levelInitialized: 0
+  numHumanPlayers: 1
+  numAIPlayers: 0
 --- !u!114 &11400008
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -125,6 +123,24 @@ MonoBehaviour:
   handlingIncrease: 750
   offenseIncrease: .300000012
   defenseIncrease: .300000012
+--- !u!114 &11400010
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc0ba0762728f5e4f89f9f54328eab63, type: 3}
+  m_Name: 
+  DebugMode: 0
+  SERVER_IP: 127.0.0.1
+  SERVER_RECEIVE_PORT: 6666
+  CLIENT_RECEIVE_PORT: 6969
+  CLIENT_RECEIVE_TIMEOUT: 15000
+  EnteredLobby: 0
+  InGame: 0
+  LobbyID: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

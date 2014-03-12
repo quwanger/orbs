@@ -1,7 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class TTSDrezzStone : MonoBehaviour {
+public class TTSDrezzStone : MonoBehaviour
+{
 	
 	public List<GameObject> Emitters;
 	public GameObject EmitterToSpawn;
@@ -61,4 +62,48 @@ public class TTSDrezzStone : MonoBehaviour {
 			
 		}
 	}
+
+	void Update() {
+		if (netHandler != null && netHandler.owner) {
+			netHandler.UpdatePowerup(transform.position, transform.rotation.eulerAngles, rigidbody.velocity);
+		}
+		else if (netHandler != null) {
+			GetNetworkUpdate();
+		}
+	}
+
+	void OnDestroy() {
+		if (netHandler != null) {
+			netHandler.DeregisterFromClient();
+			netHandler = null;
+		}
+	}
+
+	#region networking
+
+	TTSPowerupNetHandler netHandler;
+
+	public void SetNetHandler(TTSPowerupNetHandler handler) {
+		this.netHandler = handler;
+	}
+
+	private void GetNetworkUpdate() {
+		if (netHandler.isNetworkUpdated) {
+			if (netHandler.netPosition != Vector3.zero) {
+				transform.position = Vector3.Lerp(transform.position, netHandler.netPosition, netHandler.networkInterpolation);
+			}
+			transform.rotation = Quaternion.Euler(netHandler.netRotation);
+			rigidbody.velocity = netHandler.netSpeed;
+
+			netHandler.isNetworkUpdated = false;
+			netHandler.framesSinceNetData = 0;
+		}
+		else {
+			netHandler.framesSinceNetData++;
+			if (netHandler.framesSinceNetData >= TTSPowerupNetHandler.ExplodeTimeout) {
+				//Explode(true);
+			}
+		}
+	}
+	#endregion
 }

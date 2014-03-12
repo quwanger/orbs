@@ -76,7 +76,7 @@ public class TTSFollowCamera : TTSBehaviour
 		prevVelocity = racerVelocity;
 	}
 
-	TTSRacer racer;
+	public TTSRacer racer;
 	public float cameraDistance = 7.0f;
 	public float cameraBaseDistance = 7.0f; // 							
 	public float cameraMinDistance = 5.0f; //						

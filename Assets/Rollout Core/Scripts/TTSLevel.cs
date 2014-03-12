@@ -9,9 +9,12 @@ public class TTSLevel : MonoBehaviour {
 	public List<Camera> _maincameras = new List<Camera>();
 	public List<Camera> _otherCameras = new List<Camera>();
 	
-	public enum Gametype {SinglePlayer, MultiplayerLocal, MultiplayerOnline, TimeTrial};
+	public enum Gametype {Lobby, SinglePlayer, MultiplayerLocal, MultiplayerOnline, TimeTrial};
 	public Gametype currentGameType = Gametype.MultiplayerLocal;
 	
+	public enum LevelType { cliff, night, backroad, downtown, future1, future2 };
+	public LevelType currentLevel = LevelType.backroad;
+
 	public bool useKeyboard = true;
 	
 	public bool raceHasStarted = false;
@@ -25,12 +28,17 @@ public class TTSLevel : MonoBehaviour {
 	private string levelSelected = null;
 	
 	public Font[] fonts;
+
+	public TTSClient client;
+	public TTSInitRace initRace;
 	
 	public static TTSLevel instance { get; private set;}
 	
 	#region MonoBehaviour Methods
 	void Awake() {
 		instance = this;
+		client = GetComponent<TTSClient>();
+		initRace = GetComponent<TTSInitRace>();
 	}
 	
 	void Start() {	
