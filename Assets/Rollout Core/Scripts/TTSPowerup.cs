@@ -30,6 +30,7 @@ public class TTSPowerup : TTSBehaviour {
 
 	#region Tier3 Specialty Variables
 	public int numberOfEntropyCannonsAvailable = 0;
+	public int numberOfHelixCannonsAvailable = 0;
 	#endregion
 	
 	void Awake() {
@@ -113,6 +114,24 @@ public class TTSPowerup : TTSBehaviour {
 				tier = 1;
 			}
 		}
+
+		if(powerup == Powerup.Helix){
+			switch(tier){
+			case 1:
+				numberOfHelixCannonsAvailable = 1;
+				break;
+			case 2:
+				numberOfHelixCannonsAvailable = 3;
+				break;
+			case 3:
+				numberOfHelixCannonsAvailable = 8;
+				break;
+			default:
+				break;
+			}
+		}
+
+		Debug.Log(numberOfHelixCannonsAvailable);
 		
 		//only update the hud if they are a human racer (as AI do not have HUDs)
 		if(this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)
@@ -162,6 +181,11 @@ public class TTSPowerup : TTSBehaviour {
 				this.AvailablePowerup = Powerup.None;
 				this.tier = 0;
 			}
+		}else if(this.AvailablePowerup == Powerup.Helix){
+			if(numberOfHelixCannonsAvailable <= 0){
+				this.AvailablePowerup = Powerup.None;
+				this.tier = 0;
+			}
 		}else{
 			this.AvailablePowerup = Powerup.None;
 			this.tier = 0;
@@ -193,9 +217,9 @@ public class TTSPowerup : TTSBehaviour {
 	
 	public void Shockwave(int _tier) {
 		if(_tier==1){
-			DeployShockwave(1.0f, 0.02f, this.gameObject);
+			DeployShockwave(2.0f, 0.02f, this.gameObject);
 		}else if(_tier==2){
-			DeployShockwave(2.0f, 0.04f, this.gameObject);
+			DeployShockwave(4.0f, 0.04f, this.gameObject);
 		}else if(_tier==3){
 			DeployShockwave(10.0f, 0.1f, this.gameObject);
 		}
@@ -236,16 +260,12 @@ public class TTSPowerup : TTSBehaviour {
 				Invoke("EntropyMid", i * 0.075f);
 			}
 		}
-		/*if(_tier == 3) {
-			for(int i = 0; i < 20; i++) {
-				Invoke("EntropyMid", i * 0.075f);
-			}
-		}*/
+
 		if(_tier == 3){
 			EntropyMid();
 			numberOfEntropyCannonsAvailable--;
-			Debug.Log("Remaining Entropy Cannons: " + numberOfEntropyCannonsAvailable);
 		}
+
 		//it is only active while firing
 		this.ActivePowerup = TTSBehaviour.Powerup.None;
 	}
@@ -256,20 +276,17 @@ public class TTSPowerup : TTSBehaviour {
 	
 	public void Helix(int _tier) {
 
-		if(_tier == 1) {
+		Debug.Log(numberOfHelixCannonsAvailable);
+
+		if(_tier == 1 || _tier == 2 || _tier == 3) {
 			HelixMid();
+			numberOfHelixCannonsAvailable--;
 		}
 		
-		if(_tier == 2) {
-			for(int i = 0; i < 3; i++) {
-				Invoke("HelixMid", i * 0.1f);
-			}
-		}
-		if(_tier == 3) {
-			for(int i = 0; i < 8; i++) {
-				Invoke("HelixMid", i * 0.1f);
-			}
-		}
+		/*if(_tier == 3) {
+			//handle homing missile
+		}*/
+
 		//it is only active while firing
 		this.ActivePowerup = TTSBehaviour.Powerup.None;
 	}
@@ -361,7 +378,7 @@ public class TTSPowerup : TTSBehaviour {
 	public GameObject DeployShockwave(float _power, float _startSize, GameObject effectedRacer){
 		GameObject go = (GameObject) Instantiate(ShockwavePrefab, effectedRacer.transform.position, Quaternion.identity);
 		go.GetComponent<ParticleSystem>().startSize = _startSize;
-		go.GetComponent<TTSShockwave>().power = go.GetComponent<TTSShockwave>().power * _power * effectedRacer.GetComponent<TTSRacer>().Offense;
+		go.GetComponent<TTSShockwave>().power = go.GetComponent<TTSShockwave>().power * 2.0f * effectedRacer.GetComponent<TTSRacer>().Offense;
 		go.GetComponent<TTSShockwave>().radius = go.GetComponent<TTSShockwave>().radius * _power * effectedRacer.GetComponent<TTSRacer>().Offense;
 		go.GetComponent<TTSShockwave>().upwardsForce = go.GetComponent<TTSShockwave>().upwardsForce * _power * effectedRacer.GetComponent<TTSRacer>().Offense;
 		go.GetComponent<TTSShockwave>().Activate(this.gameObject);
