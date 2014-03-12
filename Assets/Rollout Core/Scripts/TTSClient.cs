@@ -35,6 +35,11 @@ public class TTSClient : MonoBehaviour
 			return level.currentGameType == TTSLevel.Gametype.MultiplayerOnline;
 		}
 	}
+	public bool isLobby {
+		get {
+			return level.currentGameType == TTSLevel.Gametype.Lobby;
+		}
+	}
 	public bool EnteredLobby = false;
 	public bool InGame = false;
 	public int LobbyID = 0;
@@ -54,6 +59,8 @@ public class TTSClient : MonoBehaviour
 	void Start() {
 		level = GetComponent<TTSLevel>();
 		initRace = GetComponent<TTSInitRace>();
+
+		if (!isMultiplayer && !isLobby) return;
 
 		serverAddr = IPAddress.Parse(SERVER_IP);
 		endPoint = new IPEndPoint(serverAddr, SERVER_RECEIVE_PORT);
@@ -143,11 +150,13 @@ public class TTSClient : MonoBehaviour
 	void OnApplicationQuit() {
 		isRunning = false;
 
-		UpdatePacket.ClearData();
-		UpdatePacket.AddData(TTSCommandTypes.CloseConnection);
-		SendPacket(UpdatePacket);
+		if (isMultiplayer && isLobby) {
+			UpdatePacket.ClearData();
+			UpdatePacket.AddData(TTSCommandTypes.CloseConnection);
+			SendPacket(UpdatePacket);
 
-		client.Client.Close();
+			client.Client.Close();
+		}
 	}
 
 	// Listens for a packet and starts a new thread to handle the packet

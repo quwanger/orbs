@@ -51,8 +51,8 @@ public class TTSHelixProjectile : TTSBehaviour
 			//Debug.Log (hit.collider);
 		}
 
-		currentWaypoint = currentRacer.GetComponent<TTSRacer>().currentWaypoint;
-		nextWaypoint = currentRacer.GetComponent<TTSRacer>().nextWaypoint;
+		currentWaypoint = currentRacer.currentWaypoint;
+		nextWaypoint = currentRacer.nextWaypoint;
 		destinationPosition = nextWaypoint.gameObject.transform.position;
 	}
 

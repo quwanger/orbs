@@ -339,14 +339,21 @@ public class TTSPowerup : TTSBehaviour
 
 	public GameObject FireHelix(bool owner, TTSPowerupNetHandler handle) {
 		GameObject go = (GameObject)Instantiate(HelixPrefab);
-		go.GetComponent<TTSHelixProjectile>().offensiveMultiplier = this.gameObject.GetComponent<TTSRacer>().Offense;
-		go.transform.rotation = GetComponent<TTSRacer>().displayMeshComponent.transform.rotation;
-		go.transform.position = this.gameObject.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
-		go.rigidbody.velocity = this.gameObject.rigidbody.velocity.normalized * (this.gameObject.rigidbody.velocity.magnitude + go.GetComponent<TTSHelixProjectile>().ProjectileStartVelocity);
+
+		TTSHelixProjectile helix = go.GetComponent<TTSHelixProjectile>();
+		TTSRacer racer = GetComponent<TTSRacer>();
+
+		helix.offensiveMultiplier = racer.Offense;
+		helix.currentRacer = racer;
+		helix.racersInFront = (racer.place - 1);
+
+		go.transform.rotation = racer.displayMeshComponent.transform.rotation;
+		go.transform.position = transform.position + racer.displayMeshComponent.forward * 3.5f;
+		go.rigidbody.velocity = rigidbody.velocity.normalized * (rigidbody.velocity.magnitude + helix.ProjectileStartVelocity);
 
 		if (owner) { SendPowerupDeploy(TTSPowerupNetworkTypes.Helix, go); }
 		else {
-			go.GetComponent<TTSHelixProjectile>().SetNetHandler(handle);
+			helix.SetNetHandler(handle);
 		}
 
 		return go;
