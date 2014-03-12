@@ -15,9 +15,6 @@ public class TTSInitRace : MonoBehaviour
 	public GameObject playericonSmall;
 	public GameObject playericonBig;
 
-	//For minimap ID and camera ID
-	private int counter = 1;
-
 	private int startingPointIndex = 0;
 
 	public enum RigTypes { Rhino, Scorpion, Default };
@@ -54,7 +51,7 @@ public class TTSInitRace : MonoBehaviour
 		//racerConfigs.Add(testRacerConfig(false));
 
 		numHumanPlayers = racerConfigs.FindAll(IsHuman).Count;
-		
+
 		if (level.currentGameType == TTSLevel.Gametype.Lobby) {
 			LobbyInitialize();
 		}
@@ -97,7 +94,7 @@ public class TTSInitRace : MonoBehaviour
 		if (Human) {
 			config.LocalControlType = TTSUtils.EnumToInt(TTSRacer.PlayerType.Player);
 		}
-		else{
+		else {
 			config.LocalControlType = TTSUtils.EnumToInt(TTSRacer.PlayerType.AI);
 		}
 
@@ -140,14 +137,14 @@ public class TTSInitRace : MonoBehaviour
 		//sets the currentrig variable of the racer to the rig selecte above
 		racer.GetComponent<TTSRacer>().CurrentRig = rig.GetComponent<TTSRig>();
 		racer.GetComponent<TTSRacer>().rigID = config.RigType;
-	
+
 		//sets an id for each racer
-		racer.GetComponent<TTSRacer>().playerNum = counter;
+		racer.GetComponent<TTSRacer>().playerNum = humanPlayerCounter;
 
 		//instantiates minimap icon
 		GameObject iconSmall = (GameObject)Instantiate(playericonSmall);
 		GameObject iconBig = (GameObject)Instantiate(playericonBig);
-		
+
 		//assigns the icon to correct racer
 		racer.GetComponent<TTSRacer>().minimapIconSmall = iconSmall;
 		racer.GetComponent<TTSRacer>().minimapIconBig = iconBig;
@@ -156,8 +153,6 @@ public class TTSInitRace : MonoBehaviour
 
 		if (level.DebugMode)
 			racer.GetComponent<TTSRacer>().canMove = true;
-
-		counter++;
 
 		return racer;
 	}
@@ -221,6 +216,8 @@ public class TTSInitRace : MonoBehaviour
 		return tempRacer;
 	}
 
+	//For minimap ID and camera ID
+	private int humanPlayerCounter = 1;
 	private void InitToHuman(GameObject racer) {
 		//set to player controlled and set the player type to Player
 		TTSRacer racerControl = racer.GetComponent<TTSRacer>();
@@ -232,257 +229,265 @@ public class TTSInitRace : MonoBehaviour
 		GameObject tempMinimap = (GameObject)Instantiate(minimapGO);
 		TTSMinimap miniWin = tempMinimap.GetComponent<TTSMinimap>();
 		miniWin.player = racerControl.CurrentRig.transform;
-		
+
 		//sets the minimap id
-		miniWin.minimapID = counter;
+		miniWin.minimapID = humanPlayerCounter-1;
 
 		//instantiate a camera for the player
 		GameObject tempCamera = (GameObject)Instantiate(cameraGO);
-		
-			//tells the camera which racer to follow
-			tempCamera.GetComponent<TTSFollowCamera>().target = racerControl.displayMeshComponent;
-			
-			//instantiate a hud for the human racer and get it to follow the camera and racer
-			GameObject tempHUD = (GameObject)Instantiate(hudGO);
-			tempHUD.GetComponent<TTSFloatHud>().boundCamera = tempCamera.transform;
-			tempHUD.GetComponent<TTSFloatHud>().racerToFollow = racer;
-		
-			//Forces it to turn off layer 9 for the camera, but leave everything else as is
-			tempCamera.camera.cullingMask &= ~ (1 << 9);
-		
-			//Splitscreen handling, case 2 for 2 player, 3 for 3 player...etc.
-			//Places the cam, minimap, fadeout and icon for each case by changing the layers
-			//and changing what each camera sees
-			switch(numHumanPlayers){
-				case 2:
-					if(counter==0) {
-						//Set the position for the camera, minimap and fadeout
-						tempCamera.camera.rect = new Rect(0, 0.5f, 1.0f, 0.5f);
-						tempMinimap.camera.rect = new Rect(0.02f, 0.52f, 0.125f, 0.25f);
-						tempMinimap.camera.cullingMask |= (1 << 12);
-						tempCamera.GetComponent<TTSFollowCamera>().fadeX = -10.0f;
-						tempCamera.GetComponent<TTSFollowCamera>().fadeY = -10.0f;
-						tempCamera.GetComponent<TTSFollowCamera>().fadeWidth = Screen.width;
-						tempCamera.GetComponent<TTSFollowCamera>().fadeHeight = Screen.height / 2;
-				
-						//Foreach goes through each child GO to change the layer to display.
-						//Used to hide huds/minimap/icon depending on which player you are
-						foreach (Transform child in racerControl.minimapIconBig.transform) { child.gameObject.layer = 12; }
-						racerControl.minimapIconBig.layer = 12;
-				
-						foreach (Transform child in tempHUD.transform) { child.gameObject.layer = 12; }
-						tempHUD.layer = 12;
-				
-						foreach (Transform child in tempMinimap.transform) { child.gameObject.layer = 12; }
-						tempMinimap.layer = 12;
-				
-						//Set the main camera to not show player 2's stuff on player 1
-						tempCamera.camera.cullingMask &= ~(1 << 13);
-					} else {
-						tempCamera.camera.rect = new Rect(0, 0, 1.0f, 0.5f);
-						tempMinimap.camera.rect = new Rect(0.02f, 0.02f, 0.125f, 0.25f);
-						tempMinimap.camera.cullingMask |= (1 << 13);
-						tempCamera.GetComponent<TTSFollowCamera>().fadeX = -10.0f;
-						tempCamera.GetComponent<TTSFollowCamera>().fadeY = Screen.height / 2;
-						tempCamera.GetComponent<TTSFollowCamera>().fadeWidth = Screen.width + 10.0f;
-						tempCamera.GetComponent<TTSFollowCamera>().fadeHeight = (Screen.height / 2) + 10.0f;
-						
-						foreach (Transform child in racerControl.minimapIconBig.transform) { child.gameObject.layer = 13; }
-						racerControl.minimapIconBig.layer = 13;
-				
-						foreach (Transform child in tempHUD.transform) {
-							child.gameObject.layer = 13;
-						}
-						tempHUD.layer = 13;
 
-						foreach (Transform child in tempMinimap.transform) {
-							child.gameObject.layer = 13;
-						}
-						tempMinimap.layer = 13;
+		//tells the camera which racer to follow
+		tempCamera.GetComponent<TTSFollowCamera>().target = racerControl.displayMeshComponent;
 
-						tempCamera.camera.cullingMask &= ~(1 << 12);
-					}
-					break;
+		//instantiate a hud for the human racer and get it to follow the camera and racer
+		GameObject tempHUD = (GameObject)Instantiate(hudGO);
+		tempHUD.GetComponent<TTSFloatHud>().boundCamera = tempCamera.transform;
+		tempHUD.GetComponent<TTSFloatHud>().racerToFollow = racer;
 
-				case 3:
-					if(counter==0) {
-						tempCamera.camera.rect = new Rect(0, 0.5f, 1.0f, 0.5f);
-						tempMinimap.camera.rect = new Rect(0.02f, 0.52f, 0.25f, 0.50f);
-						tempMinimap.camera.cullingMask |= (1 << 12);
-						tempCamera.GetComponent<TTSFollowCamera>().fadeX = -10.0f;
-						tempCamera.GetComponent<TTSFollowCamera>().fadeY = -10.0f;
-						tempCamera.GetComponent<TTSFollowCamera>().fadeWidth = Screen.width;
-						tempCamera.GetComponent<TTSFollowCamera>().fadeHeight = Screen.height / 2;
-				
-						foreach (Transform child in racerControl.minimapIconBig.transform) { child.gameObject.layer = 12; }
-						racerControl.minimapIconBig.layer = 12;
-				
-						foreach (Transform child in tempHUD.transform) { child.gameObject.layer = 12; }
-						tempHUD.layer = 12;
-				
-						foreach (Transform child in tempMinimap.transform) { child.gameObject.layer = 12; }
-						tempMinimap.layer = 12;
-				
-						tempCamera.camera.cullingMask &= ~(1 << 13);
-						tempCamera.camera.cullingMask &= ~(1 << 14);
-					} else if(counter==1) {
-						tempCamera.camera.rect = new Rect(0, 0, 0.5f, 0.5f);
-						tempMinimap.camera.rect = new Rect(0.02f, 0.02f, 0.125f, 0.25f);
-						tempMinimap.camera.cullingMask |= (1 << 13);
-						tempCamera.GetComponent<TTSFollowCamera>().fadeX = -10.0f;
-						tempCamera.GetComponent<TTSFollowCamera>().fadeY = Screen.height / 2;
-						tempCamera.GetComponent<TTSFollowCamera>().fadeWidth = (Screen.width / 2);
-						tempCamera.GetComponent<TTSFollowCamera>().fadeHeight = (Screen.height / 2) + 10.0f;
-				
-						foreach (Transform child in racerControl.minimapIconBig.transform) { child.gameObject.layer = 13; }
-						racerControl.minimapIconBig.layer = 13;
-				
-						foreach (Transform child in tempHUD.transform) { child.gameObject.layer = 13; }
-						tempHUD.layer = 13;
-				
-						foreach (Transform child in tempMinimap.transform) { child.gameObject.layer = 13; }
-						tempMinimap.layer = 13;
-				
-						tempCamera.camera.cullingMask &= ~(1 << 12);
-						tempCamera.camera.cullingMask &= ~(1 << 14);
-					} else { 
-						tempCamera.camera.rect = new Rect(0.5f, 0, 0.5f, 0.5f);
-						tempMinimap.camera.rect = new Rect(0.52f, 0.02f, 0.125f, 0.25f);
-						tempMinimap.camera.cullingMask |= (1 << 14);
-						tempCamera.GetComponent<TTSFollowCamera>().fadeX = Screen.width / 2;
-						tempCamera.GetComponent<TTSFollowCamera>().fadeY = Screen.height / 2;
-						tempCamera.GetComponent<TTSFollowCamera>().fadeWidth = (Screen.width / 2) + 10.0f;
-						tempCamera.GetComponent<TTSFollowCamera>().fadeHeight = (Screen.height / 2) + 10.0f;
-				
-						foreach (Transform child in racerControl.minimapIconBig.transform) { child.gameObject.layer = 14; }
-						racerControl.minimapIconBig.layer = 14;
-				
-						foreach (Transform child in tempHUD.transform) { child.gameObject.layer = 14; }
-						tempHUD.layer = 14;
-				
-						foreach (Transform child in tempMinimap.transform) { child.gameObject.layer = 14; }
-						tempMinimap.layer = 14;
-				
-						tempCamera.camera.cullingMask &= ~(1 << 12);
-						tempCamera.camera.cullingMask &= ~(1 << 13);
-					}
-					break;
+		//Forces it to turn off layer 9 for the camera, but leave everything else as is
+		tempCamera.camera.cullingMask &= ~(1 << 9);
 
-				case 4:
-					if(counter==0) {
-						tempCamera.camera.rect = new Rect(0, 0.5f, 0.5f, 0.5f);
-						tempMinimap.camera.rect = new Rect(0.02f, 0.52f, 0.125f, 0.25f);
-						tempMinimap.camera.cullingMask |= (1 << 12);
-						tempCamera.GetComponent<TTSFollowCamera>().fadeX = -10.0f;
-						tempCamera.GetComponent<TTSFollowCamera>().fadeY = -10.0f;
-						tempCamera.GetComponent<TTSFollowCamera>().fadeWidth = (Screen.width / 2);
-						tempCamera.GetComponent<TTSFollowCamera>().fadeHeight = (Screen.height / 2);
-				
-						foreach (Transform child in racerControl.minimapIconBig.transform) { child.gameObject.layer = 12; }
-						racerControl.minimapIconBig.layer = 12;
-				
-						foreach (Transform child in tempHUD.transform) { child.gameObject.layer = 12; }
-						tempHUD.layer = 12;
-				
-						foreach (Transform child in tempMinimap.transform) { child.gameObject.layer = 12; }
-						tempMinimap.layer = 12;
-				
-						tempCamera.camera.cullingMask &= ~(1 << 13);
-						tempCamera.camera.cullingMask &= ~(1 << 14);
-						tempCamera.camera.cullingMask &= ~(1 << 15);
-					} else if(counter==1) {
-						tempCamera.camera.rect = new Rect(0.5f, 0.5f, 0.5f, 0.5f);
-						tempMinimap.camera.rect = new Rect(0.52f, 0.52f, 0.125f, 0.25f);
-						tempMinimap.camera.cullingMask |= (1 << 13);
-						tempCamera.GetComponent<TTSFollowCamera>().fadeX = Screen.width / 2;
-						tempCamera.GetComponent<TTSFollowCamera>().fadeY = -10.0f;
-						tempCamera.GetComponent<TTSFollowCamera>().fadeWidth = (Screen.width / 2);
-						tempCamera.GetComponent<TTSFollowCamera>().fadeHeight = (Screen.height / 2);
-				
-						foreach (Transform child in racerControl.minimapIconBig.transform) { child.gameObject.layer = 13; }
-						racerControl.minimapIconBig.layer = 13;
-				
-						foreach (Transform child in tempHUD.transform) { child.gameObject.layer = 13; }
-						tempHUD.layer = 13;
-				
-						foreach (Transform child in tempMinimap.transform) { child.gameObject.layer = 13; }
-						tempMinimap.layer = 13;
-				
-						tempCamera.camera.cullingMask &= ~(1 << 12);
-						tempCamera.camera.cullingMask &= ~(1 << 14);
-						tempCamera.camera.cullingMask &= ~(1 << 15);
-					} else if(counter==2) {
-						tempCamera.camera.rect = new Rect(0, 0, 0.5f, 0.5f);
-						tempMinimap.camera.rect = new Rect(0.02f, 0.02f, 0.125f, 0.25f);
-						tempMinimap.camera.cullingMask |= (1 << 14);
-						tempCamera.GetComponent<TTSFollowCamera>().fadeX = -10.0f;
-						tempCamera.GetComponent<TTSFollowCamera>().fadeY = Screen.height / 2;
-						tempCamera.GetComponent<TTSFollowCamera>().fadeWidth = (Screen.width / 2);
-						tempCamera.GetComponent<TTSFollowCamera>().fadeHeight = (Screen.height / 2) + 10.0f;
-				
-						foreach (Transform child in racerControl.minimapIconBig.transform) { child.gameObject.layer = 14; }
-						racerControl.minimapIconBig.layer = 14;
-				
-						foreach (Transform child in tempHUD.transform) { child.gameObject.layer = 14; }
-						tempHUD.layer = 14;
-				
-						foreach (Transform child in tempMinimap.transform) { child.gameObject.layer = 14; }
-						tempMinimap.layer = 14;
-				
-						tempCamera.camera.cullingMask &= ~(1 << 13);
-						tempCamera.camera.cullingMask &= ~(1 << 12);
-						tempCamera.camera.cullingMask &= ~(1 << 15);
-					} else {
-						tempCamera.camera.rect = new Rect(0.5f, 0, 0.5f, 0.5f);
-						tempMinimap.camera.rect = new Rect(0.52f, 0.02f, 0.125f, 0.25f);
-						tempMinimap.camera.cullingMask |= (1 << 15);
-						tempCamera.GetComponent<TTSFollowCamera>().fadeX = Screen.width / 2;
-						tempCamera.GetComponent<TTSFollowCamera>().fadeY = Screen.height / 2;
-						tempCamera.GetComponent<TTSFollowCamera>().fadeWidth = (Screen.width / 2) + 10.0f;
-						tempCamera.GetComponent<TTSFollowCamera>().fadeHeight = (Screen.height / 2) + 10.0f;
-				
-						foreach (Transform child in racerControl.minimapIconBig.transform) { child.gameObject.layer = 15; }
-						racerControl.minimapIconBig.layer = 15;
-				
-						foreach (Transform child in tempHUD.transform) { child.gameObject.layer = 15; }
-						tempHUD.layer = 15;
-				
-						foreach (Transform child in tempMinimap.transform) { child.gameObject.layer = 15; }
-						tempMinimap.layer = 15;
-				
-						tempCamera.camera.cullingMask &= ~(1 << 13);
-						tempCamera.camera.cullingMask &= ~(1 << 14);
-						tempCamera.camera.cullingMask &= ~(1 << 12);
-					}
-					break;
+		//Splitscreen handling, case 2 for 2 player, 3 for 3 player...etc.
+		//Places the cam, minimap, fadeout and icon for each case by changing the layers
+		//and changing what each camera sees
+		switch (numHumanPlayers) {
+			case 2:
+				if (humanPlayerCounter == 1) {
+					//Set the position for the camera, minimap and fadeout
+					tempCamera.camera.rect = new Rect(0, 0.5f, 1.0f, 0.5f);
+					tempMinimap.camera.rect = new Rect(0.02f, 0.52f, 0.125f, 0.25f);
+					tempMinimap.camera.cullingMask |= (1 << 12);
+					tempCamera.GetComponent<TTSFollowCamera>().fadeX = -10.0f;
+					tempCamera.GetComponent<TTSFollowCamera>().fadeY = -10.0f;
+					tempCamera.GetComponent<TTSFollowCamera>().fadeWidth = Screen.width;
+					tempCamera.GetComponent<TTSFollowCamera>().fadeHeight = Screen.height / 2;
 
-				default:
-					foreach (Transform child in racerControl.minimapIconBig.transform) { child.gameObject.layer = 11; }
-					racerControl.minimapIconBig.layer = 11;
-			
+					//Foreach goes through each child GO to change the layer to display.
+					//Used to hide huds/minimap/icon depending on which player you are
+					foreach (Transform child in racerControl.minimapIconBig.transform) { child.gameObject.layer = 12; }
+					racerControl.minimapIconBig.layer = 12;
+
 					foreach (Transform child in tempHUD.transform) { child.gameObject.layer = 12; }
 					tempHUD.layer = 12;
 
+					foreach (Transform child in tempMinimap.transform) { child.gameObject.layer = 12; }
+					tempMinimap.layer = 12;
+
+					//Set the main camera to not show player 2's stuff on player 1
+					tempCamera.camera.cullingMask &= ~(1 << 13);
+				}
+				else {
+					tempCamera.camera.rect = new Rect(0, 0, 1.0f, 0.5f);
+					tempMinimap.camera.rect = new Rect(0.02f, 0.02f, 0.125f, 0.25f);
+					tempMinimap.camera.cullingMask |= (1 << 13);
+					tempCamera.GetComponent<TTSFollowCamera>().fadeX = -10.0f;
+					tempCamera.GetComponent<TTSFollowCamera>().fadeY = Screen.height / 2;
+					tempCamera.GetComponent<TTSFollowCamera>().fadeWidth = Screen.width + 10.0f;
+					tempCamera.GetComponent<TTSFollowCamera>().fadeHeight = (Screen.height / 2) + 10.0f;
+
+					foreach (Transform child in racerControl.minimapIconBig.transform) { child.gameObject.layer = 13; }
+					racerControl.minimapIconBig.layer = 13;
+
+					foreach (Transform child in tempHUD.transform) {
+						child.gameObject.layer = 13;
+					}
+					tempHUD.layer = 13;
+
+					foreach (Transform child in tempMinimap.transform) {
+						child.gameObject.layer = 13;
+					}
+					tempMinimap.layer = 13;
+
+					tempCamera.camera.cullingMask &= ~(1 << 12);
+				}
+				break;
+
+			case 3:
+				if (humanPlayerCounter == 1) {
+					tempCamera.camera.rect = new Rect(0, 0.5f, 1.0f, 0.5f);
+					tempMinimap.camera.rect = new Rect(0.02f, 0.52f, 0.25f, 0.50f);
+					tempMinimap.camera.cullingMask |= (1 << 12);
 					tempCamera.GetComponent<TTSFollowCamera>().fadeX = -10.0f;
 					tempCamera.GetComponent<TTSFollowCamera>().fadeY = -10.0f;
-					tempCamera.GetComponent<TTSFollowCamera>().fadeWidth = Screen.width + 10.0f;
-					tempCamera.GetComponent<TTSFollowCamera>().fadeHeight = Screen.height + 10.0f;
-				break;
-			}
+					tempCamera.GetComponent<TTSFollowCamera>().fadeWidth = Screen.width;
+					tempCamera.GetComponent<TTSFollowCamera>().fadeHeight = Screen.height / 2;
 
-			//assinging the hud powerup for the racer
-			Transform tempHudPowerup = tempHUD.transform.Find("CurrentPowerup");
-			racer.GetComponent<TTSPowerup>().hudPowerup = tempHudPowerup.gameObject;
-		
-			Transform tempPP1 = tempHUD.transform.Find("PerkPool1Icon");
-			tempPP1.GetComponent<TTSHudPerk>().InitializePerkPool1(racer.GetComponent<TTSPerkManager>().equiptPerkPool1);
-		
-			Transform tempPP2 = tempHUD.transform.Find("PerkPool2Icon");
-			tempPP2.GetComponent<TTSHudPerk>().InitializePerkPool2(racer.GetComponent<TTSPerkManager>().equiptPerkPool2);
-		
-			racerControl.myCamera = tempCamera;
-		
-			tempCamera.GetComponent<TTSFollowCamera>().cameraNumber = counter;
+					foreach (Transform child in racerControl.minimapIconBig.transform) { child.gameObject.layer = 12; }
+					racerControl.minimapIconBig.layer = 12;
+
+					foreach (Transform child in tempHUD.transform) { child.gameObject.layer = 12; }
+					tempHUD.layer = 12;
+
+					foreach (Transform child in tempMinimap.transform) { child.gameObject.layer = 12; }
+					tempMinimap.layer = 12;
+
+					tempCamera.camera.cullingMask &= ~(1 << 13);
+					tempCamera.camera.cullingMask &= ~(1 << 14);
+				}
+				else if (humanPlayerCounter == 2) {
+					tempCamera.camera.rect = new Rect(0, 0, 0.5f, 0.5f);
+					tempMinimap.camera.rect = new Rect(0.02f, 0.02f, 0.125f, 0.25f);
+					tempMinimap.camera.cullingMask |= (1 << 13);
+					tempCamera.GetComponent<TTSFollowCamera>().fadeX = -10.0f;
+					tempCamera.GetComponent<TTSFollowCamera>().fadeY = Screen.height / 2;
+					tempCamera.GetComponent<TTSFollowCamera>().fadeWidth = (Screen.width / 2);
+					tempCamera.GetComponent<TTSFollowCamera>().fadeHeight = (Screen.height / 2) + 10.0f;
+
+					foreach (Transform child in racerControl.minimapIconBig.transform) { child.gameObject.layer = 13; }
+					racerControl.minimapIconBig.layer = 13;
+
+					foreach (Transform child in tempHUD.transform) { child.gameObject.layer = 13; }
+					tempHUD.layer = 13;
+
+					foreach (Transform child in tempMinimap.transform) { child.gameObject.layer = 13; }
+					tempMinimap.layer = 13;
+
+					tempCamera.camera.cullingMask &= ~(1 << 12);
+					tempCamera.camera.cullingMask &= ~(1 << 14);
+				}
+				else {
+					tempCamera.camera.rect = new Rect(0.5f, 0, 0.5f, 0.5f);
+					tempMinimap.camera.rect = new Rect(0.52f, 0.02f, 0.125f, 0.25f);
+					tempMinimap.camera.cullingMask |= (1 << 14);
+					tempCamera.GetComponent<TTSFollowCamera>().fadeX = Screen.width / 2;
+					tempCamera.GetComponent<TTSFollowCamera>().fadeY = Screen.height / 2;
+					tempCamera.GetComponent<TTSFollowCamera>().fadeWidth = (Screen.width / 2) + 10.0f;
+					tempCamera.GetComponent<TTSFollowCamera>().fadeHeight = (Screen.height / 2) + 10.0f;
+
+					foreach (Transform child in racerControl.minimapIconBig.transform) { child.gameObject.layer = 14; }
+					racerControl.minimapIconBig.layer = 14;
+
+					foreach (Transform child in tempHUD.transform) { child.gameObject.layer = 14; }
+					tempHUD.layer = 14;
+
+					foreach (Transform child in tempMinimap.transform) { child.gameObject.layer = 14; }
+					tempMinimap.layer = 14;
+
+					tempCamera.camera.cullingMask &= ~(1 << 12);
+					tempCamera.camera.cullingMask &= ~(1 << 13);
+				}
+				break;
+
+			case 4:
+				if (humanPlayerCounter == 1) {
+					tempCamera.camera.rect = new Rect(0, 0.5f, 0.5f, 0.5f);
+					tempMinimap.camera.rect = new Rect(0.02f, 0.52f, 0.125f, 0.25f);
+					tempMinimap.camera.cullingMask |= (1 << 12);
+					tempCamera.GetComponent<TTSFollowCamera>().fadeX = -10.0f;
+					tempCamera.GetComponent<TTSFollowCamera>().fadeY = -10.0f;
+					tempCamera.GetComponent<TTSFollowCamera>().fadeWidth = (Screen.width / 2);
+					tempCamera.GetComponent<TTSFollowCamera>().fadeHeight = (Screen.height / 2);
+
+					foreach (Transform child in racerControl.minimapIconBig.transform) { child.gameObject.layer = 12; }
+					racerControl.minimapIconBig.layer = 12;
+
+					foreach (Transform child in tempHUD.transform) { child.gameObject.layer = 12; }
+					tempHUD.layer = 12;
+
+					foreach (Transform child in tempMinimap.transform) { child.gameObject.layer = 12; }
+					tempMinimap.layer = 12;
+
+					tempCamera.camera.cullingMask &= ~(1 << 13);
+					tempCamera.camera.cullingMask &= ~(1 << 14);
+					tempCamera.camera.cullingMask &= ~(1 << 15);
+				}
+				else if (humanPlayerCounter == 2) {
+					tempCamera.camera.rect = new Rect(0.5f, 0.5f, 0.5f, 0.5f);
+					tempMinimap.camera.rect = new Rect(0.52f, 0.52f, 0.125f, 0.25f);
+					tempMinimap.camera.cullingMask |= (1 << 13);
+					tempCamera.GetComponent<TTSFollowCamera>().fadeX = Screen.width / 2;
+					tempCamera.GetComponent<TTSFollowCamera>().fadeY = -10.0f;
+					tempCamera.GetComponent<TTSFollowCamera>().fadeWidth = (Screen.width / 2);
+					tempCamera.GetComponent<TTSFollowCamera>().fadeHeight = (Screen.height / 2);
+
+					foreach (Transform child in racerControl.minimapIconBig.transform) { child.gameObject.layer = 13; }
+					racerControl.minimapIconBig.layer = 13;
+
+					foreach (Transform child in tempHUD.transform) { child.gameObject.layer = 13; }
+					tempHUD.layer = 13;
+
+					foreach (Transform child in tempMinimap.transform) { child.gameObject.layer = 13; }
+					tempMinimap.layer = 13;
+
+					tempCamera.camera.cullingMask &= ~(1 << 12);
+					tempCamera.camera.cullingMask &= ~(1 << 14);
+					tempCamera.camera.cullingMask &= ~(1 << 15);
+				}
+				else if (humanPlayerCounter == 3) {
+					tempCamera.camera.rect = new Rect(0, 0, 0.5f, 0.5f);
+					tempMinimap.camera.rect = new Rect(0.02f, 0.02f, 0.125f, 0.25f);
+					tempMinimap.camera.cullingMask |= (1 << 14);
+					tempCamera.GetComponent<TTSFollowCamera>().fadeX = -10.0f;
+					tempCamera.GetComponent<TTSFollowCamera>().fadeY = Screen.height / 2;
+					tempCamera.GetComponent<TTSFollowCamera>().fadeWidth = (Screen.width / 2);
+					tempCamera.GetComponent<TTSFollowCamera>().fadeHeight = (Screen.height / 2) + 10.0f;
+
+					foreach (Transform child in racerControl.minimapIconBig.transform) { child.gameObject.layer = 14; }
+					racerControl.minimapIconBig.layer = 14;
+
+					foreach (Transform child in tempHUD.transform) { child.gameObject.layer = 14; }
+					tempHUD.layer = 14;
+
+					foreach (Transform child in tempMinimap.transform) { child.gameObject.layer = 14; }
+					tempMinimap.layer = 14;
+
+					tempCamera.camera.cullingMask &= ~(1 << 13);
+					tempCamera.camera.cullingMask &= ~(1 << 12);
+					tempCamera.camera.cullingMask &= ~(1 << 15);
+				}
+				else {
+					tempCamera.camera.rect = new Rect(0.5f, 0, 0.5f, 0.5f);
+					tempMinimap.camera.rect = new Rect(0.52f, 0.02f, 0.125f, 0.25f);
+					tempMinimap.camera.cullingMask |= (1 << 15);
+					tempCamera.GetComponent<TTSFollowCamera>().fadeX = Screen.width / 2;
+					tempCamera.GetComponent<TTSFollowCamera>().fadeY = Screen.height / 2;
+					tempCamera.GetComponent<TTSFollowCamera>().fadeWidth = (Screen.width / 2) + 10.0f;
+					tempCamera.GetComponent<TTSFollowCamera>().fadeHeight = (Screen.height / 2) + 10.0f;
+
+					foreach (Transform child in racerControl.minimapIconBig.transform) { child.gameObject.layer = 15; }
+					racerControl.minimapIconBig.layer = 15;
+
+					foreach (Transform child in tempHUD.transform) { child.gameObject.layer = 15; }
+					tempHUD.layer = 15;
+
+					foreach (Transform child in tempMinimap.transform) { child.gameObject.layer = 15; }
+					tempMinimap.layer = 15;
+
+					tempCamera.camera.cullingMask &= ~(1 << 13);
+					tempCamera.camera.cullingMask &= ~(1 << 14);
+					tempCamera.camera.cullingMask &= ~(1 << 12);
+				}
+				break;
+
+			default:
+				foreach (Transform child in racerControl.minimapIconBig.transform) { child.gameObject.layer = 11; }
+				racerControl.minimapIconBig.layer = 11;
+
+				foreach (Transform child in tempHUD.transform) { child.gameObject.layer = 12; }
+				tempHUD.layer = 12;
+
+				tempCamera.GetComponent<TTSFollowCamera>().fadeX = -10.0f;
+				tempCamera.GetComponent<TTSFollowCamera>().fadeY = -10.0f;
+				tempCamera.GetComponent<TTSFollowCamera>().fadeWidth = Screen.width + 10.0f;
+				tempCamera.GetComponent<TTSFollowCamera>().fadeHeight = Screen.height + 10.0f;
+				break;
+		}
+
+		//assinging the hud powerup for the racer
+		Transform tempHudPowerup = tempHUD.transform.Find("CurrentPowerup");
+		racer.GetComponent<TTSPowerup>().hudPowerup = tempHudPowerup.gameObject;
+
+		Transform tempPP1 = tempHUD.transform.Find("PerkPool1Icon");
+		tempPP1.GetComponent<TTSHudPerk>().InitializePerkPool1(racer.GetComponent<TTSPerkManager>().equiptPerkPool1);
+
+		Transform tempPP2 = tempHUD.transform.Find("PerkPool2Icon");
+		tempPP2.GetComponent<TTSHudPerk>().InitializePerkPool2(racer.GetComponent<TTSPerkManager>().equiptPerkPool2);
+
+		racerControl.myCamera = tempCamera;
+
+		tempCamera.GetComponent<TTSFollowCamera>().cameraNumber = humanPlayerCounter;
+
+		humanPlayerCounter++;
 	}
 
 	private void InitToAI(GameObject racer) {
