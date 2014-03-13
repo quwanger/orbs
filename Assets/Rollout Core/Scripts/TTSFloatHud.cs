@@ -1,11 +1,13 @@
 using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class TTSFloatHud : TTSBehaviour {
 	
 	public TextMesh timeDisplay; 
 	public Transform boundCamera;
 	
+	public List<GameObject> ammo = new List<GameObject>();
+
 	public GameObject racerToFollow;
 	
 	private Color initialBackingColor;

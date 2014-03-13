@@ -358,14 +358,24 @@ MonoBehaviour:
   shakiness: .0299999993
   baseDistance: 5
   maxDistance: 7
-  baseHeight: 3.5
-  minHeight: 2
   Base_FOV: 72.9000015
   Max_FOV: 77
   distanceStartEffect: 0
   heightStartEffect: .600000024
   fovStartEffect: .600000024
   shakeStartEffect: .699999988
+  fadeWidth: 0
+  fadeHeight: 0
+  fadeX: 0
+  fadeY: 0
+  cameraDistance: 7
+  cameraBaseDistance: 7
+  cameraMinDistance: 5
+  cameraMaxDistance: 9
+  height: 2
+  baseHeight: 3.5
+  minHeight: 2
+  heightFromTarget: .5
 --- !u!114 &11400008
 MonoBehaviour:
   m_ObjectHideFlags: 1

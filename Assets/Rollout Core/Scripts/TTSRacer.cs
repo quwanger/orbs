@@ -77,9 +77,12 @@ public class TTSRacer : TTSBehaviour
 	#endregion
 
 	#region gameplay vars
-	public float TopSpeed = 250.0f;
-	public float Acceleration = 8000.0f;
-	public float Handling = 11000.0f;
+	public float TopSpeedInit = 250.0f;
+	public float AccelerationInit = 8000.0f;
+	public float HandlingInit = 11000.0f;
+	public float TopSpeed;
+	public float Acceleration;
+	public float Handling;
 	
 	public enum PlayerType { Player, AI, Multiplayer };
 	public PlayerType player = PlayerType.Player;
@@ -185,9 +188,10 @@ public class TTSRacer : TTSBehaviour
 		RacerSfx.volume = 0.5f;
 
 		//Apply Attributes
-		TopSpeed = TopSpeed + (speedIncrease * CurrentRig.rigSpeed);
-		Acceleration = Acceleration + (accelerationIncrease * CurrentRig.rigAcceleration);
-		Handling = Handling + (handlingIncrease * CurrentRig.rigHandling);
+
+		TopSpeedInit = TopSpeedInit + (speedIncrease * CurrentRig.GetComponent<TTSRig>().rigSpeed);
+		AccelerationInit = AccelerationInit + (accelerationIncrease * CurrentRig.GetComponent<TTSRig>().rigAcceleration);
+		HandlingInit = HandlingInit + (handlingIncrease * CurrentRig.GetComponent<TTSRig>().rigHandling);
 		
 		Offense = CurrentRig.rigOffense;
 		Defense = CurrentRig.rigDefense;
@@ -217,6 +221,11 @@ public class TTSRacer : TTSBehaviour
 	}
 	
 	void FixedUpdate () {
+
+		TopSpeed = TopSpeedInit + (place * speedIncrease);
+		Acceleration = AccelerationInit + (place * accelerationIncrease);
+		Handling = HandlingInit + (place * handlingIncrease);
+
 		if(!level.raceHasFinished){
 			if(IsPlayerControlled){ 
 				CalculateInputForces();
@@ -421,18 +430,6 @@ public class TTSRacer : TTSBehaviour
 	public void OnWaypoint(TTSWaypoint hit) {
 		previousWaypoint = currentWaypoint;
 		currentWaypoint = hit;
-
-		/*if (previousWaypoint == currentWaypoint) {
-			if (goingWrongWay == true) {
-				goingWrongWay = false;
-				WrongWay();
-			}
-			else {
-				goingWrongWay = true;
-				WrongWay();
-			}
-		}*/
-		
 
 		if(AIUtil == null)
 			AIUtil = gameObject.AddComponent<TTSAIController>();	

@@ -29,6 +29,11 @@ public class TTSPowerup : TTSBehaviour
 	public GameObject HelixPrefab;
 	#endregion
 
+	#region Tier3 Specialty Variables
+	public int numberOfEntropyCannonsAvailable = 0;
+	public int numberOfHelixCannonsAvailable = 0;
+	#endregion
+	
 	void Awake() {
 		pp2 = this.GetComponent<TTSPerkManager>().equiptPerkPool2;
 	}
@@ -88,9 +93,12 @@ public class TTSPowerup : TTSBehaviour
 			if (tier < 3) {
 				tier++;
 			}
-		}
-		else if (powerup == Powerup.TimeBonus) {
-			if (AvailablePowerup == TTSBehaviour.Powerup.None)
+			//deal with tier 3 entropy
+			if(powerup == Powerup.EntropyCannon && tier == 3){
+				numberOfEntropyCannonsAvailable = 10;
+			}
+		} else if(powerup == Powerup.TimeBonus) {
+			if(AvailablePowerup == TTSBehaviour.Powerup.None)
 				tier = 0;
 			GiveTimeBonus(true);
 		}
@@ -114,6 +122,22 @@ public class TTSPowerup : TTSBehaviour
 			}
 		}
 
+		if(powerup == Powerup.Helix){
+			switch(tier){
+			case 1:
+				numberOfHelixCannonsAvailable = 1;
+				break;
+			case 2:
+				numberOfHelixCannonsAvailable = 3;
+				break;
+			case 3:
+				numberOfHelixCannonsAvailable = 8;
+				break;
+			default:
+				break;
+			}
+		}
+		
 		//only update the hud if they are a human racer (as AI do not have HUDs)
 		if (this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)
 			hudPowerup.GetComponent<TTSHudPowerup>().UpdateHudPowerup(AvailablePowerup, tier);
@@ -156,11 +180,23 @@ public class TTSPowerup : TTSBehaviour
 		}
 
 		this.ActivePowerup = this.AvailablePowerup;
-		this.AvailablePowerup = Powerup.None;
 
-		this.tier = 0;
-
-		if (this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)
+		if(this.AvailablePowerup == Powerup.EntropyCannon && tier == 3){
+			if(numberOfEntropyCannonsAvailable == 0){
+				this.AvailablePowerup = Powerup.None;
+				this.tier = 0;
+			}
+		}else if(this.AvailablePowerup == Powerup.Helix){
+			if(numberOfHelixCannonsAvailable <= 0){
+				this.AvailablePowerup = Powerup.None;
+				this.tier = 0;
+			}
+		}else{
+			this.AvailablePowerup = Powerup.None;
+			this.tier = 0;
+		}
+		
+		if(this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)
 			hudPowerup.GetComponent<TTSHudPowerup>().UpdateHudPowerup(this.AvailablePowerup, this.tier);
 	}
 
@@ -217,30 +253,23 @@ public class TTSPowerup : TTSBehaviour
 				Invoke("EntropyMid", i * 0.075f);
 			}
 		}
-		if (_tier == 3) {
-			for (int i = 0; i < 20; i++) {
-				Invoke("EntropyMid", i * 0.075f);
-			}
+
+		if(_tier == 3){
+			EntropyMid();
+			numberOfEntropyCannonsAvailable--;
 		}
+
 		//it is only active while firing
 		this.ActivePowerup = TTSBehaviour.Powerup.None;
 	}
 
 	public void Helix(int _tier) {
-		if (_tier == 1) {
+
+		if(_tier == 1 || _tier == 2 || _tier == 3) {
 			HelixMid();
+			numberOfHelixCannonsAvailable--;
 		}
 
-		if (_tier == 2) {
-			for (int i = 0; i < 3; i++) {
-				Invoke("HelixMid", i * 0.1f);
-			}
-		}
-		if (_tier == 3) {
-			for (int i = 0; i < 8; i++) {
-				Invoke("HelixMid", i * 0.1f);
-			}
-		}
 		//it is only active while firing
 		this.ActivePowerup = TTSBehaviour.Powerup.None;
 	}
@@ -327,13 +356,23 @@ public class TTSPowerup : TTSBehaviour
 		GameObject go = (GameObject)Instantiate(EntropyCannonPrefab);
 		go.GetComponent<TTSEntropyCannonProjectile>().offensiveMultiplier = this.gameObject.GetComponent<TTSRacer>().Offense;
 		go.transform.rotation = GetComponent<TTSRacer>().displayMeshComponent.transform.rotation;
-		go.transform.position = this.gameObject.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
-		go.rigidbody.velocity = rigidbody.velocity;
+
+		if(CheckForwardAnalog()){
+			//shoot forward
+			go.transform.position = transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
+			go.rigidbody.velocity = this.rigidbody.velocity.normalized * Random.Range(rigidbody.velocity.magnitude + 50.0f, rigidbody.velocity.magnitude + 150.0f);
+		}else{
+			//shoot backwards
+			go.transform.position = transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * -3.5f;
+			go.rigidbody.velocity = this.rigidbody.velocity.normalized * Random.Range(rigidbody.velocity.magnitude + 50.0f, rigidbody.velocity.magnitude + 150.0f) * -1.0f;
+		}
+
 
 		if (owner) { SendPowerupDeploy(TTSPowerupNetworkTypes.Entropy, go); }
 		else {
 			go.GetComponent<TTSEntropyCannonProjectile>().SetNetHandler(handle);
 		}
+
 		return go;
 	}
 
@@ -362,33 +401,6 @@ public class TTSPowerup : TTSBehaviour
 		return go;
 	}
 
-	// Delete if you don't need anything.
-	//public GameObject FireHelix(GameObject effectedRacer) {
-	//	GameObject go = (GameObject) Instantiate(HelixPrefab);
-	//	go.GetComponent<TTSHelixProjectile>().currentRacer = effectedRacer.GetComponent<TTSRacer>();
-	//	go.GetComponent<TTSHelixProjectile>().offensiveMultiplier = effectedRacer.GetComponent<TTSRacer>().Offense;
-	//	go.GetComponent<TTSHelixProjectile>().racersInFront = (this.GetComponent<TTSRacer>().place - 1);
-	//	switch(tier){
-	//		case 1:
-	//			go.GetComponent<TTSHelixProjectile>().helixInBatch = 1;
-	//			break;
-	//		case 2:
-	//			go.GetComponent<TTSHelixProjectile>().helixInBatch = 3;
-	//			break;
-	//		case 3:
-	//			go.GetComponent<TTSHelixProjectile>().helixInBatch = 8;
-	//			break;
-	//		default:
-	//			go.GetComponent<TTSHelixProjectile>().helixInBatch = 1;
-	//			break;
-	//	}
-	//	go.transform.rotation = GetComponent<TTSRacer>().displayMeshComponent.transform.rotation;
-	//	go.transform.position = effectedRacer.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
-	//	//go.rigidbody.velocity = effectedRacer.rigidbody.velocity.normalized * (effectedRacer.rigidbody.velocity.magnitude + go.GetComponent<TTSHelixProjectile>().ProjectileStartVelocity);
-	//	go.rigidbody.velocity = effectedRacer.rigidbody.velocity;
-	//	return go;
-	//}
-
 	public GameObject GiveTimeBonus(bool owner) {
 		level.time.GiveTimeBonus(1.0f);
 		GameObject go = (GameObject)Instantiate(TimeBonusPrefab, this.gameObject.transform.position, this.gameObject.transform.rotation);
@@ -397,19 +409,6 @@ public class TTSPowerup : TTSBehaviour
 		if (owner) { SendStaticPowerupDeploy(TTSPowerupNetworkTypes.TimeBonus, 0.0f); }
 		return go;
 	}
-
-	// Delete if you don't need anything.
-	//public GameObject DeployShockwave(float tier, bool owner) {
-	//	GameObject go = (GameObject)Instantiate(ShockwavePrefab, this.gameObject.transform.position, Quaternion.identity);
-	//	TTSExplosiveForce explosion = go.GetComponent<TTSExplosiveForce>();
-
-	//	explosion.power = explosion.power * tier * this.gameObject.GetComponent<TTSRacer>().Offense;
-	//	explosion.radius = explosion.radius * tier * this.gameObject.GetComponent<TTSRacer>().Offense;
-	//	go.GetComponent<TTSShockwave>().Activate(this.gameObject);
-
-	//	if (owner) { SendStaticPowerupDeploy(TTSPowerupNetworkTypes.Shockwave, tier); }
-	//	return go;
-	//}
 
 	public GameObject DeployShockwave(float tier, bool owner) {
 		float power = 0, startSize = 0;
@@ -427,11 +426,11 @@ public class TTSPowerup : TTSBehaviour
 			startSize = 0.01f;
 		}
 
-		GameObject go = (GameObject)Instantiate(ShockwavePrefab, this.gameObject.transform.position, Quaternion.identity);
+		GameObject go = (GameObject) Instantiate(ShockwavePrefab, transform.position, Quaternion.identity);
 		go.GetComponent<ParticleSystem>().startSize = startSize;
-		go.GetComponent<TTSShockwave>().power = go.GetComponent<TTSShockwave>().power * power * this.gameObject.GetComponent<TTSRacer>().Offense;
-		go.GetComponent<TTSShockwave>().radius = go.GetComponent<TTSShockwave>().radius * power * this.gameObject.GetComponent<TTSRacer>().Offense;
-		go.GetComponent<TTSShockwave>().upwardsForce = go.GetComponent<TTSShockwave>().upwardsForce * power * this.gameObject.GetComponent<TTSRacer>().Offense;
+		go.GetComponent<TTSShockwave>().power = go.GetComponent<TTSShockwave>().power * 2.0f * GetComponent<TTSRacer>().Offense;
+		go.GetComponent<TTSShockwave>().radius = go.GetComponent<TTSShockwave>().radius * power * GetComponent<TTSRacer>().Offense;
+		go.GetComponent<TTSShockwave>().upwardsForce = go.GetComponent<TTSShockwave>().upwardsForce * power * GetComponent<TTSRacer>().Offense;
 		go.GetComponent<TTSShockwave>().Activate(this.gameObject);
 		go.transform.parent = this.transform;
 
@@ -503,6 +502,26 @@ public class TTSPowerup : TTSBehaviour
 		}
 	}
 	#endregion
+	
+	public bool CheckForwardAnalog(){
+		if(this.gameObject.GetComponent<TTSRacer>().playerNum == 1) {
+			if(level.useKeyboard){
+				if(Input.GetKeyDown("down") || Input.GetKeyDown("s")){
+					return false;
+				}
+			}else if(Input.GetAxis("L_YAxis_1") == -1.0f){
+				return false;
+			}
+		} else if(this.gameObject.GetComponent<TTSRacer>().playerNum == 2) {
+			if(Input.GetAxis("L_YAxis_2") == -1.0f){return false;}
+		} else if(this.gameObject.GetComponent<TTSRacer>().playerNum == 3) {
+			if(Input.GetAxis("L_YAxis_3") == -1.0f){return false;}
+		} else if(this.gameObject.GetComponent<TTSRacer>().playerNum == 4) {
+			if(Input.GetAxis("L_YAxis_4") == -1.0f){return false;}
+		}
+
+		return true;
+	}
 
 }
 
