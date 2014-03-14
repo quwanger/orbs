@@ -187,11 +187,12 @@ public class TTSRacer : TTSBehaviour
 		RacerSfx.rolloffMode = AudioRolloffMode.Linear;
 		RacerSfx.volume = 0.5f;
 
-		//Apply Attributes
+		CurrentRig = (CurrentRig != null) ? CurrentRig : GetComponentInChildren<TTSRig>();
 
-		TopSpeedInit = TopSpeedInit + (speedIncrease * CurrentRig.GetComponent<TTSRig>().rigSpeed);
-		AccelerationInit = AccelerationInit + (accelerationIncrease * CurrentRig.GetComponent<TTSRig>().rigAcceleration);
-		HandlingInit = HandlingInit + (handlingIncrease * CurrentRig.GetComponent<TTSRig>().rigHandling);
+		//Apply Attributes
+		TopSpeedInit = TopSpeedInit + (speedIncrease * CurrentRig.rigSpeed);
+		AccelerationInit = AccelerationInit + (accelerationIncrease * CurrentRig.rigAcceleration);
+		HandlingInit = HandlingInit + (handlingIncrease * CurrentRig.rigHandling);
 		
 		Offense = CurrentRig.rigOffense;
 		Defense = CurrentRig.rigDefense;

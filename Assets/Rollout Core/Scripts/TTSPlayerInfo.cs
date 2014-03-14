@@ -11,6 +11,10 @@ public class TTSPlayerInfo : TTSBehaviour {
 	public PerksPool1 perkA;
 	public Powerup perkB;
 	
+	void Awake(){
+		DontDestroyOnLoad(this);
+	}
+	
 	// Use this for initialization
 	void Start () {
 		//rig = level.GetComponent<TTSMenu>().SelectedRig.ToString();

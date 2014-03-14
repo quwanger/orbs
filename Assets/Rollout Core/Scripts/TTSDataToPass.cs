@@ -1,9 +1,13 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
-public class TSSDataToPass : MonoBehaviour {
+public class TTSDataToPass : MonoBehaviour {
 	
 	public List<GameObject> players;
 	public string gametype;
 	
+	void Awake(){
+		DontDestroyOnLoad(this);
+	}
 }

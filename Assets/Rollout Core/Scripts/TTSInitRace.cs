@@ -25,16 +25,29 @@ public class TTSInitRace : MonoBehaviour
 	private string tempCharacterChoice = "Character_Default";
 	public int numHumanPlayers = 1;
 	public int numAIPlayers = 0;
-
-	GameObject rigToLoad;
-	GameObject characterToLoad;
-
+	
 	TTSLevel level;
 
 	public List<TTSRacer.RacerConfig> racerConfigs;
+	
+	// ?
+	//public enum Rigs {Rhino, Scorpion, Default};
+	//public enum Characters {Character_Default, Character1, Character2};
+	public List<GameObject> _playerBundles;
+	public string gameType;
 
 	// Use this for initialization
 	void Start() {
+		
+		// Menu passing in data
+		if(GameObject.Find("DataToPass")){
+			_playerBundles = GameObject.Find("DataToPass").GetComponent<TTSDataToPass>().players;
+			gameType = GameObject.Find("DataToPass").GetComponent<TTSDataToPass>().gametype;
+
+			Debug.Log(_playerBundles);
+			Debug.Log(gameType);
+		}
+
 		level = GetComponent<TTSLevel>();
 
 		racerConfigs = new List<TTSRacer.RacerConfig>();
@@ -156,15 +169,15 @@ public class TTSInitRace : MonoBehaviour
 
 		return racer;
 	}
-
+	
+	GameObject rigToLoad;
+	GameObject characterToLoad;
 	public GameObject InstantiateRacer(int rigID, int startPointID) {
 
 		//finds the rig to initialize
-		if (rigID == -1) {
-			foreach (GameObject rig in Rigs) {
-				if (rig.GetComponent<TTSRig>().rigName == tempRigChoice) {
-					rigToLoad = rig;
-				}
+		/*foreach(GameObject rig in _rigs){
+			if(rig.GetComponent<TTSRig>().rigName == tempRigChoice){
+				rigToLoad = rig;
 			}
 		}
 		else {
@@ -172,10 +185,10 @@ public class TTSInitRace : MonoBehaviour
 		}
 
 		//makes sure there is a rig to load if none selected
-		if (rigToLoad == null) {
-			rigID = Random.Range(0, Rigs.Count);
-			rigToLoad = Rigs[rigID];
-		}
+
+		if(rigToLoad == null){
+			rigToLoad = _rigs[Random.Range(0, _rigs.Count)];
+		}*/
 
 		//checks for the character (in this case, default sphere)
 		foreach (GameObject character in Characters) {
@@ -210,6 +223,9 @@ public class TTSInitRace : MonoBehaviour
 		//sets the currentrig variable of the racer to the rig selecte above
 		tempRacer.GetComponent<TTSRacer>().CurrentRig = tempRig.GetComponent<TTSRig>();
 		tempRacer.GetComponent<TTSRacer>().rigID = rigID;
+		
+		// MENU LOAD
+		//tempRacer.GetComponent<TTSRacer>().CurrentRig = tempRig;
 
 		tempRacer.GetComponent<TTSRacer>().Initialized();
 
@@ -224,6 +240,11 @@ public class TTSInitRace : MonoBehaviour
 
 		racerControl.IsPlayerControlled = true;
 		racerControl.player = TTSRacer.PlayerType.Player;
+		
+		// MENU LOAD
+		//add perks
+		//racer.GetComponent<TTSPerkManager>().equiptPerkPool1 = _playerBundles[i].GetComponent<TTSPlayerInfo>().perkA;
+		//racer.GetComponent<TTSPerkManager>().equiptPerkPool2 = _playerBundles[i].GetComponent<TTSPlayerInfo>().perkB;
 
 		//Instantiates a minimap for each human player and sets it to follow a racer
 		GameObject tempMinimap = (GameObject)Instantiate(minimapGO);
