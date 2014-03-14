@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using XInputDotNetPure;
 
 /***********************
  * Racer.cs - Racer Prefab Builder and Motion Handler
@@ -128,6 +129,10 @@ public class TTSRacer : TTSBehaviour
 	TTSRacerNetHandler netHandler;
 	public int rigID;
 
+	//XInput
+	PlayerIndex playerIndex;
+	GamePadState state;
+
 	public struct RacerConfig
 	{
 		public float netID;
@@ -250,24 +255,32 @@ public class TTSRacer : TTSBehaviour
 		if (finished && !level.DebugMode) // No input when race is finished
 			return;
 
+		//state = GamePad.GetState(playerIndex);
+
+		Debug.Log("Player 1: " + playerIndex);
+
 		if (player == PlayerType.Player) {
 			if (playerNum == 1) {
 				if(level.useKeyboard){
 					vInput = Input.GetAxis ("Key_YAxis");
 					hInput = Input.GetAxis ("Key_XAxis");
 				}else{
-					vInput = Input.GetAxis("TriggersR_1");
-					hInput = Input.GetAxis("L_XAxis_1");
+					state = GamePad.GetState(PlayerIndex.One);
+					vInput = state.Triggers.Right;
+					hInput = state.ThumbSticks.Left.X;
 				}
 			} else if (playerNum == 2) {
-				vInput = Input.GetAxis("TriggersR_2");
-				hInput = Input.GetAxis("L_XAxis_2");
+				state = GamePad.GetState(PlayerIndex.Two);
+				vInput = state.Triggers.Right;
+				hInput = state.ThumbSticks.Left.X;
 			} else if (playerNum == 3) {
-				vInput = Input.GetAxis("TriggersR_3");
-				hInput = Input.GetAxis("L_XAxis_3");
+				state = GamePad.GetState(PlayerIndex.Three);
+				vInput = state.Triggers.Right;
+				hInput = state.ThumbSticks.Left.X;
 			} else if (playerNum == 4) {
-				vInput = Input.GetAxis("TriggersR_4");
-				hInput = Input.GetAxis("L_XAxis_4");
+				state = GamePad.GetState(PlayerIndex.Four);
+				vInput = state.Triggers.Right;
+				hInput = state.ThumbSticks.Left.X;
 			}
 		}
 		else if (player == PlayerType.Multiplayer) {

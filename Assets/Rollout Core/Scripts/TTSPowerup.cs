@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using XInputDotNetPure;
 
 public class TTSPowerup : TTSBehaviour
 {
@@ -33,6 +34,9 @@ public class TTSPowerup : TTSBehaviour
 	public int numberOfEntropyCannonsAvailable = 0;
 	public int numberOfHelixCannonsAvailable = 0;
 	#endregion
+
+	//XInput
+	GamePadState state;
 	
 	void Awake() {
 		pp2 = this.GetComponent<TTSPerkManager>().equiptPerkPool2;
@@ -58,24 +62,32 @@ public class TTSPowerup : TTSBehaviour
 		//if you hit space or the 'a' button on an Xbox controller
 		if (AvailablePowerup != Powerup.None) {
 			if (this.gameObject.GetComponent<TTSRacer>().playerNum == 1) {
+				state = GamePad.GetState(PlayerIndex.One);
+
 				if (level.useKeyboard) {
 					if (Input.GetKeyDown("space")) {
 						ConsumePowerup();
 					}
 				}
-				else if (Input.GetKeyDown("joystick 1 button 0") || Input.GetKeyDown("joystick 1 button 16")) {
+				else if (state.Buttons.A == ButtonState.Pressed || Input.GetKeyDown("joystick 1 button 16")) {
 					Debug.Log("A pressed");
 					ConsumePowerup();
 				}
 			}
 			else if (this.gameObject.GetComponent<TTSRacer>().playerNum == 2) {
-				if (Input.GetKeyDown("joystick 2 button 0") || Input.GetKeyDown("joystick 2 button 16")) { Debug.Log("A pressed"); ConsumePowerup(); }
+				state = GamePad.GetState(PlayerIndex.Two);
+
+				if (state.Buttons.A == ButtonState.Pressed || Input.GetKeyDown("joystick 2 button 16")) { Debug.Log("A pressed"); ConsumePowerup(); }
 			}
 			else if (this.gameObject.GetComponent<TTSRacer>().playerNum == 3) {
-				if (Input.GetKeyDown("joystick 3 button 0") || Input.GetKeyDown("joystick 3 button 16")) ConsumePowerup();
+				state = GamePad.GetState(PlayerIndex.Three);
+
+				if (state.Buttons.A == ButtonState.Pressed || Input.GetKeyDown("joystick 3 button 16")) ConsumePowerup();
 			}
 			else if (this.gameObject.GetComponent<TTSRacer>().playerNum == 4) {
-				if (Input.GetKeyDown("joystick 4 button 0") || Input.GetKeyDown("joystick 4 button 16")) ConsumePowerup();
+				state = GamePad.GetState(PlayerIndex.Four);
+
+				if (state.Buttons.A == ButtonState.Pressed || Input.GetKeyDown("joystick 4 button 16")) ConsumePowerup();
 			}
 		}
 
@@ -505,19 +517,27 @@ public class TTSPowerup : TTSBehaviour
 	
 	public bool CheckForwardAnalog(){
 		if(this.gameObject.GetComponent<TTSRacer>().playerNum == 1) {
+			state = GamePad.GetState(PlayerIndex.One);
+
 			if(level.useKeyboard){
 				if(Input.GetKeyDown("down") || Input.GetKeyDown("s")){
 					return false;
 				}
-			}else if(Input.GetAxis("L_YAxis_1") == -1.0f){
+			}else if(state.ThumbSticks.Left.Y == -1.0f){
 				return false;
 			}
 		} else if(this.gameObject.GetComponent<TTSRacer>().playerNum == 2) {
-			if(Input.GetAxis("L_YAxis_2") == -1.0f){return false;}
+			state = GamePad.GetState(PlayerIndex.Two);
+
+			if(state.ThumbSticks.Left.Y == -1.0f){return false;}
 		} else if(this.gameObject.GetComponent<TTSRacer>().playerNum == 3) {
-			if(Input.GetAxis("L_YAxis_3") == -1.0f){return false;}
+			state = GamePad.GetState(PlayerIndex.Three);
+
+			if(state.ThumbSticks.Left.Y == -1.0f){return false;}
 		} else if(this.gameObject.GetComponent<TTSRacer>().playerNum == 4) {
-			if(Input.GetAxis("L_YAxis_4") == -1.0f){return false;}
+			state = GamePad.GetState(PlayerIndex.Four);
+
+			if(state.ThumbSticks.Left.Y == -1.0f){return false;}
 		}
 
 		return true;
