@@ -50,10 +50,10 @@ public class TTSClient : MonoBehaviour
 	Dictionary<float, TTSNetworkHandle> racerHandles = new Dictionary<float, TTSNetworkHandle>();
 	TTSPacketWriter UpdatePacket = new TTSPacketWriter();
 
-	List<TTSRacer.RacerConfig> spawnRacers = new List<TTSRacer.RacerConfig>();
+	List<TTSRacerConfig> spawnRacers = new List<TTSRacerConfig>();
 	List<TTSPowerupNetHandler> spawnPowerups = new List<TTSPowerupNetHandler>();
 
-	public List<TTSRacer.RacerConfig> RegisteredRacerConfigs = new List<TTSRacer.RacerConfig>();
+	public List<TTSRacerConfig> RegisteredRacerConfigs = new List<TTSRacerConfig>();
 
 	// Use this for initialization
 	void Start() {
@@ -141,7 +141,7 @@ public class TTSClient : MonoBehaviour
 
 		// Spawn multiplayer racers
 		if (spawnRacers.Count > 0) {
-			foreach (TTSRacer.RacerConfig handler in spawnRacers) {
+			foreach (TTSRacerConfig handler in spawnRacers) {
 				initRace.InitMultiplayerRacer(handler);
 			}
 			spawnRacers.Clear();
@@ -204,12 +204,12 @@ public class TTSClient : MonoBehaviour
 
 				#region racers and powerups
 				case TTSCommandTypes.RacerRegister:
-					TTSRacer.RacerConfig config = new TTSRacer.RacerConfig();
+					TTSRacerConfig config = new TTSRacerConfig();
 					id = config.netID = packet.ReadFloat();
 					config.Index = packet.ReadInt32();
 					config.RigType = packet.ReadInt32();
-					config.Perk1 = packet.ReadInt32();
-					config.Perk2 = packet.ReadInt32();
+					config.PerkA = packet.ReadInt32();
+					config.PerkB = packet.ReadInt32();
 					config.Name = packet.Read16CharString();
 					config.ControlType = packet.ReadInt32();
 					config.LocalControlType = TTSUtils.EnumToInt(TTSRacer.PlayerType.Multiplayer);

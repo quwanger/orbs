@@ -1,11 +1,11 @@
 using UnityEngine;
 using System.Collections;
 
-public class TTSMenuItemPerk : TTSMenuEnums {
+public class TTSMenuItemPerk : TTSBehaviour {
 	
 	public bool isSelected = false;
-	public PerksPool1 perk;
-	public Powerup perkB;
+	public PerkType perk;
+	public PowerupType perkB;
 	public int index;
 	public string name;
 	public string description;

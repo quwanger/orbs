@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 public class TTSPowerupPlatform : TTSBehaviour {
-	public Powerup currentPowerup;
+	public PowerupType currentPowerup;
 	public float respawnTime = 5.0f;
 	public AudioClip clip;
 	private float rotationSpeed = 50.0f;
@@ -55,42 +55,42 @@ public class TTSPowerupPlatform : TTSBehaviour {
 				if(collider.gameObject == racer) {
 					collider.gameObject.GetComponent<TTSPowerup>().GivePowerup(this.currentPowerup);
 					switch(currentPowerup) {
-						case Powerup.EntropyCannon:
+						case PowerupType.EntropyCannon:
 						pickupParticleSystem = Instantiate(EntropyParticleSystem, new Vector3(transform.position.x,transform.position.y+3.0f, transform.position.z), powerupMesh.transform.rotation) as ParticleSystem;
 						pickupParticleSystem.Emit(numParticlesToEmitOnPickup);
 						break;
 						
-						case Powerup.SuperC:
+						case PowerupType.SuperC:
 						pickupParticleSystem = Instantiate(SuperCParticleSystem, new Vector3(transform.position.x,transform.position.y+3.0f, transform.position.z), powerupMesh.transform.rotation) as ParticleSystem;
 						pickupParticleSystem.Emit(numParticlesToEmitOnPickup);
 						break;
 						
-						case Powerup.TimeBonus:
+						case PowerupType.TimeBonus:
 						pickupParticleSystem = Instantiate(TimeBonusParticleSystem, new Vector3(transform.position.x,transform.position.y+3.0f, transform.position.z), powerupMesh.transform.rotation) as ParticleSystem;
 						pickupParticleSystem.Emit(numParticlesToEmitOnPickup);
 						break;
 						
-						case Powerup.Shield:
+						case PowerupType.Shield:
 						pickupParticleSystem = Instantiate(ShieldParticleSystem, new Vector3(transform.position.x,transform.position.y+3.0f, transform.position.z), powerupMesh.transform.rotation) as ParticleSystem;
 						pickupParticleSystem.Emit(numParticlesToEmitOnPickup);
 						break;
 						
-						case Powerup.DrezzStones:
+						case PowerupType.DrezzStones:
 						pickupParticleSystem = Instantiate(DrezzStoneParticleSystem, new Vector3(transform.position.x,transform.position.y+3.0f, transform.position.z), powerupMesh.transform.rotation) as ParticleSystem;
 						pickupParticleSystem.Emit(numParticlesToEmitOnPickup);
 						break;
 						
-						case Powerup.Helix:
+						case PowerupType.Helix:
 						pickupParticleSystem = Instantiate(HelixParticleSystem, new Vector3(transform.position.x,transform.position.y+3.0f, transform.position.z), powerupMesh.transform.rotation) as ParticleSystem;
 						pickupParticleSystem.Emit(numParticlesToEmitOnPickup);
 						break;
 						
-						case Powerup.Leech:
+						case PowerupType.Leech:
 						pickupParticleSystem = Instantiate(LeechParticleSystem, new Vector3(transform.position.x,transform.position.y+3.0f, transform.position.z), powerupMesh.transform.rotation) as ParticleSystem;
 						pickupParticleSystem.Emit(numParticlesToEmitOnPickup);
 						break;
 						
-						case Powerup.Shockwave:
+						case PowerupType.Shockwave:
 						pickupParticleSystem = Instantiate(ShockwaveParticleSystem, new Vector3(transform.position.x,transform.position.y+3.0f, transform.position.z), powerupMesh.transform.rotation) as ParticleSystem;
 						pickupParticleSystem.Emit(numParticlesToEmitOnPickup);
 						break;
@@ -120,18 +120,18 @@ public class TTSPowerupPlatform : TTSBehaviour {
 		pickedUp = false;
 	}
 	
-	private Powerup getRandomPowerup () {
+	private PowerupType getRandomPowerup () {
 	
-		Powerup powerup = GetRandomEnum<Powerup>();
+		PowerupType powerup = GetRandomEnum<PowerupType>();
 		
 		if(level.currentGameType != TTSLevel.Gametype.TimeTrial){
-			while(powerup == Powerup.TimeBonus || powerup == Powerup.None || powerup == Powerup.Lottery) {
-				powerup = GetRandomEnum<Powerup>();
+			while(powerup == PowerupType.TimeBonus || powerup == PowerupType.None || powerup == PowerupType.Lottery) {
+				powerup = GetRandomEnum<PowerupType>();
 			}
 		}else{
 			//make sure that the random powerup isnt none or lottery
-			while(powerup == Powerup.None || powerup == Powerup.Lottery) {
-				powerup = GetRandomEnum<Powerup>();
+			while(powerup == PowerupType.None || powerup == PowerupType.Lottery) {
+				powerup = GetRandomEnum<PowerupType>();
 			}
 		}
 		
@@ -141,36 +141,36 @@ public class TTSPowerupPlatform : TTSBehaviour {
 	private void displayPowerup(){
 		//display the current powerup as a child of the platform
 		switch (currentPowerup){
-    	case (Powerup.SuperC):
+    	case (PowerupType.SuperC):
 			powerupMesh = Instantiate(powerupBoost, new Vector3(transform.position.x,transform.position.y+3.0f, transform.position.z), transform.rotation) as GameObject;
 			powerupMesh.transform.parent = this.transform;
 			break;
-	    case (Powerup.EntropyCannon):
+	    case (PowerupType.EntropyCannon):
 			powerupMesh = Instantiate(powerupMissiles, new Vector3(transform.position.x,transform.position.y+3.0f, transform.position.z), transform.rotation) as GameObject;
 			powerupMesh.transform.parent = this.transform;
 			break;
 			
-		case (Powerup.TimeBonus):
+		case (PowerupType.TimeBonus):
 			powerupMesh = Instantiate(powerupMoreTime, new Vector3(transform.position.x,transform.position.y+3.0f, transform.position.z), transform.rotation) as GameObject;
 			powerupMesh.transform.parent = this.transform;
 			break;
-		case (Powerup.DrezzStones):
+		case (PowerupType.DrezzStones):
 			powerupMesh = Instantiate(powerupDrezzStone, new Vector3(transform.position.x,transform.position.y+3.0f, transform.position.z), transform.rotation) as GameObject;
 			powerupMesh.transform.parent = this.transform;
 			break;
-		case (Powerup.Shield):
+		case (PowerupType.Shield):
 			powerupMesh = Instantiate(powerupShield, new Vector3(transform.position.x,transform.position.y+3.0f, transform.position.z), transform.rotation) as GameObject;
 			powerupMesh.transform.parent = this.transform;
 			break;
-		case (Powerup.Helix):
+		case (PowerupType.Helix):
 			powerupMesh = Instantiate(powerupHelix, new Vector3(transform.position.x,transform.position.y+3.0f, transform.position.z), transform.rotation) as GameObject;
 			powerupMesh.transform.parent = this.transform;
 			break;
-		case (Powerup.Leech):
+		case (PowerupType.Leech):
 			powerupMesh = Instantiate(powerupLeech, new Vector3(transform.position.x,transform.position.y+3.0f, transform.position.z), transform.rotation) as GameObject;
 			powerupMesh.transform.parent = this.transform;
 			break;
-		case (Powerup.Shockwave):
+		case (PowerupType.Shockwave):
 			powerupMesh = Instantiate(powerupShockwave, new Vector3(transform.position.x,transform.position.y+3.0f, transform.position.z), transform.rotation) as GameObject;
 			powerupMesh.transform.parent = this.transform;
 			break;

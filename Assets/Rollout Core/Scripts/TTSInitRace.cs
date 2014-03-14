@@ -17,9 +17,6 @@ public class TTSInitRace : MonoBehaviour
 
 	private int startingPointIndex = 0;
 
-	public enum RigTypes { Rhino, Scorpion, Default };
-	public enum CharacterTypes { Character_Default, Character1, Character2 };
-
 	//private string tempRigChoice = "Rig_Rhino";
 	private string tempRigChoice;
 	private string tempCharacterChoice = "Character_Default";
@@ -28,12 +25,12 @@ public class TTSInitRace : MonoBehaviour
 	
 	TTSLevel level;
 
-	public List<TTSRacer.RacerConfig> racerConfigs;
+	public List<TTSRacerConfig> racerConfigs;
 	
 	// ?
 	//public enum Rigs {Rhino, Scorpion, Default};
 	//public enum Characters {Character_Default, Character1, Character2};
-	public List<GameObject> _playerBundles;
+	public List<TTSRacerConfig> _playerBundles;
 	public TTSLevel.Gametype gameType;
 
 	// Use this for initialization
@@ -42,6 +39,7 @@ public class TTSInitRace : MonoBehaviour
 		// Menu passing in data
 		if(GameObject.Find("DataToPass")){
 			_playerBundles = GameObject.Find("DataToPass").GetComponent<TTSDataToPass>().players;
+			racerConfigs = _playerBundles;
 			gameType = GameObject.Find("DataToPass").GetComponent<TTSDataToPass>().gametype;
 
 			Debug.Log(_playerBundles);
@@ -50,7 +48,7 @@ public class TTSInitRace : MonoBehaviour
 
 		level = GetComponent<TTSLevel>();
 
-		racerConfigs = new List<TTSRacer.RacerConfig>();
+		racerConfigs = new List<TTSRacerConfig>();
 
 		for (int i = 0; i < numHumanPlayers; i++) {
 			racerConfigs.Add(testRacerConfig(true));
@@ -73,13 +71,13 @@ public class TTSInitRace : MonoBehaviour
 		}
 	}
 
-	private bool IsHuman(TTSRacer.RacerConfig config) {
+	private bool IsHuman(TTSRacerConfig config) {
 		if (config.LocalControlType == (int)TTSRacer.PlayerType.Player) return true;
 		return false;
 	}
 
-	private void InitializeRacers(List<TTSRacer.RacerConfig> racerConfigs) {
-		foreach (TTSRacer.RacerConfig config in racerConfigs) {
+	private void InitializeRacers(List<TTSRacerConfig> racerConfigs) {
+		foreach (TTSRacerConfig config in racerConfigs) {
 
 			switch ((TTSRacer.PlayerType)config.LocalControlType) {
 
@@ -98,12 +96,12 @@ public class TTSInitRace : MonoBehaviour
 		}
 	}
 
-	private TTSRacer.RacerConfig testRacerConfig(bool Human) {
-		TTSRacer.RacerConfig config = new TTSRacer.RacerConfig();
+	private TTSRacerConfig testRacerConfig(bool Human) {
+		TTSRacerConfig config = new TTSRacerConfig();
 		config.Index = 99; // So that the racers will use the starting point index.
 		config.RigType = Random.Range(0, Rigs.Count);
-		config.Perk1 = 0;
-		config.Perk2 = 0;
+		config.PerkA = 0;
+		config.PerkB = 0;
 		if (Human) {
 			config.LocalControlType = TTSUtils.EnumToInt(TTSRacer.PlayerType.Player);
 		}
@@ -124,7 +122,7 @@ public class TTSInitRace : MonoBehaviour
 		return InstantiateRacer(-1, -1);
 	}
 
-	public GameObject InstantiateRacer(TTSRacer.RacerConfig config) {
+	public GameObject InstantiateRacer(TTSRacerConfig config) {
 		// Make sure that the rig type isn't out of range
 		config.RigType = (Rigs.Count > config.RigType) ? config.RigType : 0;
 		config.CharacterType = (Characters.Count > config.CharacterType) ? config.CharacterType : 0;
@@ -518,7 +516,7 @@ public class TTSInitRace : MonoBehaviour
 		racer.GetComponent<TTSRacer>().player = TTSRacer.PlayerType.AI;
 	}
 
-	private void InitToMultiplayer(GameObject racer, TTSRacer.RacerConfig config) {
+	private void InitToMultiplayer(GameObject racer, TTSRacerConfig config) {
 		racer.GetComponent<TTSRacer>().IsPlayerControlled = true;
 		racer.GetComponent<TTSRacer>().player = TTSRacer.PlayerType.Multiplayer;
 
@@ -527,7 +525,7 @@ public class TTSInitRace : MonoBehaviour
 		racer.GetComponent<TTSRacer>().SetNetHandler(handler);
 	}
 
-	public void InitMultiplayerRacer(TTSRacer.RacerConfig config) {
+	public void InitMultiplayerRacer(TTSRacerConfig config) {
 		InitToMultiplayer(InstantiateRacer(config), config);
 	}
 

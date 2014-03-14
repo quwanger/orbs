@@ -21,9 +21,15 @@ public class TTSBehaviour : MonoBehaviour {
 	[HideInInspector]
 	public float defenseIncrease = 0.3f;
 
-	public enum Powerup {None, EntropyCannon, DrezzStones, TimeBonus, SuperC, Shield, Helix, Shockwave, Leech, Lottery};
+	public enum LevelMenuItem { level1, level2, level3, level4, level5, level6 };
+
+	public enum RigType { Rhino, Scorpion, Spider, Dragon, Antique, NextGen };
+
+	public enum CharacterTypes { Character_Default, Character1, Character2 };
+
+	public enum PowerupType {None, EntropyCannon, DrezzStones, TimeBonus, SuperC, Shield, Helix, Shockwave, Leech, Lottery};
 	
-	public enum PerksPool1 {PhotoFinish, HotStart, DiamondCoat, ManOWar, Evolution, Speed, Acceleration, Handling, None};
+	public enum PerkType {PhotoFinish, HotStart, DiamondCoat, ManOWar, Evolution, Speed, Acceleration, Handling, None};
 	//public enum PerksPool2 {None, EntropyCannon, DrezzStones, TimeBonus, SuperC, Shield, Helix, Shockwave, Leech, Lottery};
 
 	public TTSLevel level {

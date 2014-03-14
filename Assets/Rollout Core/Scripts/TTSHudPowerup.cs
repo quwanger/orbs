@@ -21,37 +21,37 @@ public class TTSHudPowerup : MonoBehaviour {
 	
 	}
 	
-	public void UpdateHudPowerup(TTSBehaviour.Powerup p, int t){
+	public void UpdateHudPowerup(TTSBehaviour.PowerupType p, int t){
 		switch(p) {
-			case TTSBehaviour.Powerup.EntropyCannon:
+			case TTSBehaviour.PowerupType.EntropyCannon:
 			this.gameObject.renderer.material.SetTexture("_MainTex", powerupImages[0]);
 			break;
 			
-			case TTSBehaviour.Powerup.Shockwave:
+			case TTSBehaviour.PowerupType.Shockwave:
 			this.gameObject.renderer.material.SetTexture("_MainTex", powerupImages[1]);
 			break;
 			
-			case TTSBehaviour.Powerup.Shield:
+			case TTSBehaviour.PowerupType.Shield:
 			this.gameObject.renderer.material.SetTexture("_MainTex", powerupImages[2]);
 			break;
 			
-			case TTSBehaviour.Powerup.Leech:
+			case TTSBehaviour.PowerupType.Leech:
 			this.gameObject.renderer.material.SetTexture("_MainTex", powerupImages[3]);
 			break;
 			
-			case TTSBehaviour.Powerup.Helix:
+			case TTSBehaviour.PowerupType.Helix:
 			this.gameObject.renderer.material.SetTexture("_MainTex", powerupImages[4]);
 			break;
 			
-			case TTSBehaviour.Powerup.DrezzStones:
+			case TTSBehaviour.PowerupType.DrezzStones:
 			this.gameObject.renderer.material.SetTexture("_MainTex", powerupImages[5]);
 			break;
 			
-			case TTSBehaviour.Powerup.SuperC:
+			case TTSBehaviour.PowerupType.SuperC:
 			this.gameObject.renderer.material.SetTexture("_MainTex", powerupImages[6]);
 			break;
 			
-			case TTSBehaviour.Powerup.None:
+			case TTSBehaviour.PowerupType.None:
 			this.gameObject.renderer.material.SetTexture("_MainTex", powerupImages[8]);
 			break;
 			

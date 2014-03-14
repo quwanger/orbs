@@ -4,7 +4,7 @@ using System.Collections;
 
 public class TTSDataToPass : MonoBehaviour {
 	
-	public List<GameObject> players;
+	public List<TTSRacerConfig> players;
 	public TTSLevel.Gametype gametype;
 	
 	void Awake(){

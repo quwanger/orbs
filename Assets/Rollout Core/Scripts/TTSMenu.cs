@@ -2,22 +2,22 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 
-public class TTSMenu : TTSMenuEnums {
+public class TTSMenu : TTSBehaviour {
 	
 	// Lists of rigs, perks, and levels
 	public List<GameObject> _rigs = new List<GameObject>();
-	public RigMenuItem SelectedRig;
+	public RigType SelectedRig;
 	
 	public List<GameObject> _perks = new List<GameObject>();
-	public PerksPool1 SelectedPerk;
+	public PerkType SelectedPerk;
 	
 	public List<GameObject> _perksB = new List<GameObject>();
-	public Powerup SelectedPerkB;
+	public PowerupType SelectedPerkB;
 	
 	public List<GameObject> _levels = new List<GameObject>();
 	public LevelMenuItem SelectedLevel;
-	
-	public List<GameObject> players = new List<GameObject>();
+
+	public List<TTSRacerConfig> players = new List<TTSRacerConfig>();
 	public GameObject playerPackage;
 	
 	public string[] playersRigs;
@@ -227,11 +227,11 @@ public class TTSMenu : TTSMenuEnums {
 				readyUpB[numPlayers].SetActive(false);
 				readyUp[numPlayers].SetActive(true);
 				numPlayers++;
-				
-				GameObject tempPP = (GameObject)Instantiate(playerPackage);
-				tempPP.GetComponent<TTSPlayerInfo>().playerID = numPlayers;
-				
-				players.Add(tempPP);
+
+				TTSRacerConfig tempConfig = new TTSRacerConfig();
+				tempConfig.ControllerID = numPlayers;
+
+				players.Add(tempConfig);
 			}
 			
 			if(Input.GetKeyDown("joystick 2 button 0") && playerReady[1] == false){
@@ -240,11 +240,11 @@ public class TTSMenu : TTSMenuEnums {
 				readyUpB[numPlayers].SetActive(false);
 				readyUp[numPlayers].SetActive(true);
 				numPlayers++;
-				
-				GameObject tempPP = (GameObject)Instantiate(playerPackage);
-				tempPP.GetComponent<TTSPlayerInfo>().playerID = numPlayers;
-				
-				players.Add(tempPP);
+
+				TTSRacerConfig tempConfig = new TTSRacerConfig();
+				tempConfig.ControllerID = numPlayers;
+
+				players.Add(tempConfig);
 			}
 			
 			if(Input.GetKeyDown("joystick 3 button 0") && playerReady[2] == false){
@@ -253,11 +253,11 @@ public class TTSMenu : TTSMenuEnums {
 				readyUpB[numPlayers].SetActive(false);
 				readyUp[numPlayers].SetActive(true);
 				numPlayers++;
-				
-				GameObject tempPP = (GameObject)Instantiate(playerPackage);
-				tempPP.GetComponent<TTSPlayerInfo>().playerID = numPlayers;
-				
-				players.Add(tempPP);
+
+				TTSRacerConfig tempConfig = new TTSRacerConfig();
+				tempConfig.ControllerID = numPlayers;
+
+				players.Add(tempConfig);
 			}
 			
 			if(Input.GetKeyDown("joystick 4 button 0") && playerReady[3] == false){
@@ -266,11 +266,11 @@ public class TTSMenu : TTSMenuEnums {
 				readyUpB[numPlayers].SetActive(false);
 				readyUp[numPlayers].SetActive(true);
 				numPlayers++;
-				
-				GameObject tempPP = (GameObject)Instantiate(playerPackage);
-				tempPP.GetComponent<TTSPlayerInfo>().playerID = numPlayers;
-				
-				players.Add(tempPP);
+
+				TTSRacerConfig tempConfig = new TTSRacerConfig();
+				tempConfig.ControllerID = numPlayers;
+
+				players.Add(tempConfig);
 			}
 		}
 	}
@@ -565,21 +565,21 @@ public class TTSMenu : TTSMenuEnums {
 						else if(SelectedLevel.ToString() == "level4")
 							Application.LoadLevel("cliffsidechoas");
 					}
-					
-					else if(activePanel == 7 && !isTweening){
+
+					else if (activePanel == 7 && !isTweening) {
+						isTweening = true;
+
+						foreach (TTSRacerConfig player in players) {
+							if (player.ControllerID == chosenOrb) {
+								player.PerkA = (int)SelectedPerk;
+								player.PerkB = (int)SelectedPerkB;
+								player.RigType = (int)SelectedRig;
+							}
+						}
+
 						// go to levelSelect
 						if(chosenOrb == numPlayers){
-							previousPanel = (activePanel-1);;
-							isTweening = true;
-							
-							foreach(GameObject go in players){
-								if(go.GetComponent<TTSPlayerInfo>().playerID == chosenOrb){
-									go.GetComponent<TTSPlayerInfo>().perkA = SelectedPerk;
-									go.GetComponent<TTSPlayerInfo>().perkB = SelectedPerkB;
-									go.GetComponent<TTSPlayerInfo>().rig = SelectedRig.ToString();
-								}
-							}
-							
+							previousPanel = (activePanel-1);
 							dtp.GetComponent<TTSDataToPass>().players = this.players;
 							dtp.GetComponent<TTSDataToPass>().gametype = gameMode;
 							movePanel();
@@ -589,15 +589,6 @@ public class TTSMenu : TTSMenuEnums {
 						else if(chosenOrb != numPlayers && !isTweening){
 							activePanel = 4;
 							previousPanel = 6;
-							isTweening = true;
-							
-							foreach(GameObject go in players){
-								if(go.GetComponent<TTSPlayerInfo>().playerID == chosenOrb){
-									go.GetComponent<TTSPlayerInfo>().perkA = SelectedPerk;
-									go.GetComponent<TTSPlayerInfo>().perkB = SelectedPerkB;
-									go.GetComponent<TTSPlayerInfo>().rig = SelectedRig.ToString();
-								}
-							}
 							chosenOrb++;
 							movePanel();
 						}

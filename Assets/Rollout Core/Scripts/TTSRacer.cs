@@ -128,28 +128,6 @@ public class TTSRacer : TTSBehaviour
 	TTSRacerNetHandler netHandler;
 	public int rigID;
 
-	public struct RacerConfig
-	{
-		public float netID;
-		public int Index;
-		public int RigType;
-		public int Perk1;
-		public int Perk2;
-		public string Name;
-
-		/// <summary>
-		/// Can either be Player, AI, or Multiplayer
-		/// </summary>
-		public int LocalControlType;
-
-		/// <summary>
-		/// Can be either Player or AI
-		/// </summary>
-		public int ControlType;
-
-		public int CharacterType;
-	}
-
 	void Awake() {
 		level.RegisterRacer(gameObject);
 	}
@@ -614,6 +592,30 @@ public class TTSRacer : TTSBehaviour
 		}
 		netHandler.receivedPowerups.Clear();
 	}
+}
+
+public class TTSRacerConfig
+{
+	public float netID;
+	public int Index;
+	public int RigType;
+	public int PerkA;
+	public int PerkB;
+	public string Name;
+
+	/// <summary>
+	/// Can either be Player, AI, or Multiplayer
+	/// </summary>
+	public int LocalControlType;
+
+	/// <summary>
+	/// Can be either Player or AI
+	/// </summary>
+	public int ControlType;
+
+	public int CharacterType;
+
+	public int ControllerID;
 }
 
 public class TTSRacerNetHandler : TTSNetworkHandle

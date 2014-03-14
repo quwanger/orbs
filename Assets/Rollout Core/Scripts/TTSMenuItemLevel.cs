@@ -1,8 +1,9 @@
 using UnityEngine;
 using System.Collections;
 
-public class TTSMenuItemLevel : TTSMenuEnums {
-	
+public class TTSMenuItemLevel : TTSBehaviour {
+
+
 	public bool isSelected = false;
 	public LevelMenuItem level;
 	public int index;
