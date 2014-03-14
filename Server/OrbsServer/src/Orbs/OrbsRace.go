@@ -20,26 +20,6 @@ func (this *OrbsRace) InitRace(connections map[string]*OrbsConnection, objToOwne
 	this.Racers = racers
 }
 
-func (this *OrbsRace) SpawnRacer(racerID float32, connection *OrbsConnection) {
-	racer := this.Racers[racerID]
-
-	var returnPacket = new(Packets.PacketWriter)
-	returnPacket.InitPacket()
-	returnPacket.WriteInt(OrbsCommandTypes.RacerRegister)
-	returnPacket.WriteFloat32(racer.ID)
-	// returnPacket.WriteFloat32(22)
-	returnPacket.WriteInt(racer.Index)
-	// returnPacket.WriteInt(len(this.Racers))
-	returnPacket.WriteInt(racer.RigType)
-	returnPacket.WriteInt(racer.Perk1Type)
-	returnPacket.WriteInt(racer.Perk2Type)
-	returnPacket.WriteString(racer.Name)
-	returnPacket.WriteInt(racer.ControlType)
-	this.writeBroadcastDataExceptSender(returnPacket.GetMinimalData(), connection)
-	// this.writeBroadcastData(returnPacket.GetMinimalData())
-
-}
-
 func (this *OrbsRace) ProcessPacket(sender *net.UDPAddr, reader *Packets.PacketReader, firstCommand int) {
 	var command int = firstCommand
 	var ip string = sender.IP.String()

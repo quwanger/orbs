@@ -11,6 +11,8 @@ type OrbsRacer struct {
 	Name        string
 	ControlType int
 	Owner       *OrbsConnection
+
+	isReady bool
 }
 
 func (this *OrbsRacer) Init(id float32, index int, rig int, perk1 int, perk2 int, name string, controlType int, owner *OrbsConnection) {
@@ -22,6 +24,7 @@ func (this *OrbsRacer) Init(id float32, index int, rig int, perk1 int, perk2 int
 	this.Name = name
 	this.ControlType = controlType
 	this.Owner = owner
+	this.isReady = false
 
-	println("Racer", name, "has been initialized: ", rig)
+	// println("Racer", name, "has been initialized: ", rig)
 }

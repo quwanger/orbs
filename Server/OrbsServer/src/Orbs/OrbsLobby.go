@@ -49,6 +49,10 @@ func (this *OrbsLobby) ProcessPacket(sender *net.UDPAddr, reader *Packets.Packet
 		case OrbsCommandTypes.RacerRegister:
 			this.racerRegister(this.connections[ip], reader)
 
+		// 2020
+		case OrbsCommandTypes.RacerReadyState:
+			this.racerReady(this.connections[ip], reader)
+
 		// 9999
 		case OrbsCommandTypes.CloseConnection:
 			if this.connectionExists(ip) {
@@ -95,9 +99,9 @@ func (this *OrbsLobby) racerRegister(connection *OrbsConnection, reader *Packets
 		this.racers[racerID] = new(OrbsRacer)
 		this.racers[racerID].Init(racerID, racerIndex, racerRig, racerPerk1, racerPerk2, racerName, racerControlType, connection)
 
-		if this.InGame { // Broadcast to everyone else
-			this.Race.SpawnRacer(racerID, connection)
-		}
+		// if this.InGame { // Broadcast to everyone else
+		// 	this.Race.SpawnRacer(racerID, connection)
+		// }
 
 		// Return success command to the sender
 		this.objToOwner[racerID] = connection
@@ -105,6 +109,20 @@ func (this *OrbsLobby) racerRegister(connection *OrbsConnection, reader *Packets
 		returnPacket.WriteInt(OrbsCommandTypes.RacerRegisterOK)
 		returnPacket.WriteFloat32(racerID)
 		fmt.Printf("	S	L:%v Racer %v registered\n", this.LobbyID, racerID)
+
+		// Broadcast to everyone else
+		racer := this.racers[racerID]
+		var returnPacket = new(Packets.PacketWriter)
+		returnPacket.InitPacket()
+		returnPacket.WriteInt(OrbsCommandTypes.RacerRegister)
+		returnPacket.WriteFloat32(racer.ID)
+		returnPacket.WriteInt(racer.Index)
+		returnPacket.WriteInt(racer.RigType)
+		returnPacket.WriteInt(racer.Perk1Type)
+		returnPacket.WriteInt(racer.Perk2Type)
+		returnPacket.WriteString(racer.Name)
+		returnPacket.WriteInt(racer.ControlType)
+		this.writeBroadcastDataExceptSender(returnPacket.GetMinimalData(), connection)
 
 	} else if this.objToOwner[racerID].IPAddress != connection.IPAddress { // Racer already registered
 		returnPacket.WriteInt(OrbsCommandTypes.RacerAlreadyRegistered)
@@ -126,6 +144,19 @@ func (this *OrbsLobby) racerDeregister(connection *OrbsConnection, racerID float
 	packet.WriteFloat32(racerID)
 
 	this.writeBroadcastDataExceptSender(packet.GetMinimalData(), connection)
+}
+
+func (this *OrbsLobby) racerReady(connection *OrbsConnection, reader *Packets.PacketReader) {
+	racerID := reader.ReadFloat32()
+	isReady := reader.ReadBool()
+
+	this.racers[racerID].isReady = isReady
+
+	// Check if all racers are ready.
+}
+
+func (this *OrbsLobby) startRace() {
+
 }
 
 // Initialization functions
@@ -166,6 +197,7 @@ func (this *OrbsLobby) AddConnection(newConnection *OrbsConnection) bool {
 
 	// Send the registered racers
 	for _, value := range this.racers {
+		fmt.Printf("	D	Sending racer %v back to %v", value.ID, newConnection.IPAddress)
 		this.SendRacer(value, newConnection)
 	}
 

@@ -118,6 +118,12 @@ func (this *PacketReader) ReadBytes(amount int) []byte {
 	return this.Data[this.readIndex-amount : this.readIndex]
 }
 
+func (this *PacketReader) ReadBool() bool {
+	a := this.Data[this.readIndex]
+	this.readIndex++
+	return (int(a) != 0)
+}
+
 func (this *PacketReader) handleError(err error) {
 	println(err)
 }

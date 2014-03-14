@@ -28,6 +28,7 @@ const (
 	RacerRegister          = 2010
 	RacerRegisterOK        = 2011
 	RacerDeregister        = 2012
+	RacerReadyState        = 2020
 	RacerAlreadyRegistered = 2091
 	RacerIsNotRegistered   = 2092
 
