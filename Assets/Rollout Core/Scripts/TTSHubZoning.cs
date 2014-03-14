@@ -16,7 +16,7 @@ public class TTSHubZoning : TTSBehaviour {
 	void OnTriggerEnter(Collider collision){
 		if(collision.gameObject.name == "Racer 2.0")
 		{
-			level.GetComponent<TTSMenu>().gameMode = "singleplayer";
+			level.GetComponent<TTSMenu>().gameMode = TTSLevel.Gametype.TimeTrial;
 			level.GetComponent<TTSMenu>().activePanel = 4;
 			level.GetComponent<TTSMenu>().movePanel();
 			//level.GetComponent<TTSMenu>().panels[4].SetActive(true);

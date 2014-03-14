@@ -113,7 +113,7 @@ public class TTSMenu : TTSMenuEnums {
 	public int chosenOrb = 1;
 	
 	// Is either a string saying multiplayer or singleplayer
-	public string gameMode;
+	public TTSLevel.Gametype gameMode;
 
 	// Use this for initialization
 	void Start () {		
@@ -170,14 +170,14 @@ public class TTSMenu : TTSMenuEnums {
 	
 	// Update is called once per frame
 	void Update () {
-				
-		if(gameMode == "singleplayer" || gameMode == "splitscreen" || gameMode == "online"){
+
+		if (gameMode != TTSLevel.Gametype.Lobby) {
 			
 			playerText[0].guiText.text = ("Player" + (chosenOrb));
 			playerText[1].guiText.text = ("Player" + (chosenOrb));
 			string tempJoystick = "joystick 1 button 7";
-			
-			if(gameMode == "splitscreen"){
+
+			if (gameMode == TTSLevel.Gametype.MultiplayerLocal) {
 				tempJoystick = ("joystick " + playerID[chosenOrb-1] + " button 7");
 			}
 			
@@ -220,7 +220,7 @@ public class TTSMenu : TTSMenuEnums {
 			cameras[1].enabled = true;
 		}
 		
-		if(gameMode == "splitscreen" && activePanel == 3 && !isTweening){
+		if(gameMode == TTSLevel.Gametype.MultiplayerLocal && activePanel == 3 && !isTweening){
 			if(Input.GetKeyDown("joystick 1 button 0") && playerReady[0] == false){
 				playerReady[0] = true;
 				playerID[numPlayers] = 1;
@@ -284,7 +284,7 @@ public class TTSMenu : TTSMenuEnums {
 		string tempJoystick = "DPad_XAxis_1";
 		string tempJoystickB = "DPad_YAxis_1";
 		
-		if(gameMode == "splitscreen"){	
+		if(gameMode == TTSLevel.Gametype.MultiplayerLocal){	
 			tempJoystick = ("DPad_XAxis_" + playerID[chosenOrb-1]);
 			tempJoystickB = ("DPad_YAxis_" + playerID[chosenOrb-1]);
 		}
@@ -520,7 +520,7 @@ public class TTSMenu : TTSMenuEnums {
 	private void changePanels(string direction){
 		
 		if(direction == "right"){
-			if(gameMode == "singleplayer"){
+			if(gameMode == TTSLevel.Gametype.TimeTrial){
 				if(activePanel < 7 && !isTweening){
 					activePanel++;
 					if(activePanel == 5 || activePanel == 7){
@@ -531,9 +531,9 @@ public class TTSMenu : TTSMenuEnums {
 						}
 					}
 				}
-			}	
-			
-			else if(gameMode == "splitscreen"){
+			}
+
+			else if (gameMode == TTSLevel.Gametype.MultiplayerLocal) {
 				if(activePanel == 0 && !isTweening){
 					activePanel += 3;
 					previousPanel = (activePanel - 3);
@@ -607,7 +607,7 @@ public class TTSMenu : TTSMenuEnums {
 		}
 		
 		if(direction == "left"){
-			if(gameMode == "singleplayer"){
+			if(gameMode == TTSLevel.Gametype.TimeTrial){
 				if(activePanel > 4){
 					activePanel--;
 					if(activePanel == 4 || activePanel == 6 && !isTweening){
@@ -618,7 +618,7 @@ public class TTSMenu : TTSMenuEnums {
 				}
 			}
 			
-			else if(gameMode == "splitscreen"){
+			else if(gameMode == TTSLevel.Gametype.MultiplayerLocal){
 				if(activePanel == 3){
 					activePanel -= 3;
 					previousPanel = (activePanel + 3);
@@ -655,13 +655,13 @@ public class TTSMenu : TTSMenuEnums {
 	
 	private void HighlightMPSelect(){
 		if(indices[0] == 1){
-			gameMode = "online";
+			gameMode = TTSLevel.Gametype.MultiplayerOnline;
 			topHighlighter.SetActive(true);
 			botHighlighter.SetActive(false);
 		}
 		
 		else if(indices[0] == 2){
-			gameMode = "splitscreen";
+			gameMode = TTSLevel.Gametype.MultiplayerLocal;
 			topHighlighter.SetActive(false);
 			botHighlighter.SetActive(true);
 		}
@@ -834,7 +834,7 @@ public class TTSMenu : TTSMenuEnums {
 	}
 	
 	void OnGUI(){
-		if(gameMode == "singleplayer" || gameMode == "splitscreen" || gameMode == "online"){
+		if(gameMode != TTSLevel.Gametype.Lobby){
         	GUI.color = new Color(0, 0, 0, alphaFadeValue);
        		//GUI.DrawTexture( new Rect(0, 0, Screen.width, Screen.height ), Overlay);
 		}

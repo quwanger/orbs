@@ -116,7 +116,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 058bbfe9f43212e43b825d873c489f78, type: 2}
+  - {fileID: 2100000, guid: d252e6f71431d1f449acf4db97b6a137, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -258,77 +258,6 @@ MeshCollider:
   m_SmoothSphereCollisions: 0
   m_Convex: 0
   m_Mesh: {fileID: 4300018, guid: 2a6891ee09ecf2946abd2d11dca5a07d, type: 3}
---- !u!1 &11572162
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 11572166}
-  - 20: {fileID: 11572165}
-  - 124: {fileID: 11572164}
-  - 92: {fileID: 11572163}
-  m_Layer: 0
-  m_Name: Menu Camera 3D
-  m_TagString: MainCamera
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!92 &11572163
-Behaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 11572162}
-  m_Enabled: 0
---- !u!124 &11572164
-Behaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 11572162}
-  m_Enabled: 1
---- !u!20 &11572165
-Camera:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 11572162}
-  m_Enabled: 0
-  serializedVersion: 2
-  m_ClearFlags: 3
-  m_BackGroundColor: {r: .192156866, g: .301960796, b: .474509805, a: .0196078438}
-  m_NormalizedViewPortRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
-  near clip plane: .300000012
-  far clip plane: 1000
-  field of view: 60
-  orthographic: 0
-  orthographic size: 100
-  m_Depth: 0
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 4096
-  m_RenderingPath: -1
-  m_TargetTexture: {fileID: 0}
-  m_HDR: 0
---- !u!4 &11572166
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 11572162}
-  m_LocalRotation: {x: 0, y: -.707106829, z: 0, w: .707106829}
-  m_LocalPosition: {x: 501.52002, y: 441.861755, z: 1151.48242}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
 --- !u!1 &15249835
 GameObject:
   m_ObjectHideFlags: 0
@@ -2928,7 +2857,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 058bbfe9f43212e43b825d873c489f78, type: 2}
+  - {fileID: 2100000, guid: d252e6f71431d1f449acf4db97b6a137, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -4851,7 +4780,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 926f18b0e8aa4cd4b97d1e0292470c50, type: 2}
+  - {fileID: 2100000, guid: e86a4fd470d83904cac21578f90bf82b, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -5931,7 +5860,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 578cfd26d837ecb47934eb340abdffe8, type: 2}
+  - {fileID: 2100000, guid: 869333178284a5a4ab3bc8dabe6c1026, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -7353,6 +7282,7 @@ MonoBehaviour:
   fadeHeight: 0
   fadeX: 0
   fadeY: 0
+  racer: {fileID: 0}
   cameraDistance: 7
   cameraBaseDistance: 7
   cameraMinDistance: 5
@@ -9803,7 +9733,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 578cfd26d837ecb47934eb340abdffe8, type: 2}
+  - {fileID: 2100000, guid: 869333178284a5a4ab3bc8dabe6c1026, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -11430,7 +11360,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 578cfd26d837ecb47934eb340abdffe8, type: 2}
+  - {fileID: 2100000, guid: 869333178284a5a4ab3bc8dabe6c1026, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -11978,7 +11908,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 407efa782eed2a445ac6bb86fedcb4cf, type: 2}
+  - {fileID: 2100000, guid: 9b8cb2af4002ac044a29d3f0e66f10fa, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -13295,7 +13225,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 407efa782eed2a445ac6bb86fedcb4cf, type: 2}
+  - {fileID: 2100000, guid: 9b8cb2af4002ac044a29d3f0e66f10fa, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -13897,6 +13827,7 @@ GameObject:
   - 114: {fileID: 1357254828}
   - 114: {fileID: 1357254832}
   - 114: {fileID: 1357254834}
+  - 114: {fileID: 1357254835}
   - 114: {fileID: 1357254833}
   m_Layer: 0
   m_Name: TTSLevel
@@ -13933,6 +13864,7 @@ MonoBehaviour:
   _maincameras: []
   _otherCameras: []
   currentGameType: 1
+  currentLevel: 2
   useKeyboard: 0
   raceHasStarted: 0
   raceHasFinished: 0
@@ -13941,6 +13873,8 @@ MonoBehaviour:
   PerksEnabled: 1
   fonts:
   - {fileID: 12800000, guid: f9929be8a43d15b408cb23dd53efaaa4, type: 3}
+  client: {fileID: 0}
+  initRace: {fileID: 0}
 --- !u!114 &1357254830
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13974,33 +13908,27 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 594730c6d405c439c9a166e2348e236c, type: 3}
   m_Name: 
-  _rigs:
-  - {fileID: 100000, guid: c20b079c5fcdf46f2aa9e3af0af3c542, type: 2}
-  - {fileID: 100000, guid: cac4f45fdecaa41c6b3049591ead6a42, type: 2}
-  - {fileID: 100000, guid: f7c902cd5131d4d60b9f82066c72d03e, type: 2}
-  - {fileID: 100000, guid: 86fcc84505238442bb7ecd6d5b3594da, type: 2}
+  Rigs:
+  - {fileID: 100000, guid: 4222a4c25048c4676885fb09d185cfcc, type: 2}
   - {fileID: 100000, guid: 3d695fc3acab5411a989ff39de826674, type: 2}
+  - {fileID: 100000, guid: 86fcc84505238442bb7ecd6d5b3594da, type: 2}
+  - {fileID: 100000, guid: c20b079c5fcdf46f2aa9e3af0af3c542, type: 2}
+  - {fileID: 100000, guid: f7c902cd5131d4d60b9f82066c72d03e, type: 2}
+  - {fileID: 100000, guid: cac4f45fdecaa41c6b3049591ead6a42, type: 2}
   - {fileID: 100000, guid: 26f3bdb906e294cf6b3a76f23cc527b2, type: 2}
-  _characters:
+  Characters:
   - {fileID: 100000, guid: 189d21dfc47334c93b9485bb32b654c4, type: 2}
-  _startingpoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  StartingPoints: []
   racerGO: {fileID: 100000, guid: 32f9bdadaccd84b44ae9856e8195bf9b, type: 2}
   cameraGO: {fileID: 100002, guid: 6ae8ef38693b84fc1bf2f43164d7cf3b, type: 2}
   hudGO: {fileID: 100014, guid: bf46875515a25a247a2a558437133fc4, type: 2}
   minimapGO: {fileID: 100000, guid: 427cc4e8f2e15b949ab8e2df99a0b486, type: 2}
   playericonSmall: {fileID: 100000, guid: 3635d8ce9f9159c43acbd463f00cc399, type: 2}
   playericonBig: {fileID: 100000, guid: 43ed54951cf5c48d4b58e3cead59c7a0, type: 2}
+  numHumanPlayers: 1
+  numAIPlayers: 0
   _playerBundles: []
   gameType: 
-  tempNumHumanPlayers: 1
-  numHumanPlayers: 0
-  numberOfRacers: 3
 --- !u!114 &1357254833
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14046,7 +13974,6 @@ MonoBehaviour:
   joystickDownY: 0
   cameras:
   - {fileID: 758272860}
-  - {fileID: 11572165}
   - {fileID: 1808318236}
   playerStatistics: {fileID: 1459878964}
   playerID: 00000000000000000000000000000000
@@ -14110,6 +14037,25 @@ MonoBehaviour:
   handlingIncrease: 750
   offenseIncrease: .300000012
   defenseIncrease: .300000012
+--- !u!114 &1357254835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400010, guid: 66b1082218c3fc643bf095d7cf975069,
+    type: 2}
+  m_PrefabInternal: {fileID: 150597646}
+  m_GameObject: {fileID: 1357254827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc0ba0762728f5e4f89f9f54328eab63, type: 3}
+  m_Name: 
+  DebugMode: 0
+  SERVER_IP: 127.0.0.1
+  SERVER_RECEIVE_PORT: 6666
+  CLIENT_RECEIVE_PORT: 6969
+  CLIENT_RECEIVE_TIMEOUT: 15000
+  EnteredLobby: 0
+  InGame: 0
+  LobbyID: 0
 --- !u!1 &1358393703
 GameObject:
   m_ObjectHideFlags: 0
@@ -14846,7 +14792,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 926f18b0e8aa4cd4b97d1e0292470c50, type: 2}
+  - {fileID: 2100000, guid: e86a4fd470d83904cac21578f90bf82b, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -15854,7 +15800,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 407efa782eed2a445ac6bb86fedcb4cf, type: 2}
+  - {fileID: 2100000, guid: 9b8cb2af4002ac044a29d3f0e66f10fa, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -16169,7 +16115,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 407efa782eed2a445ac6bb86fedcb4cf, type: 2}
+  - {fileID: 2100000, guid: 9b8cb2af4002ac044a29d3f0e66f10fa, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -17162,7 +17108,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 407efa782eed2a445ac6bb86fedcb4cf, type: 2}
+  - {fileID: 2100000, guid: 9b8cb2af4002ac044a29d3f0e66f10fa, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -18732,6 +18678,8 @@ MonoBehaviour:
   ShockwavePrefab: {fileID: 0}
   LeechPrefab: {fileID: 0}
   HelixPrefab: {fileID: 0}
+  numberOfEntropyCannonsAvailable: 0
+  numberOfHelixCannonsAvailable: 0
 --- !u!114 &1778131398
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18784,10 +18732,13 @@ MonoBehaviour:
   - {fileID: 8300000, guid: b29d83db0b1d1e34b88b7b8eb07430c8, type: 3}
   - {fileID: 8300000, guid: 07185902a679f8a45a62fb7954bf000e, type: 3}
   SparksEmitter: {fileID: 100000, guid: 87c7b3f1a056e5d4fb78ff71783a1593, type: 2}
-  CurrentRig: {fileID: 100000, guid: 4222a4c25048c4676885fb09d185cfcc, type: 2}
+  CurrentRig: {fileID: 0}
   canMove: 1
   rpm: 0
   calcOrientation: 1
+  TopSpeedInit: 250
+  AccelerationInit: 8000
+  HandlingInit: 11000
   TopSpeed: 250
   Acceleration: 8000
   Handling: 11000
@@ -18810,6 +18761,7 @@ MonoBehaviour:
   debugStart: {fileID: 0}
   goingWrongWay: 0
   nextWaypoint: {fileID: 0}
+  rigID: 0
 --- !u!135 &1778131400
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -19952,7 +19904,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 407efa782eed2a445ac6bb86fedcb4cf, type: 2}
+  - {fileID: 2100000, guid: 9b8cb2af4002ac044a29d3f0e66f10fa, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -20584,7 +20536,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 10835f63b58ca0244a2448cec70257c7, type: 2}
+  - {fileID: 2100000, guid: d7fb7bf55fb07574d91cd0e92d9d7302, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -20902,7 +20854,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 6688233207f0a4c4dba44e658e4bae8c, type: 2}
+  - {fileID: 2100000, guid: 4c456346def5c1f4db61c3a175580d54, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -21993,7 +21945,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: c9bd8e9cf1a8c3a42b3a96998a5a693a, type: 2}
+  - {fileID: 2100000, guid: 812701da8dc5ad945af59db061a36cc5, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0

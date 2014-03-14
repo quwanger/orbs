@@ -34,7 +34,7 @@ public class TTSInitRace : MonoBehaviour
 	//public enum Rigs {Rhino, Scorpion, Default};
 	//public enum Characters {Character_Default, Character1, Character2};
 	public List<GameObject> _playerBundles;
-	public string gameType;
+	public TTSLevel.Gametype gameType;
 
 	// Use this for initialization
 	void Start() {
