@@ -50,7 +50,7 @@ public class TTSClient : MonoBehaviour
 	Dictionary<float, TTSNetworkHandle> racerHandles = new Dictionary<float, TTSNetworkHandle>();
 	TTSPacketWriter UpdatePacket = new TTSPacketWriter();
 
-	List<TTSRacerNetHandler> spawnRacers = new List<TTSRacerNetHandler>();
+	List<TTSRacer.RacerConfig> spawnRacers = new List<TTSRacer.RacerConfig>();
 	List<TTSPowerupNetHandler> spawnPowerups = new List<TTSPowerupNetHandler>();
 
 	public List<TTSRacer.RacerConfig> RegisteredRacerConfigs = new List<TTSRacer.RacerConfig>();
@@ -140,12 +140,12 @@ public class TTSClient : MonoBehaviour
 		// Code to run during in game.
 
 		// Spawn multiplayer racers
-		//if (spawnRacers.Count > 0) {
-		//	foreach (TTSRacerNetHandler handler in spawnRacers) {
-		//		initRace.InitMultiplayerRacer(handler);
-		//	}
-		//	spawnRacers.Clear();
-		//}
+		if (spawnRacers.Count > 0) {
+			foreach (TTSRacer.RacerConfig handler in spawnRacers) {
+				initRace.InitMultiplayerRacer(handler);
+			}
+			spawnRacers.Clear();
+		}
 	}
 	void OnApplicationQuit() {
 		isRunning = false;
@@ -223,8 +223,10 @@ public class TTSClient : MonoBehaviour
 					//handler.Name = packet.Read16CharString();
 					//handler.ControlType = packet.ReadInt32();
 
-					if (DebugMode) Debug.Log(">	Received a racer " + id);
-					//spawnRacers.Add(handler);
+					if (DebugMode){
+						Debug.Log(">	Received a racer " + id);
+						spawnRacers.Add(config);
+					}
 					break;
 
 				case TTSCommandTypes.RacerUpdate:

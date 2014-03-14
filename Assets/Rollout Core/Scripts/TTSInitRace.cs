@@ -506,6 +506,10 @@ public class TTSInitRace : MonoBehaviour
 		racer.GetComponent<TTSRacer>().SetNetHandler(handler);
 	}
 
+	public void InitMultiplayerRacer(TTSRacer.RacerConfig config) {
+		InitToMultiplayer(InstantiateRacer(config), config);
+	}
+
 	// Update is called once per frame
 	void Update() {
 
