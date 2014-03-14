@@ -567,7 +567,6 @@ public class TTSMenu : TTSBehaviour {
 					}
 
 					else if (activePanel == 7 && !isTweening) {
-						isTweening = true;
 
 						foreach (TTSRacerConfig player in players) {
 							if (player.ControllerID == chosenOrb) {
@@ -578,7 +577,7 @@ public class TTSMenu : TTSBehaviour {
 						}
 
 						// go to levelSelect
-						if(chosenOrb == numPlayers){
+						if (chosenOrb == numPlayers) {
 							previousPanel = (activePanel-1);
 							dtp.GetComponent<TTSDataToPass>().players = this.players;
 							dtp.GetComponent<TTSDataToPass>().gametype = gameMode;
@@ -592,6 +591,8 @@ public class TTSMenu : TTSBehaviour {
 							chosenOrb++;
 							movePanel();
 						}
+
+						isTweening = true;
 					}
 				}
 			}
@@ -619,8 +620,8 @@ public class TTSMenu : TTSBehaviour {
 			}
 		}
 	}
-	
-	public void movePanel(){
+
+	public void movePanel() {
 		if(activePanel == 4 || activePanel == 5 || activePanel == 6)
 			playerStatistics.transform.parent = panels[activePanel].transform;
 		

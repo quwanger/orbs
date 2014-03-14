@@ -40,10 +40,19 @@ public class TTSInitRace : MonoBehaviour
 		if(GameObject.Find("DataToPass")){
 			_playerBundles = GameObject.Find("DataToPass").GetComponent<TTSDataToPass>().players;
 			racerConfigs = _playerBundles;
-			gameType = GameObject.Find("DataToPass").GetComponent<TTSDataToPass>().gametype;
 
-			Debug.Log(_playerBundles);
+			foreach (TTSRacerConfig config in racerConfigs) {
+				Debug.Log(config.ControllerID);
+				Debug.Log((TTSBehaviour.RigType)config.RigType);
+				Debug.Log((TTSBehaviour.PerkType)config.PerkA);
+				Debug.Log((TTSBehaviour.PowerupType)config.PerkB);
+				Debug.Log(config.Index);
+			}
+
+			gameType = GameObject.Find("DataToPass").GetComponent<TTSDataToPass>().gametype;
 			Debug.Log(gameType);
+
+			numHumanPlayers = racerConfigs.FindAll(IsHuman).Count;
 		}
 
 		level = GetComponent<TTSLevel>();
@@ -60,8 +69,6 @@ public class TTSInitRace : MonoBehaviour
 
 		//racerConfigs.Add(testRacerConfig(false));
 		//racerConfigs.Add(testRacerConfig(false));
-
-		numHumanPlayers = racerConfigs.FindAll(IsHuman).Count;
 
 		if (level.currentGameType == TTSLevel.Gametype.Lobby) {
 			LobbyInitialize();
