@@ -30,7 +30,6 @@ public class TTSInitRace : MonoBehaviour
 	// ?
 	//public enum Rigs {Rhino, Scorpion, Default};
 	//public enum Characters {Character_Default, Character1, Character2};
-	public List<TTSRacerConfig> _playerBundles;
 	public TTSLevel.Gametype gameType;
 
 	// Use this for initialization
@@ -38,8 +37,10 @@ public class TTSInitRace : MonoBehaviour
 		
 		// Menu passing in data
 		if(GameObject.Find("DataToPass")){
-			_playerBundles = GameObject.Find("DataToPass").GetComponent<TTSDataToPass>().players;
-			racerConfigs = _playerBundles;
+			racerConfigs = GameObject.Find("DataToPass").GetComponent<TTSDataToPass>().players;
+			gameType = GameObject.Find("DataToPass").GetComponent<TTSDataToPass>().gametype;
+
+			numHumanPlayers = racerConfigs.FindAll(IsHuman).Count;
 
 			foreach (TTSRacerConfig config in racerConfigs) {
 				Debug.Log(config.ControllerID);
@@ -49,15 +50,13 @@ public class TTSInitRace : MonoBehaviour
 				Debug.Log(config.Index);
 			}
 
-			gameType = GameObject.Find("DataToPass").GetComponent<TTSDataToPass>().gametype;
 			Debug.Log(gameType);
-
-			numHumanPlayers = racerConfigs.FindAll(IsHuman).Count;
 		}
 
 		level = GetComponent<TTSLevel>();
 
-		if (DebugMode) {
+		if (DebugMode || racerConfigs == null) {
+			Debug.Log("INIT RACE: GENERATING RACERS");
 
 			racerConfigs = new List<TTSRacerConfig>();
 
@@ -69,9 +68,6 @@ public class TTSInitRace : MonoBehaviour
 				racerConfigs.Add(testRacerConfig(false));
 			}
 		}
-
-		//racerConfigs.Add(testRacerConfig(false));
-		//racerConfigs.Add(testRacerConfig(false));
 
 		if (level.currentGameType == TTSLevel.Gametype.Lobby) {
 			LobbyInitialize();
@@ -166,6 +162,10 @@ public class TTSInitRace : MonoBehaviour
 		GameObject iconSmall = (GameObject)Instantiate(playericonSmall);
 		GameObject iconBig = (GameObject)Instantiate(playericonBig);
 
+		//add perks
+		racer.GetComponent<TTSPerkManager>().equiptPerkPool1 = (TTSBehaviour.PerkType)config.PerkA;
+		racer.GetComponent<TTSPerkManager>().equiptPerkPool2 = (TTSBehaviour.PowerupType)config.PerkB;
+
 		//assigns the icon to correct racer
 		racer.GetComponent<TTSRacer>().minimapIconSmall = iconSmall;
 		racer.GetComponent<TTSRacer>().minimapIconBig = iconBig;
@@ -248,11 +248,6 @@ public class TTSInitRace : MonoBehaviour
 
 		racerControl.IsPlayerControlled = true;
 		racerControl.player = TTSRacer.PlayerType.Player;
-		
-		// MENU LOAD
-		//add perks
-		//racer.GetComponent<TTSPerkManager>().equiptPerkPool1 = _playerBundles[i].GetComponent<TTSPlayerInfo>().perkA;
-		//racer.GetComponent<TTSPerkManager>().equiptPerkPool2 = _playerBundles[i].GetComponent<TTSPlayerInfo>().perkB;
 
 		//Instantiates a minimap for each human player and sets it to follow a racer
 		GameObject tempMinimap = (GameObject)Instantiate(minimapGO);
