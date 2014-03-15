@@ -17,7 +17,6 @@ public class TTSHudPerk : MonoBehaviour {
 	}
 	
 	public void InitializePerkPool1(TTSBehaviour.PerkType p){
-		Debug.Log(perkPool1Images[0].name);
 		switch(p) {
 			case TTSBehaviour.PerkType.Acceleration:
 			this.gameObject.renderer.material.SetTexture("_MainTex", perkPool1Images[0]);

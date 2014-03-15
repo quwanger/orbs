@@ -106,8 +106,8 @@ public class TTSInitRace : MonoBehaviour
 		TTSRacerConfig config = new TTSRacerConfig();
 		config.Index = 99; // So that the racers will use the starting point index.
 		config.RigType = Random.Range(0, Rigs.Count);
-		config.PerkA = 0;
-		config.PerkB = 0;
+		config.PerkA = (int)TTSBehaviour.PerkType.Acceleration;
+		config.PerkB = (int)TTSBehaviour.PowerupType.Leech;
 		if (Human) {
 			config.LocalControlType = TTSUtils.EnumToInt(TTSRacer.PlayerType.Player);
 		}
