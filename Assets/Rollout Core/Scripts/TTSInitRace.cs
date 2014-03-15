@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class TTSInitRace : MonoBehaviour
 {
-
+	public bool DebugMode = false;
 	public List<GameObject> Rigs = new List<GameObject>();
 	public List<GameObject> Characters = new List<GameObject>();
 	public List<GameObject> StartingPoints = new List<GameObject>();
@@ -57,14 +57,17 @@ public class TTSInitRace : MonoBehaviour
 
 		level = GetComponent<TTSLevel>();
 
-		racerConfigs = new List<TTSRacerConfig>();
+		if (DebugMode) {
 
-		for (int i = 0; i < numHumanPlayers; i++) {
-			racerConfigs.Add(testRacerConfig(true));
-		}
+			racerConfigs = new List<TTSRacerConfig>();
 
-		for (int i = 0; i < numAIPlayers; i++) {
-			racerConfigs.Add(testRacerConfig(false));
+			for (int i = 0; i < numHumanPlayers; i++) {
+				racerConfigs.Add(testRacerConfig(true));
+			}
+
+			for (int i = 0; i < numAIPlayers; i++) {
+				racerConfigs.Add(testRacerConfig(false));
+			}
 		}
 
 		//racerConfigs.Add(testRacerConfig(false));
