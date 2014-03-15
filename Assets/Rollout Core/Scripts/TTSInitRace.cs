@@ -141,7 +141,7 @@ public class TTSInitRace : MonoBehaviour
 		startingPointIndex = (config.Index + 1) % StartingPoints.Count; // Always the next starting position. Loop around if array out of bounds.
 
 		// Instantiate the gameobjects.
-		GameObject rig = (GameObject)Instantiate(Rigs[config.RigType], startPoint.transform.position, startPoint.transform.rotation);
+		GameObject rig = (GameObject)Instantiate(getRig((TTSBehaviour.RigType)config.RigType), startPoint.transform.position, startPoint.transform.rotation);
 		GameObject character = (GameObject)Instantiate(Characters[config.CharacterType], startPoint.transform.position, startPoint.transform.rotation);
 		GameObject racer = (GameObject)Instantiate(racerGO, startPoint.transform.position, startPoint.transform.rotation);
 
@@ -534,6 +534,14 @@ public class TTSInitRace : MonoBehaviour
 
 	public void InitMultiplayerRacer(TTSRacerConfig config) {
 		InitToMultiplayer(InstantiateRacer(config), config);
+	}
+
+	private GameObject getRig(TTSBehaviour.RigType type) {
+		foreach (GameObject tempRig in Rigs) {
+			if (tempRig.GetComponent<TTSRig>().rigType == type)
+				return tempRig;
+		}
+		return null;
 	}
 
 	// Update is called once per frame

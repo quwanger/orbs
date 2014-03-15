@@ -23,7 +23,7 @@ public class TTSBehaviour : MonoBehaviour {
 
 	public enum LevelMenuItem { level1, level2, level3, level4, level5, level6 };
 
-	public enum RigType { Rhino, Scorpion, Spider, Dragon, Antique, NextGen };
+	public enum RigType { Rhino, Scorpion, Spider, Dragon, Antique, NextGen, Testing };
 
 	public enum CharacterTypes { Character_Default, Character1, Character2 };
 

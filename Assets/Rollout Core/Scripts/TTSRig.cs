@@ -12,8 +12,8 @@ public class TTSRig : MonoBehaviour {
 	
 	public float rigOffense = 1.0f;
 	public float rigDefense = 1.0f;
-	
-	public string rigName;
+
+	public TTSBehaviour.RigType rigType;
 	
 	void Update () {
 		
