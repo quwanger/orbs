@@ -15,6 +15,8 @@ public class TTSPowerup : TTSBehaviour
 
 	public GameObject hudPowerup;
 
+	public int ammo = 0;
+
 	//Perk Stuff
 	public Powerup pp2;
 	private float lotteryChance = 0.2f;
@@ -108,6 +110,7 @@ public class TTSPowerup : TTSBehaviour
 			//deal with tier 3 entropy
 			if(powerup == Powerup.EntropyCannon && tier == 3){
 				numberOfEntropyCannonsAvailable = 10;
+				ammo = 10;
 			}
 		} else if(powerup == Powerup.TimeBonus) {
 			if(AvailablePowerup == TTSBehaviour.Powerup.None)
@@ -115,6 +118,7 @@ public class TTSPowerup : TTSBehaviour
 			GiveTimeBonus(true);
 		}
 		else {
+			ammo = 0;
 			AvailablePowerup = powerup;
 			if (pp2 == AvailablePowerup) {
 				tier = 2;
@@ -138,12 +142,15 @@ public class TTSPowerup : TTSBehaviour
 			switch(tier){
 			case 1:
 				numberOfHelixCannonsAvailable = 1;
+				ammo = 1;
 				break;
 			case 2:
 				numberOfHelixCannonsAvailable = 3;
+				ammo = 3;
 				break;
 			case 3:
 				numberOfHelixCannonsAvailable = 8;
+				ammo = 8;
 				break;
 			default:
 				break;
@@ -269,6 +276,7 @@ public class TTSPowerup : TTSBehaviour
 		if(_tier == 3){
 			EntropyMid();
 			numberOfEntropyCannonsAvailable--;
+			ammo--;
 		}
 
 		//it is only active while firing
@@ -280,6 +288,7 @@ public class TTSPowerup : TTSBehaviour
 		if(_tier == 1 || _tier == 2 || _tier == 3) {
 			HelixMid();
 			numberOfHelixCannonsAvailable--;
+			ammo--;
 		}
 
 		//it is only active while firing

@@ -7,6 +7,7 @@ public class TTSFloatHud : TTSBehaviour {
 	public Transform boundCamera;
 	
 	public List<GameObject> ammo = new List<GameObject>();
+	private int previousAmmo = -1;
 
 	public GameObject racerToFollow;
 	
@@ -54,6 +55,26 @@ public class TTSFloatHud : TTSBehaviour {
 		}
 			
 		previousPlace = racerToFollow.GetComponent<TTSRacer>().place;
+
+		if(racerToFollow.GetComponent<TTSPowerup>().ammo != previousAmmo){
+			DisableAllAmmo();
+			DisplayAmmo();
+			previousAmmo = racerToFollow.GetComponent<TTSPowerup>().ammo;
+		}
+
+	}
+
+	public void DisableAllAmmo(){
+		foreach(GameObject _ammo in ammo){
+			if(_ammo.active)
+				_ammo.active = false;
+		}
+	}
+
+	public void DisplayAmmo(){
+		for(int i=0; i<racerToFollow.GetComponent<TTSPowerup>().ammo; i++){
+			ammo[i].active = true;
+		}
 	}
 	
 	public void ReturnToOriginalSize(){

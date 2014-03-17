@@ -257,7 +257,7 @@ public class TTSRacer : TTSBehaviour
 
 		//state = GamePad.GetState(playerIndex);
 
-		Debug.Log("Player 1: " + playerIndex);
+		//Debug.Log("Player 1: " + playerIndex);
 
 		if (player == PlayerType.Player) {
 			if (playerNum == 1) {
