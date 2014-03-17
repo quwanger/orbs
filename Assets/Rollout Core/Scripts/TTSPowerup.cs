@@ -194,7 +194,7 @@ public class TTSPowerup : TTSBehaviour
 		this.ActivePowerup = this.AvailablePowerup;
 
 		if(this.AvailablePowerup == Powerup.EntropyCannon && tier == 3){
-			if(numberOfEntropyCannonsAvailable == 0){
+			if(numberOfEntropyCannonsAvailable <= 0){
 				this.AvailablePowerup = Powerup.None;
 				this.tier = 0;
 			}
@@ -404,7 +404,7 @@ public class TTSPowerup : TTSBehaviour
 
 		go.transform.rotation = racer.displayMeshComponent.transform.rotation;
 		go.transform.position = transform.position + racer.displayMeshComponent.forward * 3.5f;
-		go.rigidbody.velocity = racer.rigidbody.velocity;
+		go.rigidbody.velocity = racer.rigidbody.velocity + (racer.rigidbody.velocity.normalized * 50.0f);
 
 		if (owner) { SendPowerupDeploy(TTSPowerupNetworkTypes.Helix, go); }
 		else {
