@@ -12,13 +12,13 @@ public class TTSLeech : TTSBehaviour {
 	public GameObject explosion;
 	
 	public float homingRadius = 25.0F;
-	public float stickRadius = 1.5f;
-	public float jumpRadius = 5.0f;
-	public float explosionRadius = 5.0f;
+	public float stickRadius = 3.0f;
+	public float jumpRadius = 8.0f;
+	public float explosionRadius = 8.0f;
 	public float explosionPower = 1000.0F;
 	
 	private Vector3 currentTarget;
-	public TTSRacer currentRacer;
+	public GameObject currentRacer;
 	public TTSWaypoint currentWaypoint;
 	public TTSWaypoint previousWaypoint;
 	public TTSWaypoint nextWaypoint;
@@ -82,7 +82,11 @@ public class TTSLeech : TTSBehaviour {
 			transform.position = stuckRacer.transform.position + positionDifference;
 			CheckForOtherRacers();
 		}else{
-			this.rigidbody.velocity = (destinationPosition - this.transform.position).normalized * leechVelocity;
+			if(racerFound){
+				this.rigidbody.velocity = (destinationPosition - this.transform.position).normalized * homedRacer.rigidbody.velocity.magnitude * 2.0f;
+			}else{
+				this.rigidbody.velocity = (destinationPosition - this.transform.position).normalized * leechVelocity;
+			}
 			findDestination();
 		}
 	}
@@ -90,10 +94,11 @@ public class TTSLeech : TTSBehaviour {
 	private void CheckForOtherRacers(){
 		Collider[] colliders = Physics.OverlapSphere(this.transform.position, jumpRadius);
 		    foreach (Collider hit in colliders) {
-		        if (hit.GetComponent<TTSRacer>() && hit.gameObject != stuckRacer.gameObject){
+		        if (hit.GetComponent<TTSRacer>() && hit.gameObject != stuckRacer){
 					racerStuck = false;
-					currentRacer = stuckRacer.GetComponent<TTSRacer>();
-					destinationPosition = hit.gameObject.transform.position;
+					currentRacer = stuckRacer;
+					homedRacer = hit.gameObject;
+					destinationPosition = homedRacer.transform.position;
 					if(level.DebugMode)
 						Debug.Log("Leech jump to: " + hit.gameObject);
 				}
@@ -110,11 +115,11 @@ public class TTSLeech : TTSBehaviour {
 	        if (hit && hit.rigidbody){
 	        	if(hit.GetComponent<TTSRacer>()){
 	        		if(!hit.GetComponent<TTSRacer>().hasShield){
-	        			hit.GetComponent<TTSRacer>().DamageRacer(0.7f * currentRacer.Offense);
-	        			hit.rigidbody.AddExplosionForce(explosionPower * currentRacer.Offense, explosionPos, explosionRadius * currentRacer.Offense, -3.0F);
+	        			hit.GetComponent<TTSRacer>().DamageRacer(0.7f * currentRacer.GetComponent<TTSRacer>().Offense);
+	        			hit.rigidbody.AddExplosionForce(explosionPower * currentRacer.GetComponent<TTSRacer>().Offense, explosionPos, explosionRadius * currentRacer.GetComponent<TTSRacer>().Offense, -3.0F);
 	        		}
 	        	}else{
-	            	hit.rigidbody.AddExplosionForce(explosionPower * currentRacer.Offense, explosionPos, explosionRadius * currentRacer.Offense, -3.0F);
+	            	hit.rigidbody.AddExplosionForce(explosionPower * currentRacer.GetComponent<TTSRacer>().Offense, explosionPos, explosionRadius * currentRacer.GetComponent<TTSRacer>().Offense, -3.0F);
 	            }
 	        }
 	    }
@@ -133,8 +138,8 @@ public class TTSLeech : TTSBehaviour {
 		if(!racerFound){
 			Collider[] colliders = Physics.OverlapSphere(this.transform.position, homingRadius);
 		    foreach (Collider hit in colliders) {
-		        if (hit.GetComponent<TTSRacer>() && hit.gameObject != currentRacer.gameObject){
-					Debug.Log("Leech - Racer Found");
+		        if (hit.GetComponent<TTSRacer>() && hit.gameObject != currentRacer){
+					//Debug.Log("Leech - Racer Found");
 					racerFound = true;
 					homedRacer = hit.gameObject;
 		            destinationPosition = hit.transform.position;
@@ -147,7 +152,7 @@ public class TTSLeech : TTSBehaviour {
 			//check to see if leech should attach itself to the racer
 			Collider[] colliders2 = Physics.OverlapSphere(this.transform.position, stickRadius);
 			foreach (Collider hit in colliders2) {
-				if (hit.GetComponent<TTSRacer>()){
+				if (hit.gameObject == homedRacer){
 					this.rigidbody.velocity = new Vector3(0,0,0);
 					stuckRacer = hit.gameObject;
 					positionDifference = this.transform.position - stuckRacer.transform.position;
@@ -164,7 +169,9 @@ public class TTSLeech : TTSBehaviour {
 		}
 		
 		if(nextWaypoint.getDifferenceFromEnd(this.transform.position) < 7.0f){
-			resetWaypoints(nextWaypoint);
+			if(!racerFound && !racerStuck){
+				resetWaypoints(nextWaypoint);
+			}
 		}
 	}
 	

@@ -110,7 +110,6 @@ public class TTSPowerup : TTSBehaviour
 			//deal with tier 3 entropy
 			if(powerup == Powerup.EntropyCannon && tier == 3){
 				numberOfEntropyCannonsAvailable = 10;
-				ammo = 10;
 			}
 		} else if(powerup == Powerup.TimeBonus) {
 			if(AvailablePowerup == TTSBehaviour.Powerup.None)
@@ -155,8 +154,35 @@ public class TTSPowerup : TTSBehaviour
 			default:
 				break;
 			}
-		}
-		
+		}else if(powerup == Powerup.DrezzStones){
+			switch(tier){
+			case 1:
+				ammo = 1;
+				break;
+			case 2:
+				ammo = 3;
+				break;
+			case 3:
+				ammo = 6;
+				break;
+			default:
+				break;
+			}
+		}else if(powerup == Powerup.EntropyCannon){
+			switch(tier){
+			case 1:
+				ammo = 3;
+				break;
+			case 2:
+				ammo = 8;
+				break;
+			case 3:
+				ammo = 10;
+				break;
+			default:
+				break;
+			}
+		}		
 		//only update the hud if they are a human racer (as AI do not have HUDs)
 		if (this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)
 			hudPowerup.GetComponent<TTSHudPowerup>().UpdateHudPowerup(AvailablePowerup, tier);
@@ -465,7 +491,7 @@ public class TTSPowerup : TTSBehaviour
 
 	public GameObject DeployLeech(bool owner, TTSPowerupNetHandler handle) {
 		GameObject go = (GameObject)Instantiate(LeechPrefab, this.gameObject.transform.position, Quaternion.identity);
-		go.GetComponent<TTSLeech>().currentRacer = this.gameObject.GetComponent<TTSRacer>();
+		go.GetComponent<TTSLeech>().currentRacer = this.gameObject;
 		go.transform.rotation = GetComponent<TTSRacer>().displayMeshComponent.transform.rotation;
 		go.transform.position = this.gameObject.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
 		go.rigidbody.velocity = this.gameObject.rigidbody.velocity;
