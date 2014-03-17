@@ -56,10 +56,12 @@ public class TTSFloatHud : TTSBehaviour {
 			
 		previousPlace = racerToFollow.GetComponent<TTSRacer>().place;
 
-		if(racerToFollow.GetComponent<TTSPowerup>().ammo != previousAmmo){
-			DisableAllAmmo();
-			DisplayAmmo();
-			previousAmmo = racerToFollow.GetComponent<TTSPowerup>().ammo;
+		if(level.GetComponent<TTSLevel>().DebugMode == false){
+			if(racerToFollow.GetComponent<TTSPowerup>().ammo != previousAmmo){
+				DisableAllAmmo();
+				DisplayAmmo();
+				previousAmmo = racerToFollow.GetComponent<TTSPowerup>().ammo;
+			}
 		}
 
 	}
