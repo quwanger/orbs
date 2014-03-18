@@ -302,7 +302,7 @@ public class TTSClient : MonoBehaviour
 			}
 		}
 		if(DebugMode)
-			Debug.Log("Registering " + handler.id);
+			Debug.Log("Registering " + handler.type + " " + handler.id);
 
 		if (InGame && handler.inGameRegistration && handler.owner) {
 			ServerObjectRegister(handler, UpdatePacket);
@@ -415,6 +415,12 @@ public static class TTSCommandTypes
 	public const int PowerupAlreadyRegistered = 5091;
 	public const int PowerupIsNotRegistered   = 5092;
 
+	// PowerupPlatform
+	public const int PowerupPlatformRegister   = 5501;
+	public const int PowerupPlatformRegisterOK = 5511;
+	public const int PowerupPlatformSpawn      = 5504;
+	public const int PowerupPlatformPickedUp   = 5505;
+
 	// General
 	public const int RequestNumRacers = 8001;
 	public const int ReturnNumRacers = 8002;
@@ -424,6 +430,7 @@ public static class TTSCommandTypes
 
 public abstract class TTSNetworkHandle
 {
+	public string type = "Net Handle";
 	public int registerCommand; // Must be set
 	public bool isServerRegistered = false;
 	public float id = 0.0f; // ID will only be stored here
@@ -461,6 +468,10 @@ public abstract class TTSNetworkHandle
 
 	public virtual void DeregisterFromClient() {
 		client.LocalObjectDeregister(id);
+	}
+
+	public void DoneReading() {
+		isNetworkUpdated = false;
 	}
 }
 

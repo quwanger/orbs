@@ -578,10 +578,12 @@ public class TTSPowerupNetHandler : TTSNetworkHandle
 	public float RacerID = -1.0f;
 
 	public TTSPowerupNetHandler() {
+		type = "Static Powerup";
 		// For static powerups only. Class is used only for storage.
 	}
 
 	public TTSPowerupNetHandler(TTSClient Client, bool Owner, int PowerupType, float racerID) {
+		type = "Powerup";
 		Type = PowerupType;
 		owner = Owner;
 		RacerID = racerID;

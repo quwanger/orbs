@@ -257,8 +257,6 @@ public class TTSRacer : TTSBehaviour
 
 		//state = GamePad.GetState(playerIndex);
 
-		Debug.Log("Player 1: " + playerIndex);
-
 		if (player == PlayerType.Player) {
 			if (playerNum == 1) {
 				if(level.useKeyboard){
@@ -651,6 +649,7 @@ public class TTSRacerNetHandler : TTSNetworkHandle
 	public List<TTSPowerupNetHandler> receivedPowerups = new List<TTSPowerupNetHandler>();
 
 	public TTSRacerNetHandler(TTSClient Client, bool Owner, int rigID) {
+		type = "Racer";
 		registerCommand = TTSCommandTypes.RacerRegister;
 		owner = Owner;
 		client = Client;
@@ -659,6 +658,7 @@ public class TTSRacerNetHandler : TTSNetworkHandle
 	}
 
 	public TTSRacerNetHandler(TTSClient Client, bool Owner, float ID) { // For multiplayer players
+		type = "Racer";
 		id = ID;
 		registerCommand = TTSCommandTypes.RacerRegister;
 		owner = Owner;
