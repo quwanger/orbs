@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: scorpion_redmarble
-  m_Shader: {fileID: 7, guid: 0000000000000000e000000000000000, type: 0}
+  m_Shader: {fileID: 3, guid: 0000000000000000e000000000000000, type: 0}
   m_SavedProperties:
     serializedVersion: 2
     m_TexEnvs:
@@ -18,9 +18,17 @@ Material:
           m_Texture: {fileID: 2800000, guid: 841bd772e982a459f808e6851866ba0c, type: 3}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
-    m_Floats: {}
+    m_Floats:
+      data:
+        first:
+          name: _Shininess
+        second: .0641845986
     m_Colors:
       data:
         first:
           name: _Color
-        second: {r: 1, g: 1, b: 1, a: 1}
+        second: {r: .947761178, g: .947761178, b: .947761178, a: 1}
+      data:
+        first:
+          name: _SpecColor
+        second: {r: .24626863, g: .0422699824, b: .0422699824, a: 1}
