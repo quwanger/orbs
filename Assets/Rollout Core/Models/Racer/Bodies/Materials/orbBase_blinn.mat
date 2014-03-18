@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Orb_Lambert
+  m_Name: orbBase_blinn
   m_Shader: {fileID: 22, guid: 0000000000000000e000000000000000, type: 0}
   m_SavedProperties:
     serializedVersion: 2
@@ -20,39 +20,21 @@ Material:
           m_Offset: {x: 0, y: 0}
       data:
         first:
-          name: _BumpMap
-        second:
-          m_Texture: {fileID: 2800000, guid: dab0806454e4d924491b1b84dddaa6b7, type: 3}
-          m_Scale: {x: 3, y: 3}
-          m_Offset: {x: 0, y: 0}
-      data:
-        first:
           name: _Cube
         second:
           m_Texture: {fileID: 8900000, guid: 6993f1ee3ff1a4a3a8fec59e7cc67bde, type: 3}
           m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
-      data:
-        first:
-          name: _ParallaxMap
-        second:
-          m_Texture: {fileID: 2800000, guid: 4758710af75f7c84cbabc28c28b5e685, type: 3}
-          m_Scale: {x: 2, y: 2}
           m_Offset: {x: 0, y: 0}
     m_Floats:
       data:
         first:
           name: _Shininess
         second: 1
-      data:
-        first:
-          name: _Parallax
-        second: .00499999989
     m_Colors:
       data:
         first:
           name: _Color
-        second: {r: .134328365, g: .134328365, b: .134328365, a: 1}
+        second: {r: .13333334, g: .13333334, b: .13333334, a: 1}
       data:
         first:
           name: _SpecColor
@@ -60,4 +42,4 @@ Material:
       data:
         first:
           name: _ReflectColor
-        second: {r: 0, g: 0, b: 0, a: .156862751}
+        second: {r: 0, g: 0, b: 0, a: 0}

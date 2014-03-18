@@ -18,11 +18,11 @@ public class TTSInitRace : MonoBehaviour
 	private int startingPointIndex = 0;
 
 	public enum RigTypes { Rhino, Scorpion, Default };
-	public enum CharacterTypes { Character_Default, Character1, Character2 };
+	public enum CharacterTypes { character_yellow, character_purple, character_orange, character_blue, character_red, character_green};
 
 	//private string tempRigChoice = "Rig_Rhino";
 	private string tempRigChoice;
-	private string tempCharacterChoice = "Character_Default";
+	//private string tempCharacterChoice = "Character_Default";
 	public int numHumanPlayers = 1;
 	public int numAIPlayers = 0;
 
@@ -98,7 +98,10 @@ public class TTSInitRace : MonoBehaviour
 			config.LocalControlType = TTSUtils.EnumToInt(TTSRacer.PlayerType.AI);
 		}
 
-		config.CharacterType = 0;
+		if(!Human)
+			config.CharacterType = Random.Range(0, 6);
+		else
+			config.CharacterType = 0;
 
 		return config;
 	}
@@ -178,13 +181,18 @@ public class TTSInitRace : MonoBehaviour
 		}
 
 		//checks for the character (in this case, default sphere)
-		foreach (GameObject character in Characters) {
-			if (character.name == tempCharacterChoice)
+		/*foreach (GameObject character in Characters) {
+			if (character.name == tempCharacterChoice){
 				characterToLoad = character;
+			}
 		}
 		if (characterToLoad == null) {
-			characterToLoad = Characters[0];
-		}
+			characterToLoad = Characters[Random.Range(0, Characters.Count)];
+		}*/
+
+		characterToLoad = Characters[Random.Range(0, Characters.Count)];
+
+		Debug.Log(characterToLoad);
 
 		//gets the starting positions, sets them as taken if someone spawning on them already
 		GameObject sp = StartingPoints[(startPointID != -1) ? startPointID : startingPointIndex];
