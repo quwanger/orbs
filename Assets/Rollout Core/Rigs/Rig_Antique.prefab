@@ -10,7 +10,6 @@ GameObject:
   - 4: {fileID: 400000}
   - 33: {fileID: 3300000}
   - 23: {fileID: 2300000}
-  - 95: {fileID: 9500000}
   - 114: {fileID: 11400000}
   m_Layer: 0
   m_Name: Rig_Antique
@@ -42,7 +41,10 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 31d668c11939a4ab49c07a7fd622554c, type: 2}
+  - {fileID: 2100000, guid: ab40844623f2c481fb1c89cf4b64c550, type: 2}
+  - {fileID: 2100000, guid: ef0fb3f5bf6844d248c7c47d89193c55, type: 2}
+  - {fileID: 2100000, guid: ef0fb3f5bf6844d248c7c47d89193c55, type: 2}
+  - {fileID: 2100000, guid: 9888468fa9ab947029b993e996ab5a6c, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -54,19 +56,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_Mesh: {fileID: 4300000, guid: 8b825bd8ff40f4089899c1e5e6c519f7, type: 3}
---- !u!95 &9500000
-Animator:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 8b825bd8ff40f4089899c1e5e6c519f7, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 1
-  m_ApplyRootMotion: 1
-  m_AnimatePhysics: 0
+  m_Mesh: {fileID: 4300000, guid: 901a3f66960f34afb9a2769afdf71ec4, type: 3}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 1
