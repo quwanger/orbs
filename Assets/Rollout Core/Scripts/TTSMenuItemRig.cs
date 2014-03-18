@@ -26,6 +26,7 @@ public class TTSMenuItemRig : TTSBehaviour {
 	public int handling;
 	public int offense;
 	public int defense;
+	public GUITexture rigImage;
 	
 	// Use this for initialization
 	void Start () {

@@ -96,6 +96,7 @@ public class TTSMenu : TTSBehaviour {
 	// 5 PERKA		11		3x3
 	// 6 PERKB		11		3x3
 	// 7 LEVEL		11		3x2
+	// 8 BLANK		
 	public GameObject[] panels;
 	
 	// indices for each panel
@@ -117,7 +118,7 @@ public class TTSMenu : TTSBehaviour {
 
 	// Use this for initialization
 	void Start () {		
-		previousPanel = 7;
+		previousPanel = 8;
 		
 		playerText = GameObject.FindGameObjectsWithTag("playerText");
 		
@@ -175,10 +176,10 @@ public class TTSMenu : TTSBehaviour {
 			
 			playerText[0].guiText.text = ("Player" + (chosenOrb));
 			playerText[1].guiText.text = ("Player" + (chosenOrb));
-			string tempJoystick = "joystick 1 button 7";
+			string tempJoystick = "joystick 1 button 0";
 
 			if (gameMode == TTSLevel.Gametype.MultiplayerLocal) {
-				tempJoystick = ("joystick " + playerID[chosenOrb-1] + " button 7");
+				tempJoystick = ("joystick " + playerID[chosenOrb-1] + " button 0");
 			}
 			
 			if(activePanel == 4 || activePanel == 5 || activePanel == 6){
@@ -189,7 +190,7 @@ public class TTSMenu : TTSBehaviour {
 			
 			else if(activePanel == 0 || activePanel == 1 || activePanel == 2 || activePanel == 3 || activePanel == 7)
 			{
-				if(Input.GetKeyDown("joystick 1 button 7")){
+				if(Input.GetKeyDown("joystick 1 button 0")){
 						changePanels("right");
 				}
 			}
@@ -221,7 +222,7 @@ public class TTSMenu : TTSBehaviour {
 		}
 		
 		if(gameMode == TTSLevel.Gametype.MultiplayerLocal && activePanel == 3 && !isTweening){
-			if(Input.GetKeyDown("joystick 1 button 0") && playerReady[0] == false){
+			if(Input.GetKeyDown("joystick 1 button 7") && playerReady[0] == false){
 				playerReady[0] = true;
 				playerID[numPlayers] = 1;
 				readyUpB[numPlayers].SetActive(false);
@@ -234,7 +235,7 @@ public class TTSMenu : TTSBehaviour {
 				players.Add(tempConfig);
 			}
 			
-			if(Input.GetKeyDown("joystick 2 button 0") && playerReady[1] == false){
+			if(Input.GetKeyDown("joystick 2 button 7") && playerReady[1] == false){
 				playerReady[1] = true;
 				playerID[numPlayers] = 2;
 				readyUpB[numPlayers].SetActive(false);
@@ -247,7 +248,7 @@ public class TTSMenu : TTSBehaviour {
 				players.Add(tempConfig);
 			}
 			
-			if(Input.GetKeyDown("joystick 3 button 0") && playerReady[2] == false){
+			if(Input.GetKeyDown("joystick 3 button 7") && playerReady[2] == false){
 				playerReady[2] = true;
 				playerID[numPlayers] = 3;
 				readyUpB[numPlayers].SetActive(false);
@@ -260,7 +261,7 @@ public class TTSMenu : TTSBehaviour {
 				players.Add(tempConfig);
 			}
 			
-			if(Input.GetKeyDown("joystick 4 button 0") && playerReady[3] == false){
+			if(Input.GetKeyDown("joystick 4 button 7") && playerReady[3] == false){
 				playerReady[3] = true;
 				playerID[numPlayers] = 4;
 				readyUpB[numPlayers].SetActive(false);
@@ -532,7 +533,53 @@ public class TTSMenu : TTSBehaviour {
 					}
 				}
 			}
+			
+			// ONLINE
+			else if (gameMode == TTSLevel.Gametype.MultiplayerOnline) {
+				// mp 
+				if(activePanel == 0 && !isTweening){
+					activePanel += 4;
+					previousPanel = (activePanel - 4);
+					isTweening = true;
+					movePanel();
+				}
+				
+				else if(activePanel == 4 || activePanel == 5 || activePanel == 6 && !isTweening){
+					activePanel++;
+					if(activePanel == 5){
+						if(!isTweening){
+							previousPanel = (activePanel-1);
+							isTweening = true;
+							movePanel();
+						}
+					}
 
+					else if (activePanel == 7 && !isTweening) {
+						foreach (TTSRacerConfig player in players) {
+							if (player.ControllerID == chosenOrb) {
+								player.PerkA = (int)SelectedPerk;
+								player.PerkB = (int)SelectedPerkB;
+								player.RigType = (int)SelectedRig;
+							}
+						}
+						// go to mp menu
+						activePanel = 1;
+						previousPanel = 6;
+						isTweening = true;
+						movePanel();
+					}
+				}
+				
+				// mp lobby
+				else if(activePanel == 1 && !isTweening){
+					activePanel++;
+					previousPanel = (activePanel-1);
+					isTweening = true;
+					movePanel();
+				}
+			}
+			
+			// SPLITSCREEN
 			else if (gameMode == TTSLevel.Gametype.MultiplayerLocal) {
 				if(activePanel == 0 && !isTweening){
 					activePanel += 3;
@@ -550,7 +597,6 @@ public class TTSMenu : TTSBehaviour {
 							movePanel();
 						}
 					}
-					
 										
 					else if(activePanel == 8 && !isTweening){
 						if(SelectedLevel.ToString() == "level1")
@@ -629,7 +675,7 @@ public class TTSMenu : TTSBehaviour {
 		iTween.MoveTo(panels[activePanel], iTween.Hash("x", 0.5, "time", 2.0f, "onComplete", "stoppedTweening", "onCompleteTarget", gameObject));
 				
 		// move out last panel
-		iTween.MoveTo(panels[previousPanel], iTween.Hash("x", -5, "time", 2.0f, "onComplete", "stoppedTweening", "onCompleteTarget", gameObject));
+		iTween.MoveTo(panels[previousPanel], iTween.Hash("x", 5, "time", 2.0f, "onComplete", "stoppedTweening", "onCompleteTarget", gameObject));
 	}
 	
 	public void stoppedTweening(){
@@ -727,11 +773,14 @@ public class TTSMenu : TTSBehaviour {
 	private void HighlightRig(){
 		deactiveCircles();
 		foreach(GameObject r in _rigs){	
-			if(r.GetComponent<TTSMenuItemRig>().index!=indices[4])
+			if(r.GetComponent<TTSMenuItemRig>().index!=indices[4]){
+				r.GetComponent<TTSMenuItemRig>().rigImage.enabled = false;
 				r.SetActive(false);
+			}
 
 			else{
 				SelectedRig = r.GetComponent<TTSMenuItemRig>().rig;
+				r.GetComponent<TTSMenuItemRig>().rigImage.enabled = true;
 				r.SetActive(true);
 				
 				numCircles[0]  = r.GetComponent<TTSMenuItemRig>().acceleration;
