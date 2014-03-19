@@ -448,33 +448,36 @@ public class TTSRacer : TTSBehaviour
 		sparkClone.transform.forward = displayMeshComponent.forward;
 
 //UNFINISHED SHIELD CRAP
-
+/*
 		if(hasShield){
-			TTSPowerup pu = this.GetComponent<TTSPowerup>();
-			if(collision.gameObject.tag == "Powerup"){
-				Debug.Log("Collision with" + collision.gameObject.name);
-				switch(collision.gameObject.name){
-					case "HelixProjectile(Clone)":
-						pu.GivePowerup(Powerup.Helix);
-						hasShield = false;
-						this.GetComponentInChildren<TTSShield>().duration = 0.5f;
-						break;
-					case "HelixProjectileTier3(Clone)":
-						pu.GivePowerup(Powerup.Helix);
-						hasShield = false;
-						this.GetComponentInChildren<TTSShield>().duration = 0.5f;
-						break;
-					case "EntropyCannonProjectile(Clone)":
-						pu.GivePowerup(Powerup.EntropyCannon);
-						hasShield = false;
-						this.GetComponentInChildren<TTSShield>().duration = 0.5f;
-						break;
-					default:
-						break;
-				}	
+			if(this.GetComponentInChildren<TTSShield>().tier3){
+				Debug.Log("Hit with tier 3 shield");
+				TTSPowerup pu = this.GetComponent<TTSPowerup>();
+				if(collision.gameObject.tag == "Powerup"){
+					switch(collision.gameObject.name){
+						case "HelixProjectile(Clone)":
+							Destroy(collision.gameObject);
+							pu.GivePowerup(Powerup.Helix);
+							hasShield = false;
+							this.GetComponentInChildren<TTSShield>().duration = 0.5f;
+							break;
+						case "HelixProjectileTier3(Clone)":
+							pu.GivePowerup(Powerup.Helix);
+							hasShield = false;
+							this.GetComponentInChildren<TTSShield>().duration = 0.5f;
+							break;
+						case "EntropyCannonProjectile(Clone)":
+							pu.GivePowerup(Powerup.EntropyCannon);
+							hasShield = false;
+							this.GetComponentInChildren<TTSShield>().duration = 0.5f;
+							break;
+						default:
+							break;
+					}	
+				}
 			}
 		}
-
+*/
 	}
 
 	void OnCollisionStay(Collision collision) {

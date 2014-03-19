@@ -4,8 +4,10 @@ using System.Collections;
 public class TTSShield : TTSPerishingBehaviour {
 	
 	private bool dead = false;
-	private bool tier3 = false;
+	public bool tier3 = false;
 	private TTSRacer racer;
+
+	public ParticleSystem absorbEffect;
 	
 	void Awake(){
 		destroyWhenLifecycleComplete = false; // Once duration has passed, the class will stop running and self-destruct
@@ -16,6 +18,7 @@ public class TTSShield : TTSPerishingBehaviour {
 		if(level == 3){
 			//set to 5 minutes since races don't last that long
 			this.duration = 300.0f;
+			tier3 = true;
 		}else{
 			this.duration = 4.0f * level * def;
 		}

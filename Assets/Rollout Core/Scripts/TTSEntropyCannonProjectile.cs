@@ -101,10 +101,19 @@ public class TTSEntropyCannonProjectile : MonoBehaviour {
 	void OnCollisionEnter(Collision other) {
 		//damage racer if racer is hit
 		if(other.gameObject.GetComponent<TTSRacer>()){
-			if(!other.gameObject.GetComponent<TTSRacer>().hasShield)
+			if(other.gameObject.GetComponent<TTSRacer>().hasShield){
+				if(other.gameObject.GetComponentInChildren<TTSShield>().tier3){
+					other.gameObject.GetComponent<TTSPowerup>().GivePowerup(TTSBehaviour.Powerup.EntropyCannon);
+					other.gameObject.GetComponentInChildren<TTSShield>().duration = 2.0f;
+					Explode(false);
+				}
+			}else{
 				other.gameObject.GetComponent<TTSRacer>().DamageRacer(offensiveMultiplier * 0.7f);
+				Explode(true);
+			}
+		}else{
+			Explode(true);
 		}
-		Explode(true);
 	}
 #endregion
 

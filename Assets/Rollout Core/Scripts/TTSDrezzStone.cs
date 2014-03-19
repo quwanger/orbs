@@ -31,8 +31,18 @@ public class TTSDrezzStone : MonoBehaviour
 				GameObject newemitter = (GameObject) Instantiate(EmitterToSpawn, this.transform.position, this.transform.rotation);
 				newemitter.transform.parent = this.transform;
 				newemitter.GetComponent<LightningBolt>().target = other.gameObject.transform;
-				if(other.gameObject.GetComponent<TTSRacer>())
-					other.GetComponent<TTSRacer>().DamageRacer(0.5f + (0.5f*offensiveMultiplier));
+				if(other.gameObject.GetComponent<TTSRacer>()){
+					if(other.gameObject.GetComponent<TTSRacer>().hasShield){
+						if(other.gameObject.GetComponentInChildren<TTSShield>().tier3){
+							other.gameObject.GetComponent<TTSPowerup>().GivePowerup(TTSBehaviour.Powerup.DrezzStones);
+							other.gameObject.GetComponentInChildren<TTSShield>().duration = 2.0f;
+							Destroy(this.gameObject);
+							Destroy(this);
+						}
+					}else{
+						other.GetComponent<TTSRacer>().DamageRacer(0.5f + (0.5f*offensiveMultiplier));
+					}
+				}
 				Emitters.Add(newemitter);
 			}
 			
