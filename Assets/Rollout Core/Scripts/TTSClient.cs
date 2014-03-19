@@ -78,7 +78,7 @@ public class TTSClient : MonoBehaviour
 
 	private void InitConnection() {
 		ConnectToLobby(1);
-		RequestLobbyInfo();
+		//RequestLobbyInfo();
 	}
 
 	public void RequestLobbyInfo() {
@@ -207,6 +207,17 @@ public class TTSClient : MonoBehaviour
 				case TTSCommandTypes.PowerupPlatformRegisterOK:
 					id = packet.ReadFloat();
 					netHandles[id].isServerRegistered = true;
+					netHandles[id].ReceiveNetworkData(packet, command);
+					break;
+
+				case TTSCommandTypes.PowerupPlatformAlreadyRegistered:
+					id = packet.ReadFloat();
+					netHandles[id].owner = false;
+					netHandles[id].isServerRegistered = true;
+					break;
+
+				case TTSCommandTypes.PowerupPlatformSpawn:
+					id = packet.ReadFloat();
 					netHandles[id].ReceiveNetworkData(packet, command);
 					break;
 				#endregion
@@ -417,10 +428,11 @@ public static class TTSCommandTypes
 	public const int PowerupIsNotRegistered   = 5092;
 
 	// PowerupPlatform
-	public const int PowerupPlatformRegister   = 5501;
-	public const int PowerupPlatformRegisterOK = 5511;
-	public const int PowerupPlatformSpawn      = 5504;
-	public const int PowerupPlatformPickedUp   = 5505;
+	public const int PowerupPlatformRegister			= 5501;
+	public const int PowerupPlatformRegisterOK			= 5511;
+	public const int PowerupPlatformSpawn				= 5504;
+	public const int PowerupPlatformPickedUp			= 5505;
+	public const int PowerupPlatformAlreadyRegistered	= 5591;
 
 	// General
 	public const int RequestNumRacers = 8001;
