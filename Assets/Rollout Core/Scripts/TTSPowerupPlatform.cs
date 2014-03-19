@@ -150,7 +150,7 @@ public class TTSPowerupPlatform : TTSBehaviour
 				powerupMesh = null;
 				//currentPowerup = Powerup.None;
 
-				if (netHandle != null && netHandle.owner) {
+				if (netHandle == null || (netHandle != null && netHandle.owner)) {
 					StartCoroutine("respawnPickup");
 				}
 			}
