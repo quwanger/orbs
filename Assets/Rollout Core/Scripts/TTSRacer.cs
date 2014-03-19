@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
+#if UNITY_STANDALONE_WIN
 using XInputDotNetPure;
 #endif
 
@@ -132,7 +132,7 @@ public class TTSRacer : TTSBehaviour
 	public int rigID;
 
 	//XInput
-	#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
+	#if UNITY_STANDALONE_WIN
 		PlayerIndex playerIndex;
 		GamePadState state;
 	#endif
@@ -253,72 +253,66 @@ public class TTSRacer : TTSBehaviour
 		PreviousVelocity = rigidbody.velocity;
 	}
 
-
-
 	private void CalculateInputForces() {
 		if (finished && !level.DebugMode) // No input when race is finished
 			return;
 
 		if (player == PlayerType.Player) {
 			if (playerNum == 1) {
-				if(level.useKeyboard){
+				if(level.useKeyboard) {
 					vInput = Input.GetAxis ("Key_YAxis");
 					hInput = Input.GetAxis ("Key_XAxis");
 				}
-				#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
-				else {
+
+				#if UNITY_STANDALONE_WIN
+				else if(!level.useKeyboard) {
 					state = GamePad.GetState(PlayerIndex.One);
 					vInput = state.Triggers.Right;
 					hInput = state.ThumbSticks.Left.X;
 				}
 				#endif
-				#if UNITY_STANDALONE_OSX && !UNITY_EDITOR
-				else {
-					vInput = Input.GetAxis("L_YAxis_1");
+
+				#if UNITY_STANDALONE_OSX
+				else if(!level.useKeyboard) {
+					vInput = Input.GetAxis("R_YAxis_1");
 					hInput = Input.GetAxis("L_XAxis_1");
 				}
 				#endif
 			} else if (playerNum == 2) {
-				#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
-				else {
+
+				#if UNITY_STANDALONE_WIN
 					state = GamePad.GetState(PlayerIndex.Two);
 					vInput = state.Triggers.Right;
 					hInput = state.ThumbSticks.Left.X;
-				}
 				#endif
-				#if UNITY_STANDALONE_OSX && !UNITY_EDITOR
-				else {
-					vInput = Input.GetAxis("L_YAxis_2");
+
+				#if UNITY_STANDALONE_OSX
+					vInput = Input.GetAxis("R_YAxis_2");
 					hInput = Input.GetAxis("L_XAxis_2");
-				}
 				#endif
 			} else if (playerNum == 3) {
-				#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
-				else {
+
+				#if UNITY_STANDALONE_WIN
 					state = GamePad.GetState(PlayerIndex.Three);
 					vInput = state.Triggers.Right;
 					hInput = state.ThumbSticks.Left.X;
-				}
 				#endif
-				#if UNITY_STANDALONE_OSX && !UNITY_EDITOR
-				else {
-					vInput = Input.GetAxis("L_YAxis_3");
+
+				#if UNITY_STANDALONE_OSX
+					vInput = Input.GetAxis("R_YAxis_3");
 					hInput = Input.GetAxis("L_XAxis_3");
-				}
 				#endif
 			} else if (playerNum == 4) {
-				#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
-				else {
+
+				#if UNITY_STANDALONE_WIN
 					state = GamePad.GetState(PlayerIndex.Four);
 					vInput = state.Triggers.Right;
 					hInput = state.ThumbSticks.Left.X;
-				}
 				#endif
-				#if UNITY_STANDALONE_OSX && !UNITY_EDITOR
-				else {
-					vInput = Input.GetAxis("L_YAxis_4");
+
+				#if UNITY_STANDALONE_OSX
+					vInput = Input.GetAxis("R_YAxis_4");
 					hInput = Input.GetAxis("L_XAxis_4");
-				}
 				#endif
 			}
 		}
