@@ -42,7 +42,7 @@ public class TTSClient : MonoBehaviour
 		}
 	}
 	public bool EnteredLobby = false;
-	public bool InGame = false;
+
 	public int LobbyID = 0;
 
 	// Game networking
@@ -136,7 +136,7 @@ public class TTSClient : MonoBehaviour
 		}
 		SendPacket(UpdatePacket, true);
 
-		if (!InGame)
+		if (level.currentGameType == TTSLevel.Gametype.MultiplayerOnline)
 			return;
 		// Code to run during in game.
 
@@ -183,7 +183,7 @@ public class TTSClient : MonoBehaviour
 		float id = -1;
 
 		while (command != TTSCommandTypes.EndPacket) {
-			if (DebugMode)
+			//if (DebugMode)
 				Debug.Log(">	Received command " + command);
 
 			switch (command) {
@@ -192,7 +192,6 @@ public class TTSClient : MonoBehaviour
 				case TTSCommandTypes.LobbyRegisterOK:
 					LobbyID = packet.ReadInt32();
 					EnteredLobby = true;
-					InGame = true;		// REMOVE THIS LATER
 					ServerAllObjectsRegister();
 					break;
 
@@ -316,7 +315,7 @@ public class TTSClient : MonoBehaviour
 		if(DebugMode)
 			Debug.Log("Registering " + handler.type + " " + handler.id);
 
-		if (InGame && handler.inGameRegistration && handler.owner) {
+		if (handler.inGameRegistration && handler.owner) {
 			ServerObjectRegister(handler, UpdatePacket);
 		}
 
