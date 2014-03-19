@@ -48,7 +48,7 @@ GameObject:
   - 114: {fileID: 11400002}
   m_Layer: 0
   m_Name: HelixProjectile
-  m_TagString: Untagged
+  m_TagString: Powerup
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -353,12 +353,25 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bcf0853940cd240e18841ffcd3970921, type: 3}
   m_Name: 
+  accelerationIncrease: 500
+  speedIncrease: 25
+  handlingIncrease: 750
+  offenseIncrease: .300000012
+  defenseIncrease: .300000012
   explosion: {fileID: 100000, guid: 206ee8423a6c04d0f896c11dfbfee2d7, type: 2}
   fire: {fileID: 8300000, guid: 50dcf1f8cc98d334d953d96ded8fa742, type: 3}
   Timeout: 5
   ProjectileAcceleration: 10
   ProjectileStartVelocity: 100
   offensiveMultiplier: 0
+  homingRadius: 25
+  currentRacer: {fileID: 0}
+  currentWaypoint: {fileID: 0}
+  previousWaypoint: {fileID: 0}
+  nextWaypoint: {fileID: 0}
+  destinationPosition: {x: 0, y: 0, z: 0}
+  racersInFront: 0
+  helixInBatch: 0
 --- !u!135 &13500000
 SphereCollider:
   m_ObjectHideFlags: 1

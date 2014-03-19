@@ -463,7 +463,7 @@ public class TTSPowerup : TTSBehaviour
 		
 		GameObject go = (GameObject)Instantiate(HelixPrefabTier3);
 
-		TTSHelixProjectile helix = go.GetComponent<TTSHelixProjectile>();
+		TTSHelixProjectileTier3 helix = go.GetComponent<TTSHelixProjectileTier3>();
 		TTSRacer racer = GetComponent<TTSRacer>();
 
 		helix.offensiveMultiplier = racer.Offense;

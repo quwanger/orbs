@@ -45,10 +45,10 @@ GameObject:
   - 54: {fileID: 5400000}
   - 96: {fileID: 9600000}
   - 82: {fileID: 8200000}
-  - 114: {fileID: 11400002}
+  - 114: {fileID: 11400000}
   m_Layer: 0
-  m_Name: HelixProjectile
-  m_TagString: Untagged
+  m_Name: HelixProjectileTier3
+  m_TagString: Powerup
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -343,7 +343,7 @@ Light:
   m_ShadowAngle: 0
   m_IndirectIntensity: 1
   m_AreaSize: {x: 1, y: 1}
---- !u!114 &11400002
+--- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -351,14 +351,29 @@ MonoBehaviour:
   m_GameObject: {fileID: 100004}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bcf0853940cd240e18841ffcd3970921, type: 3}
+  m_Script: {fileID: 11500000, guid: 39a90f2b3c3b05143aa59eb9312e6492, type: 3}
   m_Name: 
-  explosion: {fileID: 100000, guid: 206ee8423a6c04d0f896c11dfbfee2d7, type: 2}
+  accelerationIncrease: 500
+  speedIncrease: 25
+  handlingIncrease: 750
+  offenseIncrease: .300000012
+  defenseIncrease: .300000012
+  explosion: {fileID: 100000, guid: cb2ab6b9055d1894d83dea9a7d2ec0f2, type: 2}
   fire: {fileID: 8300000, guid: 50dcf1f8cc98d334d953d96ded8fa742, type: 3}
-  Timeout: 5
+  Timeout: 15
   ProjectileAcceleration: 10
   ProjectileStartVelocity: 100
   offensiveMultiplier: 0
+  homingRadius: 25
+  currentRacer: {fileID: 0}
+  currentWaypoint: {fileID: 0}
+  previousWaypoint: {fileID: 0}
+  nextWaypoint: {fileID: 0}
+  destinationPosition: {x: 0, y: 0, z: 0}
+  racersInFront: 0
+  helixInBatch: 0
+  ProjectileToSpawn: {fileID: 100004, guid: 91e0f6e5128764f0784af9858af549da, type: 2}
+  hitRacers: []
 --- !u!135 &13500000
 SphereCollider:
   m_ObjectHideFlags: 1

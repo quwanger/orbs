@@ -32,7 +32,7 @@ GameObject:
   - 54: {fileID: 5400000}
   m_Layer: 0
   m_Name: Leech
-  m_TagString: Untagged
+  m_TagString: Powerup
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -279,6 +279,7 @@ MonoBehaviour:
   explosion: {fileID: 100000, guid: 205452f44c0db435e931dbe0a37c348b, type: 2}
   homingRadius: 15
   stickRadius: 1
+  jumpRadius: 8
   explosionRadius: 5
   explosionPower: 1000
   currentRacer: {fileID: 0}
@@ -286,6 +287,7 @@ MonoBehaviour:
   previousWaypoint: {fileID: 0}
   nextWaypoint: {fileID: 0}
   destinationPosition: {x: 0, y: 0, z: 0}
+  beeping: {fileID: 0}
   stuckMaterial: {fileID: 2100000, guid: f8c061fa99a6d44fd9eae9d0ab9a056e, type: 2}
 --- !u!135 &13500000
 SphereCollider:
