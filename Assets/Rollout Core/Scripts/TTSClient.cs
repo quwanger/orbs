@@ -10,6 +10,7 @@ public class TTSClient : MonoBehaviour
 {
 	#region Configuration
 	public bool DebugMode = true;
+	public bool DebugRacerSpawn = true;
 
 	public string SERVER_IP = "127.0.0.1";
 	public int SERVER_RECEIVE_PORT = 6666;
@@ -202,6 +203,14 @@ public class TTSClient : MonoBehaviour
 
 				#endregion
 
+				#region powerup platform
+				case TTSCommandTypes.PowerupPlatformRegisterOK:
+					id = packet.ReadFloat();
+					netHandles[id].isServerRegistered = true;
+					netHandles[id].ReceiveNetworkData(packet, command);
+					break;
+				#endregion
+
 				#region racers and powerups
 				case TTSCommandTypes.RacerRegister:
 					TTSRacer.RacerConfig config = new TTSRacer.RacerConfig();
@@ -215,15 +224,7 @@ public class TTSClient : MonoBehaviour
 					config.LocalControlType = TTSUtils.EnumToInt(TTSRacer.PlayerType.Multiplayer);
 					RegisteredRacerConfigs.Add(config);
 
-					//TTSRacerNetHandler handler = new TTSRacerNetHandler(this, false, id);
-					//handler.Index = packet.ReadInt32();
-					//handler.Rig = packet.ReadInt32();
-					//handler.Perk1 = packet.ReadInt32();
-					//handler.Perk2 = packet.ReadInt32();
-					//handler.Name = packet.Read16CharString();
-					//handler.ControlType = packet.ReadInt32();
-
-					if (DebugMode){
+					if (DebugRacerSpawn) {
 						Debug.Log(">	Received a racer " + id);
 						spawnRacers.Add(config);
 					}
@@ -463,7 +464,9 @@ public abstract class TTSNetworkHandle
 	// Do not override this method unless necessary
 	public virtual byte[] GetNetworkUpdate() {
 		isWriterUpdated = false;
-		return writer.GetMinimizedData();
+		byte[] data = writer.GetMinimizedData();
+		writer.ClearData();
+		return data;
 	}
 
 	public virtual void DeregisterFromClient() {

@@ -41,6 +41,13 @@ const (
 	PowerupAlreadyRegistered = 5091
 	PowerupIsNotRegistered   = 5092
 
+	// PowerupPlatform
+	PowerupPlatformRegister          = 5501
+	PowerupPlatformRegisterOK        = 5511
+	PowerupPlatformSpawn             = 5504
+	PowerupPlatformPickedUp          = 5505
+	PowerupPlatformAlreadyRegistered = 5591
+
 	// General
 	RequestNumRacers  = 8001
 	ReturnNumRacers   = 8002

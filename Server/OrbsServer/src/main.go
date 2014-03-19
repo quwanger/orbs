@@ -9,7 +9,7 @@ import (
 	"strconv"
 )
 
-var DebugMode bool = true
+var DebugMode bool = false
 var inConn, outConn *net.UDPConn
 var Lobbies []*Orbs.OrbsLobby
 var IPToLobby map[string]*Orbs.OrbsLobby
