@@ -90,6 +90,7 @@ MonoBehaviour:
   ActivePowerup: 0
   tier: 0
   hudPowerup: {fileID: 0}
+  ammo: 0
   pp2: 0
   DrezzStonePrefab: {fileID: 100000, guid: 0a8a8e54eac559c4eb9eaf21597dc517, type: 2}
   EntropyCannonPrefab: {fileID: 100004, guid: ffa3df054cf855b40b77a94e33b9cab4, type: 2}
@@ -99,6 +100,9 @@ MonoBehaviour:
   ShockwavePrefab: {fileID: 100000, guid: 03fb1200dc9ef44289b971c778a8efb0, type: 2}
   LeechPrefab: {fileID: 100002, guid: 4099cbcdeaced42e0ad98093bd327361, type: 2}
   HelixPrefab: {fileID: 100004, guid: 91e0f6e5128764f0784af9858af549da, type: 2}
+  HelixPrefabTier3: {fileID: 100004, guid: d183f5f5460b24abab634894717ec141, type: 2}
+  numberOfEntropyCannonsAvailable: 0
+  numberOfHelixCannonsAvailable: 0
 --- !u!114 &11400004
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -149,9 +153,13 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 07185902a679f8a45a62fb7954bf000e, type: 3}
   - {fileID: 8300000, guid: 07185902a679f8a45a62fb7954bf000e, type: 3}
   SparksEmitter: {fileID: 100000, guid: 87c7b3f1a056e5d4fb78ff71783a1593, type: 2}
-  CurrentRig: {fileID: 100000, guid: 4222a4c25048c4676885fb09d185cfcc, type: 2}
+  CurrentRig: {fileID: 0}
   canMove: 0
   rpm: 0
+  calcOrientation: 1
+  TopSpeedInit: 250
+  AccelerationInit: 8000
+  HandlingInit: 11000
   TopSpeed: 250
   Acceleration: 8000
   Handling: 11000
@@ -174,6 +182,7 @@ MonoBehaviour:
   debugStart: {fileID: 0}
   goingWrongWay: 0
   nextWaypoint: {fileID: 0}
+  rigID: 0
 --- !u!135 &13500000
 SphereCollider:
   m_ObjectHideFlags: 1

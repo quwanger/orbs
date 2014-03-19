@@ -67,11 +67,12 @@ public class TTSHelixProjectile : TTSBehaviour
 				return;
 			}
 
-			//move the projectile
-			this.rigidbody.velocity = (destinationPosition - this.transform.position).normalized * ProjectileStartVelocity;
 			//check for the projectile's next destination
 			FindDestination();
 
+			//move the projectile
+			this.rigidbody.velocity = (destinationPosition - this.transform.position).normalized * ProjectileStartVelocity;
+			
 			if (netHandler != null && netHandler.owner)
 				netHandler.UpdatePowerup(transform.position, transform.rotation.eulerAngles, rigidbody.velocity);
 		}
@@ -85,14 +86,10 @@ public class TTSHelixProjectile : TTSBehaviour
 			Collider[] colliders = Physics.OverlapSphere(this.transform.position, homingRadius);
 		    foreach (Collider hit in colliders) {
 		        if (hit.GetComponent<TTSRacer>() && hit.gameObject != currentRacer.gameObject){
-					//if(hit.GetComponent<TTSRacer>().numHelix < Mathf.Ceil(helixInBatch/racersInFront)){
-						//Debug.Log("Helix - Racer Found");
-						racerFound = true;
-						homedRacer = hit.gameObject;
-						//homedRacer.GetComponent<TTSRacer>().numHelix++;
-			            destinationPosition = hit.transform.position;
-						break;
-					//}
+					racerFound = true;
+					homedRacer = hit.gameObject;
+			        destinationPosition = hit.transform.position;
+					break;
 				}
 		    }
 
@@ -106,11 +103,8 @@ public class TTSHelixProjectile : TTSBehaviour
 	}
 
 	void OnCollisionEnter(Collision other) {
-		//damage racer if racer is hit
-		if (other.gameObject.GetComponent<TTSWaypoint>() || other.gameObject.GetComponent<TTSHelixProjectile>()) {
-			//do nothing if it's a waypoint
-		}
-		else {
+		//only collide with racer
+		if(other.gameObject.GetComponent<TTSRacer>()){
 			if (other.gameObject.GetComponent<TTSRacer>()) {
 				other.gameObject.GetComponent<TTSRacer>().DamageRacer(offensiveMultiplier * 0.7f);
 			}

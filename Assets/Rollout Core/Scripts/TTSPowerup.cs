@@ -15,6 +15,8 @@ public class TTSPowerup : TTSBehaviour
 
 	public GameObject hudPowerup;
 
+	public int ammo = 0;
+
 	//Perk Stuff
 	public Powerup pp2;
 	private float lotteryChance = 0.2f;
@@ -28,6 +30,7 @@ public class TTSPowerup : TTSBehaviour
 	public GameObject ShockwavePrefab;
 	public GameObject LeechPrefab;
 	public GameObject HelixPrefab;
+	public GameObject HelixPrefabTier3;
 	#endregion
 
 	#region Tier3 Specialty Variables
@@ -62,14 +65,15 @@ public class TTSPowerup : TTSBehaviour
 		//if you hit space or the 'a' button on an Xbox controller
 		if (AvailablePowerup != Powerup.None) {
 			if (this.gameObject.GetComponent<TTSRacer>().playerNum == 1) {
-				state = GamePad.GetState(PlayerIndex.One);
+				//state = GamePad.GetState(PlayerIndex.One);
 
 				if (level.useKeyboard) {
 					if (Input.GetKeyDown("space")) {
 						ConsumePowerup();
 					}
 				}
-				else if (state.Buttons.A == ButtonState.Pressed || Input.GetKeyDown("joystick 1 button 16")) {
+				//else if (state.Buttons.A == ButtonState.Pressed || Input.GetKeyDown("joystick 1 button 16")) {
+				else if (Input.GetKeyDown("joystick 1 button 16")) {
 					Debug.Log("A pressed");
 					ConsumePowerup();
 				}
@@ -115,6 +119,7 @@ public class TTSPowerup : TTSBehaviour
 			GiveTimeBonus(true);
 		}
 		else {
+			ammo = 0;
 			AvailablePowerup = powerup;
 			if (pp2 == AvailablePowerup) {
 				tier = 2;
@@ -138,18 +143,48 @@ public class TTSPowerup : TTSBehaviour
 			switch(tier){
 			case 1:
 				numberOfHelixCannonsAvailable = 1;
+				ammo = 1;
 				break;
 			case 2:
 				numberOfHelixCannonsAvailable = 3;
+				ammo = 3;
 				break;
 			case 3:
-				numberOfHelixCannonsAvailable = 8;
+				numberOfHelixCannonsAvailable = 1;
+				ammo = 1;
 				break;
 			default:
 				break;
 			}
-		}
-		
+		}else if(powerup == Powerup.DrezzStones){
+			switch(tier){
+			case 1:
+				ammo = 1;
+				break;
+			case 2:
+				ammo = 3;
+				break;
+			case 3:
+				ammo = 6;
+				break;
+			default:
+				break;
+			}
+		}else if(powerup == Powerup.EntropyCannon){
+			switch(tier){
+			case 1:
+				ammo = 3;
+				break;
+			case 2:
+				ammo = 8;
+				break;
+			case 3:
+				ammo = 10;
+				break;
+			default:
+				break;
+			}
+		}		
 		//only update the hud if they are a human racer (as AI do not have HUDs)
 		if (this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)
 			hudPowerup.GetComponent<TTSHudPowerup>().UpdateHudPowerup(AvailablePowerup, tier);
@@ -194,7 +229,7 @@ public class TTSPowerup : TTSBehaviour
 		this.ActivePowerup = this.AvailablePowerup;
 
 		if(this.AvailablePowerup == Powerup.EntropyCannon && tier == 3){
-			if(numberOfEntropyCannonsAvailable == 0){
+			if(numberOfEntropyCannonsAvailable <= 0){
 				this.AvailablePowerup = Powerup.None;
 				this.tier = 0;
 			}
@@ -269,6 +304,7 @@ public class TTSPowerup : TTSBehaviour
 		if(_tier == 3){
 			EntropyMid();
 			numberOfEntropyCannonsAvailable--;
+			ammo--;
 		}
 
 		//it is only active while firing
@@ -278,8 +314,9 @@ public class TTSPowerup : TTSBehaviour
 	public void Helix(int _tier) {
 
 		if(_tier == 1 || _tier == 2 || _tier == 3) {
-			HelixMid();
+			HelixMid(_tier);
 			numberOfHelixCannonsAvailable--;
+			ammo--;
 		}
 
 		//it is only active while firing
@@ -295,8 +332,12 @@ public class TTSPowerup : TTSBehaviour
 		FireEntropyCannon(true);
 	}
 
-	private void HelixMid() {
-		FireHelix(true);
+	private void HelixMid(int t) {
+		if(t==3){
+			FireHelixTier3(true);
+		}else{	
+			FireHelix(true);
+		}
 	}
 
 	#endregion
@@ -392,7 +433,12 @@ public class TTSPowerup : TTSBehaviour
 		return FireHelix(owner, null);
 	}
 
+	public GameObject FireHelixTier3(bool owner) {
+		return FireHelixTier3(owner, null);
+	}
+
 	public GameObject FireHelix(bool owner, TTSPowerupNetHandler handle) {
+
 		GameObject go = (GameObject)Instantiate(HelixPrefab);
 
 		TTSHelixProjectile helix = go.GetComponent<TTSHelixProjectile>();
@@ -404,7 +450,29 @@ public class TTSPowerup : TTSBehaviour
 
 		go.transform.rotation = racer.displayMeshComponent.transform.rotation;
 		go.transform.position = transform.position + racer.displayMeshComponent.forward * 3.5f;
-		go.rigidbody.velocity = racer.rigidbody.velocity;
+		go.rigidbody.velocity = racer.rigidbody.velocity + (racer.rigidbody.velocity.normalized * 50.0f);
+
+		if (owner) { SendPowerupDeploy(TTSPowerupNetworkTypes.Helix, go); }
+		else {
+			helix.SetNetHandler(handle);
+		}
+		return go;
+	}
+
+	public GameObject FireHelixTier3(bool owner, TTSPowerupNetHandler handle) {
+		
+		GameObject go = (GameObject)Instantiate(HelixPrefabTier3);
+
+		TTSHelixProjectileTier3 helix = go.GetComponent<TTSHelixProjectileTier3>();
+		TTSRacer racer = GetComponent<TTSRacer>();
+
+		helix.offensiveMultiplier = racer.Offense;
+		helix.currentRacer = racer;
+		helix.racersInFront = (racer.place - 1);
+
+		go.transform.rotation = racer.displayMeshComponent.transform.rotation;
+		go.transform.position = transform.position + racer.displayMeshComponent.forward * 3.5f;
+		go.rigidbody.velocity = racer.rigidbody.velocity + (racer.rigidbody.velocity.normalized * 50.0f);
 
 		if (owner) { SendPowerupDeploy(TTSPowerupNetworkTypes.Helix, go); }
 		else {
@@ -456,7 +524,7 @@ public class TTSPowerup : TTSBehaviour
 
 	public GameObject DeployLeech(bool owner, TTSPowerupNetHandler handle) {
 		GameObject go = (GameObject)Instantiate(LeechPrefab, this.gameObject.transform.position, Quaternion.identity);
-		go.GetComponent<TTSLeech>().currentRacer = this.gameObject.GetComponent<TTSRacer>();
+		go.GetComponent<TTSLeech>().currentRacer = this.gameObject;
 		go.transform.rotation = GetComponent<TTSRacer>().displayMeshComponent.transform.rotation;
 		go.transform.position = this.gameObject.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
 		go.rigidbody.velocity = this.gameObject.rigidbody.velocity;
