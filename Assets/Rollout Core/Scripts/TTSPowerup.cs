@@ -101,7 +101,7 @@ public class TTSPowerup : TTSBehaviour
 				#endif
 
 				#if UNITY_STANDALONE_WIN
-					else if (state.Buttons.A == ButtonState.Pressed)
+					if (state.Buttons.A == ButtonState.Pressed)
 						ConsumePowerup();
 				#endif
 			}
@@ -116,7 +116,7 @@ public class TTSPowerup : TTSBehaviour
 				#endif
 
 				#if UNITY_STANDALONE_WIN
-					else if (state.Buttons.A == ButtonState.Pressed)
+					if (state.Buttons.A == ButtonState.Pressed)
 						ConsumePowerup();
 				#endif
 			}
@@ -131,7 +131,7 @@ public class TTSPowerup : TTSBehaviour
 				#endif
 				
 				#if UNITY_STANDALONE_WIN
-					else if (state.Buttons.A == ButtonState.Pressed)
+					if (state.Buttons.A == ButtonState.Pressed)
 						ConsumePowerup();
 				#endif
 			}
