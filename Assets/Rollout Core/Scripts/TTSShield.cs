@@ -4,6 +4,7 @@ using System.Collections;
 public class TTSShield : TTSPerishingBehaviour {
 	
 	private bool dead = false;
+	private bool tier3 = false;
 	private TTSRacer racer;
 	
 	void Awake(){
@@ -12,7 +13,13 @@ public class TTSShield : TTSPerishingBehaviour {
 	}
 	
 	public void DeployShield(float level, float def, TTSRacer tempRacer){
-		this.duration = 4.0f * level * def;
+		if(level == 3){
+			//set to 5 minutes since races don't last that long
+			this.duration = 300.0f;
+		}else{
+			this.duration = 4.0f * level * def;
+		}
+
 		racer = tempRacer;
 	}
 	

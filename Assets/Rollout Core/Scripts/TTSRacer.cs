@@ -80,9 +80,9 @@ public class TTSRacer : TTSBehaviour
 	#endregion
 
 	#region gameplay vars
-	public float TopSpeedInit = 250.0f;
-	public float AccelerationInit = 8000.0f;
-	public float HandlingInit = 11000.0f;
+	public float TopSpeedInit = 150.0f;
+	public float AccelerationInit = 6000.0f;
+	public float HandlingInit = 9000.0f;
 	public float TopSpeed;
 	public float Acceleration;
 	public float Handling;
@@ -274,7 +274,7 @@ public class TTSRacer : TTSBehaviour
 
 				#if UNITY_STANDALONE_OSX
 				else if(!level.useKeyboard) {
-					vInput = Input.GetAxis("R_YAxis_1");
+					vInput = Input.GetAxis("L_YAxis_1");
 					hInput = Input.GetAxis("L_XAxis_1");
 				}
 				#endif
@@ -287,7 +287,7 @@ public class TTSRacer : TTSBehaviour
 				#endif
 
 				#if UNITY_STANDALONE_OSX
-					vInput = Input.GetAxis("R_YAxis_2");
+					vInput = Input.GetAxis("L_YAxis_2");
 					hInput = Input.GetAxis("L_XAxis_2");
 				#endif
 			} else if (playerNum == 3) {
@@ -299,7 +299,7 @@ public class TTSRacer : TTSBehaviour
 				#endif
 
 				#if UNITY_STANDALONE_OSX
-					vInput = Input.GetAxis("R_YAxis_3");
+					vInput = Input.GetAxis("L_YAxis_3");
 					hInput = Input.GetAxis("L_XAxis_3");
 				#endif
 			} else if (playerNum == 4) {
@@ -311,7 +311,7 @@ public class TTSRacer : TTSBehaviour
 				#endif
 
 				#if UNITY_STANDALONE_OSX
-					vInput = Input.GetAxis("R_YAxis_4");
+					vInput = Input.GetAxis("L_YAxis_4");
 					hInput = Input.GetAxis("L_XAxis_4");
 				#endif
 			}
@@ -446,6 +446,35 @@ public class TTSRacer : TTSBehaviour
 		sparkClone.transform.position = collision.contacts[0].point;
 		sparkClone.particleEmitter.emit = true;
 		sparkClone.transform.forward = displayMeshComponent.forward;
+
+//UNFINISHED SHIELD CRAP
+
+		if(hasShield){
+			TTSPowerup pu = this.GetComponent<TTSPowerup>();
+			if(collision.gameObject.tag == "Powerup"){
+				Debug.Log("Collision with" + collision.gameObject.name);
+				switch(collision.gameObject.name){
+					case "HelixProjectile(Clone)":
+						pu.GivePowerup(Powerup.Helix);
+						hasShield = false;
+						this.GetComponentInChildren<TTSShield>().duration = 0.5f;
+						break;
+					case "HelixProjectileTier3(Clone)":
+						pu.GivePowerup(Powerup.Helix);
+						hasShield = false;
+						this.GetComponentInChildren<TTSShield>().duration = 0.5f;
+						break;
+					case "EntropyCannonProjectile(Clone)":
+						pu.GivePowerup(Powerup.EntropyCannon);
+						hasShield = false;
+						this.GetComponentInChildren<TTSShield>().duration = 0.5f;
+						break;
+					default:
+						break;
+				}	
+			}
+		}
+
 	}
 
 	void OnCollisionStay(Collision collision) {
