@@ -13,7 +13,7 @@ public class TTSLevel : MonoBehaviour {
 	public Gametype currentGameType = Gametype.MultiplayerLocal;
 	
 	public enum LevelType { cliff, night, backroad, downtown, future1, future2 };
-	public LevelType currentLevel = LevelType.backroad;
+	public LevelType currentLevel;
 
 	public bool useKeyboard = true;
 	

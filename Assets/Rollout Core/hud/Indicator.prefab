@@ -12,7 +12,7 @@ GameObject:
   - 114: {fileID: 11400000}
   m_Layer: 18
   m_Name: Indicator
-  m_TagString: Untagged
+  m_TagString: minimap
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -41,6 +41,7 @@ MonoBehaviour:
   racerToIndicate: {fileID: 0}
   screenPosition: {x: 0, y: 0, z: 0}
   myCamera: {fileID: 0}
+  myCameraNumber: 0
   myScale: .100000001
 --- !u!131 &13100000
 GUITexture:
