@@ -218,7 +218,6 @@ public class TTSRacer : TTSBehaviour
 			SetNetHandler(new TTSRacerNetHandler(level.client, true, rigID));
 		}
 		else if (player == PlayerType.Multiplayer) {
-
 		}
 
 		if (AIUtil == null)
@@ -575,14 +574,14 @@ public class TTSRacer : TTSBehaviour
 	public void MultiplayerInput() {
 		if (netHandler.isNetworkUpdated) {
 			if (netHandler.netPosition != Vector3.zero) {
-				transform.position = Vector3.Lerp(transform.position, netHandler.netPosition, netHandler.networkInterpolation);
+				transform.position = Vector3.Lerp(transform.position, netHandler.netPosition, netHandler.networkInterpolation * 10);
 			}
 		}
 		displayMeshComponent.rotation = Quaternion.Lerp(displayMeshComponent.rotation, Quaternion.Euler(netHandler.netRotation), netHandler.networkInterpolation * 10);
 		rigidbody.velocity = netHandler.netSpeed;
 
-		vInput = Mathf.Lerp(vInput, netHandler.networkVInput, netHandler.networkInterpolation * 5);
-		hInput = Mathf.Lerp(hInput, netHandler.networkHInput, netHandler.networkInterpolation * 5);
+		vInput = netHandler.networkVInput;// Mathf.Lerp(vInput, netHandler.networkVInput, netHandler.networkInterpolation * 5);
+		hInput = netHandler.networkHInput;// Mathf.Lerp(hInput, netHandler.networkHInput, netHandler.networkInterpolation * 5);
 
 		netHandler.isNetworkUpdated = false;
 
