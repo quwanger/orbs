@@ -38,6 +38,8 @@ public class TTSMenu : TTSBehaviour {
 	// player statistics gameObject folder
 	public GameObject playerStatistics;
 	
+	public GameObject[] characterColor;
+	private int activeColorIndex;
 	public int[] playerID;
 	public int[] ID;
 	
@@ -123,7 +125,7 @@ public class TTSMenu : TTSBehaviour {
 		playerText = GameObject.FindGameObjectsWithTag("playerText");
 		
 		cameras[0].enabled = true;
-		cameras[1].enabled = false;
+		cameras[1].enabled = false;	
 		
 		// populate arrays with their gameObjects
 		GameObject[] perks = GameObject.FindGameObjectsWithTag("PerkMenuItem");
@@ -176,13 +178,34 @@ public class TTSMenu : TTSBehaviour {
 			
 			playerText[0].guiText.text = ("Player" + (chosenOrb));
 			playerText[1].guiText.text = ("Player" + (chosenOrb));
+			
+			
 			string tempJoystick = "joystick 1 button 0";
+			string tempJoystickB = "joystick 1 button 3";
 
 			if (gameMode == TTSLevel.Gametype.MultiplayerLocal) {
 				tempJoystick = ("joystick " + playerID[chosenOrb-1] + " button 0");
+				tempJoystickB = ("joystick " + playerID[chosenOrb-1] + " button 3");
 			}
 			
 			if(activePanel == 4 || activePanel == 5 || activePanel == 6){
+				// Y BUTTON RIG SELECT
+				if(Input.GetKeyDown(tempJoystick) || Input.GetKeyDown(KeyCode.Y)){
+					if(activePanel == 4){
+						if(activeColorIndex == 6){
+							activeColorIndex = 0;
+						}
+						
+						foreach(GameObject i in characterColor){
+							i.guiTexture.enabled = false;
+						}
+						
+						characterColor[activeColorIndex].guiTexture.enabled = true;
+						
+						activeColorIndex ++;
+					}
+				}
+				
 				if(Input.GetKeyDown(tempJoystick)){
 						changePanels("right");
 				}
