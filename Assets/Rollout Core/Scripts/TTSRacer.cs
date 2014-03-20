@@ -674,7 +674,7 @@ public class TTSRacerNetHandler : TTSNetworkHandle
 		writer.AddData(Rig);
 		writer.AddData(Perk1);
 		writer.AddData(Perk2);
-		writer.AddData(Name);
+		writer.AddData(Name, 16);
 		writer.AddData(ControlType);
 		return writer.GetMinimizedData();
 	}

@@ -170,18 +170,16 @@ public class TTSPowerupPlatform : TTSBehaviour
 			Destroy(powerupMesh);
 		}
 
-		if (!client.isMultiplayer || (netHandle != null && netHandle.owner)) {
-			//set new powerup
-			if (isRandom)
-				currentPowerup = powerup;
+		//set new powerup
+		if (isRandom)
+			currentPowerup = powerup;
 
-			displayPowerup();
+		displayPowerup();
 
-			pickedUp = false;
+		pickedUp = false;
 
-			if (netHandle != null) {
-				netHandle.SpawnPowerup(currentPowerup);
-			}
+		if (netHandle != null && netHandle.owner){
+			netHandle.SpawnPowerup(currentPowerup);
 		}
 	}
 
@@ -267,7 +265,6 @@ public class TTSPowerupPlatformNetworkHandler : TTSNetworkHandle
 		id = StartingPosition.x * StartingPosition.y * StartingPosition.z;
 
 		client = Client;
-
 		client.LocalObjectRegister(this);
 	}
 

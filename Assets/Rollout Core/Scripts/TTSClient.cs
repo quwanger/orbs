@@ -67,7 +67,7 @@ public class TTSClient : MonoBehaviour
 		endPoint = new IPEndPoint(serverAddr, SERVER_RECEIVE_PORT);
 
 		client = new UdpClient(CLIENT_RECEIVE_PORT);
-		client.Client.ReceiveTimeout = 15000;
+		client.Client.ReceiveTimeout = CLIENT_RECEIVE_TIMEOUT;
 
 		receiveThread = new Thread(new ThreadStart(PacketListener));
 		receiveThread.IsBackground = true;
@@ -142,8 +142,8 @@ public class TTSClient : MonoBehaviour
 
 		// Spawn multiplayer racers
 		if (spawnRacers.Count > 0) {
-			foreach (TTSRacer.RacerConfig handler in spawnRacers) {
-				initRace.InitMultiplayerRacer(handler);
+			foreach (TTSRacer.RacerConfig config in spawnRacers) {
+				initRace.InitMultiplayerRacer(config);
 			}
 			spawnRacers.Clear();
 		}
@@ -181,9 +181,8 @@ public class TTSClient : MonoBehaviour
 
 		int command = packet.ReadInt32();
 		float id = -1;
-
 		while (command != TTSCommandTypes.EndPacket) {
-			//if (DebugMode)
+			if (DebugMode)
 				Debug.Log(">	Received command " + command);
 
 			switch (command) {
@@ -235,7 +234,7 @@ public class TTSClient : MonoBehaviour
 					RegisteredRacerConfigs.Add(config);
 
 					if (DebugRacerSpawn) {
-						Debug.Log(">	Received a racer " + id);
+						Debug.Log("R	Received a racer " + id);
 						spawnRacers.Add(config);
 					}
 					break;
@@ -271,7 +270,12 @@ public class TTSClient : MonoBehaviour
 				#endregion
 			}
 
-			command = packet.ReadInt32();
+			if (packet.IsEOF()) {
+				command = TTSCommandTypes.EndPacket;
+			}
+			else {
+				command = packet.ReadInt32();
+			}
 		}
 	}
 
@@ -312,10 +316,11 @@ public class TTSClient : MonoBehaviour
 				handler.id = UnityEngine.Random.value * 100;
 			}
 		}
+
 		if(DebugMode)
 			Debug.Log("Registering " + handler.type + " " + handler.id);
 
-		if (handler.inGameRegistration && handler.owner) {
+		if (handler.owner) {
 			ServerObjectRegister(handler, UpdatePacket);
 		}
 
@@ -429,7 +434,7 @@ public static class TTSCommandTypes
 	// PowerupPlatform
 	public const int PowerupPlatformRegister			= 5501;
 	public const int PowerupPlatformRegisterOK			= 5511;
-	public const int PowerupPlatformSpawn				= 5504;
+	public const int PowerupPlatformSpawn				= 5508;
 	public const int PowerupPlatformPickedUp			= 5505;
 	public const int PowerupPlatformAlreadyRegistered	= 5591;
 
@@ -563,6 +568,12 @@ public class TTSPacketWriter
 
 	public void AddData(string str) {
 		AddData(System.Text.Encoding.UTF8.GetBytes(str));
+	}
+
+	public void AddData(string str, int size) {
+		byte[] temp = new byte[size], bytes = System.Text.Encoding.UTF8.GetBytes(str);
+		Buffer.BlockCopy(bytes, 0, temp, 0, bytes.Length);
+		AddData(temp);
 	}
 
 	public void AddData(bool b) {
