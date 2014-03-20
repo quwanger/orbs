@@ -124,7 +124,7 @@ public class TTSClient : MonoBehaviour
 		// Code to run during lobby
 		foreach (KeyValuePair<float, TTSNetworkHandle> pair in netHandles) {
 			TTSNetworkHandle handle = pair.Value;
-			if (handle.isServerRegistered) {
+			if (handle.isServerRegistered && handle.owner) {
 				// First make sure the packet won't overflow
 				byte[] tempData = handle.GetNetworkUpdate();
 				if (UpdatePacket.WillOverflow(tempData.Length)) {
@@ -182,7 +182,7 @@ public class TTSClient : MonoBehaviour
 		float id = -1;
 
 		while (command != TTSCommandTypes.EndPacket) {
-			//if (DebugMode)
+			if (DebugMode)
 				Debug.Log(">	Received command " + command);
 
 			switch (command) {
@@ -191,7 +191,7 @@ public class TTSClient : MonoBehaviour
 				case TTSCommandTypes.LobbyRegisterOK:
 					LobbyID = packet.ReadInt32();
 					EnteredLobby = true;
-					ServerAllObjectsRegister();
+					// ServerAllObjectsRegister();
 					break;
 
 				case TTSCommandTypes.ReturnAllLobbies:
@@ -271,17 +271,6 @@ public class TTSClient : MonoBehaviour
 		SendPacket(writer);
 	}
 
-	// Writes the necessary register code to the given packet writer
-	private void ServerObjectRegister(TTSNetworkHandle handle, TTSPacketWriter writer) {
-		byte[] data = handle.GetNetworkRegister();
-
-		if (writer.WillOverflow(data.Length)) { // Overflow check
-			SendPacket(writer, true);
-		}
-
-		writer.AddData(data);
-	}
-
 	public void LocalRacerRegister(TTSRacerNetHandler handler) {
 		LocalObjectRegister(handler);
 		racerHandles.Add(handler.id, handler);
@@ -305,6 +294,17 @@ public class TTSClient : MonoBehaviour
 		}
 
 		netHandles.Add(handler.id, handler);
+	}
+
+	// Writes the necessary register code to the given packet writer
+	private void ServerObjectRegister(TTSNetworkHandle handle, TTSPacketWriter writer) {
+		byte[] data = handle.GetNetworkRegister();
+
+		if (writer.WillOverflow(data.Length)) { // Overflow check
+			SendPacket(writer, true);
+		}
+
+		writer.AddData(data);
 	}
 
 	public void LocalObjectDeregister(float id) {
