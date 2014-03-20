@@ -10,6 +10,7 @@ public class TTSClient : MonoBehaviour
 {
 	#region Configuration
 	public bool DebugMode = true;
+	public bool DebugRacerSpawn = true;
 
 	public string SERVER_IP = "127.0.0.1";
 	public int SERVER_RECEIVE_PORT = 6666;
@@ -41,7 +42,6 @@ public class TTSClient : MonoBehaviour
 		}
 	}
 	public bool EnteredLobby = false;
-	public bool InGame = false;
 	public int LobbyID = 0;
 
 	// Game networking
@@ -66,7 +66,7 @@ public class TTSClient : MonoBehaviour
 		endPoint = new IPEndPoint(serverAddr, SERVER_RECEIVE_PORT);
 
 		client = new UdpClient(CLIENT_RECEIVE_PORT);
-		client.Client.ReceiveTimeout = 15000;
+		client.Client.ReceiveTimeout = CLIENT_RECEIVE_TIMEOUT;
 
 		receiveThread = new Thread(new ThreadStart(PacketListener));
 		receiveThread.IsBackground = true;
@@ -77,7 +77,7 @@ public class TTSClient : MonoBehaviour
 
 	private void InitConnection() {
 		ConnectToLobby(1);
-		RequestLobbyInfo();
+		//RequestLobbyInfo();
 	}
 
 	public void RequestLobbyInfo() {
@@ -135,14 +135,14 @@ public class TTSClient : MonoBehaviour
 		}
 		SendPacket(UpdatePacket, true);
 
-		if (!InGame)
+		if (!isMultiplayer)
 			return;
 		// Code to run during in game.
 
 		// Spawn multiplayer racers
 		if (spawnRacers.Count > 0) {
-			foreach (TTSRacer.RacerConfig handler in spawnRacers) {
-				initRace.InitMultiplayerRacer(handler);
+			foreach (TTSRacer.RacerConfig config in spawnRacers) {
+				initRace.InitMultiplayerRacer(config);
 			}
 			spawnRacers.Clear();
 		}
@@ -182,7 +182,7 @@ public class TTSClient : MonoBehaviour
 		float id = -1;
 
 		while (command != TTSCommandTypes.EndPacket) {
-			if (DebugMode)
+			//if (DebugMode)
 				Debug.Log(">	Received command " + command);
 
 			switch (command) {
@@ -191,7 +191,6 @@ public class TTSClient : MonoBehaviour
 				case TTSCommandTypes.LobbyRegisterOK:
 					LobbyID = packet.ReadInt32();
 					EnteredLobby = true;
-					InGame = true;		// REMOVE THIS LATER
 					ServerAllObjectsRegister();
 					break;
 
@@ -215,16 +214,8 @@ public class TTSClient : MonoBehaviour
 					config.LocalControlType = TTSUtils.EnumToInt(TTSRacer.PlayerType.Multiplayer);
 					RegisteredRacerConfigs.Add(config);
 
-					//TTSRacerNetHandler handler = new TTSRacerNetHandler(this, false, id);
-					//handler.Index = packet.ReadInt32();
-					//handler.Rig = packet.ReadInt32();
-					//handler.Perk1 = packet.ReadInt32();
-					//handler.Perk2 = packet.ReadInt32();
-					//handler.Name = packet.Read16CharString();
-					//handler.ControlType = packet.ReadInt32();
-
-					if (DebugMode){
-						Debug.Log(">	Received a racer " + id);
+					if (DebugRacerSpawn){
+						Debug.Log("R	Received a racer " + id);
 						spawnRacers.Add(config);
 					}
 					break;
@@ -260,7 +251,12 @@ public class TTSClient : MonoBehaviour
 				#endregion
 			}
 
-			command = packet.ReadInt32();
+			if (packet.IsEOF()) {
+				command = TTSCommandTypes.EndPacket;
+			}
+			else {
+				command = packet.ReadInt32();
+			}
 		}
 	}
 
@@ -304,7 +300,7 @@ public class TTSClient : MonoBehaviour
 		if(DebugMode)
 			Debug.Log("Registering " + handler.id);
 
-		if (InGame && handler.inGameRegistration && handler.owner) {
+		if (handler.owner) {
 			ServerObjectRegister(handler, UpdatePacket);
 		}
 
@@ -424,6 +420,7 @@ public static class TTSCommandTypes
 
 public abstract class TTSNetworkHandle
 {
+	public string type = "Net Handle";
 	public int registerCommand; // Must be set
 	public bool isServerRegistered = false;
 	public float id = 0.0f; // ID will only be stored here
@@ -456,11 +453,17 @@ public abstract class TTSNetworkHandle
 	// Do not override this method unless necessary
 	public virtual byte[] GetNetworkUpdate() {
 		isWriterUpdated = false;
-		return writer.GetMinimizedData();
+		byte[] data = writer.GetMinimizedData();
+		writer.ClearData();
+		return data;
 	}
 
 	public virtual void DeregisterFromClient() {
 		client.LocalObjectDeregister(id);
+	}
+
+	public void DoneReading() {
+		isNetworkUpdated = false;
 	}
 }
 
@@ -572,6 +575,12 @@ public class TTSPacketWriter
 		Buffer.BlockCopy(arr, 0, Data, WriteIndex, arr.Length * sizeof(float));
 
 		WriteIndex += sizeof(float) * arr.Length;
+	}
+
+	public void AddData(string str, int size) {
+		byte[] temp = new byte[size], bytes = System.Text.Encoding.UTF8.GetBytes(str);
+		Buffer.BlockCopy(bytes, 0, temp, 0, bytes.Length);
+		AddData(temp);
 	}
 
 	public void ClearData() {
