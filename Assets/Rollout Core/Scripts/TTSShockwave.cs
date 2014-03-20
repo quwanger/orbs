@@ -20,6 +20,7 @@ public class TTSShockwave : TTSPerishingBehaviour {
 							if(hit.gameObject.GetComponentInChildren<TTSShield>().tier3){
 								hit.gameObject.GetComponent<TTSPowerup>().GivePowerup(TTSBehaviour.Powerup.Shockwave);
 								hit.gameObject.GetComponentInChildren<TTSShield>().duration = 2.0f;
+								hit.gameObject.GetComponentInChildren<TTSShield>().absorbEffect.Play();
 							}
 						}
 					}

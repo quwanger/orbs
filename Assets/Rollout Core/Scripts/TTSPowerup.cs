@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections;
-#if UNITY_STANDALONE_WIN
+#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
 	using XInputDotNetPure;
 #endif
 
@@ -41,7 +41,7 @@ public class TTSPowerup : TTSBehaviour
 	#endregion
 
 	//XInput
-	#if UNITY_STANDALONE_WIN
+	#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
 		GamePadState state;
 		PlayerIndex playerIndex;
 	#endif
@@ -70,7 +70,7 @@ public class TTSPowerup : TTSBehaviour
 		//if you hit space or the 'a' button on an Xbox controller
 		if (AvailablePowerup != Powerup.None) {
 			if (this.gameObject.GetComponent<TTSRacer>().playerNum == 1) {
-				#if UNITY_STANDALONE_WIN
+				#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
 				state = GamePad.GetState(PlayerIndex.One);
 				#endif
 
@@ -80,60 +80,60 @@ public class TTSPowerup : TTSBehaviour
 					}
 				}
 
-				#if UNITY_STANDALONE_OSX
+				#if UNITY_STANDALONE_OSX || UNITY_EDITOR
 				else if (Input.GetKeyDown("joystick 1 button 16")) {
 					Debug.Log("A pressed");
 					ConsumePowerup();
 				}
 				#endif
 
-				#if UNITY_STANDALONE_WIN
+				#if UNITY_STANDALONE_WIN && !UNITY_EDITOR && !UNITY_EDITOR
 				else if( state.Buttons.A == ButtonState.Pressed) {
 					ConsumePowerup();
 				}
 				#endif
 			}
 			else if (this.gameObject.GetComponent<TTSRacer>().playerNum == 2) {
-				#if UNITY_STANDALONE_WIN
+				#if UNITY_STANDALONE_WIN && !UNITY_EDITOR && !UNITY_EDITOR
 				state = GamePad.GetState(PlayerIndex.Two);
 				#endif
 
-				#if UNITY_STANDALONE_OSX
+				#if UNITY_STANDALONE_OSX || UNITY_EDITOR
 				if (Input.GetKeyDown("joystick 2 button 16"))
 					ConsumePowerup();
 				#endif
 
-				#if UNITY_STANDALONE_WIN
+				#if UNITY_STANDALONE_WIN && !UNITY_EDITOR && !UNITY_EDITOR
 				if (state.Buttons.A == ButtonState.Pressed)
 					ConsumePowerup();
 				#endif
 			}
 			else if (this.gameObject.GetComponent<TTSRacer>().playerNum == 3) {
-				#if UNITY_STANDALONE_WIN
+				#if UNITY_STANDALONE_WIN && !UNITY_EDITOR && !UNITY_EDITOR
 				state = GamePad.GetState(PlayerIndex.Three);
 				#endif
 
-				#if UNITY_STANDALONE_OSX
+				#if UNITY_STANDALONE_OSX || UNITY_EDITOR
 				if (Input.GetKeyDown("joystick 3 button 16")) 
 					ConsumePowerup();
 				#endif
 
-				#if UNITY_STANDALONE_WIN
+				#if UNITY_STANDALONE_WIN && !UNITY_EDITOR && !UNITY_EDITOR
 				if (state.Buttons.A == ButtonState.Pressed)
 					ConsumePowerup();
 				#endif
 			}
 			else if (this.gameObject.GetComponent<TTSRacer>().playerNum == 4) {
-				#if UNITY_STANDALONE_WIN
+				#if UNITY_STANDALONE_WIN && !UNITY_EDITOR && !UNITY_EDITOR
 				state = GamePad.GetState(PlayerIndex.Four);
 				#endif
 
-				#if UNITY_STANDALONE_OSX
+				#if UNITY_STANDALONE_OSX || UNITY_EDITOR
 				if (Input.GetKeyDown("joystick 4 button 16")) 
 					ConsumePowerup();
 				#endif
 				
-				#if UNITY_STANDALONE_WIN
+				#if UNITY_STANDALONE_WIN && !UNITY_EDITOR && !UNITY_EDITOR
 				if (state.Buttons.A == ButtonState.Pressed)
 					ConsumePowerup();
 				#endif
@@ -229,7 +229,21 @@ public class TTSPowerup : TTSBehaviour
 			default:
 				break;
 			}
-		}		
+		}else if(powerup == Powerup.Leech){
+			switch(tier){
+			case 1:
+				ammo = 2;
+				break;
+			case 2:
+				ammo = 5;
+				break;
+			case 3:
+				ammo = 10;
+				break;
+			default:
+				break;
+			}
+		}
 		//only update the hud if they are a human racer (as AI do not have HUDs)
 		if (this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)
 			hudPowerup.GetComponent<TTSHudPowerup>().UpdateHudPowerup(AvailablePowerup, tier);
@@ -286,6 +300,7 @@ public class TTSPowerup : TTSBehaviour
 		}else{
 			this.AvailablePowerup = Powerup.None;
 			this.tier = 0;
+			ammo = 0;
 		}
 		
 		if(this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)
@@ -297,51 +312,32 @@ public class TTSPowerup : TTSBehaviour
 
 	#region public methods
 	public void Leech(int _tier) {
-		if (_tier == 1) {
-			for (int i = 0; i < 2; i++) {
-				DeployLeech(true);
-			}
-		}
-		else if (_tier == 2) {
-			for (int i = 0; i < 5; i++) {
-				DeployLeech(true);
-			}
-		}
-		else if (_tier == 3) {
-			for (int i = 0; i < 15; i++) {
-				DeployLeech(true);
-			}
+
+		int leechesPerRacer = Mathf.CeilToInt(ammo/(this.gameObject.GetComponent<TTSRacer>().place-1));
+
+		for (int i = 0; i < ammo; i++) {
+			DeployLeech(true);
 		}
 	}
 
 	public void DrezzStone(int _tier) {
-		if (_tier == 1) {
-			DrezzMid();
+		for (int i = 0; i < ammo; i++) {
+			Invoke("DrezzMid", i * 0.3f);
 		}
-
-		if (_tier == 2) {
-			for (int i = 0; i < 3; i++) {
-				Invoke("DrezzMid", i * 0.3f);
-			}
-		}
-		if (_tier == 3) {
-			for (int i = 0; i < 6; i++) {
-				Invoke("DrezzMid", i * 0.3f);
-			}
-		}
+	
 		//it is only active while firing
 		this.ActivePowerup = TTSBehaviour.Powerup.None;
 	}
 
 	public void EntropyCannon(int _tier) {
 		if (_tier == 1) {
-			for (int i = 0; i < 3; i++) {
+			for (int i = 0; i < ammo; i++) {
 				Invoke("EntropyMid", i * 0.075f);
 			}
 		}
 
 		if (_tier == 2) {
-			for (int i = 0; i < 8; i++) {
+			for (int i = 0; i < ammo; i++) {
 				Invoke("EntropyMid", i * 0.075f);
 			}
 		}
@@ -570,6 +566,8 @@ public class TTSPowerup : TTSBehaviour
 	public GameObject DeployLeech(bool owner, TTSPowerupNetHandler handle) {
 		GameObject go = (GameObject)Instantiate(LeechPrefab, this.gameObject.transform.position, Quaternion.identity);
 		go.GetComponent<TTSLeech>().currentRacer = this.gameObject;
+		go.GetComponent<TTSLeech>().leechesInPack = ammo;
+		go.GetComponent<TTSLeech>().racersAheadOfLeechOwner = this.gameObject.GetComponent<TTSRacer>().place - 1;
 		go.transform.rotation = GetComponent<TTSRacer>().displayMeshComponent.transform.rotation;
 		go.transform.position = this.gameObject.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
 		go.rigidbody.velocity = this.gameObject.rigidbody.velocity;
@@ -630,7 +628,7 @@ public class TTSPowerup : TTSBehaviour
 	
 	public bool CheckForwardAnalog(){
 		if(this.gameObject.GetComponent<TTSRacer>().playerNum == 1) {
-			#if UNITY_STANDALONE_WIN
+			#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
 				state = GamePad.GetState(PlayerIndex.One);
 			#endif
 
@@ -640,49 +638,49 @@ public class TTSPowerup : TTSBehaviour
 				}
 			}
 
-			#if UNITY_STANDALONE_OSX
+			#if UNITY_STANDALONE_OSX || UNITY_EDITOR
 				if(Input.GetAxis("R_YAxis_1") == -1.0f) {
 					return false;
 				}
 			#endif
 
-			#if UNITY_STANDALONE_WIN
+			#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
 				else if(state.ThumbSticks.Left.Y == -1.0f){
 					return false;
 				}
 			#endif
 		} else if(this.gameObject.GetComponent<TTSRacer>().playerNum == 2) {
-			#if UNITY_STANDALONE_OSX
+			#if UNITY_STANDALONE_OSX || UNITY_EDITOR
 				if(Input.GetAxis("R_YAxis_2") == -1.0f) {
 					return false;
 				}
 			#endif
 
-			#if UNITY_STANDALONE_WIN
+			#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
 				state = GamePad.GetState(PlayerIndex.Two);
 				if(state.ThumbSticks.Left.Y == -1.0f)
 					return false;
 			#endif
 		} else if(this.gameObject.GetComponent<TTSRacer>().playerNum == 3) {
-			#if UNITY_STANDALONE_OSX
+			#if UNITY_STANDALONE_OSX || UNITY_EDITOR
 				if(Input.GetAxis("R_YAxis_3") == -1.0f) {
 					return false;
 				}
 			#endif
 
-			#if UNITY_STANDALONE_WIN
+			#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
 				state = GamePad.GetState(PlayerIndex.Three);
 				if(state.ThumbSticks.Left.Y == -1.0f)
 					return false;
 			#endif
 		} else if(this.gameObject.GetComponent<TTSRacer>().playerNum == 4) {
-			#if UNITY_STANDALONE_OSX
+			#if UNITY_STANDALONE_OSX || UNITY_EDITOR
 				if(Input.GetAxis("R_YAxis_4") == -1.0f) {
 					return false;
 				}
 			#endif
 
-			#if UNITY_STANDALONE_WIN
+			#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
 				state = GamePad.GetState(PlayerIndex.Four);
 				if(state.ThumbSticks.Left.Y == -1.0f)
 					return false;

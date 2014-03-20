@@ -36,6 +36,7 @@ public class TTSDrezzStone : MonoBehaviour
 						if(other.gameObject.GetComponentInChildren<TTSShield>().tier3){
 							other.gameObject.GetComponent<TTSPowerup>().GivePowerup(TTSBehaviour.Powerup.DrezzStones);
 							other.gameObject.GetComponentInChildren<TTSShield>().duration = 2.0f;
+							other.gameObject.GetComponentInChildren<TTSShield>().absorbEffect.Play();
 							Destroy(this.gameObject);
 							Destroy(this);
 						}
