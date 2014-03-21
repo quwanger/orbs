@@ -18,6 +18,17 @@ public class TTSPowerup : TTSBehaviour
 	public GameObject hudPowerup;
 
 	public int ammo = 0;
+	
+	public GameObject myCamera{
+		get {
+			return GetComponent<TTSRacer>().myCamera;
+		}
+	}
+	public TTSCameraEffects vfx{
+		get {
+			return myCamera.GetComponent<TTSCameraEffects>();
+		}
+	}
 
 	//Perk Stuff
 	public Powerup pp2;
