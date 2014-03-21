@@ -56,14 +56,18 @@ func (this *OrbsLobby) ProcessPacket(sender *net.UDPAddr, reader *Packets.Packet
 		// 9999
 		case OrbsCommandTypes.CloseConnection:
 			if this.connectionExists(ip) {
+				fmt.Printf("	%v disconnected.\n", ip)
 				for _, value := range this.connections[ip].OwnedObjects {
 					this.racerDeregister(this.connections[ip], value)
 					delete(this.objToOwner, value)
 					delete(this.racers, value)
+
+					// Get rid of the platforms here
+					// this.Race.powerupPlatformDeRegister(value)
 				}
 				delete(this.connections, ip)
 			}
-			if len(this.racers) == 0 {
+			if len(this.connections) == 0 {
 				this.Reset()
 			}
 
@@ -97,7 +101,8 @@ func (this *OrbsLobby) racerRegister(connection *OrbsConnection, reader *Packets
 	if !this.objExists(racerID) { // Success
 
 		this.racers[racerID] = new(OrbsRacer)
-		this.racers[racerID].Init(racerID, racerIndex, racerRig, racerPerk1, racerPerk2, racerName, racerControlType, connection)
+		racer := this.racers[racerID]
+		racer.Init(racerID, racerIndex, racerRig, racerPerk1, racerPerk2, racerName, racerControlType, connection)
 
 		// if this.InGame { // Broadcast to everyone else
 		// 	this.Race.SpawnRacer(racerID, connection)
@@ -108,10 +113,10 @@ func (this *OrbsLobby) racerRegister(connection *OrbsConnection, reader *Packets
 		connection.AddObject(racerID)
 		returnPacket.WriteInt(OrbsCommandTypes.RacerRegisterOK)
 		returnPacket.WriteFloat32(racerID)
+		returnPacket.WriteInt(racer.Index)
 		fmt.Printf("	S	L:%v Racer %v registered\n", this.LobbyID, racerID)
 
 		// Broadcast to everyone else
-		racer := this.racers[racerID]
 		var returnPacket = new(Packets.PacketWriter)
 		returnPacket.InitPacket()
 		returnPacket.WriteInt(OrbsCommandTypes.RacerRegister)
@@ -197,7 +202,7 @@ func (this *OrbsLobby) AddConnection(newConnection *OrbsConnection) bool {
 
 	// Send the registered racers
 	for _, value := range this.racers {
-		fmt.Printf("	D	Sending racer %v back to %v", value.ID, newConnection.IPAddress)
+		fmt.Printf("	D	Sending racer %v back to %v\n", value.ID, newConnection.IPAddress)
 		this.SendRacer(value, newConnection)
 	}
 

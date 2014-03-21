@@ -3,28 +3,35 @@ package Orbs
 import (
 	"OrbsCommandTypes"
 	"Packets"
+	"fmt"
 	"net"
 )
 
 type OrbsRace struct {
 	Lobby *OrbsLobby
 
-	Connections map[string]*OrbsConnection
-	ObjToOwner  map[float32]*OrbsConnection
-	Racers      map[float32]*OrbsRacer
+	Connections      map[string]*OrbsConnection
+	ObjToOwner       map[float32]*OrbsConnection
+	Racers           map[float32]*OrbsRacer
+	PowerupPlatforms map[float32]*OrbsPowerupPlatform
 }
 
 func (this *OrbsRace) InitRace(connections map[string]*OrbsConnection, objToOwner map[float32]*OrbsConnection, racers map[float32]*OrbsRacer) {
 	this.Connections = connections
 	this.ObjToOwner = objToOwner
 	this.Racers = racers
+
+	this.PowerupPlatforms = make(map[float32]*OrbsPowerupPlatform)
 }
 
 func (this *OrbsRace) ProcessPacket(sender *net.UDPAddr, reader *Packets.PacketReader, firstCommand int) {
 	var command int = firstCommand
 	var ip string = sender.IP.String()
 
+	var debugNumPlatforms int = 0
+
 	for command != OrbsCommandTypes.EndPacket {
+
 		switch command {
 
 		// 2004
@@ -43,20 +50,87 @@ func (this *OrbsRace) ProcessPacket(sender *net.UDPAddr, reader *Packets.PacketR
 		// 5004
 		case OrbsCommandTypes.PowerupUpdate:
 			this.powerupUpdate(this.Connections[ip], reader)
+
+		// 5051
+		case OrbsCommandTypes.PowerupPlatformRegister:
+			this.powerupPlatformRegister(this.Connections[ip], reader)
+			debugNumPlatforms++
+
+		// 5504
+		case OrbsCommandTypes.PowerupPlatformSpawn:
+			this.powerupPlatformSpawn(this.Connections[ip], reader)
+
 		}
 
 		command = reader.ReadInt32()
 	}
+
+	// if debugNumPlatforms != 0 {
+	// 	fmt.Printf("Received %v platforms\n", debugNumPlatforms)
+	// }
 
 	reader.Rewind4Bytes()
 }
 
 // Command Processors
 
+func (this *OrbsRace) powerupPlatformSpawn(connection *OrbsConnection, reader *Packets.PacketReader) {
+	platformID := reader.ReadFloat32()
+	powerupType := reader.ReadInt32()
+
+	// fmt.Printf("Race:	Platform Update: '%v' with %v\n", platformID, powerupType)
+	fmt.Printf("")
+
+	if this.objExists(platformID) && this.ObjToOwner[platformID] == connection {
+
+		this.PowerupPlatforms[platformID].PowerupType = powerupType
+
+		var broadcastPacket = new(Packets.PacketWriter)
+		broadcastPacket.InitPacket()
+		broadcastPacket.WriteInt(OrbsCommandTypes.PowerupPlatformSpawn)
+		broadcastPacket.WriteFloat32(platformID)
+		broadcastPacket.WriteInt(powerupType)
+
+		// this.writeBroadcastDataExceptSender(broadcastPacket.GetMinimalData(), connection)
+		this.writeBroadcastData(broadcastPacket.GetMinimalData())
+	}
+}
+
+func (this *OrbsRace) powerupPlatformRegister(connection *OrbsConnection, reader *Packets.PacketReader) {
+	platformID := reader.ReadFloat32()
+
+	// fmt.Printf("Race:	Register Platform: '%v'\n", platformID)
+
+	var returnPacket = new(Packets.PacketWriter)
+	returnPacket.InitPacket()
+
+	if this.objExists(platformID) {
+		println("Platform", platformID, "Exists")
+		returnPacket.WriteInt(OrbsCommandTypes.PowerupPlatformAlreadyRegistered)
+		returnPacket.WriteFloat32(platformID)
+
+	} else { // Success
+		connection.AddObject(platformID)
+		this.ObjToOwner[platformID] = connection
+		this.PowerupPlatforms[platformID] = new(OrbsPowerupPlatform)
+		this.PowerupPlatforms[platformID].ID = platformID
+		this.PowerupPlatforms[platformID].Owner = connection
+
+		returnPacket.WriteInt(OrbsCommandTypes.PowerupPlatformRegisterOK)
+		returnPacket.WriteFloat32(platformID)
+	}
+
+	connection.WriteData(returnPacket.GetMinimalData())
+}
+
+func (this *OrbsRace) powerupPlatformDeRegister(id float32) {
+
+}
+
 func (this *OrbsRace) powerupUpdate(connection *OrbsConnection, reader *Packets.PacketReader) {
 	powerupID := reader.ReadFloat32()
 
-	println("#	Powerup Update Received ", powerupID)
+	//println("#	Powerup Update Received ", powerupID)
 
 	// Pull all the packet data
 	position, rotation, speed := new(Vector3), new(Vector3), new(Vector3)
@@ -150,7 +224,8 @@ func (this *OrbsRace) racerUpdate(connection *OrbsConnection, reader *Packets.Pa
 		broadcastPacket.WriteFloat32(vInput)
 		broadcastPacket.WriteFloat32(hInput)
 
-		this.writeBroadcastData(broadcastPacket.GetMinimalData())
+		//this.writeBroadcastData(broadcastPacket.GetMinimalData())
+		this.writeBroadcastDataExceptSender(broadcastPacket.GetMinimalData(), connection)
 
 	} else {
 		// Read the necessary number of bytes

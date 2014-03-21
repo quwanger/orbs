@@ -201,6 +201,15 @@ public class TTSClient : MonoBehaviour
 
 				#endregion
 
+				#region powerup platforms
+				case TTSCommandTypes.PowerupPlatformRegisterOK:
+					Debug.Log("Received Powerup OK");
+					id = packet.ReadFloat();
+					netHandles[id].isServerRegistered = true;
+					netHandles[id].ReceiveNetworkData(packet, command);
+					break;
+				#endregion
+
 				#region racers and powerups
 				case TTSCommandTypes.RacerRegister:
 					TTSRacer.RacerConfig config = new TTSRacer.RacerConfig();
@@ -410,6 +419,13 @@ public static class TTSCommandTypes
 	public const int PowerupDeregister        = 5009;
 	public const int PowerupAlreadyRegistered = 5091;
 	public const int PowerupIsNotRegistered   = 5092;
+
+	// Powerup Platform
+	public const int PowerupPlatformRegister			= 5501;
+	public const int PowerupPlatformRegisterOK			= 5511;
+	public const int PowerupPlatformSpawn				= 5508;
+	public const int PowerupPlatformPickedUp			= 5505;
+	public const int PowerupPlatformAlreadyRegistered	= 5591;
 
 	// General
 	public const int RequestNumRacers = 8001;

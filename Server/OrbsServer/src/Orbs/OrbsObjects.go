@@ -28,3 +28,15 @@ func (this *OrbsRacer) Init(id float32, index int, rig int, perk1 int, perk2 int
 
 	// println("Racer", name, "has been initialized: ", rig)
 }
+
+// type OrbsProp struct {
+// 	ID        float32
+// 	Owner     *OrbsConnection
+// 	NeedOwner bool
+// }
+
+type OrbsPowerupPlatform struct {
+	ID          float32
+	Owner       *OrbsConnection
+	PowerupType int
+}

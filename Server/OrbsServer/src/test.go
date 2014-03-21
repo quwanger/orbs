@@ -5,6 +5,7 @@ import (
 	"Packets"
 	"fmt"
 	"net"
+	"time"
 )
 
 var inConn, outConn *net.UDPConn
@@ -29,13 +30,13 @@ func main() {
 	println(" Orbs Tester v1.0             2014")
 	println("__________________________________")
 
-	serverAddress = &net.UDPAddr{net.IPv4(127, 0, 0, 1), 6666, ""}
+	serverAddress = &net.UDPAddr{net.IPv4(127, 0, 0, 1), 6969, ""}
 	outPacket = new(Packets.PacketWriter)
 	outPacket.InitPacket()
 
 	var err error
 
-	inConn, err = net.ListenUDP("udp", &net.UDPAddr{net.IPv4zero, 6969, ""})
+	inConn, err = net.ListenUDP("udp", &net.UDPAddr{net.IPv4zero, 7777, ""})
 	chk(err)
 
 	outConn, err = net.ListenUDP("udp", &net.UDPAddr{IP: net.IPv4zero, Port: 0})
@@ -47,14 +48,23 @@ func main() {
 	// outPacket.WriteInt(OrbsCommandTypes.RacerRegister)
 	// outPacket.WriteFloat32(123.123)
 
-	outPacket.WriteInt(OrbsCommandTypes.RacerUpdate)
-	outPacket.WriteVector3(1, 1, 1)
-	outPacket.WriteVector3(1, 1, 1)
-	outPacket.WriteVector3(1, 1, 1)
-	outPacket.WriteFloat32(123.123)
-	outPacket.WriteFloat32(123.123)
+	// outPacket.WriteInt(OrbsCommandTypes.RacerUpdate)
+	// outPacket.WriteVector3(1, 1, 1)
+	// outPacket.WriteVector3(1, 1, 1)
+	// outPacket.WriteVector3(1, 1, 1)
+	// outPacket.WriteFloat32(123.123)
+	// outPacket.WriteFloat32(123.123)
 
-	SendPacket()
+	for {
+		time.Sleep(500 * time.Millisecond)
+
+		outPacket.WriteInt(OrbsCommandTypes.PowerupPlatformSpawn)
+		outPacket.WriteFloat32(123.123)
+		outPacket.WriteInt(1)
+
+		SendPacket()
+		outPacket.Clear()
+	}
 }
 
 func SendPacket() {

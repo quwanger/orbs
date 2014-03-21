@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"math"
+	"strconv"
 )
 
 func ConvertTo16String(str string) string {
@@ -131,6 +132,7 @@ func (this *PacketReader) handleError(err error) {
 type PacketWriter struct {
 	Data      []byte
 	readIndex int
+	Commands  []int
 }
 
 func (this *PacketWriter) Size() int {
@@ -140,11 +142,14 @@ func (this *PacketWriter) Size() int {
 func (this *PacketWriter) InitPacket() {
 	this.Data = make([]byte, 1024)
 	this.readIndex = 0
+
+	this.Commands = make([]int, 0)
 }
 
 func (this *PacketWriter) Clear() {
 	this.Data = make([]byte, 1024)
 	this.readIndex = 0
+	this.Commands = make([]int, 0)
 }
 
 func (this *PacketWriter) WriteInt(data int) {
@@ -190,4 +195,28 @@ func (this *PacketWriter) WriteBytes(data []byte) {
 
 func (this *PacketWriter) GetMinimalData() []byte {
 	return this.Data[0:this.Size()]
+}
+
+func (this *PacketWriter) AddCommand(command int) {
+	this.Commands = append(this.Commands, command)
+}
+
+func (this *PacketWriter) PrintBytes() {
+	var a string = "["
+	for _, value := range this.GetMinimalData() {
+		a += strconv.Itoa(int(value)) + " "
+	}
+	a += "]"
+
+	println(a)
+}
+
+func (this *PacketWriter) PrintCommands() {
+	var a string = "["
+	for _, value := range this.Commands {
+		a += strconv.Itoa(value) + " "
+	}
+	a += "]"
+
+	println(a)
 }

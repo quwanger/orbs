@@ -6,7 +6,7 @@ public class TTSPowerupPlatform : TTSBehaviour {
 	public float respawnTime = 5.0f;
 	public AudioClip clip;
 	private float rotationSpeed = 50.0f;
-	private bool pickedUp = false;
+	private bool pickedUp = true;
 	private Collider collidedRacer;
 	public bool isRandom = false;
 	public GameObject powerupBoost;
@@ -31,6 +31,10 @@ public class TTSPowerupPlatform : TTSBehaviour {
 	
 	public GameObject powerupMesh;
 	public ParticleSystem pickupParticleSystem;
+
+	#region networking
+	private TTSPowerupPlatformNetworkHandler netHandle;
+	#endregion
 	
 	
 	void Start () {
@@ -40,6 +44,13 @@ public class TTSPowerupPlatform : TTSBehaviour {
 		if(isRandom)
 			currentPowerup = getRandomPowerup();
 		displayPowerup();
+
+		if (level.client.isMultiplayer) {
+			netHandle = new TTSPowerupPlatformNetworkHandler(level.client, transform.position);
+		}
+		else {
+			pickedUp = false;
+		}
 	}
 	
 	void Update () {
@@ -180,4 +191,40 @@ public class TTSPowerupPlatform : TTSBehaviour {
 			break;
 		}
 	}
+}
+
+public class TTSPowerupPlatformNetworkHandler : TTSNetworkHandle
+{
+	public TTSBehaviour.Powerup PowerupType = TTSBehaviour.Powerup.None;
+	//public bool pickedUp = false;
+
+	public TTSPowerupPlatformNetworkHandler(TTSClient Client, Vector3 StartingPosition) {
+		type = "Powerup Platform";
+
+		canForfeitControl = true;
+		inGameRegistration = true;
+		owner = true; // Until the already registered command comes back.
+		registerCommand = TTSCommandTypes.PowerupPlatformRegister;
+
+		id = StartingPosition.x * StartingPosition.y * StartingPosition.z;
+
+		client = Client;
+		client.LocalObjectRegister(this);
+	}
+
+	public override void ReceiveNetworkData(TTSPacketReader reader, int command) {
+
+		if (command == TTSCommandTypes.PowerupPlatformSpawn) {
+			PowerupType = (TTSBehaviour.Powerup)reader.ReadInt32();
+			isNetworkUpdated = true;
+		}
+		else if (command == TTSCommandTypes.PowerupPlatformPickedUp) {
+			//pickedUp = true;
+		}
+		else if (command == TTSCommandTypes.PowerupPlatformRegisterOK) {
+			//startPowerup = true;
+			isNetworkUpdated = true;
+		}
+	}
+
 }
