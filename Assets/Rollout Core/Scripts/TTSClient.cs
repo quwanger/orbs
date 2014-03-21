@@ -203,9 +203,19 @@ public class TTSClient : MonoBehaviour
 
 				#region powerup platforms
 				case TTSCommandTypes.PowerupPlatformRegisterOK:
-					Debug.Log("Received Powerup OK");
 					id = packet.ReadFloat();
 					netHandles[id].isServerRegistered = true;
+					netHandles[id].ReceiveNetworkData(packet, command);
+					break;
+
+				case TTSCommandTypes.PowerupPlatformAlreadyRegistered:
+					id = packet.ReadFloat();
+					netHandles[id].owner = false;
+					netHandles[id].isServerRegistered = true;
+					break;
+
+				case TTSCommandTypes.PowerupPlatformSpawn:
+					id = packet.ReadFloat();
 					netHandles[id].ReceiveNetworkData(packet, command);
 					break;
 				#endregion
