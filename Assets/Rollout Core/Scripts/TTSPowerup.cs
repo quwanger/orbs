@@ -313,7 +313,7 @@ public class TTSPowerup : TTSBehaviour
 	#region public methods
 	public void Leech(int _tier) {
 
-		int leechesPerRacer = Mathf.CeilToInt(ammo/(this.gameObject.GetComponent<TTSRacer>().place-1));
+		//int leechesPerRacer = Mathf.CeilToInt(ammo/(this.gameObject.GetComponent<TTSRacer>().place-1));
 
 		for (int i = 0; i < ammo; i++) {
 			DeployLeech(true);
