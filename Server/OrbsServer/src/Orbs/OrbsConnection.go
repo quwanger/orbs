@@ -54,8 +54,21 @@ func (this *OrbsConnection) SendPacket() {
 		return
 	}
 
-	n, _ := this.OutConnection.WriteToUDP(this.OutPacket.Data[0:this.OutPacket.Size()], this.ReturnAddress)
+	n, _ := this.OutConnection.WriteToUDP(this.OutPacket.GetMinimalData(), this.ReturnAddress)
 	this.OutPacket.Clear()
+
+	if this.DebugMode {
+		fmt.Printf(">	Sent %v bytes to %v\n", n, this.IPAddress)
+	}
+}
+
+// Avoid use
+func (this *OrbsConnection) SendData(data []byte) {
+	if this.OutPacket.Size() == 0 {
+		return
+	}
+
+	n, _ := this.OutConnection.WriteToUDP(data, this.ReturnAddress)
 
 	if this.DebugMode {
 		fmt.Printf(">	Sent %v bytes to %v\n", n, this.IPAddress)
@@ -65,6 +78,7 @@ func (this *OrbsConnection) SendPacket() {
 func (this *OrbsConnection) CheckPacketSize(dataLength int) {
 	if this.OutPacket.Size()+dataLength > len(this.OutPacket.Data) {
 		fmt.Printf("W	POTENTIAL DATA OVERFLOW AT %v BYTES. SENDING/CLEARING PACKET\n", this.OutPacket.Size())
+
 		this.SendPacket()
 		this.OutPacket.Clear()
 	}

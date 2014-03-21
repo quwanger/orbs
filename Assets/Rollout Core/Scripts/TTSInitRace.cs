@@ -152,8 +152,6 @@ public class TTSInitRace : MonoBehaviour
 		racer.GetComponent<TTSRacer>().minimapIconSmall = iconSmall;
 		racer.GetComponent<TTSRacer>().minimapIconBig = iconBig;
 
-		racer.GetComponent<TTSRacer>().Initialized();
-
 		if (level.DebugMode)
 			racer.GetComponent<TTSRacer>().canMove = true;
 
@@ -232,6 +230,8 @@ public class TTSInitRace : MonoBehaviour
 
 		racerControl.IsPlayerControlled = true;
 		racerControl.player = TTSRacer.PlayerType.Player;
+
+		racer.GetComponent<TTSRacer>().Initialized();
 
 		//Instantiates a minimap for each human player and sets it to follow a racer
 		GameObject tempMinimap = (GameObject)Instantiate(minimapGO);
@@ -503,11 +503,15 @@ public class TTSInitRace : MonoBehaviour
 		//set the player type to AI
 		racer.GetComponent<TTSRacer>().IsPlayerControlled = true;
 		racer.GetComponent<TTSRacer>().player = TTSRacer.PlayerType.AI;
+
+		racer.GetComponent<TTSRacer>().Initialized();
 	}
 
 	private void InitToMultiplayer(GameObject racer, TTSRacer.RacerConfig config) {
 		racer.GetComponent<TTSRacer>().IsPlayerControlled = true;
 		racer.GetComponent<TTSRacer>().player = TTSRacer.PlayerType.Multiplayer;
+
+		racer.GetComponent<TTSRacer>().Initialized();
 
 		TTSRacerNetHandler handler = new TTSRacerNetHandler(level.client, false, config.netID);
 		handler.position = racer.transform.position;

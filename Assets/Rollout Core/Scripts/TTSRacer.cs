@@ -639,14 +639,14 @@ public class TTSRacer : TTSBehaviour
 	public void MultiplayerInput() {
 		if (netHandler.isNetworkUpdated) {
 			if (netHandler.netPosition != Vector3.zero) {
-				transform.position = Vector3.Lerp(transform.position, netHandler.netPosition, netHandler.networkInterpolation);
+				transform.position = Vector3.Lerp(transform.position, netHandler.netPosition, netHandler.networkInterpolation * 10);
 			}
 		}
 		displayMeshComponent.rotation = Quaternion.Lerp(displayMeshComponent.rotation, Quaternion.Euler(netHandler.netRotation), netHandler.networkInterpolation * 10);
 		rigidbody.velocity = netHandler.netSpeed;
 
-		vInput = Mathf.Lerp(vInput, netHandler.networkVInput, netHandler.networkInterpolation * 5);
-		hInput = Mathf.Lerp(hInput, netHandler.networkHInput, netHandler.networkInterpolation * 5);
+		vInput = netHandler.networkVInput;// Mathf.Lerp(vInput, netHandler.networkVInput, netHandler.networkInterpolation * 5);
+		hInput = netHandler.networkHInput;// Mathf.Lerp(hInput, netHandler.networkHInput, netHandler.networkInterpolation * 5);
 
 		netHandler.isNetworkUpdated = false;
 
@@ -713,6 +713,7 @@ public class TTSRacerNetHandler : TTSNetworkHandle
 	public List<TTSPowerupNetHandler> receivedPowerups = new List<TTSPowerupNetHandler>();
 
 	public TTSRacerNetHandler(TTSClient Client, bool Owner, int rigID) {
+		type = "Racer";
 		registerCommand = TTSCommandTypes.RacerRegister;
 		owner = Owner;
 		client = Client;
@@ -721,6 +722,7 @@ public class TTSRacerNetHandler : TTSNetworkHandle
 	}
 
 	public TTSRacerNetHandler(TTSClient Client, bool Owner, float ID) { // For multiplayer players
+		type = "Racer";
 		id = ID;
 		registerCommand = TTSCommandTypes.RacerRegister;
 		owner = Owner;
@@ -736,7 +738,7 @@ public class TTSRacerNetHandler : TTSNetworkHandle
 		writer.AddData(Rig);
 		writer.AddData(Perk1);
 		writer.AddData(Perk2);
-		writer.AddData(Name);
+		writer.AddData(Name, 16);
 		writer.AddData(ControlType);
 		return writer.GetMinimizedData();
 	}
