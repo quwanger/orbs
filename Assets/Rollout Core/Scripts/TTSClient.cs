@@ -243,7 +243,7 @@ public class TTSClient : MonoBehaviour
 				case TTSCommandTypes.PowerupStaticRegister:
 				case TTSCommandTypes.PowerupRegister:
 				case TTSCommandTypes.PowerupUpdate:
-					id = packet.ReadFloat();
+					id = packet.ReadFloat(); // Racer Net handle
 					netHandles[id].ReceiveNetworkData(packet, command);
 					break;
 

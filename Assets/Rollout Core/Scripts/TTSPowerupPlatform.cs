@@ -282,7 +282,6 @@ public class TTSPowerupPlatformNetworkHandler : TTSNetworkHandle
 		if (command == TTSCommandTypes.PowerupPlatformSpawn) {
 			PowerupType = (TTSBehaviour.Powerup)reader.ReadInt32();
 			isNetworkUpdated = true;
-			Debug.Log("Received Powerup type " + PowerupType);
 		}
 		else if (command == TTSCommandTypes.PowerupPlatformPickedUp) {
 			//pickedUp = true;
