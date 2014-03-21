@@ -11,7 +11,7 @@ public class TTSLeech : TTSBehaviour {
 	
 	public GameObject explosion;
 	
-	public float homingRadius = 25.0F;
+	public float homingRadius = 30.0F;
 	public float stickRadius = 3.0f;
 	public float jumpRadius = 8.0f;
 	public float explosionRadius = 8.0f;
@@ -31,12 +31,15 @@ public class TTSLeech : TTSBehaviour {
 	public AudioClip beeping;
 	
 	private bool racerFound = false;
-	private bool racerStuck = false;
+	public bool racerStuck = false;
 	
 	private GameObject homedRacer;
 	private GameObject stuckRacer;
 	
 	public Material stuckMaterial;
+
+	public int leechesInPack;
+	public int racersAheadOfLeechOwner;
 	
 	TTSAIController AIUtil;
 	
@@ -78,6 +81,18 @@ public class TTSLeech : TTSBehaviour {
 	private void doHoming(){
 		
 		if(racerStuck){
+
+			//handle tier 3 shield
+			if(stuckRacer.GetComponent<TTSRacer>().hasShield){
+				if(stuckRacer.GetComponentInChildren<TTSShield>().tier3){
+					stuckRacer.GetComponent<TTSPowerup>().GivePowerup(Powerup.Leech);
+					stuckRacer.GetComponentInChildren<TTSShield>().duration = 2.0f;
+					stuckRacer.GetComponentInChildren<TTSShield>().absorbEffect.Play();
+					Destroy(this.gameObject);
+					Destroy(this);
+				}
+			}
+
 			positionDifference = TTSUtils.RotateAround(positionDifference, Vector3.zero, new Vector3(Random.Range(10.0f, 20.0f), Random.Range(10.0f, 20.0f), Random.Range(10.0f, 20.0f)));
 			transform.position = stuckRacer.transform.position + positionDifference;
 			CheckForOtherRacers();

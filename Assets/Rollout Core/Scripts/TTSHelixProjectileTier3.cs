@@ -118,15 +118,21 @@ public class TTSHelixProjectileTier3 : TTSBehaviour
 		
 	}
 
-	void OnCollisionEnter(Collision other) {
+	void OnTriggerEnter(Collider other) {
 		//only collide with racer
 		if(other.gameObject.GetComponent<TTSRacer>()){
-			if (other.gameObject.GetComponent<TTSRacer>()) {
+			if(other.gameObject.GetComponent<TTSRacer>().hasShield){
+				if(other.gameObject.GetComponentInChildren<TTSShield>().tier3){
+					other.gameObject.GetComponent<TTSPowerup>().GivePowerup(Powerup.Helix);
+					other.gameObject.GetComponentInChildren<TTSShield>().duration = 2.0f;
+					other.gameObject.GetComponentInChildren<TTSShield>().absorbEffect.Play();
+					Explode(false);
+				}
+			}else{
 				other.gameObject.GetComponent<TTSRacer>().DamageRacer(offensiveMultiplier * 1.0f);
 				other.rigidbody.AddExplosionForce(25, this.transform.position, 10, -10);
-				Debug.Log(other.gameObject + " damaged by " + offensiveMultiplier);
+				Explode(true);
 			}
-			Explode(true);
 		}
 	}
 	#endregion
@@ -190,8 +196,6 @@ public class TTSHelixProjectileTier3 : TTSBehaviour
 		if (actually) {
 			Instantiate(explosion, this.transform.position, this.transform.rotation);
 		}
-
-		//homedRacer.GetComponent<TTSRacer>().numHelix--;
 
 		foreach (Transform child in transform) {
 			Destroy(child.gameObject);
