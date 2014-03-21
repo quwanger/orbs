@@ -91,8 +91,8 @@ func (this *OrbsRace) powerupPlatformSpawn(connection *OrbsConnection, reader *P
 		broadcastPacket.WriteFloat32(platformID)
 		broadcastPacket.WriteInt(powerupType)
 
-		// this.writeBroadcastDataExceptSender(broadcastPacket.GetMinimalData(), connection)
-		this.writeBroadcastData(broadcastPacket.GetMinimalData())
+		this.writeBroadcastDataExceptSender(broadcastPacket.GetMinimalData(), connection)
+		// this.writeBroadcastData(broadcastPacket.GetMinimalData())
 	}
 }
 
@@ -105,9 +105,13 @@ func (this *OrbsRace) powerupPlatformRegister(connection *OrbsConnection, reader
 	returnPacket.InitPacket()
 
 	if this.objExists(platformID) {
-		println("Platform", platformID, "Exists")
+		// println("Platform", platformID, "Exists")
 		returnPacket.WriteInt(OrbsCommandTypes.PowerupPlatformAlreadyRegistered)
 		returnPacket.WriteFloat32(platformID)
+
+		returnPacket.WriteInt(OrbsCommandTypes.PowerupPlatformSpawn)
+		returnPacket.WriteFloat32(platformID)
+		returnPacket.WriteInt(this.PowerupPlatforms[platformID].PowerupType)
 
 	} else { // Success
 		connection.AddObject(platformID)
