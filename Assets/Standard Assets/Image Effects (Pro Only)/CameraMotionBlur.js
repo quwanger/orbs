@@ -369,6 +369,7 @@ public class CameraMotionBlur extends PostEffectsBase
 		tmpCam.camera.enabled = false;
 		tmpCam.camera.depthTextureMode = DepthTextureMode.None;
 		tmpCam.camera.clearFlags = CameraClearFlags.Nothing;
+		tmpCam.camera.renderingPath = RenderingPath.Forward;
 
 		return tmpCam.camera;
 	}

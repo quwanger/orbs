@@ -34,6 +34,7 @@ public class TTSAIController : TTSBehaviour
 	private float turnAmount = 0.0f;
 	private Vector3 destination;
 	private Vector3 detourDestination; // Used in the secondary blocked path
+	private Vector3 velocity;
 
 	private int counter = 0;
 	#endregion
@@ -48,15 +49,18 @@ public class TTSAIController : TTSBehaviour
 	}
 
 	// Randomize the distances and maybe the foresight to get more randomness
-	public void randomizeValues() { }
+	public void randomizeValues() {
+
+	}
 
 	/// Takes distance into account for how fast the racer must go.
-	public float verticalInput(float prevInput, TTSWaypoint wp, Vector3 position, Vector3 velocity) {
+	public float verticalInput(float prevInput, TTSWaypoint wp, Vector3 position, Vector3 racerVelocity) {
+		velocity = racerVelocity;
 		// Get distance multiplier based on how far the racer is from the waypoint
 		float distanceMultiplier = Mathf.Pow(Mathf.Min(1.0f, wp.getDistanceFrom(position) / AISlowDownDistance), turnCautiousness);
 
 		if (intelligence > 2) { // Reverse if it's a hard turn
-			if (turnAmount < HARD_TURN_AMOUNT && velocity.magnitude > (80.0f * turnAmount) && wp.getDistanceFrom(position) < ((1 - turnAmount) * hardTurnDistance))
+			if (turnAmount < HARD_TURN_AMOUNT && racerVelocity.magnitude > (80.0f * turnAmount) && wp.getDistanceFrom(position) < ((1 - turnAmount) * hardTurnDistance))
 				return -1.0f;
 		}
 
@@ -116,11 +120,12 @@ public class TTSAIController : TTSBehaviour
 			Vector3 dir = racer.transform.position - position;
 
 			Vector3 normalizedDir = dir.normalized;
-			float directionalStrength = Mathf.Pow(1 - Vector3.Project(normalizedDir, racerForward).magnitude, 2); // Stronger avoidance when a racer is on the side than front.
+			float directionalStrength = Mathf.Pow(1 - Vector3.Project(normalizedDir, racerForward).magnitude, 3); // Stronger avoidance when a racer is on the side than front.
+			float speedStrength = Mathf.Clamp01(TTSUtils.FlattenVector(velocity).magnitude / 100.0f);
 
 			if (dir.magnitude < racerBufferDistance) {
 				//Debug.DrawLine(position, racer.transform.position);
-				direction -= dir.normalized * Mathf.Pow(50.0f / dir.magnitude, 2) * directionalStrength;
+				direction -= dir.normalized * Mathf.Pow(50.0f / dir.magnitude, 2) * directionalStrength * speedStrength;
 			}
 		}
 

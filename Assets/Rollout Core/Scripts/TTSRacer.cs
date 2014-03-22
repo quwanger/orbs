@@ -38,6 +38,9 @@ using XInputDotNetPure;
 [RequireComponent(typeof(MeshRenderer))]
 public class TTSRacer : TTSBehaviour
 {
+	#region configuration
+	#endregion
+
 	public GameObject minimapIconSmall;
 	public GameObject minimapIconBig;
 
@@ -112,6 +115,7 @@ public class TTSRacer : TTSBehaviour
 	private float stopSpeed = 0.05f;
 	
 	public GameObject myCamera;
+	public TTSCameraEffects vfx;
 
 	private TTSPowerup powerupManager;
 
@@ -204,9 +208,11 @@ public class TTSRacer : TTSBehaviour
 		
 		Offense = CurrentRig.rigOffense;
 		Defense = CurrentRig.rigDefense;
-		
-		if(myCamera != null)
-			myCamera.GetComponent<TTSCameraFade>().SetScreenOverlayColor(new Color(0,0,0,0));
+
+		if (myCamera != null) {
+			vfx = myCamera.GetComponent<TTSCameraEffects>();
+			myCamera.GetComponent<TTSCameraFade>().SetScreenOverlayColor(new Color(0, 0, 0, 0));
+		}
 	}
 
 	// Runs after the racer is initialized with the rigs
@@ -434,8 +440,9 @@ public class TTSRacer : TTSBehaviour
 	void OnCollisionEnter(Collision collision) {
 
 		onGround = true;
-		if (collision.relativeVelocity.magnitude > 10) {
-			vfx.DamageEffect(100.0f);
+		if (collision.relativeVelocity.magnitude > 15) {
+			if(vfx != null)
+				vfx.DamageEffect(100.0f);
 			//RacerSfx.volume = collision.relativeVelocity.magnitude / TopSpeed / 1.5f;
 			RacerSfx.volume = collision.relativeVelocity.magnitude / 100.0f / 1.5f;
 			RacerSfx.PlayOneShot(DamageSounds[Mathf.FloorToInt(Random.value * DamageSounds.Length)]);

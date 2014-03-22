@@ -26,11 +26,11 @@ GameObject:
   m_Component:
   - 4: {fileID: 400002}
   - 20: {fileID: 2000000}
+  - 114: {fileID: 11400014}
   - 92: {fileID: 9200000}
   - 124: {fileID: 12400000}
   - 114: {fileID: 11400012}
   - 114: {fileID: 11400010}
-  - 114: {fileID: 11400014}
   - 114: {fileID: 11400008}
   - 82: {fileID: 8200002}
   - 114: {fileID: 11400006}
@@ -319,7 +319,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100002}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bef3d242a13c447ac90c2d2dc213b1ea, type: 3}
   m_Name: 
@@ -368,6 +368,7 @@ MonoBehaviour:
   fadeHeight: 0
   fadeX: 0
   fadeY: 0
+  racer: {fileID: 0}
   cameraDistance: 7
   cameraBaseDistance: 7
   cameraMinDistance: 5
@@ -520,7 +521,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100002}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1dad87ba4f1e04d6eb7f287e1f2e08fe, type: 3}
   m_Name: 
@@ -530,8 +531,8 @@ MonoBehaviour:
   radialBlurIterations: 1
   sunColor: {r: 0, g: .58041954, b: 1, a: 1}
   sunShaftBlurRadius: 1.75999999
-  sunShaftIntensity: .200000003
-  useSkyBoxAlpha: .68900001
+  sunShaftIntensity: .219999999
+  useSkyBoxAlpha: .667999983
   maxRadius: .751999974
   useDepthTexture: 1
   sunShaftsShader: {fileID: 4800000, guid: d3b1c8c1036784176946f5cfbfb7fe4c, type: 3}
@@ -549,10 +550,10 @@ MonoBehaviour:
   tweakMode: 1
   screenBlendMode: 1
   hdr: 1
-  sepBlurSpread: 1.37
+  sepBlurSpread: 1.87
   quality: 1
-  bloomIntensity: .100000001
-  bloomThreshhold: .248999998
+  bloomIntensity: .200000003
+  bloomThreshhold: .300000012
   bloomThreshholdColor: {r: .178937405, g: .531019151, b: .888059676, a: 1}
   bloomBlurIterations: 1
   hollywoodFlareBlurIterations: 1
@@ -580,24 +581,24 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100002}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f7db9ec1392f34265817a55853e6ab07, type: 3}
   m_Name: 
-  filterType: 2
+  filterType: 1
   preview: 0
-  previewScale: {x: 1, y: 1, z: 1}
+  previewScale: {x: 10, y: 10, z: 10}
   movementScale: 0
   rotationScale: 1
   maxVelocity: 10
   maxNumSamples: 17
   minVelocity: 0
-  velocityScale: .349999994
+  velocityScale: .200000003
   softZDistance: .00499999989
-  velocityDownsample: 1
+  velocityDownsample: 500
   excludeLayers:
     serializedVersion: 2
-    m_Bits: 512
+    m_Bits: 258816
   shader: {fileID: 4800000, guid: 85a88efa8c871af4a9d17c64791b6f4f, type: 3}
   dx11MotionBlurShader: {fileID: 4800000, guid: f1b13d7a80660504a858ea24cfa418c6,
     type: 3}
@@ -645,7 +646,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9aaa3f5f2d574f228e4a21aa38b61e4, type: 3}
   m_Name: 
-  mode: 1
+  mode: 0
   showGeneratedNormals: 0
   offsetScale: .200000003
   blurRadius: 18

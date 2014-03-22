@@ -26,7 +26,7 @@ public class TTSPowerup : TTSBehaviour
 	}
 	public TTSCameraEffects vfx{
 		get {
-			return myCamera.GetComponent<TTSCameraEffects>();
+			return GetComponent<TTSRacer>().vfx;
 		}
 	}
 

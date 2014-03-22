@@ -3,7 +3,7 @@ using System.Collections;
 
 public class TTSDamageEffect : TTSPerishingBehaviour {
 	
-	private float fromValue = 30.0f;
+	private float fromValue = 20.0f;
 	private float baseValue;
 
 	private float fromBlur = 2.0f;

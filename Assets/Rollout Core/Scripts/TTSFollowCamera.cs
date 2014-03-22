@@ -150,7 +150,7 @@ public class TTSFollowCamera : TTSBehaviour
 		camera.fov = Mathf.Lerp(camera.fov, TTSUtils.Remap(racerVelocity.magnitude, 40, racerTopSpeed * fovStartEffect, Base_FOV, Max_FOV, true), 0.05f);
 
 		if (GetComponent<Vignetting>().chromaticAberration > 0.0f) {
-			GetComponent<Vignetting>().chromaticAberration = Mathf.Lerp(GetComponent<Vignetting>().chromaticAberration, 0.0f, 0.07f);
+			GetComponent<Vignetting>().chromaticAberration = Mathf.Lerp(GetComponent<Vignetting>().chromaticAberration, 0.0f, 0.1f);
 		}
 	}
 
