@@ -438,7 +438,6 @@ public class TTSRacer : TTSBehaviour
 
 	#region Events
 	void OnCollisionEnter(Collision collision) {
-
 		onGround = true;
 		if (collision.relativeVelocity.magnitude > 15) {
 			if(vfx != null)
@@ -593,7 +592,7 @@ public class TTSRacer : TTSBehaviour
 			}
 		}
 
-		destination = AIUtil.getDestination(lastForward, nextWaypoint, position);
+		destination = AIUtil.getDestination(displayMeshComponent, nextWaypoint, position);
 
 		Vector3 steerDir = TTSUtils.FlattenVector(destination - position);
 

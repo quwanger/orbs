@@ -25,6 +25,9 @@ public class TTSAIController : TTSBehaviour
 
 	private float racerBufferDistance = 20.0f; // How close a racer has to be to affect it.
 	private float racerAvoidStrength = 5.0f;
+
+	public float wallAvoidanceDistance = 2.0f; // How close the wall could be until it's avoided
+	public float wallAvoidanceStrength = 2.0f;
 	#endregion
 
 	#region AI persistent vars
@@ -69,7 +72,8 @@ public class TTSAIController : TTSBehaviour
 		return Mathf.Lerp(prevInput, t, 0.1f);
 	}
 
-	public Vector3 getDestination(Vector3 racerForward, TTSWaypoint next, Vector3 position) {
+	public Vector3 getDestination(Transform racerTransform, TTSWaypoint next, Vector3 position) {
+		Vector3 racerForward = racerTransform.forward;
 		turnAmount = turnCurveAmount(racerForward, next);
 
 		// If there's a secondary destination that needs to be held for a bit
@@ -79,35 +83,70 @@ public class TTSAIController : TTSBehaviour
 		}
 
 		// Straight Path
-		if (turnAmount > HARD_TURN_AMOUNT){ // Check to see if there needs to be a hard turn
+		if (turnAmount > HARD_TURN_AMOUNT) { // Check to see if there needs to be a hard turn
 			if (debugMode) Debug.Log("Straight Path");
 			destination = next.getClosestPoint(position);
 			destination = Vector3.Lerp(next.position, destination, 0.9f);
 		}
 		// Hard turn
-		else{
+		else {
 			if (debugMode) Debug.Log("Hard Turn");
 			destination = hardTurnManeuver(next, position);
 		}
-		
+
 		// Blocked Path
 		if (Physics.Linecast(position, destination, TTSUtils.ExceptLayerMask(10))) {
 			if (debugMode) Debug.Log("Blocked Path");
-			
+
 			destination = blockedPathManeuver(next, position);
 		}
 
 		// Secondary Blocked Path
 		RaycastHit hit;
 		if (Physics.Linecast(position, destination, out hit, TTSUtils.ExceptLayerMask(10))) {
-			if (debugMode)Debug.Log("Secondary Blocked Path");
-			
+			if (debugMode) Debug.Log("Secondary Blocked Path");
+
 			destination = secondaryBlockedPathManeuver(next, position, hit);
 		}
 
-		destination += racerRelative(position, racerForward)  * Mathf.Min(1.0f, next.getDistanceFrom(position) / racerBufferDistance);
+		destination += racerRelative(position, racerForward) * Mathf.Min(1.0f, next.getDistanceFrom(position) / racerBufferDistance);
+
+		destination += wallAvoidance(position, racerTransform);
 
 		return destination;
+	}
+
+	private Vector3 wallAvoidance(Vector3 position, Transform transform) {
+		Vector3 direction = Vector3.zero;
+		Vector3 origin = position + (transform.forward * 1.0f) + Vector3.up * 0.1f;
+		Vector3 wing = TTSUtils.FlattenVector(transform.right).normalized * wallAvoidanceDistance;
+
+			Debug.DrawRay(origin, wing);
+			Debug.DrawRay(origin, -wing);
+
+		if (Physics.Linecast(origin, origin + wing, TTSUtils.ExceptLayerMask(10))) {
+			direction += -wing * wallAvoidanceStrength;
+		}
+		if (Physics.Linecast(origin, origin - wing, TTSUtils.ExceptLayerMask(10))) {
+			direction += wing * wallAvoidanceStrength;
+		}
+
+		if (direction == Vector3.zero) {
+			origin -= Vector3.up * 1.0f;
+			wing = TTSUtils.FlattenVector(transform.right).normalized * 1.25f;
+
+			Debug.DrawRay(origin, wing);
+			Debug.DrawRay(origin, -wing);
+
+			if (Physics.Linecast(origin, origin + wing, TTSUtils.ExceptLayerMask(10))) {
+				direction += -wing * wallAvoidanceStrength;
+			}
+			if (Physics.Linecast(origin, origin - wing, TTSUtils.ExceptLayerMask(10))) {
+				direction += wing * wallAvoidanceStrength;
+			}
+		}
+
+		return direction;
 	}
 
 	private Vector3 racerRelative(Vector3 position, Vector3 racerForward) {
@@ -138,7 +177,7 @@ public class TTSAIController : TTSBehaviour
 
 		Vector3 point = Vector3.Project(waypointForwardForesight(foresight, nextWP).normalized, nextWP.colliderLine);
 
-		if(debugMode)
+		if (debugMode)
 			Debug.DrawRay(nextWP.position, point * nextWP.boxWidth / 2);
 
 		if (nextWP.getDistanceFrom(position) > hardTurnDistance)
@@ -231,7 +270,7 @@ public class TTSAIController : TTSBehaviour
 			else if ((dist2 == -1.0f && dist1 != -1.0f) || (dist1 < dist2 && dist1 != -1.0f)) {
 				return destination = detourDestination = rotatedVec1;
 			}
-			else if ((dist1 == -1.0f && dist2 != -1.0f) || (dist2 < dist1  && dist2 != -1.0f)) {
+			else if ((dist1 == -1.0f && dist2 != -1.0f) || (dist2 < dist1 && dist2 != -1.0f)) {
 				return destination = detourDestination = rotatedVec2;
 			}
 		}
