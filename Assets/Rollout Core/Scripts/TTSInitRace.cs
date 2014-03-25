@@ -113,7 +113,7 @@ public class TTSInitRace : MonoBehaviour
 	public GameObject InstantiateRacer() {
 		return InstantiateRacer(-1, -1);
 	}
-
+	int playerIDCounter = 1;
 	public GameObject InstantiateRacer(TTSRacer.RacerConfig config) {
 		// Make sure that the rig type isn't out of range
 		config.RigType = (Rigs.Count > config.RigType) ? config.RigType : 0;
@@ -142,7 +142,8 @@ public class TTSInitRace : MonoBehaviour
 		racer.GetComponent<TTSRacer>().rigID = config.RigType;
 
 		//sets an id for each racer
-		racer.GetComponent<TTSRacer>().playerNum = humanPlayerCounter;
+		racer.GetComponent<TTSRacer>().playerNum = playerIDCounter;
+		playerIDCounter++;
 
 		//instantiates minimap icon
 		GameObject iconSmall = (GameObject)Instantiate(playericonSmall);

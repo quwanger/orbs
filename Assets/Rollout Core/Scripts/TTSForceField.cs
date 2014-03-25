@@ -14,9 +14,6 @@ public class TTSForceField : TTSBehaviour {
 	void OnTriggerEnter(Collider collider) {
 			if(collider.gameObject.tag == "Player") {
 			
-				//remove the forces from the racer
-				//collider.gameObject.GetComponent<TTSRacer>().StopRacer();
-			
 				//this is a hack so that the 'wrong way' doesnt appear when respawning
 				collider.gameObject.GetComponent<TTSRacer>().goingWrongWay = true;
 			
@@ -32,10 +29,6 @@ public class TTSForceField : TTSBehaviour {
 				collider.gameObject.GetComponent<TTSRacer>().respawnRotation = collider.gameObject.GetComponent<TTSRacer>().currentWaypoint.transform.rotation;
 			
 				collider.gameObject.GetComponent<TTSRacer>().DelayedRespawn();
-			
-				//collider.gameObject.GetComponent<TTSRacer>().StopRacer();
-				//collider.gameObject.transform.position = newPosition;
-				//collider.gameObject.transform.rotation = collider.gameObject.GetComponent<TTSRacer>().currentWaypoint.transform.rotation;
 			}
 	}
 }

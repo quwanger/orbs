@@ -35,7 +35,7 @@ public class TTSRacerSpeedBoost : TTSPerishingBehaviour {
 		isPlatform = false;
 		go = (GameObject) Instantiate(booster);
 		go.transform.parent = this.gameObject.transform;
-		go.transform.position = this.gameObject.GetComponent<TTSRacer>().displayMeshComponent.position;
+		go.transform.position = this.gameObject.GetComponent<TTSPowerup>().GetFrontPP().position;
 		
 		foreach(Transform child in go.transform){
 			if(child.gameObject.GetComponent<TrailRenderer>()){
@@ -49,7 +49,7 @@ public class TTSRacerSpeedBoost : TTSPerishingBehaviour {
 		_power = power;
 		go = (GameObject) Instantiate(booster);
 		go.transform.parent = transform;
-		go.transform.position = GetComponent<TTSRacer>().displayMeshComponent.position;
+		go.transform.position = this.gameObject.GetComponent<TTSPowerup>().GetFrontPP().position;
 		
 		foreach(Transform child in go.transform){
 			if(child.gameObject.GetComponent<TrailRenderer>()){
