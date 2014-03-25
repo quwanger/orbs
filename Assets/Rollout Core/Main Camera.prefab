@@ -88,7 +88,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: .699999988
-  far clip plane: 2000
+  far clip plane: 14000
   field of view: 72.9000015
   orthographic: 0
   orthographic size: 100
@@ -117,7 +117,7 @@ AudioListener:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100002}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!82 &8200000
 AudioSource:
   m_ObjectHideFlags: 1
@@ -187,7 +187,7 @@ AudioSource:
   m_Volume: 1
   m_Pitch: 1
   Loop: 1
-  Mute: 0
+  Mute: 1
   Priority: 255
   DopplerLevel: 0
   MinDistance: 1
