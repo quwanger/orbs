@@ -461,6 +461,17 @@ public class TTSPowerup : TTSBehaviour
 		return t;
 	}
 
+	public Transform GetSpecificBackPP(int gunNumber){
+		
+		Transform t;
+
+		if(ppBack.Count<2)
+			t = ppBack[0];
+		else
+			t = ppBack[gunNumber];
+		return t;
+	}
+
 	public GameObject DropDrezzStone(bool owner, TTSPowerupNetHandler handle) {
 		//GameObject go = (GameObject)Instantiate(DrezzStonePrefab, GetBackPP().position - GetComponent<TTSRacer>().displayMeshComponent.forward * 2.0f, this.gameObject.transform.rotation);
 		GameObject go = (GameObject)Instantiate(DrezzStonePrefab, GetBackPP().position, this.gameObject.transform.rotation);

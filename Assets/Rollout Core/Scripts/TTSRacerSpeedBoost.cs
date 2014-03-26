@@ -29,17 +29,28 @@ public class TTSRacerSpeedBoost : TTSPerishingBehaviour {
 		}else{
 			this.rigidbody.AddForce(GetComponent<TTSRacer>().displayMeshComponent.forward * Mathf.Lerp(TargetForce, 0.0f, progress));
 		}
+
+		int counter = 0;
+
+		foreach(TrailRenderer tr in trailRenderers){
+			tr.gameObject.transform.position = this.gameObject.GetComponent<TTSPowerup>().GetSpecificBackPP(counter).position;
+			counter++;
+		}
 	}
 	
 	public void FireBoost(GameObject booster){
 		isPlatform = false;
 		go = (GameObject) Instantiate(booster);
 		go.transform.parent = this.gameObject.transform;
-		go.transform.position = this.gameObject.GetComponent<TTSPowerup>().GetFrontPP().position;
+		go.transform.position = this.gameObject.transform.position;
 		
+		int counter = 0;
+
 		foreach(Transform child in go.transform){
 			if(child.gameObject.GetComponent<TrailRenderer>()){
 				trailRenderers.Add(child.gameObject.GetComponent<TrailRenderer>());
+				child.gameObject.transform.position = this.gameObject.GetComponent<TTSPowerup>().GetSpecificBackPP(counter).position;
+				counter++;
 			}
 		}
 	}
@@ -49,11 +60,15 @@ public class TTSRacerSpeedBoost : TTSPerishingBehaviour {
 		_power = power;
 		go = (GameObject) Instantiate(booster);
 		go.transform.parent = transform;
-		go.transform.position = this.gameObject.GetComponent<TTSPowerup>().GetFrontPP().position;
+		go.transform.position = this.gameObject.transform.position;
 		
+		int counter = 0;
+
 		foreach(Transform child in go.transform){
 			if(child.gameObject.GetComponent<TrailRenderer>()){
 				trailRenderers.Add(child.gameObject.GetComponent<TrailRenderer>());
+				child.gameObject.transform.position = this.gameObject.GetComponent<TTSPowerup>().GetSpecificBackPP(counter).position;
+				counter++;
 			}
 		}
 	}
