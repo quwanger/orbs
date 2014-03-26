@@ -422,6 +422,7 @@ public class TTSPowerup : TTSBehaviour
 		if (tier == 3.0f) {
 			boost.duration = 3.0f * this.GetComponent<TTSRacer>().Offense;
 			boost.TargetForce = 100.0f * this.GetComponent<TTSRacer>().Offense;
+			boost.isTier3 = true;
 			if (owner) vfx.BoostEffect(1.0f);
 		}
 

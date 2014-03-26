@@ -9,6 +9,10 @@ public class TTSRacerSpeedBoost : TTSPerishingBehaviour {
 	private List<TrailRenderer> trailRenderers = new List<TrailRenderer>();
 	private bool isPlatform;
 	private float _power;
+
+	//tier 3 boost
+	public bool isTier3 = false;
+	public float homingRadius = 25.0F;
 	
 	void Awake(){
 		destroyWhenLifecycleComplete = false; // Once duration has passed, the class will stop running and self-destruct
@@ -35,6 +39,18 @@ public class TTSRacerSpeedBoost : TTSPerishingBehaviour {
 		foreach(TrailRenderer tr in trailRenderers){
 			tr.gameObject.transform.position = this.gameObject.GetComponent<TTSPowerup>().GetSpecificBackPP(counter).position;
 			counter++;
+		}
+
+		if(isTier3){
+			//handle tier 3 shizzzzz
+			Collider[] colliders = Physics.OverlapSphere(this.transform.position, homingRadius);
+		    foreach (Collider hit in colliders) {
+		        if (hit.GetComponent<TTSRacer>() && hit.gameObject != this.gameObject){
+		        	//push racer
+		        	Vector3 directionVector = (hit.gameObject.transform.position - this.gameObject.transform.position).normalized;
+		        	hit.gameObject.rigidbody.AddForce(directionVector * 5.0f);
+				}
+		    }
 		}
 	}
 	
