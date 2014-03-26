@@ -13,6 +13,7 @@ public class TTSRacerSpeedBoost : TTSPerishingBehaviour {
 	//tier 3 boost
 	public bool isTier3 = false;
 	public float homingRadius = 25.0F;
+	public float tier3Strength = 500.0f;
 	
 	void Awake(){
 		destroyWhenLifecycleComplete = false; // Once duration has passed, the class will stop running and self-destruct
@@ -48,7 +49,7 @@ public class TTSRacerSpeedBoost : TTSPerishingBehaviour {
 		        if (hit.GetComponent<TTSRacer>() && hit.gameObject != this.gameObject){
 		        	//push racer
 		        	Vector3 directionVector = (hit.gameObject.transform.position - this.gameObject.transform.position).normalized;
-		        	hit.gameObject.rigidbody.AddForce(directionVector * 5.0f);
+		        	hit.gameObject.rigidbody.AddForce(directionVector * tier3Strength);
 				}
 		    }
 		}
