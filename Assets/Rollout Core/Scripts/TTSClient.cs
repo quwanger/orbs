@@ -220,6 +220,11 @@ public class TTSClient : MonoBehaviour
 					break;
 				#endregion
 
+				case TTSCommandTypes.GiveControl:
+					id = packet.ReadFloat();
+					netHandles[id].SetAsOwner();
+					break;
+
 				#region racers and powerups
 				case TTSCommandTypes.RacerRegister:
 					TTSRacer.RacerConfig config = new TTSRacer.RacerConfig();
@@ -302,7 +307,7 @@ public class TTSClient : MonoBehaviour
 		}
 		else { // If the object must be controlled, generate a new non-zero key
 			while (netHandles.ContainsKey(handler.id) || handler.id == 0.0f && handler.owner) {
-				handler.id = UnityEngine.Random.value * 100;
+				handler.id = UnityEngine.Random.value * 100f + 1000f;
 			}
 		}
 		if(DebugMode)
@@ -412,6 +417,7 @@ public static class TTSCommandTypes
 	public const int ObjectRegisterOK        = 1011;
 	public const int ObjectAlreadyRegistered = 1091;
 	public const int ObjectIsNotRegistered   = 1092;
+	public const int GiveControl			 = 1111;
 
 	// Racer
 	public const int RacerUpdate            = 2004;
@@ -463,6 +469,12 @@ public abstract class TTSNetworkHandle
 
 	public TTSNetworkHandle() {
 		// Register yourself to the client from here.
+	}
+
+	public void SetAsOwner() {
+		if (canForfeitControl) {
+			owner = true;
+		}
 	}
 
 	// You must override this method. Command and ID will already be read
