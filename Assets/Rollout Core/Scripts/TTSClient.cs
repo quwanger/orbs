@@ -20,7 +20,7 @@ public class TTSClient : MonoBehaviour
 	#region Network
 	private IPAddress serverAddr;
 	private IPEndPoint endPoint;
-	private Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+	private Socket sock;
 	private UdpClient client;
 	private Thread receiveThread;
 	private bool isRunning = true;
@@ -57,13 +57,14 @@ public class TTSClient : MonoBehaviour
 
 	// Use this for initialization
 	void Start() {
+		sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+		serverAddr = IPAddress.Parse(SERVER_IP);
+		endPoint = new IPEndPoint(serverAddr, SERVER_RECEIVE_PORT);
+
 		level = GetComponent<TTSLevel>();
 		initRace = GetComponent<TTSInitRace>();
 
 		if (!isMultiplayer && !isLobby) return;
-
-		serverAddr = IPAddress.Parse(SERVER_IP);
-		endPoint = new IPEndPoint(serverAddr, SERVER_RECEIVE_PORT);
 
 		client = new UdpClient(CLIENT_RECEIVE_PORT);
 		client.Client.ReceiveTimeout = 15000;
@@ -77,10 +78,11 @@ public class TTSClient : MonoBehaviour
 
 	private void InitConnection() {
 		ConnectToLobby(1);
-		RequestLobbyInfo();
 	}
 
-	public void RequestLobbyInfo() {
+	TTSServerMenu serverMenu;
+	public void RequestLobbyInfo(TTSServerMenu menu) {
+		serverMenu = menu;
 		TTSPacketWriter packet = new TTSPacketWriter();
 		packet.AddData(TTSCommandTypes.RequestAllLobbies);
 		SendPacket(packet);
@@ -88,20 +90,18 @@ public class TTSClient : MonoBehaviour
 
 	public void ReceiveLobbyInfo(TTSPacketReader reader) {
 		int numLobbies = reader.ReadInt32();
-		Debug.Log(numLobbies + " Lobbies. " + reader.Data.Length);
-
-		List<TTSLobby> lobbies = new List<TTSLobby>();
 
 		for (int i = 0; i < numLobbies; i++) {
-			int lobbyID = reader.ReadInt32();
-			string lobbyName = reader.Read16CharString();
-			int numRacers = reader.ReadInt32();
-			int maxRacers = reader.ReadInt32();
-			bool inGame = reader.ReadBool();
-			bool botsEnabled = reader.ReadBool();
-			int levelID = reader.ReadInt32();
+			LobbyData lobby = new LobbyData();
+			lobby.ID = reader.ReadInt32();
+			lobby.Name = reader.Read16CharString();
+			lobby.NumRacers = reader.ReadInt32();
+			lobby.MaxNumRacers = reader.ReadInt32();
+			lobby.InProgress = reader.ReadBool();
+			lobby.BotsEnabled = reader.ReadBool();
+			lobby.Level = reader.ReadInt32();
 
-			lobbies.Add(new TTSLobby(lobbyID, lobbyName, numRacers, maxRacers, inGame, botsEnabled, levelID));
+			serverMenu.ReceiveLobby(lobby);
 		}
 	}
 
@@ -339,7 +339,7 @@ public class TTSClient : MonoBehaviour
 	}
 }
 
-public class TTSLobby
+public class TempTTSLobby
 {
 	public TTSLevel.LevelType Level;
 
@@ -358,7 +358,7 @@ public class TTSLobby
 		}
 	}
 
-	public TTSLobby(int id, string name, int numRacers, int maxRacers, bool inProgress, bool botsEnabled, int levelID) {
+	public TempTTSLobby(int id, string name, int numRacers, int maxRacers, bool inProgress, bool botsEnabled, int levelID) {
 		ID = id;
 		Name = name;
 		NumRacers = numRacers;

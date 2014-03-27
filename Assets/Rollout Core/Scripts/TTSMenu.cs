@@ -567,7 +567,7 @@ public class TTSMenu : TTSBehaviour {
 					movePanel();
 				}
 				
-				else if(activePanel == 4 || activePanel == 5 || activePanel == 6 && !isTweening){
+				else if((activePanel == 4 || activePanel == 5 || activePanel == 6) && !isTweening){
 					activePanel++;
 					if(activePanel == 5){
 						if(!isTweening){
