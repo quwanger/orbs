@@ -2,44 +2,58 @@ using UnityEngine;
 using System.Collections.Generic;
 
 public class TTSLobbyMenu : TTSBehaviour {
+	public TTSClient client;
+	public bool networkUpdated = true;
+	private int lobbyID = -1;
+
 	public string levelTitle = "Level";
 	public string[] playerNames = new string[6];
 
-	public GUIText level;
-	public GUIText playerCount;
-	public GUIText[] players = new GUIText[6];
+	public GUIText levelText;
+	public GUIText playerCountText;
+	public GUIText[] playerTexts = new GUIText[6];
 
 	public string nullPlayerText = "Waiting for player";
 
 	// Use this for initialization
 	void Start () {
+		client = level.client;
+
 		//playerNames[0] = "sunmock";
 		OnPlayerUpdate();
 		OnLevelUpdate();
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update() {
+		if (!networkUpdated)
+			return;
 
+		OnPlayerUpdate();
+		OnLevelUpdate();
+	}
+
+	public void OnJoin(TTSLobby lobby) {
+		lobbyID = lobby.ID;
 	}
 
 	public void OnLevelUpdate() {
-		level.text = levelTitle;
+		levelText.text = levelTitle;
 	}
 
 	public void OnPlayerUpdate() {
 		int guiIndex = 0;
 		foreach (string value in playerNames) {
 			if(value != ""){
-				players[guiIndex].text = value;
+				playerTexts[guiIndex].text = value;
 				guiIndex++;
 			}
 		}
 
-		playerCount.text = guiIndex + "/" + players.Length;
+		playerCountText.text = guiIndex + "/" + playerTexts.Length;
 
-		for (int i = guiIndex; i < players.Length; i++) {
-			players[i].text = nullPlayerText;
+		for (int i = guiIndex; i < playerTexts.Length; i++) {
+			playerTexts[i].text = nullPlayerText;
 		}
 	}
 

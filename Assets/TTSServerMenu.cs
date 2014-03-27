@@ -23,7 +23,6 @@ public class TTSServerMenu : TTSBehaviour {
 		SetPositions();
 
 		if ((Time.time - lastUpdate) > RequestInterval) {
-			Debug.Log("Request");
 			client.RequestLobbyInfo(this);
 			lastUpdate = Time.time;
 		}
@@ -92,7 +91,6 @@ public class TTSServerMenu : TTSBehaviour {
 					newLobbies.Add(lobby);
 				}
 				else {
-					Debug.Log(lobby.Level);
 					existingLobby.Name = lobby.Name;
 					existingLobby.NumRacers = lobby.NumRacers;
 					existingLobby.MaxNumRacers = lobby.MaxNumRacers;
