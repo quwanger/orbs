@@ -104,6 +104,7 @@ public class TTSHelixProjectile : TTSBehaviour
 
 	void OnTriggerEnter(Collider other) {
 		//only collide with racer
+
 		if(other.gameObject.GetComponent<TTSRacer>()){
 
 			if(other.gameObject.GetComponent<TTSRacer>().hasShield){
@@ -115,6 +116,7 @@ public class TTSHelixProjectile : TTSBehaviour
 				}
 			}else{
 				other.gameObject.GetComponent<TTSRacer>().DamageRacer(offensiveMultiplier * 0.7f);
+				//Debug.Log("Racer " + other.gameObject.GetComponent<TTSRacer>().playerNum + " has been damaged by " + (offensiveMultiplier * 0.7f));
 				Explode(true);
 			}
 		}

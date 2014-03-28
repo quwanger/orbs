@@ -11,11 +11,11 @@ public class TTSBehaviour : MonoBehaviour {
 	
 	//used for changing the stats of the racers based on their rig selection and perk selection
 	[HideInInspector]
-	public float accelerationIncrease = 1000.0f;
+	public float accelerationIncrease = 1500.0f;
 	[HideInInspector]
-	public float speedIncrease = 50.0f;
+	public float speedIncrease = 75.0f;
 	[HideInInspector]
-	public float handlingIncrease = 1500.0f;
+	public float handlingIncrease = 2000.0f;
 	[HideInInspector]
 	public float offenseIncrease = 0.3f;
 	[HideInInspector]

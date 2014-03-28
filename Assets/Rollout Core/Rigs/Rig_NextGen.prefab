@@ -19,6 +19,66 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &100002
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 400002}
+  m_Layer: 0
+  m_Name: BackPowerup
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &100004
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 400004}
+  m_Layer: 0
+  m_Name: BackPowerup
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &100006
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 400006}
+  m_Layer: 0
+  m_Name: FrontPowerup
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &100008
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 400008}
+  m_Layer: 0
+  m_Name: FrontPowerup
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!4 &400000
 Transform:
   m_ObjectHideFlags: 1
@@ -26,10 +86,58 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: .135000005, y: .135000005, z: .135000005}
-  m_Children: []
+  m_Children:
+  - {fileID: 400002}
+  - {fileID: 400008}
+  - {fileID: 400006}
+  - {fileID: 400004}
   m_Father: {fileID: 0}
+--- !u!4 &400002
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100002}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4.86331367, y: -4.46062279, z: -10.3257408}
+  m_LocalScale: {x: 7.40740728, y: 7.40740728, z: 7.40740728}
+  m_Children: []
+  m_Father: {fileID: 400000}
+--- !u!4 &400004
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100004}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 4.84974337, y: -4.46061993, z: -10.3257408}
+  m_LocalScale: {x: 7.40740728, y: 7.40740728, z: 7.40740728}
+  m_Children: []
+  m_Father: {fileID: 400000}
+--- !u!4 &400006
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100006}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.23455572, y: 7.37494612, z: 7.78446913}
+  m_LocalScale: {x: 7.40740728, y: 7.40740728, z: 7.40740728}
+  m_Children: []
+  m_Father: {fileID: 400000}
+--- !u!4 &400008
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100008}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -5.28609657, y: 7.37494946, z: 7.78446913}
+  m_LocalScale: {x: 7.40740728, y: 7.40740728, z: 7.40740728}
+  m_Children: []
+  m_Father: {fileID: 400000}
 --- !u!23 &2300000
 Renderer:
   m_ObjectHideFlags: 1
@@ -42,17 +150,17 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: b7881196e25c847cb92d1b79e3aa031c, type: 2}
+  - {fileID: 2100000, guid: 20e7abce610b0410abbecb039084b7fc, type: 2}
   - {fileID: 2100000, guid: 71e72717c85cc4ddba87e6cf7520e614, type: 2}
   - {fileID: 2100000, guid: 77683340d1b9f4d8c88d9c44b3efff19, type: 2}
-  - {fileID: 2100000, guid: 469020c4de53948cfafc1f4775c0d66c, type: 2}
-  - {fileID: 2100000, guid: de798cb693fd64bb6880dfec1ffd9079, type: 2}
-  - {fileID: 2100000, guid: 03780310981ad46d6a8240dfcd593ae7, type: 2}
+  - {fileID: 2100000, guid: 2b635e0a7b1544a2dafb65b6574a75e1, type: 2}
+  - {fileID: 2100000, guid: 6d5c8075379444464ae7001610b545df, type: 2}
+  - {fileID: 2100000, guid: 71e72717c85cc4ddba87e6cf7520e614, type: 2}
   - {fileID: 2100000, guid: 78357e47ae0be4e099442543556715fb, type: 2}
   - {fileID: 2100000, guid: 8067ce72e05ad4aef9ffa12ee7c21328, type: 2}
   - {fileID: 2100000, guid: ccc3dec3c98004c0fa5f6af79da22459, type: 2}
-  - {fileID: 2100000, guid: de4b78aaebb194418a27ce91898a9b68, type: 2}
-  - {fileID: 2100000, guid: bb7a4e79a29454ebe90ac2bb8ad8cb4d, type: 2}
+  - {fileID: 2100000, guid: 0740797c0ac08458e8b20a75e7b0a831, type: 2}
+  - {fileID: 2100000, guid: 8d8360d914cdf4080915ef4a009a1cc2, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -94,6 +202,12 @@ MonoBehaviour:
   rigOffense: 1.10000002
   rigDefense: .899999976
   rigName: Rig_NextGen
+  powerupPositionsFront:
+  - {fileID: 400006}
+  - {fileID: 400008}
+  powerupPositionsBack:
+  - {fileID: 400002}
+  - {fileID: 400004}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

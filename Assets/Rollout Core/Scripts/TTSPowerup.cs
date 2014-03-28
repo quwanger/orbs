@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 #if UNITY_STANDALONE_WIN && !UNITY_EDITOR
 	using XInputDotNetPure;
 #endif
@@ -51,6 +52,10 @@ public class TTSPowerup : TTSBehaviour
 	public int numberOfHelixCannonsAvailable = 0;
 	#endregion
 
+	// Powerup Launch Positions
+	public List<Transform> ppFront;
+	public List<Transform> ppBack;
+
 	//XInput
 	#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
 		GamePadState state;
@@ -59,6 +64,11 @@ public class TTSPowerup : TTSBehaviour
 	
 	void Awake() {
 		pp2 = this.GetComponent<TTSPerkManager>().equiptPerkPool2;
+	}
+
+	void Start() {
+		ppFront = this.GetComponent<TTSRacer>().CurrentRig.powerupPositionsFront;
+		ppBack = this.GetComponent<TTSRacer>().CurrentRig.powerupPositionsBack;
 	}
 
 	#region monobehaviour methods
@@ -412,6 +422,7 @@ public class TTSPowerup : TTSBehaviour
 		if (tier == 3.0f) {
 			boost.duration = 3.0f * this.GetComponent<TTSRacer>().Offense;
 			boost.TargetForce = 100.0f * this.GetComponent<TTSRacer>().Offense;
+			boost.isTier3 = true;
 			if (owner) vfx.BoostEffect(1.0f);
 		}
 
@@ -441,8 +452,30 @@ public class TTSPowerup : TTSBehaviour
 		return DropDrezzStone(owner, null);
 	}
 
+	public Transform GetFrontPP(){
+		Transform t = ppFront[Random.Range(0, ppFront.Count)];
+		return t;
+	}
+
+	public Transform GetBackPP(){
+		Transform t = ppBack[Random.Range(0, ppBack.Count)];
+		return t;
+	}
+
+	public Transform GetSpecificBackPP(int gunNumber){
+		
+		Transform t;
+
+		if(ppBack.Count<2)
+			t = ppBack[0];
+		else
+			t = ppBack[gunNumber];
+		return t;
+	}
+
 	public GameObject DropDrezzStone(bool owner, TTSPowerupNetHandler handle) {
-		GameObject go = (GameObject)Instantiate(DrezzStonePrefab, this.gameObject.transform.position - GetComponent<TTSRacer>().displayMeshComponent.forward * 2.0f, this.gameObject.transform.rotation);
+		//GameObject go = (GameObject)Instantiate(DrezzStonePrefab, GetBackPP().position - GetComponent<TTSRacer>().displayMeshComponent.forward * 2.0f, this.gameObject.transform.rotation);
+		GameObject go = (GameObject)Instantiate(DrezzStonePrefab, GetBackPP().position, this.gameObject.transform.rotation);
 		go.GetComponent<TTSDrezzStone>().offensiveMultiplier = this.gameObject.GetComponent<TTSRacer>().Offense;
 		go.rigidbody.AddForce(Random.insideUnitCircle * 50f);
 
@@ -464,11 +497,11 @@ public class TTSPowerup : TTSBehaviour
 
 		if(CheckForwardAnalog()){
 			//shoot forward
-			go.transform.position = transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
+			go.transform.position = GetFrontPP().position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
 			go.rigidbody.velocity = this.rigidbody.velocity.normalized * Random.Range(rigidbody.velocity.magnitude + 50.0f, rigidbody.velocity.magnitude + 150.0f);
 		}else{
 			//shoot backwards
-			go.transform.position = transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * -3.5f;
+			go.transform.position = GetBackPP().position + GetComponent<TTSRacer>().displayMeshComponent.forward * -3.5f;
 			go.rigidbody.velocity = this.rigidbody.velocity.normalized * Random.Range(rigidbody.velocity.magnitude + 50.0f, rigidbody.velocity.magnitude + 150.0f) * -1.0f;
 		}
 
@@ -501,7 +534,7 @@ public class TTSPowerup : TTSBehaviour
 		helix.racersInFront = (racer.place - 1);
 
 		go.transform.rotation = racer.displayMeshComponent.transform.rotation;
-		go.transform.position = transform.position + racer.displayMeshComponent.forward * 3.5f;
+		go.transform.position = GetFrontPP().position + racer.displayMeshComponent.forward * 3.5f;
 		go.rigidbody.velocity = racer.rigidbody.velocity + (racer.rigidbody.velocity.normalized * 50.0f);
 
 		if (owner) { SendPowerupDeploy(TTSPowerupNetworkTypes.Helix, go); }
@@ -523,7 +556,7 @@ public class TTSPowerup : TTSBehaviour
 		helix.racersInFront = (racer.place - 1);
 
 		go.transform.rotation = racer.displayMeshComponent.transform.rotation;
-		go.transform.position = transform.position + racer.displayMeshComponent.forward * 3.5f;
+		go.transform.position = GetFrontPP().position + racer.displayMeshComponent.forward * 3.5f;
 		go.rigidbody.velocity = racer.rigidbody.velocity + (racer.rigidbody.velocity.normalized * 50.0f);
 
 		if (owner) { SendPowerupDeploy(TTSPowerupNetworkTypes.Helix, go); }
@@ -575,7 +608,7 @@ public class TTSPowerup : TTSBehaviour
 	}
 
 	public GameObject DeployLeech(bool owner, TTSPowerupNetHandler handle) {
-		GameObject go = (GameObject)Instantiate(LeechPrefab, this.gameObject.transform.position, Quaternion.identity);
+		GameObject go = (GameObject)Instantiate(LeechPrefab, GetFrontPP().position, Quaternion.identity);
 		go.GetComponent<TTSLeech>().currentRacer = this.gameObject;
 		go.GetComponent<TTSLeech>().leechesInPack = ammo;
 		go.GetComponent<TTSLeech>().racersAheadOfLeechOwner = this.gameObject.GetComponent<TTSRacer>().place - 1;

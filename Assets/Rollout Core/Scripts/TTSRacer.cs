@@ -83,9 +83,9 @@ public class TTSRacer : TTSBehaviour
 	#endregion
 
 	#region gameplay vars
-	public float TopSpeedInit = 150.0f;
-	public float AccelerationInit = 6000.0f;
-	public float HandlingInit = 9000.0f;
+	public float TopSpeedInit = 100.0f;
+	public float AccelerationInit = 5000.0f;
+	public float HandlingInit = 8000.0f;
 	public float TopSpeed;
 	public float Acceleration;
 	public float Handling;
@@ -101,7 +101,7 @@ public class TTSRacer : TTSBehaviour
 	public float previousDistanceToFinish;
 	public int place;
 	
-	public float respawnTime = 2.0f;
+	public float respawnTime = 1.0f;
 	public Vector3 respawnPoint;
 	public Quaternion respawnRotation;
 	

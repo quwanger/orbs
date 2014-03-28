@@ -1,5 +1,5 @@
 using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class TTSRig : MonoBehaviour {
 
@@ -14,6 +14,9 @@ public class TTSRig : MonoBehaviour {
 	public float rigDefense = 1.0f;
 	
 	public string rigName;
+
+	public List<Transform> powerupPositionsFront = new List<Transform>();
+	public List<Transform> powerupPositionsBack = new List<Transform>();
 	
 	void Update () {
 		
