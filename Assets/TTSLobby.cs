@@ -7,7 +7,7 @@ public class TTSLobby : MonoBehaviour
 	public GUIText levelText;
 	public GUIText playersText;
 	public GUIText roomText;
-
+	
 	public bool networkUpdated = true;
 
 	public TTSLevel.LevelType Level = TTSLevel.LevelType.backroad;
@@ -49,12 +49,17 @@ public class TTSLobby : MonoBehaviour
 	}
 
 	public void SetPosition(int index) {
-		int verticalOffset = ((InProgress)? -55 : 154) - index * 20;
+		int verticalOffset = ((InProgress)? -55 : 154) - index * 25;
+		Debug.Log(verticalOffset);
 
 		botsText.pixelOffset = new Vector2(botsText.pixelOffset.x, verticalOffset);
 		levelText.pixelOffset = new Vector2(levelText.pixelOffset.x, verticalOffset);
 		playersText.pixelOffset = new Vector2(playersText.pixelOffset.x, verticalOffset);
 		roomText.pixelOffset = new Vector2(roomText.pixelOffset.x, verticalOffset);
+	}
+	
+	public Rect GetPosition(){
+		return new Rect(-539, botsText.pixelOffset.y-20, 1087, 20);
 	}
 
 	public void SetLevel(int levelID) {

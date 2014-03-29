@@ -1715,10 +1715,6 @@ Prefab:
       value: 
       objectReference: {fileID: 100008, guid: edfd818c65e951642b84833e9897a7a6, type: 2}
     - target: {fileID: 11400010, guid: 66b1082218c3fc643bf095d7cf975069, type: 2}
-      propertyPath: SERVER_IP
-      value: 10.64.110.127
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400010, guid: 66b1082218c3fc643bf095d7cf975069, type: 2}
       propertyPath: DebugMode
       value: 0
       objectReference: {fileID: 0}
@@ -2922,10 +2918,10 @@ GUITexture:
   m_Color: {r: .5, g: .5, b: .5, a: .5}
   m_PixelInset:
     serializedVersion: 2
-    x: 198
+    x: 18.2999992
     y: -64
-    width: 334
-    height: 130
+    width: 515
+    height: 134
   m_LeftBorder: 0
   m_RightBorder: 0
   m_TopBorder: 0
@@ -3026,71 +3022,6 @@ Transform:
   - {fileID: 549814980}
   - {fileID: 150256349}
   m_Father: {fileID: 960781420}
---- !u!1 &265523043
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 265523044}
-  - 131: {fileID: 265523046}
-  - 114: {fileID: 265523045}
-  m_Layer: 24
-  m_Name: tbd1-on
-  m_TagString: LevelMenuItem
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &265523044
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 265523043}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 10}
-  m_LocalScale: {x: 0, y: 0, z: 0}
-  m_Children: []
-  m_Father: {fileID: 2120145847}
---- !u!114 &265523045
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 265523043}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 302f758d77a237f4c9b8b9110f9b4929, type: 3}
-  m_Name: 
-  accelerationIncrease: 500
-  speedIncrease: 25
-  handlingIncrease: 750
-  offenseIncrease: .300000012
-  defenseIncrease: .300000012
-  isSelected: 0
-  level: 4
-  index: 31
---- !u!131 &265523046
-GUITexture:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 265523043}
-  m_Enabled: 1
-  m_Texture: {fileID: 2800000, guid: 3607e91cb58091a4f90cd4e4f22a0d36, type: 3}
-  m_Color: {r: .5, g: .5, b: .5, a: .5}
-  m_PixelInset:
-    serializedVersion: 2
-    x: -164
-    y: -211
-    width: 334
-    height: 130
-  m_LeftBorder: 0
-  m_RightBorder: 0
-  m_TopBorder: 0
-  m_BottomBorder: 0
 --- !u!1 &265914830
 GameObject:
   m_ObjectHideFlags: 0
@@ -3436,7 +3367,7 @@ GameObject:
   - 132: {fileID: 300649135}
   - 114: {fileID: 300649134}
   m_Layer: 24
-  m_Name: tbd2-text
+  m_Name: Vindicae-text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3471,7 +3402,7 @@ GUIText:
   m_GameObject: {fileID: 300649132}
   m_Enabled: 1
   serializedVersion: 3
-  m_Text: Night Fright
+  m_Text: Vindicae
   m_Anchor: 0
   m_Alignment: 0
   m_PixelOffset: {x: 2536, y: 206}
@@ -6138,10 +6069,10 @@ GUITexture:
   m_Color: {r: .5, g: .5, b: .5, a: .5}
   m_PixelInset:
     serializedVersion: 2
-    x: 1080
-    y: 20
-    width: 540
-    height: 0
+    x: -539
+    y: 10
+    width: 1087
+    height: 20
   m_LeftBorder: 0
   m_RightBorder: 0
   m_TopBorder: 0
@@ -10459,7 +10390,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &870670224
 Transform:
   m_ObjectHideFlags: 0
@@ -10695,7 +10626,6 @@ Transform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 2078301742}
-  - {fileID: 1454296276}
   - {fileID: 1725137964}
   m_Father: {fileID: 1249927302}
 --- !u!1 &920459299
@@ -11758,6 +11688,52 @@ GUITexture:
   m_RightBorder: 0
   m_TopBorder: 0
   m_BottomBorder: 0
+--- !u!1 &995774589
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 995774591}
+  - 131: {fileID: 995774590}
+  m_Layer: 24
+  m_Name: Vindicae-icon
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!131 &995774590
+GUITexture:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 995774589}
+  m_Enabled: 1
+  m_Texture: {fileID: 2800000, guid: 6e5846d5ef9f7c046a4589919a70be60, type: 3}
+  m_Color: {r: .5, g: .5, b: .5, a: .5}
+  m_PixelInset:
+    serializedVersion: 2
+    x: 18.6000004
+    y: -210.300003
+    width: 515
+    height: 134
+  m_LeftBorder: 0
+  m_RightBorder: 0
+  m_TopBorder: 0
+  m_BottomBorder: 0
+--- !u!4 &995774591
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 995774589}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1819635429}
 --- !u!1 &1000608210
 GameObject:
   m_ObjectHideFlags: 0
@@ -12965,10 +12941,10 @@ GUITexture:
   m_Color: {r: .5, g: .5, b: .5, a: .5}
   m_PixelInset:
     serializedVersion: 2
-    x: -164
+    x: -517.700012
     y: 83
-    width: 334
-    height: 130
+    width: 515
+    height: 134
   m_LeftBorder: 0
   m_RightBorder: 0
   m_TopBorder: 0
@@ -14570,10 +14546,10 @@ GUITexture:
   m_Color: {r: .5, g: .5, b: .5, a: .5}
   m_PixelInset:
     serializedVersion: 2
-    x: 198
+    x: 17
     y: 83
-    width: 334
-    height: 130
+    width: 515
+    height: 134
   m_LeftBorder: 0
   m_RightBorder: 0
   m_TopBorder: 0
@@ -15077,71 +15053,6 @@ GUIText:
   m_FontStyle: 0
   m_PixelCorrect: 1
   m_RichText: 1
---- !u!1 &1289010409
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 1289010410}
-  - 131: {fileID: 1289010412}
-  - 114: {fileID: 1289010411}
-  m_Layer: 24
-  m_Name: Blitz-on
-  m_TagString: LevelMenuItem
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1289010410
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1289010409}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 10}
-  m_LocalScale: {x: 0, y: 0, z: 0}
-  m_Children: []
-  m_Father: {fileID: 1831536792}
---- !u!114 &1289010411
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1289010409}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 302f758d77a237f4c9b8b9110f9b4929, type: 3}
-  m_Name: 
-  accelerationIncrease: 500
-  speedIncrease: 25
-  handlingIncrease: 750
-  offenseIncrease: .300000012
-  defenseIncrease: .300000012
-  isSelected: 0
-  level: 0
-  index: 11
---- !u!131 &1289010412
-GUITexture:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1289010409}
-  m_Enabled: 1
-  m_Texture: {fileID: 2800000, guid: 3607e91cb58091a4f90cd4e4f22a0d36, type: 3}
-  m_Color: {r: .5, g: .5, b: .5, a: .5}
-  m_PixelInset:
-    serializedVersion: 2
-    x: -164
-    y: 83
-    width: 334
-    height: 130
-  m_LeftBorder: 0
-  m_RightBorder: 0
-  m_TopBorder: 0
-  m_BottomBorder: 0
 --- !u!1 &1290947283
 GameObject:
   m_ObjectHideFlags: 0
@@ -15822,6 +15733,52 @@ Transform:
   - {fileID: 277856469}
   - {fileID: 171767862}
   m_Father: {fileID: 228297208}
+--- !u!1 &1343747098
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1343747099}
+  - 131: {fileID: 1343747100}
+  m_Layer: 24
+  m_Name: Digital-Palace-icon
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1343747099
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1343747098}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 2120145847}
+--- !u!131 &1343747100
+GUITexture:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1343747098}
+  m_Enabled: 1
+  m_Texture: {fileID: 2800000, guid: 0b1640405bc111442816a2e50917489a, type: 3}
+  m_Color: {r: .5, g: .5, b: .5, a: .5}
+  m_PixelInset:
+    serializedVersion: 2
+    x: -516.299988
+    y: -210.699997
+    width: 515
+    height: 134
+  m_LeftBorder: 0
+  m_RightBorder: 0
+  m_TopBorder: 0
+  m_BottomBorder: 0
 --- !u!1 &1346329295
 GameObject:
   m_ObjectHideFlags: 0
@@ -16255,7 +16212,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc0ba0762728f5e4f89f9f54328eab63, type: 3}
   m_Name: 
   DebugMode: 0
-  SERVER_IP: 10.64.110.127
+  SERVER_IP: 127.0.0.1
   SERVER_RECEIVE_PORT: 6666
   CLIENT_RECEIVE_PORT: 6969
   CLIENT_RECEIVE_TIMEOUT: 15000
@@ -16650,136 +16607,6 @@ GUIText:
   m_FontStyle: 0
   m_PixelCorrect: 1
   m_RichText: 1
---- !u!1 &1392720758
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 1392720759}
-  - 131: {fileID: 1392720761}
-  - 114: {fileID: 1392720760}
-  m_Layer: 24
-  m_Name: Downtown-on
-  m_TagString: LevelMenuItem
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1392720759
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1392720758}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 10}
-  m_LocalScale: {x: 0, y: 0, z: 0}
-  m_Children: []
-  m_Father: {fileID: 1641679091}
---- !u!114 &1392720760
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1392720758}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 302f758d77a237f4c9b8b9110f9b4929, type: 3}
-  m_Name: 
-  accelerationIncrease: 500
-  speedIncrease: 25
-  handlingIncrease: 750
-  offenseIncrease: .300000012
-  defenseIncrease: .300000012
-  isSelected: 0
-  level: 1
-  index: 12
---- !u!131 &1392720761
-GUITexture:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1392720758}
-  m_Enabled: 1
-  m_Texture: {fileID: 2800000, guid: 3607e91cb58091a4f90cd4e4f22a0d36, type: 3}
-  m_Color: {r: .5, g: .5, b: .5, a: .5}
-  m_PixelInset:
-    serializedVersion: 2
-    x: 198
-    y: 83
-    width: 334
-    height: 130
-  m_LeftBorder: 0
-  m_RightBorder: 0
-  m_TopBorder: 0
-  m_BottomBorder: 0
---- !u!1 &1393117142
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 1393117143}
-  - 131: {fileID: 1393117145}
-  - 114: {fileID: 1393117144}
-  m_Layer: 24
-  m_Name: tbd2-on
-  m_TagString: LevelMenuItem
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1393117143
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1393117142}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 10}
-  m_LocalScale: {x: 0, y: 0, z: 0}
-  m_Children: []
-  m_Father: {fileID: 1819635429}
---- !u!114 &1393117144
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1393117142}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 302f758d77a237f4c9b8b9110f9b4929, type: 3}
-  m_Name: 
-  accelerationIncrease: 500
-  speedIncrease: 25
-  handlingIncrease: 750
-  offenseIncrease: .300000012
-  defenseIncrease: .300000012
-  isSelected: 0
-  level: 5
-  index: 32
---- !u!131 &1393117145
-GUITexture:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1393117142}
-  m_Enabled: 1
-  m_Texture: {fileID: 2800000, guid: 3607e91cb58091a4f90cd4e4f22a0d36, type: 3}
-  m_Color: {r: .5, g: .5, b: .5, a: .5}
-  m_PixelInset:
-    serializedVersion: 2
-    x: 198
-    y: -211
-    width: 334
-    height: 130
-  m_LeftBorder: 0
-  m_RightBorder: 0
-  m_TopBorder: 0
-  m_BottomBorder: 0
 --- !u!1 &1394608146
 GameObject:
   m_ObjectHideFlags: 0
@@ -17522,71 +17349,6 @@ MonoBehaviour:
   offense: 7
   defense: 3
   rigImage: {fileID: 0}
---- !u!1 &1454296275
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 1454296276}
-  - 131: {fileID: 1454296278}
-  - 114: {fileID: 1454296277}
-  m_Layer: 24
-  m_Name: Night-on
-  m_TagString: LevelMenuItem
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1454296276
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1454296275}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 10}
-  m_LocalScale: {x: 0, y: 0, z: 0}
-  m_Children: []
-  m_Father: {fileID: 907220248}
---- !u!114 &1454296277
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1454296275}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 302f758d77a237f4c9b8b9110f9b4929, type: 3}
-  m_Name: 
-  accelerationIncrease: 500
-  speedIncrease: 25
-  handlingIncrease: 750
-  offenseIncrease: .300000012
-  defenseIncrease: .300000012
-  isSelected: 0
-  level: 2
-  index: 21
---- !u!131 &1454296278
-GUITexture:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1454296275}
-  m_Enabled: 1
-  m_Texture: {fileID: 2800000, guid: 3607e91cb58091a4f90cd4e4f22a0d36, type: 3}
-  m_Color: {r: .5, g: .5, b: .5, a: .5}
-  m_PixelInset:
-    serializedVersion: 2
-    x: -164
-    y: -64
-    width: 334
-    height: 130
-  m_LeftBorder: 0
-  m_RightBorder: 0
-  m_TopBorder: 0
-  m_BottomBorder: 0
 --- !u!1 &1459878964
 GameObject:
   m_ObjectHideFlags: 0
@@ -18128,7 +17890,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1527306700
 Transform:
   m_ObjectHideFlags: 0
@@ -19398,7 +19160,7 @@ GameObject:
   - 132: {fileID: 1632347010}
   - 114: {fileID: 1632347009}
   m_Layer: 24
-  m_Name: tbd1-text
+  m_Name: Digital-Palace-text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19433,7 +19195,7 @@ GUIText:
   m_GameObject: {fileID: 1632347007}
   m_Enabled: 1
   serializedVersion: 3
-  m_Text: Night Fright
+  m_Text: Digital Palace
   m_Anchor: 0
   m_Alignment: 0
   m_PixelOffset: {x: 2536, y: -9}
@@ -19527,7 +19289,6 @@ Transform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 1250521888}
-  - {fileID: 1392720759}
   - {fileID: 1843784191}
   m_Father: {fileID: 1249927302}
 --- !u!1 &1646044444
@@ -20637,7 +20398,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1725137964
 Transform:
   m_ObjectHideFlags: 0
@@ -20929,6 +20690,7 @@ MonoBehaviour:
   lobbyElementGO: {fileID: 100006, guid: 388f046f9efef2d479253e16d3a473fd, type: 2}
   highlighter: {fileID: 570149395}
   lobbies: []
+  highlightedLobby: {fileID: 0}
 --- !u!1001 &1733924338
 Prefab:
   m_ObjectHideFlags: 0
@@ -22576,7 +22338,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1819635429}
   m_Layer: 24
-  m_Name: tbd2
+  m_Name: Vindicae
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -22592,7 +22354,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
-  - {fileID: 1393117143}
+  - {fileID: 995774591}
   - {fileID: 300649133}
   m_Father: {fileID: 1249927302}
 --- !u!1 &1831536791
@@ -22621,7 +22383,6 @@ Transform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 1099162217}
-  - {fileID: 1289010410}
   - {fileID: 870670224}
   m_Father: {fileID: 1249927302}
 --- !u!1 &1835660089
@@ -22778,7 +22539,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1843784191
 Transform:
   m_ObjectHideFlags: 0
@@ -24256,7 +24017,6 @@ Transform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 252265176}
-  - {fileID: 2088849449}
   - {fileID: 1527306700}
   m_Father: {fileID: 1249927302}
 --- !u!1 &1978262753
@@ -25612,10 +25372,10 @@ GUITexture:
   m_Color: {r: .5, g: .5, b: .5, a: .5}
   m_PixelInset:
     serializedVersion: 2
-    x: -164
+    x: -514.599976
     y: -64
-    width: 334
-    height: 130
+    width: 515
+    height: 134
   m_LeftBorder: 0
   m_RightBorder: 0
   m_TopBorder: 0
@@ -25667,71 +25427,6 @@ GUIText:
   m_FontStyle: 0
   m_PixelCorrect: 1
   m_RichText: 1
---- !u!1 &2088849448
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 2088849449}
-  - 131: {fileID: 2088849451}
-  - 114: {fileID: 2088849450}
-  m_Layer: 24
-  m_Name: Cliff-on
-  m_TagString: LevelMenuItem
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2088849449
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2088849448}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 10}
-  m_LocalScale: {x: 0, y: 0, z: 0}
-  m_Children: []
-  m_Father: {fileID: 1968943215}
---- !u!114 &2088849450
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2088849448}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 302f758d77a237f4c9b8b9110f9b4929, type: 3}
-  m_Name: 
-  accelerationIncrease: 500
-  speedIncrease: 25
-  handlingIncrease: 750
-  offenseIncrease: .300000012
-  defenseIncrease: .300000012
-  isSelected: 0
-  level: 3
-  index: 22
---- !u!131 &2088849451
-GUITexture:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2088849448}
-  m_Enabled: 1
-  m_Texture: {fileID: 2800000, guid: 3607e91cb58091a4f90cd4e4f22a0d36, type: 3}
-  m_Color: {r: .5, g: .5, b: .5, a: .5}
-  m_PixelInset:
-    serializedVersion: 2
-    x: 198
-    y: -64
-    width: 334
-    height: 130
-  m_LeftBorder: 0
-  m_RightBorder: 0
-  m_TopBorder: 0
-  m_BottomBorder: 0
 --- !u!1 &2096243900
 GameObject:
   m_ObjectHideFlags: 0
@@ -25957,7 +25652,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 2120145847}
   m_Layer: 24
-  m_Name: tbd1
+  m_Name: Digital-Palace
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25973,7 +25668,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
-  - {fileID: 265523044}
+  - {fileID: 1343747099}
   - {fileID: 1632347008}
   m_Father: {fileID: 1249927302}
 --- !u!1 &2120748894

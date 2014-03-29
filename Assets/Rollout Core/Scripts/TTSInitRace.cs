@@ -36,7 +36,8 @@ public class TTSInitRace : MonoBehaviour
 	void Start() {
 		
 		// Menu passing in data
-		if(GameObject.Find("DataToPass")){
+		GameObject dataToPass = GameObject.Find("DataToPass");
+		if(dataToPass && dataToPass.GetComponent<TTSDataToPass>().gametype != TTSLevel.Gametype.Lobby){
 			racerConfigs = GameObject.Find("DataToPass").GetComponent<TTSDataToPass>().players;
 			gameType = GameObject.Find("DataToPass").GetComponent<TTSDataToPass>().gametype;
 
@@ -539,7 +540,7 @@ public class TTSInitRace : MonoBehaviour
 			if (tempRig.GetComponent<TTSRig>().rigType == type)
 				return tempRig;
 		}
-		return null;
+		return Rigs[0];
 	}
 
 	// Update is called once per frame

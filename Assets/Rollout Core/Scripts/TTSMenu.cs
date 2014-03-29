@@ -124,7 +124,7 @@ public class TTSMenu : TTSBehaviour {
 		
 		playerText = GameObject.FindGameObjectsWithTag("playerText");
 		
-		cameras[0].enabled = true;
+		Camera.main.enabled = true;
 		cameras[1].enabled = false;	
 		
 		// populate arrays with their gameObjects
@@ -240,7 +240,7 @@ public class TTSMenu : TTSBehaviour {
 			racer.SlowToStopToPosition(spawn_mp);
 			racer.rigidbody.constraints = RigidbodyConstraints.FreezeAll;
 				
-			cameras[0].enabled = false;
+			Camera.main.enabled = false;
 			cameras[1].enabled = true;
 		}
 		
