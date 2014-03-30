@@ -42,7 +42,7 @@ public class TTSServerMenu : TTSBehaviour {
 		AddNewLobbies();
 		SetPositions();
 		
-		if(level.GetComponent<TTSMenu>().activePanel == 1){
+		if(GameObject.Find("TTSMenu").GetComponent<TTSMenu>().activePanel == 1){
 			if(Input.GetKeyDown(KeyCode.W))
 				UpButton();
 			

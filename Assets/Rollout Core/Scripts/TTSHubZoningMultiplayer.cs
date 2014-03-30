@@ -16,9 +16,9 @@ public class TTSHubZoningMultiplayer : TTSBehaviour {
 	void OnTriggerEnter(Collider collision){
 		if(collision.gameObject.name == "Racer 2.0")
 		{
-			level.GetComponent<TTSMenu>().gameMode = TTSLevel.Gametype.MultiplayerOnline;
-			level.GetComponent<TTSMenu>().activePanel = 0;
-			level.GetComponent<TTSMenu>().movePanel();
+			GameObject.Find("TTSMenu").GetComponent<TTSMenu>().gameMode = TTSLevel.Gametype.MultiplayerOnline;
+			GameObject.Find("TTSMenu").GetComponent<TTSMenu>().activePanel = 0;
+			GameObject.Find("TTSMenu").GetComponent<TTSMenu>().movePanel();
 			//level.GetComponent<TTSMenu>().panels[4].SetActive(true);
 			//iTween.MoveTo(level.GetComponent<TTSMenu>().panels[4]], iTween.Hash("x", 0.5, "time", 2.0f, "onComplete", "stoppedTweening", "onCompleteTarget", gameObject));
 		}
