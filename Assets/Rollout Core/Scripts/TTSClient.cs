@@ -40,6 +40,7 @@ public class TTSClient : MonoBehaviour
 	}
 	public bool isLobby {
 		get {
+			if(level == null) return false;
 			return level.currentGameType == TTSLevel.Gametype.Lobby;
 		}
 	}
