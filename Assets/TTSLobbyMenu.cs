@@ -68,6 +68,7 @@ public class TTSLobbyMenu : TTSBehaviour
 		int guiIndex = 0;
 		foreach (TTSRacerConfig value in level.menu.players) {
 			playerTexts[guiIndex].text = value.Name;
+			//player color
 			guiIndex++;
 		}
 
