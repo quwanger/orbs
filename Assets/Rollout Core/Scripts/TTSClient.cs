@@ -221,6 +221,8 @@ public class TTSClient : MonoBehaviour
 					if(DebugMode) Debug.Log("DEREGISTER RACER " + id);
 					// IMPLMENTE THIS
 					RegisteredRacerConfigs.RemoveAll(x => x.netID == id);
+					
+					if (isLobby) lobbyMenu.networkUpdated = true;
 					break;
 
 				case TTSCommandTypes.RacerAlreadyRegistered:

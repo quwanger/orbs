@@ -25,11 +25,6 @@ public class TTSLobbyMenu : TTSBehaviour
 		client = level.client;
 		racerConfigs = client.RegisteredRacerConfigs;
 
-		// Create a player
-		//TTSRacerConfig tempConfig = level.initRace.testRacerConfig(true);
-		//tempConfig.Name = "BOBBY BOBB";
-		//level.menu.players.Add(tempConfig);
-
 		OnPlayerUpdate();
 		OnLevelUpdate();
 	}

@@ -48,7 +48,7 @@ public class TTSServerMenu : TTSBehaviour {
 		}
 
 		if ((Time.time - lastUpdate) > RequestInterval) {
-			//client.RequestLobbyInfo(this);
+			client.RequestLobbyInfo(this);
 			lastUpdate = Time.time;
 		}
 
@@ -120,7 +120,13 @@ public class TTSServerMenu : TTSBehaviour {
 	List<LobbyData> serverLobbies = new List<LobbyData>();
 	public void ReceiveLobby(LobbyData lobby) {
 		lock (serverLobbies) {
-			serverLobbies.Add(lobby);
+			int index = serverLobbies.FindIndex(x => x.ID == lobby.ID);
+			if (index != -1) {
+				serverLobbies[index] = lobby;
+			}
+			else {
+				serverLobbies.Add(lobby);
+			}
 			networkUpdated = true;
 		}
 	}
