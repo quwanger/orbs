@@ -4,6 +4,9 @@ using System.Collections.Generic;
 public class TTSLobbyMenu : TTSBehaviour
 {
 	public TTSClient client;
+	private List<TTSRacerConfig> racerConfigs;
+	public TTSLobby lobbyItem;
+
 	public bool lobbyJoined = false;
 	public bool networkUpdated = true;
 	private int lobbyID = -1;
@@ -20,6 +23,8 @@ public class TTSLobbyMenu : TTSBehaviour
 	// Use this for initialization
 	void Start() {
 		client = level.client;
+		racerConfigs = client.RegisteredRacerConfigs;
+
 		// Create a player
 		//TTSRacerConfig tempConfig = level.initRace.testRacerConfig(true);
 		//tempConfig.Name = "BOBBY BOBB";
@@ -38,9 +43,13 @@ public class TTSLobbyMenu : TTSBehaviour
 
 		OnPlayerUpdate();
 		OnLevelUpdate();
+
+		networkUpdated = false;
 	}
 
 	public void OnLobbyJoin() {
+		// Populate info using lobby item
+		levelText.text = lobbyItem.Name;
 
 		// Register it
 		lock (level.menu.players) {
@@ -62,11 +71,14 @@ public class TTSLobbyMenu : TTSBehaviour
 
 	public void OnPlayerUpdate() {
 		int guiIndex = 0;
-		foreach (string value in playerNames) {
-			if (value != "") {
-				playerTexts[guiIndex].text = value;
-				guiIndex++;
-			}
+		foreach (TTSRacerConfig value in level.menu.players) {
+			playerTexts[guiIndex].text = value.Name;
+			guiIndex++;
+		}
+
+		foreach (TTSRacerConfig value in racerConfigs) {
+			playerTexts[guiIndex].text = value.Name;
+			guiIndex++;
 		}
 
 		playerCountText.text = guiIndex + "/" + playerTexts.Length;
@@ -74,14 +86,6 @@ public class TTSLobbyMenu : TTSBehaviour
 		for (int i = guiIndex; i < playerTexts.Length; i++) {
 			playerTexts[i].text = nullPlayerText;
 		}
-	}
-
-	private int getNumPlayers() {
-		int i = 0;
-		foreach (string value in playerNames) {
-			if (value != "") i++;
-		}
-		return i;
 	}
 
 	#region From Network Thread

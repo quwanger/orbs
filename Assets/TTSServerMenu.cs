@@ -9,9 +9,7 @@ public class TTSServerMenu : TTSBehaviour {
 
 	public GameObject lobbyElementGO;
 	public GameObject highlighter;
-	
-	
-	
+
 	public List<TTSLobby> lobbies = new List<TTSLobby>();
 	
 	public TTSLobby highlightedLobby;
@@ -202,9 +200,9 @@ public class TTSServerMenu : TTSBehaviour {
 		highlighter.guiTexture.pixelInset = destination.GetPosition();
 	}
 
-	public void JoinLobby(TTSLobby lobby) {
+	public void JoinLobby() {
 		// Send request to server
-		client.ConnectToLobby(1, this);//lobby.ID);
+		client.ConnectToLobby(highlightedLobby.ID, this, lobbyMenu);//lobby.ID);
 
 		// Wait to join server screen
 

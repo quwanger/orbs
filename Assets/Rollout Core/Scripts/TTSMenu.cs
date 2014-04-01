@@ -118,6 +118,9 @@ public class TTSMenu : TTSBehaviour {
 	// Is either a string saying multiplayer or singleplayer
 	public TTSLevel.Gametype gameMode;
 
+	// Server Menu
+	public TTSServerMenu serverMenu;
+
 	// Use this for initialization
 	void Start () {		
 		previousPanel = 8;
@@ -244,7 +247,7 @@ public class TTSMenu : TTSBehaviour {
 		int tempPlayers = numPlayers+1;
 		
 		if(gameMode == TTSLevel.Gametype.MultiplayerOnline || gameMode == TTSLevel.Gametype.TimeTrial){
-			if(Input.GetKeyDown("joystick " + tempPlayers + " button 0") && playerReady[0] == false){
+			if((Input.GetKeyDown("joystick " + tempPlayers + " button 0") || Input.GetKeyDown(KeyCode.Return)) && playerReady[0] == false){
 				if(activePanel == 6){
 					playerReady[0] = true;
 					numPlayers++;
@@ -605,7 +608,8 @@ public class TTSMenu : TTSBehaviour {
 				}
 				
 				// mp lobby
-				else if(activePanel == 1 && !isTweening){
+				else if (activePanel == 1 && !isTweening) {
+					serverMenu.JoinLobby();
 					activePanel++;
 					previousPanel = (activePanel-1);
 					isTweening = true;

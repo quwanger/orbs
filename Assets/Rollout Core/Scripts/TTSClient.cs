@@ -10,6 +10,7 @@ public class TTSClient : MonoBehaviour
 {
 	#region Configuration
 	public bool DebugMode = true;
+	public bool DebugRacerSpawn = true;
 
 	public string SERVER_IP = "127.0.0.1";
 	public int SERVER_RECEIVE_PORT = 6666;
@@ -28,6 +29,8 @@ public class TTSClient : MonoBehaviour
 
 	TTSLevel level;
 	TTSInitRace initRace;
+
+	public List<TTSRacerConfig> RegisteredRacerConfigs = new List<TTSRacerConfig>();
 
 	// Status
 	public bool isMultiplayer{
@@ -179,26 +182,17 @@ public class TTSClient : MonoBehaviour
 					config.RigType = packet.ReadInt32();
 					config.PerkA = packet.ReadInt32();
 					config.PerkB = packet.ReadInt32();
-					config.CharacterType = packet.ReadInt32();
 					config.Name = packet.Read16CharString();
 					config.ControlType = packet.ReadInt32();
 					config.LocalControlType = TTSUtils.EnumToInt(TTSRacer.PlayerType.Multiplayer);
+					RegisteredRacerConfigs.Add(config);
 
-					lock (level.menu.players) {
-						level.menu.players.Add(config);
+					if (isLobby) {
+						lobbyMenu.networkUpdated = true;
 					}
-					//RegisteredRacerConfigs.Add(config);
 
-					//TTSRacerNetHandler handler = new TTSRacerNetHandler(this, false, id);
-					//handler.Index = packet.ReadInt32();
-					//handler.Rig = packet.ReadInt32();
-					//handler.Perk1 = packet.ReadInt32();
-					//handler.Perk2 = packet.ReadInt32();
-					//handler.Name = packet.Read16CharString();
-					//handler.ControlType = packet.ReadInt32();
-
-					if (DebugMode){
-						Debug.Log(">	Received a racer " + id);
+					if (DebugRacerSpawn) {
+						Debug.Log("R	Received a racer " + id);
 						spawnRacers.Add(config);
 					}
 					break;
@@ -240,6 +234,7 @@ public class TTSClient : MonoBehaviour
 
 	#region In Lobby
 	TTSServerMenu serverMenu;
+	TTSLobbyMenu lobbyMenu;
 	public void RequestLobbyInfo(TTSServerMenu menu) {
 		serverMenu = menu;
 		TTSPacketWriter packet = new TTSPacketWriter();
@@ -264,8 +259,9 @@ public class TTSClient : MonoBehaviour
 		}
 	}
 
-	public void ConnectToLobby(int lobby, TTSServerMenu menu) {
-		serverMenu = menu;
+	public void ConnectToLobby(int lobby, TTSServerMenu ServerMenu, TTSLobbyMenu LobbyMenu) {
+		serverMenu = ServerMenu;
+		lobbyMenu = LobbyMenu;
 		TTSPacketWriter packet = new TTSPacketWriter();
 		packet.AddData(TTSCommandTypes.LobbyRegister);
 		packet.AddData(lobby);

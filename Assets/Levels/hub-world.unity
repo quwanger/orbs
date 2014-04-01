@@ -5422,6 +5422,8 @@ MonoBehaviour:
   offenseIncrease: .300000012
   defenseIncrease: .300000012
   client: {fileID: 0}
+  lobbyItem: {fileID: 0}
+  lobbyJoined: 0
   networkUpdated: 1
   levelTitle: Level
   playerNames:
@@ -13767,7 +13769,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 407efa782eed2a445ac6bb86fedcb4cf, type: 2}
+  - {fileID: 2100000, guid: 9b8cb2af4002ac044a29d3f0e66f10fa, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -15210,7 +15212,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 407efa782eed2a445ac6bb86fedcb4cf, type: 2}
+  - {fileID: 2100000, guid: 9b8cb2af4002ac044a29d3f0e66f10fa, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -16184,6 +16186,7 @@ MonoBehaviour:
   numPlayers: 0
   chosenOrb: 1
   gameMode: 0
+  serverMenu: {fileID: 1731168038}
 --- !u!114 &1357254834
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16212,6 +16215,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc0ba0762728f5e4f89f9f54328eab63, type: 3}
   m_Name: 
   DebugMode: 0
+  DebugRacerSpawn: 1
   SERVER_IP: 127.0.0.1
   SERVER_RECEIVE_PORT: 6666
   CLIENT_RECEIVE_PORT: 6969
@@ -18281,7 +18285,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 407efa782eed2a445ac6bb86fedcb4cf, type: 2}
+  - {fileID: 2100000, guid: 9b8cb2af4002ac044a29d3f0e66f10fa, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -18645,7 +18649,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 407efa782eed2a445ac6bb86fedcb4cf, type: 2}
+  - {fileID: 2100000, guid: 9b8cb2af4002ac044a29d3f0e66f10fa, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -19761,7 +19765,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 407efa782eed2a445ac6bb86fedcb4cf, type: 2}
+  - {fileID: 2100000, guid: 9b8cb2af4002ac044a29d3f0e66f10fa, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -20691,6 +20695,7 @@ MonoBehaviour:
   highlighter: {fileID: 570149395}
   lobbies: []
   highlightedLobby: {fileID: 0}
+  lobbyMenu: {fileID: 0}
 --- !u!1001 &1733924338
 Prefab:
   m_ObjectHideFlags: 0
@@ -23164,7 +23169,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 407efa782eed2a445ac6bb86fedcb4cf, type: 2}
+  - {fileID: 2100000, guid: 9b8cb2af4002ac044a29d3f0e66f10fa, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -24098,7 +24103,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 10835f63b58ca0244a2448cec70257c7, type: 2}
+  - {fileID: 2100000, guid: d7fb7bf55fb07574d91cd0e92d9d7302, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -24464,7 +24469,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 6688233207f0a4c4dba44e658e4bae8c, type: 2}
+  - {fileID: 2100000, guid: 4c456346def5c1f4db61c3a175580d54, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
