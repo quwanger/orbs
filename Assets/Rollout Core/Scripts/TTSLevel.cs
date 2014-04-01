@@ -106,6 +106,13 @@ public class TTSLevel : MonoBehaviour {
 			ThrowSetException("racers");
 		}
 	}
+
+	private TTSMenu _menu;
+	public TTSMenu menu {
+		get {
+			return (_menu != null) ? _menu : (_menu = GetComponent<TTSMenu>());
+		}
+	}
 	
 	private void ThrowSetException(string source) {
 		Debug.LogError("Tried to set a readonly property: " + source);

@@ -103,7 +103,7 @@ public class TTSInitRace : MonoBehaviour
 		}
 	}
 
-	private TTSRacerConfig testRacerConfig(bool Human) {
+	public TTSRacerConfig testRacerConfig(bool Human) {
 		TTSRacerConfig config = new TTSRacerConfig();
 		config.Index = 99; // So that the racers will use the starting point index.
 		config.RigType = Random.Range(0, Rigs.Count);

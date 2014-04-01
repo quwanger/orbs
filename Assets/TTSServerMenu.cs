@@ -5,10 +5,8 @@ public class TTSServerMenu : TTSBehaviour {
 	public TTSClient client;
 	public float lastUpdate;
 	public float RequestInterval = 5.0f;
-	
-	//public int 
-	
 	public bool networkUpdated = true;
+
 	public GameObject lobbyElementGO;
 	public GameObject highlighter;
 	
@@ -29,6 +27,7 @@ public class TTSServerMenu : TTSBehaviour {
 			return lobbies.FindAll(x => x.InProgress == false);
 		}
 	}
+	public TTSLobbyMenu lobbyMenu;
 
 	// Use this for initialization
 	void Start () {
@@ -42,7 +41,7 @@ public class TTSServerMenu : TTSBehaviour {
 		AddNewLobbies();
 		SetPositions();
 		
-		if(GameObject.Find("TTSMenu").GetComponent<TTSMenu>().activePanel == 1){
+		if(level.menu.activePanel == 1){
 			if(Input.GetKeyDown(KeyCode.W))
 				UpButton();
 			
@@ -149,9 +148,9 @@ public class TTSServerMenu : TTSBehaviour {
 	}
 	
 	public void UpButton(){
-		TTSLobby highlightTo;
-		
-		if(highlightedLobby == null){
+		if (lobbies.Count == 0) return;
+
+		if (highlightedLobby == null) {
 			highlightedLobby = lobbies[0];
 			highlighter.guiTexture.pixelInset = lobbies[0].GetPosition();
 		}
@@ -172,9 +171,9 @@ public class TTSServerMenu : TTSBehaviour {
 		
 		SetHighlighter(currentList[toIndex]);
 	}
-	
-	public void DownButton(){
-		TTSLobby highlightTo;
+
+	public void DownButton() {
+		if (lobbies.Count == 0) return;
 		
 		if(highlightedLobby == null){
 			highlightedLobby = lobbies[0];
@@ -197,11 +196,26 @@ public class TTSServerMenu : TTSBehaviour {
 		
 		SetHighlighter(currentList[toIndex]);
 	}
-	
-	private void SetHighlighter(TTSLobby destination){
+
+	private void SetHighlighter(TTSLobby destination) {
 		highlightedLobby = destination;
-		highlighter.guiTexture.pixelInset = destination.GetPosition();		
+		highlighter.guiTexture.pixelInset = destination.GetPosition();
 	}
+
+	public void JoinLobby(TTSLobby lobby) {
+		// Send request to server
+		client.ConnectToLobby(1, this);//lobby.ID);
+
+		// Wait to join server screen
+
+	}
+
+	#region network thread
+	public void OnLobbyJoin(int lobbyID) {
+		TTSLobby joinedLobby = lobbies.Find(x => x.ID == lobbyID);
+		lobbyMenu.JoinLobby(joinedLobby);
+	}
+	#endregion
 }
 
 public struct LobbyData

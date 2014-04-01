@@ -50,7 +50,6 @@ public class TTSLobby : MonoBehaviour
 
 	public void SetPosition(int index) {
 		int verticalOffset = ((InProgress)? -55 : 154) - index * 25;
-		Debug.Log(verticalOffset);
 
 		botsText.pixelOffset = new Vector2(botsText.pixelOffset.x, verticalOffset);
 		levelText.pixelOffset = new Vector2(levelText.pixelOffset.x, verticalOffset);
