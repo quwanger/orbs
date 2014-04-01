@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class TTSMenuItemRig : TTSMenuEnums {
+public class TTSMenuItemRig : TTSBehaviour {
 	
 	/* Rig:			S, A, H,  O,   D
 	 * Scorpion: 	7, 6, 8, 1.2, 0.8
@@ -19,13 +19,14 @@ public class TTSMenuItemRig : TTSMenuEnums {
 	 */
 
 	public bool isSelected = false;
-	public RigMenuItem rig;
+	public RigType rig;
 	public int index;
 	public int speed;
 	public int acceleration;
 	public int handling;
 	public int offense;
 	public int defense;
+	public GUITexture rigImage;
 	
 	// Use this for initialization
 	void Start () {

@@ -12,11 +12,12 @@ public class TTSRig : MonoBehaviour {
 	
 	public float rigOffense = 1.0f;
 	public float rigDefense = 1.0f;
-	
+
 	public string rigName;
 
 	public List<Transform> powerupPositionsFront = new List<Transform>();
 	public List<Transform> powerupPositionsBack = new List<Transform>();
+	public TTSBehaviour.RigType rigType;
 	
 	void Update () {
 		

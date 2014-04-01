@@ -16,42 +16,42 @@ public class TTSHudPerk : MonoBehaviour {
 	
 	}
 	
-	public void InitializePerkPool1(TTSBehaviour.PerksPool1 p){
+	public void InitializePerkPool1(TTSBehaviour.PerkType p){
 		switch(p) {
-			case TTSBehaviour.PerksPool1.Acceleration:
+			case TTSBehaviour.PerkType.Acceleration:
 			this.gameObject.renderer.material.SetTexture("_MainTex", perkPool1Images[0]);
 			break;
 			
-			case TTSBehaviour.PerksPool1.DiamondCoat:
+			case TTSBehaviour.PerkType.DiamondCoat:
 			this.gameObject.renderer.material.SetTexture("_MainTex", perkPool1Images[1]);
 			break;
 			
-			case TTSBehaviour.PerksPool1.Evolution:
+			case TTSBehaviour.PerkType.Evolution:
 			this.gameObject.renderer.material.SetTexture("_MainTex", perkPool1Images[2]);
 			break;
 			
-			case TTSBehaviour.PerksPool1.Handling:
+			case TTSBehaviour.PerkType.Handling:
 			this.gameObject.renderer.material.SetTexture("_MainTex", perkPool1Images[3]);
 			break;
 			
-			case TTSBehaviour.PerksPool1.HotStart:
+			case TTSBehaviour.PerkType.HotStart:
 			this.gameObject.renderer.material.SetTexture("_MainTex", perkPool1Images[4]);
 			break;
 			
-			case TTSBehaviour.PerksPool1.ManOWar:
+			case TTSBehaviour.PerkType.ManOWar:
 			this.gameObject.renderer.material.SetTexture("_MainTex", perkPool1Images[5]);
 			break;
 			
-			case TTSBehaviour.PerksPool1.None:
+			case TTSBehaviour.PerkType.None:
 			this.gameObject.renderer.material.SetTexture("_MainTex", perkPool1Images[6]);
 			break;
 			
-			case TTSBehaviour.PerksPool1.PhotoFinish:
-			this.gameObject.renderer.material.SetTexture("_MainTex", perkPool1Images[8]);
+			case TTSBehaviour.PerkType.PhotoFinish:
+			this.gameObject.renderer.material.SetTexture("_MainTex", perkPool1Images[7]);
 			break;
 			
-			case TTSBehaviour.PerksPool1.Speed:
-			this.gameObject.renderer.material.SetTexture("_MainTex", perkPool1Images[9]);
+			case TTSBehaviour.PerkType.Speed:
+			this.gameObject.renderer.material.SetTexture("_MainTex", perkPool1Images[8]);
 			break;
 			
 			default:
@@ -60,41 +60,41 @@ public class TTSHudPerk : MonoBehaviour {
 		}
 	}
 	
-	public void InitializePerkPool2(TTSBehaviour.Powerup p){
+	public void InitializePerkPool2(TTSBehaviour.PowerupType p){
 		switch(p) {
-			case TTSBehaviour.Powerup.EntropyCannon:
+			case TTSBehaviour.PowerupType.EntropyCannon:
 			this.gameObject.renderer.material.SetTexture("_MainTex", perkPool2Images[0]);
 			break;
 			
-			case TTSBehaviour.Powerup.Shockwave:
+			case TTSBehaviour.PowerupType.Shockwave:
 			this.gameObject.renderer.material.SetTexture("_MainTex", perkPool2Images[1]);
 			break;
 			
-			case TTSBehaviour.Powerup.Shield:
+			case TTSBehaviour.PowerupType.Shield:
 			this.gameObject.renderer.material.SetTexture("_MainTex", perkPool2Images[2]);
 			break;
 			
-			case TTSBehaviour.Powerup.Leech:
+			case TTSBehaviour.PowerupType.Leech:
 			this.gameObject.renderer.material.SetTexture("_MainTex", perkPool2Images[3]);
 			break;
 			
-			case TTSBehaviour.Powerup.Helix:
+			case TTSBehaviour.PowerupType.Helix:
 			this.gameObject.renderer.material.SetTexture("_MainTex", perkPool2Images[4]);
 			break;
 			
-			case TTSBehaviour.Powerup.DrezzStones:
+			case TTSBehaviour.PowerupType.DrezzStones:
 			this.gameObject.renderer.material.SetTexture("_MainTex", perkPool2Images[5]);
 			break;
 			
-			case TTSBehaviour.Powerup.SuperC:
+			case TTSBehaviour.PowerupType.SuperC:
 			this.gameObject.renderer.material.SetTexture("_MainTex", perkPool2Images[6]);
 			break;
 			
-			case TTSBehaviour.Powerup.Lottery:
+			case TTSBehaviour.PowerupType.Lottery:
 			this.gameObject.renderer.material.SetTexture("_MainTex", perkPool2Images[7]);
 			break;
 			
-			case TTSBehaviour.Powerup.None:
+			case TTSBehaviour.PowerupType.None:
 			this.gameObject.renderer.material.SetTexture("_MainTex", perkPool2Images[8]);
 			break;
 			

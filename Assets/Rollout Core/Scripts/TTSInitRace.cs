@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class TTSInitRace : MonoBehaviour
 {
-
+	public bool DebugMode = false;
 	public List<GameObject> Rigs = new List<GameObject>();
 	public List<GameObject> Characters = new List<GameObject>();
 	public List<GameObject> StartingPoints = new List<GameObject>();
@@ -25,32 +25,51 @@ public class TTSInitRace : MonoBehaviour
 	//private string tempCharacterChoice = "Character_Default";
 	public int numHumanPlayers = 1;
 	public int numAIPlayers = 0;
-
-	GameObject rigToLoad;
-	GameObject characterToLoad;
-
+	
 	TTSLevel level;
 
-	public List<TTSRacer.RacerConfig> racerConfigs;
+	public List<TTSRacerConfig> racerConfigs;
+	
+	// ?
+	public TTSLevel.Gametype gameType;
 
 	// Use this for initialization
 	void Start() {
+		
+		// Menu passing in data
+		GameObject dataToPass = GameObject.Find("DataToPass");
+		if(dataToPass && dataToPass.GetComponent<TTSDataToPass>().gametype != TTSLevel.Gametype.Lobby){
+			racerConfigs = GameObject.Find("DataToPass").GetComponent<TTSDataToPass>().players;
+			gameType = GameObject.Find("DataToPass").GetComponent<TTSDataToPass>().gametype;
+
+			numHumanPlayers = racerConfigs.FindAll(IsHuman).Count;
+
+			foreach (TTSRacerConfig config in racerConfigs) {
+				Debug.Log(config.ControllerID);
+				Debug.Log((TTSBehaviour.RigType)config.RigType);
+				Debug.Log((TTSBehaviour.PerkType)config.PerkA);
+				Debug.Log((TTSBehaviour.PowerupType)config.PerkB);
+				Debug.Log(config.Index);
+			}
+
+			Debug.Log(gameType);
+		}
+
 		level = GetComponent<TTSLevel>();
 
-		racerConfigs = new List<TTSRacer.RacerConfig>();
+		if (DebugMode || racerConfigs == null) {
+			Debug.Log("INIT RACE: GENERATING RACERS");
 
-		for (int i = 0; i < numHumanPlayers; i++) {
-			racerConfigs.Add(testRacerConfig(true));
+			racerConfigs = new List<TTSRacerConfig>();
+
+			for (int i = 0; i < numHumanPlayers; i++) {
+				racerConfigs.Add(testRacerConfig(true));
+			}
+
+			for (int i = 0; i < numAIPlayers; i++) {
+				racerConfigs.Add(testRacerConfig(false));
+			}
 		}
-
-		for (int i = 0; i < numAIPlayers; i++) {
-			racerConfigs.Add(testRacerConfig(false));
-		}
-
-		//racerConfigs.Add(testRacerConfig(false));
-		//racerConfigs.Add(testRacerConfig(false));
-
-		numHumanPlayers = racerConfigs.FindAll(IsHuman).Count;
 
 		if (level.currentGameType == TTSLevel.Gametype.Lobby) {
 			LobbyInitialize();
@@ -60,13 +79,13 @@ public class TTSInitRace : MonoBehaviour
 		}
 	}
 
-	private bool IsHuman(TTSRacer.RacerConfig config) {
+	private bool IsHuman(TTSRacerConfig config) {
 		if (config.LocalControlType == (int)TTSRacer.PlayerType.Player) return true;
 		return false;
 	}
 
-	private void InitializeRacers(List<TTSRacer.RacerConfig> racerConfigs) {
-		foreach (TTSRacer.RacerConfig config in racerConfigs) {
+	private void InitializeRacers(List<TTSRacerConfig> racerConfigs) {
+		foreach (TTSRacerConfig config in racerConfigs) {
 
 			switch ((TTSRacer.PlayerType)config.LocalControlType) {
 
@@ -85,12 +104,12 @@ public class TTSInitRace : MonoBehaviour
 		}
 	}
 
-	private TTSRacer.RacerConfig testRacerConfig(bool Human) {
-		TTSRacer.RacerConfig config = new TTSRacer.RacerConfig();
+	public TTSRacerConfig testRacerConfig(bool Human) {
+		TTSRacerConfig config = new TTSRacerConfig();
 		config.Index = 99; // So that the racers will use the starting point index.
 		config.RigType = Random.Range(0, Rigs.Count);
-		config.Perk1 = 0;
-		config.Perk2 = 0;
+		config.PerkA = (int)TTSBehaviour.PerkType.Acceleration;
+		config.PerkB = (int)TTSBehaviour.PowerupType.Leech;
 		if (Human) {
 			config.LocalControlType = TTSUtils.EnumToInt(TTSRacer.PlayerType.Player);
 		}
@@ -113,8 +132,9 @@ public class TTSInitRace : MonoBehaviour
 	public GameObject InstantiateRacer() {
 		return InstantiateRacer(-1, -1);
 	}
+
 	int playerIDCounter = 1;
-	public GameObject InstantiateRacer(TTSRacer.RacerConfig config) {
+	public GameObject InstantiateRacer(TTSRacerConfig config) {
 		// Make sure that the rig type isn't out of range
 		config.RigType = (Rigs.Count > config.RigType) ? config.RigType : 0;
 		config.CharacterType = (Characters.Count > config.CharacterType) ? config.CharacterType : 0;
@@ -126,7 +146,7 @@ public class TTSInitRace : MonoBehaviour
 		startingPointIndex = (config.Index + 1) % StartingPoints.Count; // Always the next starting position. Loop around if array out of bounds.
 
 		// Instantiate the gameobjects.
-		GameObject rig = (GameObject)Instantiate(Rigs[config.RigType], startPoint.transform.position, startPoint.transform.rotation);
+		GameObject rig = (GameObject)Instantiate(getRig((TTSBehaviour.RigType)config.RigType), startPoint.transform.position, startPoint.transform.rotation);
 		GameObject character = (GameObject)Instantiate(Characters[config.CharacterType], startPoint.transform.position, startPoint.transform.rotation);
 		GameObject racer = (GameObject)Instantiate(racerGO, startPoint.transform.position, startPoint.transform.rotation);
 
@@ -149,6 +169,10 @@ public class TTSInitRace : MonoBehaviour
 		GameObject iconSmall = (GameObject)Instantiate(playericonSmall);
 		GameObject iconBig = (GameObject)Instantiate(playericonBig);
 
+		//add perks
+		racer.GetComponent<TTSPerkManager>().equiptPerkPool1 = (TTSBehaviour.PerkType)config.PerkA;
+		racer.GetComponent<TTSPerkManager>().equiptPerkPool2 = (TTSBehaviour.PowerupType)config.PerkB;
+
 		//assigns the icon to correct racer
 		racer.GetComponent<TTSRacer>().minimapIconSmall = iconSmall;
 		racer.GetComponent<TTSRacer>().minimapIconBig = iconBig;
@@ -158,15 +182,15 @@ public class TTSInitRace : MonoBehaviour
 
 		return racer;
 	}
-
+	
+	GameObject rigToLoad;
+	GameObject characterToLoad;
 	public GameObject InstantiateRacer(int rigID, int startPointID) {
 
 		//finds the rig to initialize
-		if (rigID == -1) {
-			foreach (GameObject rig in Rigs) {
-				if (rig.GetComponent<TTSRig>().rigName == tempRigChoice) {
-					rigToLoad = rig;
-				}
+		/*foreach(GameObject rig in _rigs){
+			if(rig.GetComponent<TTSRig>().rigName == tempRigChoice){
+				rigToLoad = rig;
 			}
 		}
 		else {
@@ -174,10 +198,10 @@ public class TTSInitRace : MonoBehaviour
 		}
 
 		//makes sure there is a rig to load if none selected
-		if (rigToLoad == null) {
-			rigID = Random.Range(0, Rigs.Count);
-			rigToLoad = Rigs[rigID];
-		}
+
+		if(rigToLoad == null){
+			rigToLoad = _rigs[Random.Range(0, _rigs.Count)];
+		}*/
 
 		//checks for the character (in this case, default sphere)
 		/*foreach (GameObject character in Characters) {
@@ -217,6 +241,9 @@ public class TTSInitRace : MonoBehaviour
 		//sets the currentrig variable of the racer to the rig selecte above
 		tempRacer.GetComponent<TTSRacer>().CurrentRig = tempRig.GetComponent<TTSRig>();
 		tempRacer.GetComponent<TTSRacer>().rigID = rigID;
+		
+		// MENU LOAD
+		//tempRacer.GetComponent<TTSRacer>().CurrentRig = tempRig;
 
 		tempRacer.GetComponent<TTSRacer>().Initialized();
 
@@ -508,7 +535,7 @@ public class TTSInitRace : MonoBehaviour
 		racer.GetComponent<TTSRacer>().Initialized();
 	}
 
-	private void InitToMultiplayer(GameObject racer, TTSRacer.RacerConfig config) {
+	private void InitToMultiplayer(GameObject racer, TTSRacerConfig config) {
 		racer.GetComponent<TTSRacer>().IsPlayerControlled = true;
 		racer.GetComponent<TTSRacer>().player = TTSRacer.PlayerType.Multiplayer;
 
@@ -519,8 +546,16 @@ public class TTSInitRace : MonoBehaviour
 		racer.GetComponent<TTSRacer>().SetNetHandler(handler);
 	}
 
-	public void InitMultiplayerRacer(TTSRacer.RacerConfig config) {
+	public void InitMultiplayerRacer(TTSRacerConfig config) {
 		InitToMultiplayer(InstantiateRacer(config), config);
+	}
+
+	private GameObject getRig(TTSBehaviour.RigType type) {
+		foreach (GameObject tempRig in Rigs) {
+			if (tempRig.GetComponent<TTSRig>().rigType == type)
+				return tempRig;
+		}
+		return Rigs[0];
 	}
 
 	// Update is called once per frame

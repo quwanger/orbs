@@ -109,7 +109,7 @@ public class TTSHelixProjectile : TTSBehaviour
 
 			if(other.gameObject.GetComponent<TTSRacer>().hasShield){
 				if(other.gameObject.GetComponentInChildren<TTSShield>().tier3){
-					other.gameObject.GetComponent<TTSPowerup>().GivePowerup(Powerup.Helix);
+					other.gameObject.GetComponent<TTSPowerup>().GivePowerup(PowerupType.Helix);
 					other.gameObject.GetComponentInChildren<TTSShield>().duration = 2.0f;
 					other.gameObject.GetComponentInChildren<TTSShield>().absorbEffect.Play();
 					Explode(false);

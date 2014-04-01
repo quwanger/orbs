@@ -4,8 +4,8 @@ using System.Collections;
 public class TTSPerkManager : TTSBehaviour {
 	
 	//general use variables
-	public PerksPool1 equiptPerkPool1;
-	public Powerup equiptPerkPool2;
+	public PerkType equiptPerkPool1;
+	public PowerupType equiptPerkPool2;
 	public GameObject hudPerkPool1;
 	public GameObject hudPerkPool2;
 	
@@ -20,25 +20,25 @@ public class TTSPerkManager : TTSBehaviour {
 	
 	void Awake(){
 		switch(equiptPerkPool1) {
-			case PerksPool1.Acceleration:
+			case PerkType.Acceleration:
 				doAcceleration();
 				break;
-			case PerksPool1.DiamondCoat:
+			case PerkType.DiamondCoat:
 				doDiamondCoat();
 				break;
-			case PerksPool1.Handling:
+			case PerkType.Handling:
 				doHandling();
 				break;
-			case PerksPool1.HotStart:
+			case PerkType.HotStart:
 				doHotStart();
 				break;
-			case PerksPool1.ManOWar:
+			case PerkType.ManOWar:
 				doManOWar();
 				break;
-			case PerksPool1.Evolution:
+			case PerkType.Evolution:
 				doEvolution();
 				break;
-			case PerksPool1.Speed:
+			case PerkType.Speed:
 				doSpeed();
 				break;
 			default:
@@ -50,7 +50,7 @@ public class TTSPerkManager : TTSBehaviour {
 	void Update ()
 	{
 		switch(equiptPerkPool1) {
-			case PerksPool1.PhotoFinish:
+			case PerkType.PhotoFinish:
 				doPhotoFinish();
 				break;
 			default:
@@ -75,7 +75,7 @@ public class TTSPerkManager : TTSBehaviour {
 		if(!hot && level.raceHasStarted){
 			//Debug.Log("Hot Start");
 			hot = true;
-			Powerup p = getRandomPowerup();
+			PowerupType p = getRandomPowerup();
 			this.GetComponent<TTSPowerup>().GivePowerup(p);
 		}
 	}
@@ -106,12 +106,12 @@ public class TTSPerkManager : TTSBehaviour {
 		this.GetComponent<TTSRacer>().Defense += defenseIncrease;
 	}
 	
-	private Powerup getRandomPowerup () {
+	private PowerupType getRandomPowerup () {
 	
-		Powerup powerup = GetRandomEnum<Powerup>();
+		PowerupType powerup = GetRandomEnum<PowerupType>();
 		
-		while(powerup == Powerup.None || powerup == Powerup.TimeBonus) {
-			powerup = GetRandomEnum<Powerup>();
+		while(powerup == PowerupType.None || powerup == PowerupType.TimeBonus) {
+			powerup = GetRandomEnum<PowerupType>();
 		}
 		
 		//Debug.Log (powerup);

@@ -4,7 +4,7 @@ using System.Collections;
 public class TTSTimeManager : MonoBehaviour {
 	
 	
-	private float timeInMillis = 0;
+	public float timeInMillis = 0;
 	private float startTime = 0;
 	
 	private bool running = false;

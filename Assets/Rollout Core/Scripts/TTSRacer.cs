@@ -200,11 +200,12 @@ public class TTSRacer : TTSBehaviour
 		RacerSfx.rolloffMode = AudioRolloffMode.Linear;
 		RacerSfx.volume = 0.5f;
 
-		//Apply Attributes
+		CurrentRig = (CurrentRig != null) ? CurrentRig : GetComponentInChildren<TTSRig>();
 
-		TopSpeedInit = TopSpeedInit + (speedIncrease * CurrentRig.GetComponent<TTSRig>().rigSpeed);
-		AccelerationInit = AccelerationInit + (accelerationIncrease * CurrentRig.GetComponent<TTSRig>().rigAcceleration);
-		HandlingInit = HandlingInit + (handlingIncrease * CurrentRig.GetComponent<TTSRig>().rigHandling);
+		//Apply Attributes
+		TopSpeedInit = TopSpeedInit + (speedIncrease * CurrentRig.rigSpeed);
+		AccelerationInit = AccelerationInit + (accelerationIncrease * CurrentRig.rigAcceleration);
+		HandlingInit = HandlingInit + (handlingIncrease * CurrentRig.rigHandling);
 		
 		Offense = CurrentRig.rigOffense;
 		Defense = CurrentRig.rigDefense;
@@ -605,6 +606,9 @@ public class TTSRacer : TTSBehaviour
 	}
 
 	public void SetNetHandler(TTSRacerNetHandler handler) {
+		if(level.currentGameType != TTSLevel.Gametype.MultiplayerOnline)
+			return;
+
 		this.netHandler = handler;
 		powerupManager.SetNetHandler(netHandler);
 	}
@@ -667,13 +671,40 @@ public class TTSRacer : TTSBehaviour
 	}
 }
 
+public class TTSRacerConfig
+{
+	public float netID;
+	public int Index;
+	public int RigType;
+	public int PerkA;
+	public int PerkB;
+	public string Name;
+
+	/// <summary>
+	/// Can either be Player, AI, or Multiplayer
+	/// </summary>
+	public int LocalControlType;
+
+	/// <summary>
+	/// Can be either Player or AI
+	/// </summary>
+	public int ControlType;
+
+	public int CharacterType;
+
+	public int ControllerID;
+}
+
 public class TTSRacerNetHandler : TTSNetworkHandle
 {
+	TTSRacerConfig Config; // Info stored between levels in here.
+
 	// Racer Configuration
 	public int Index = 0;
 	public int Rig = 3;
-	public int Perk1 = 0;
-	public int Perk2 = 0;
+	public int PerkA = 0;
+	public int PerkB = 0;
+	public int Character = 0;
 	public string Name = "Bob";
 	public int ControlType = 0;
 
@@ -688,6 +719,26 @@ public class TTSRacerNetHandler : TTSNetworkHandle
 
 	// Powerup
 	public List<TTSPowerupNetHandler> receivedPowerups = new List<TTSPowerupNetHandler>();
+
+	// Register from Lobby
+	public TTSRacerNetHandler(TTSClient Client, TTSRacerConfig config, int lobbyID) {
+		registerCommand = TTSCommandTypes.RacerRegister;
+		owner = true;
+		client = Client;
+
+		Rig = config.RigType;
+		PerkA = config.PerkA;
+		PerkB = config.PerkB;
+		Character = config.CharacterType;
+		Name = ((TTSBehaviour.CharacterTypes)Character + " " + (TTSBehaviour.RigType)Rig).Substring(0, 16);
+		ControlType = config.LocalControlType;
+
+		Config = config;
+		Config.Name = Name;
+
+		//Client.LobbyRacerRegister(lobbyID, config);
+		client.LocalRacerRegister(this);
+	}
 
 	public TTSRacerNetHandler(TTSClient Client, bool Owner, int rigID) {
 		type = "Racer";
@@ -707,17 +758,24 @@ public class TTSRacerNetHandler : TTSNetworkHandle
 		Client.LocalRacerRegister(this);
 	}
 
+	public override void SetNetID(float ID) {
+		id = ID;
+		if (Config != null)
+			Config.netID = id;
+	}
+
 	public override byte[] GetNetworkRegister() {
 		writer.ClearData();
 		writer.AddData(registerCommand);
 		writer.AddData(id);
 		writer.AddData(-1); // Index
 		writer.AddData(Rig);
-		writer.AddData(Perk1);
-		writer.AddData(Perk2);
+		writer.AddData(PerkA);
+		writer.AddData(PerkB);
+		writer.AddData(Character);
 		writer.AddData(Name, 16);
 		writer.AddData(ControlType);
-		return writer.GetMinimizedData();
+		return writer.GetMinimizedData(true);
 	}
 
 	// Command and ID already read in packet

@@ -9,11 +9,11 @@ public class TTSLevel : MonoBehaviour {
 	public List<Camera> _maincameras = new List<Camera>();
 	public List<Camera> _otherCameras = new List<Camera>();
 	
-	public enum Gametype {Lobby, SinglePlayer, MultiplayerLocal, MultiplayerOnline, TimeTrial};
+	public enum Gametype {Lobby, MultiplayerLocal, MultiplayerOnline, TimeTrial};
 	public Gametype currentGameType = Gametype.MultiplayerLocal;
 	
 	public enum LevelType { cliff, night, backroad, downtown, future1, future2 };
-	public LevelType currentLevel = LevelType.backroad;
+	public LevelType currentLevel;
 
 	public bool useKeyboard = true;
 	
@@ -104,6 +104,13 @@ public class TTSLevel : MonoBehaviour {
 		}
 		set {
 			ThrowSetException("racers");
+		}
+	}
+
+	private TTSMenu _menu;
+	public TTSMenu menu {
+		get {
+			return (_menu != null) ? _menu : (_menu = GetComponent<TTSMenu>());
 		}
 	}
 	

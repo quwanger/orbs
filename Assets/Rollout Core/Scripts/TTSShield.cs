@@ -39,7 +39,7 @@ public class TTSShield : TTSPerishingBehaviour {
 			dead = true;
 		}
 		racer.hasShield = false;
-		racer.GetComponent<TTSPowerup>().ActivePowerup = TTSBehaviour.Powerup.None;
+		racer.GetComponent<TTSPowerup>().ActivePowerup = TTSBehaviour.PowerupType.None;
 		Invoke("Cleanup", 5);
 	}
 	

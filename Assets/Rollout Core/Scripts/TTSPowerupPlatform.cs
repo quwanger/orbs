@@ -3,7 +3,7 @@ using System.Collections;
 
 public class TTSPowerupPlatform : TTSBehaviour
 {
-	public Powerup currentPowerup;
+	public PowerupType currentPowerup;
 	public float respawnTime = 5.0f;
 	public AudioClip clip;
 	private float rotationSpeed = 50.0f;
@@ -97,35 +97,35 @@ public class TTSPowerupPlatform : TTSBehaviour
 
 				#region currentPowerup -> pickupParticleSystem
 				switch (currentPowerup) {
-					case Powerup.EntropyCannon:
+					case PowerupType.EntropyCannon:
 						tempPickupParticleSystem = EntropyParticleSystem;
 						break;
 
-					case Powerup.SuperC:
+					case PowerupType.SuperC:
 						tempPickupParticleSystem = SuperCParticleSystem;
 						break;
 
-					case Powerup.TimeBonus:
+					case PowerupType.TimeBonus:
 						tempPickupParticleSystem = TimeBonusParticleSystem;
 						break;
 
-					case Powerup.Shield:
+					case PowerupType.Shield:
 						tempPickupParticleSystem = ShieldParticleSystem;
 						break;
 
-					case Powerup.DrezzStones:
+					case PowerupType.DrezzStones:
 						tempPickupParticleSystem = DrezzStoneParticleSystem;
 						break;
 
-					case Powerup.Helix:
+					case PowerupType.Helix:
 						tempPickupParticleSystem = HelixParticleSystem;
 						break;
 
-					case Powerup.Leech:
+					case PowerupType.Leech:
 						tempPickupParticleSystem = LeechParticleSystem;
 						break;
 
-					case Powerup.Shockwave:
+					case PowerupType.Shockwave:
 						tempPickupParticleSystem = ShockwaveParticleSystem;
 						break;
 
@@ -164,7 +164,7 @@ public class TTSPowerupPlatform : TTSBehaviour
 		spawnPowerup(getRandomPowerup());
 	}
 
-	private void spawnPowerup(Powerup powerup) {
+	private void spawnPowerup(PowerupType powerup) {
 		if (powerupMesh != null) {
 			//remove powerup
 			Destroy(powerupMesh);
@@ -182,20 +182,20 @@ public class TTSPowerupPlatform : TTSBehaviour
 			netHandle.SpawnPowerup(currentPowerup);
 		}
 	}
-
-	private Powerup getRandomPowerup() {
-
-		Powerup powerup = GetRandomEnum<Powerup>();
-
-		if (level.currentGameType != TTSLevel.Gametype.TimeTrial) {
-			while (powerup == Powerup.TimeBonus || powerup == Powerup.None || powerup == Powerup.Lottery) {
-				powerup = GetRandomEnum<Powerup>();
+	
+	private PowerupType getRandomPowerup () {
+	
+		PowerupType powerup = GetRandomEnum<PowerupType>();
+		
+		if(level.currentGameType != TTSLevel.Gametype.TimeTrial){
+			while(powerup == PowerupType.TimeBonus || powerup == PowerupType.None || powerup == PowerupType.Lottery) {
+				powerup = GetRandomEnum<PowerupType>();
 			}
 		}
 		else {
 			//make sure that the random powerup isnt none or lottery
-			while (powerup == Powerup.None || powerup == Powerup.Lottery) {
-				powerup = GetRandomEnum<Powerup>();
+			while(powerup == PowerupType.None || powerup == PowerupType.Lottery) {
+				powerup = GetRandomEnum<PowerupType>();
 			}
 		}
 
@@ -210,28 +210,28 @@ public class TTSPowerupPlatform : TTSBehaviour
 		//display the current powerup as a child of the platform
 		#region currentPowerup -> powerupMesh
 		switch (currentPowerup) {
-			case (Powerup.SuperC):
+			case (PowerupType.SuperC):
 				tempPowerupMesh = powerupBoost;
 				break;
-			case (Powerup.EntropyCannon):
+			case (PowerupType.EntropyCannon):
 				tempPowerupMesh = powerupMissiles;
 				break;
-			case (Powerup.TimeBonus):
+			case (PowerupType.TimeBonus):
 				tempPowerupMesh = powerupMoreTime;
 				break;
-			case (Powerup.DrezzStones):
+			case (PowerupType.DrezzStones):
 				tempPowerupMesh = powerupDrezzStone;
 				break;
-			case (Powerup.Shield):
+			case (PowerupType.Shield):
 				tempPowerupMesh = powerupShield;
 				break;
-			case (Powerup.Helix):
+			case (PowerupType.Helix):
 				tempPowerupMesh = powerupHelix;
 				break;
-			case (Powerup.Leech):
+			case (PowerupType.Leech):
 				tempPowerupMesh = powerupLeech;
 				break;
-			case (Powerup.Shockwave):
+			case (PowerupType.Shockwave):
 				tempPowerupMesh = powerupShockwave;
 				break;
 
@@ -250,7 +250,7 @@ public class TTSPowerupPlatform : TTSBehaviour
 
 public class TTSPowerupPlatformNetworkHandler : TTSNetworkHandle
 {
-	public TTSBehaviour.Powerup PowerupType = TTSBehaviour.Powerup.None;
+	public TTSBehaviour.PowerupType PowerupType = TTSBehaviour.PowerupType.None;
 	public bool pickedUp = false;
 	public bool startPowerup = false;
 
@@ -267,7 +267,7 @@ public class TTSPowerupPlatformNetworkHandler : TTSNetworkHandle
 		client = Client;
 		client.LocalObjectRegister(this);
 	}
-	public void SpawnPowerup(TTSBehaviour.Powerup powerupType) {
+	public void SpawnPowerup(TTSBehaviour.PowerupType powerupType) {
 		if (owner) {
 			writer.ClearData();
 			writer.AddData(TTSCommandTypes.PowerupPlatformSpawn);
@@ -280,7 +280,7 @@ public class TTSPowerupPlatformNetworkHandler : TTSNetworkHandle
 	public override void ReceiveNetworkData(TTSPacketReader reader, int command) {
 
 		if (command == TTSCommandTypes.PowerupPlatformSpawn) {
-			PowerupType = (TTSBehaviour.Powerup)reader.ReadInt32();
+			PowerupType = (TTSBehaviour.PowerupType)reader.ReadInt32();
 			isNetworkUpdated = true;
 		}
 		else if (command == TTSCommandTypes.PowerupPlatformPickedUp) {

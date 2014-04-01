@@ -90,7 +90,7 @@ public class TTSEntropyCannonProjectile : MonoBehaviour {
 		if(other.gameObject.GetComponent<TTSRacer>()){
 			if(other.gameObject.GetComponent<TTSRacer>().hasShield){
 				if(other.gameObject.GetComponentInChildren<TTSShield>().tier3){
-					other.gameObject.GetComponent<TTSPowerup>().GivePowerup(TTSBehaviour.Powerup.EntropyCannon);
+					other.gameObject.GetComponent<TTSPowerup>().GivePowerup(TTSBehaviour.PowerupType.EntropyCannon);
 					other.gameObject.GetComponentInChildren<TTSShield>().duration = 2.0f;
 					other.gameObject.GetComponentInChildren<TTSShield>().absorbEffect.Play();
 					Explode(false);

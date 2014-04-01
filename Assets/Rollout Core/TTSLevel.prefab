@@ -42,6 +42,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b63d4ab093cdc304486f813302608b78, type: 3}
   m_Name: 
+  timeInMillis: 0
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -89,6 +90,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 594730c6d405c439c9a166e2348e236c, type: 3}
   m_Name: 
+  DebugMode: 0
   Rigs:
   - {fileID: 100000, guid: 26f3bdb906e294cf6b3a76f23cc527b2, type: 2}
   - {fileID: 100000, guid: 3d695fc3acab5411a989ff39de826674, type: 2}
@@ -112,6 +114,7 @@ MonoBehaviour:
   playericonBig: {fileID: 100000, guid: 43ed54951cf5c48d4b58e3cead59c7a0, type: 2}
   numHumanPlayers: 1
   numAIPlayers: 0
+  gameType: 0
 --- !u!114 &11400008
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -138,10 +141,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc0ba0762728f5e4f89f9f54328eab63, type: 3}
   m_Name: 
   DebugMode: 0
+  DebugRacerSpawn: 0
   SERVER_IP: 127.0.0.1
   SERVER_RECEIVE_PORT: 6666
   CLIENT_RECEIVE_PORT: 6969
-  CLIENT_RECEIVE_TIMEOUT: 15000
+  CLIENT_RECEIVE_TIMEOUT: 0
   EnteredLobby: 0
   InGame: 0
   LobbyID: 0

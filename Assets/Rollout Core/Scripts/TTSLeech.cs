@@ -85,7 +85,7 @@ public class TTSLeech : TTSBehaviour {
 			//handle tier 3 shield
 			if(stuckRacer.GetComponent<TTSRacer>().hasShield){
 				if(stuckRacer.GetComponentInChildren<TTSShield>().tier3){
-					stuckRacer.GetComponent<TTSPowerup>().GivePowerup(Powerup.Leech);
+					stuckRacer.GetComponent<TTSPowerup>().GivePowerup(PowerupType.Leech);
 					stuckRacer.GetComponentInChildren<TTSShield>().duration = 2.0f;
 					stuckRacer.GetComponentInChildren<TTSShield>().absorbEffect.Play();
 					Destroy(this.gameObject);

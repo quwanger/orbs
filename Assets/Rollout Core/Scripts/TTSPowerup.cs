@@ -11,9 +11,9 @@ public class TTSPowerup : TTSBehaviour
 	public bool debug = false;
 	public int DebugTier = 1;
 
-	public Powerup AvailablePowerup;
-	public Powerup PreviouslyAvailablePowerup = Powerup.None;
-	public Powerup ActivePowerup;
+	public PowerupType AvailablePowerup;
+	public PowerupType PreviouslyAvailablePowerup = PowerupType.None;
+	public PowerupType ActivePowerup;
 	public int tier = 0;
 
 	public GameObject hudPowerup;
@@ -32,7 +32,7 @@ public class TTSPowerup : TTSBehaviour
 	}
 
 	//Perk Stuff
-	public Powerup pp2;
+	public PowerupType pp2;
 	private float lotteryChance = 0.2f;
 
 	#region Projectile Prefab Assignment
@@ -89,7 +89,7 @@ public class TTSPowerup : TTSBehaviour
 		}
 
 		//if you hit space or the 'a' button on an Xbox controller
-		if (AvailablePowerup != Powerup.None) {
+		if (AvailablePowerup != PowerupType.None) {
 			if (this.gameObject.GetComponent<TTSRacer>().playerNum == 1) {
 				#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
 				state = GamePad.GetState(PlayerIndex.One);
@@ -170,17 +170,17 @@ public class TTSPowerup : TTSBehaviour
 	#endregion
 
 	#region donation methods
-	public void GivePowerup(Powerup powerup) {
+	public void GivePowerup(PowerupType powerup) {
 		if (powerup == AvailablePowerup) {
 			if (tier < 3) {
 				tier++;
 			}
 			//deal with tier 3 entropy
-			if(powerup == Powerup.EntropyCannon && tier == 3){
+			if(powerup == PowerupType.EntropyCannon && tier == 3){
 				numberOfEntropyCannonsAvailable = 10;
 			}
-		} else if(powerup == Powerup.TimeBonus) {
-			if(AvailablePowerup == TTSBehaviour.Powerup.None)
+		} else if(powerup == PowerupType.TimeBonus) {
+			if(AvailablePowerup == TTSBehaviour.PowerupType.None)
 				tier = 0;
 			GiveTimeBonus(true);
 		}
@@ -190,7 +190,7 @@ public class TTSPowerup : TTSBehaviour
 			if (pp2 == AvailablePowerup) {
 				tier = 2;
 			}
-			else if (pp2 == Powerup.Lottery) {
+			else if (pp2 == PowerupType.Lottery) {
 				//deals with the lottery perk
 				float temp = Random.Range(0, 1.0f);
 				if (temp <= lotteryChance) {
@@ -205,7 +205,7 @@ public class TTSPowerup : TTSBehaviour
 			}
 		}
 
-		if(powerup == Powerup.Helix){
+		if(powerup == PowerupType.Helix){
 			switch(tier){
 			case 1:
 				numberOfHelixCannonsAvailable = 1;
@@ -222,7 +222,7 @@ public class TTSPowerup : TTSBehaviour
 			default:
 				break;
 			}
-		}else if(powerup == Powerup.DrezzStones){
+		}else if(powerup == PowerupType.DrezzStones){
 			switch(tier){
 			case 1:
 				ammo = 1;
@@ -236,7 +236,7 @@ public class TTSPowerup : TTSBehaviour
 			default:
 				break;
 			}
-		}else if(powerup == Powerup.EntropyCannon){
+		}else if(powerup == PowerupType.EntropyCannon){
 			switch(tier){
 			case 1:
 				ammo = 3;
@@ -250,7 +250,7 @@ public class TTSPowerup : TTSBehaviour
 			default:
 				break;
 			}
-		}else if(powerup == Powerup.Leech){
+		}else if(powerup == PowerupType.Leech){
 			switch(tier){
 			case 1:
 				ammo = 2;
@@ -273,31 +273,31 @@ public class TTSPowerup : TTSBehaviour
 	public void ConsumePowerup() {
 
 		switch (AvailablePowerup) {
-			case Powerup.EntropyCannon:
+			case PowerupType.EntropyCannon:
 				EntropyCannon(tier);
 				break;
 
-			case Powerup.DrezzStones:
+			case PowerupType.DrezzStones:
 				DrezzStone(tier);
 				break;
 
-			case Powerup.SuperC:
+			case PowerupType.SuperC:
 				SuperCBooster(tier, true);
 				break;
 
-			case Powerup.Shield:
+			case PowerupType.Shield:
 				Shield(tier);
 				break;
 
-			case Powerup.Shockwave:
+			case PowerupType.Shockwave:
 				DeployShockwave(tier, true);
 				break;
 
-			case Powerup.Leech:
+			case PowerupType.Leech:
 				Leech(tier);
 				break;
 
-			case Powerup.Helix:
+			case PowerupType.Helix:
 				Helix(tier);
 				break;
 
@@ -308,18 +308,18 @@ public class TTSPowerup : TTSBehaviour
 
 		this.ActivePowerup = this.AvailablePowerup;
 
-		if(this.AvailablePowerup == Powerup.EntropyCannon && tier == 3){
+		if(this.AvailablePowerup == PowerupType.EntropyCannon && tier == 3){
 			if(numberOfEntropyCannonsAvailable <= 0){
-				this.AvailablePowerup = Powerup.None;
+				this.AvailablePowerup = PowerupType.None;
 				this.tier = 0;
 			}
-		}else if(this.AvailablePowerup == Powerup.Helix){
+		}else if(this.AvailablePowerup == PowerupType.Helix){
 			if(numberOfHelixCannonsAvailable <= 0){
-				this.AvailablePowerup = Powerup.None;
+				this.AvailablePowerup = PowerupType.None;
 				this.tier = 0;
 			}
 		}else{
-			this.AvailablePowerup = Powerup.None;
+			this.AvailablePowerup = PowerupType.None;
 			this.tier = 0;
 			ammo = 0;
 		}
@@ -347,7 +347,7 @@ public class TTSPowerup : TTSBehaviour
 		}
 	
 		//it is only active while firing
-		this.ActivePowerup = TTSBehaviour.Powerup.None;
+		this.ActivePowerup = TTSBehaviour.PowerupType.None;
 	}
 
 	public void EntropyCannon(int _tier) {
@@ -370,7 +370,7 @@ public class TTSPowerup : TTSBehaviour
 		}
 
 		//it is only active while firing
-		this.ActivePowerup = TTSBehaviour.Powerup.None;
+		this.ActivePowerup = TTSBehaviour.PowerupType.None;
 	}
 
 	public void Helix(int _tier) {
@@ -382,7 +382,7 @@ public class TTSPowerup : TTSBehaviour
 		}
 
 		//it is only active while firing
-		this.ActivePowerup = TTSBehaviour.Powerup.None;
+		this.ActivePowerup = TTSBehaviour.PowerupType.None;
 	}
 
 	#region timed handler functions

@@ -8,8 +8,12 @@ public class TTSPlayerInfo : TTSBehaviour {
 	//public string perkB;
 	public int playerID;
 	
-	public PerksPool1 perkA;
-	public Powerup perkB;
+	public PerkType perkA;
+	public PowerupType perkB;
+	
+	void Awake(){
+		DontDestroyOnLoad(this);
+	}
 	
 	// Use this for initialization
 	void Start () {
