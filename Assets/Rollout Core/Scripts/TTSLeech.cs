@@ -23,7 +23,7 @@ public class TTSLeech : TTSBehaviour {
 	public TTSWaypoint previousWaypoint;
 	public TTSWaypoint nextWaypoint;
 	public Vector3 destinationPosition;
-	private float leechVelocity = 120.0f;
+	private float leechVelocity = 150.0f;
 	
 	private Vector3 positionDifference;
 	

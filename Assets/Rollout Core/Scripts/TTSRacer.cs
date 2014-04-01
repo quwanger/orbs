@@ -602,7 +602,32 @@ public class TTSRacer : TTSBehaviour
 			hInput = TTSUtils.Remap(TTSUtils.GetRelativeAngle(lastForward, steerDir) * 2, -90.0f, 90.0f, -1.0f, 1.0f, true);
 		}
 
+		CheckAIPowerupUsage();
+
 		Debug.DrawLine(position, destination);
+	}
+
+	public void CheckAIPowerupUsage(){
+		if(powerupManager.AvailablePowerup != PowerupType.None){
+			float chance = Random.Range(0.0f, 100.0f);
+
+			if(place > 1){
+				//if the racer is NOT in first
+				if(chance < powerupManager.tier*powerupManager.tier){
+					powerupManager.ConsumePowerup();
+				}
+			}else{
+				//player is in first
+				if(powerupManager.AvailablePowerup == PowerupType.DrezzStones ||
+					powerupManager.AvailablePowerup == PowerupType.SuperC || 
+					powerupManager.AvailablePowerup == PowerupType.Shield ||
+					powerupManager.AvailablePowerup == PowerupType.Shockwave){
+						if(chance < powerupManager.tier*powerupManager.tier){
+							powerupManager.ConsumePowerup();
+						}
+				}
+			}
+		}
 	}
 
 	public void SetNetHandler(TTSRacerNetHandler handler) {

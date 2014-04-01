@@ -95,7 +95,7 @@ public class TTSAIController : TTSBehaviour
 		}
 
 		// Blocked Path
-		if (Physics.Linecast(position, destination, TTSUtils.ExceptLayerMask(10))) {
+		if (Physics.Linecast(position, destination, TTSUtils.ExceptLayerMask(new int[] {10, 26}))) {
 			if (debugMode) Debug.Log("Blocked Path");
 
 			destination = blockedPathManeuver(next, position);
@@ -103,7 +103,7 @@ public class TTSAIController : TTSBehaviour
 
 		// Secondary Blocked Path
 		RaycastHit hit;
-		if (Physics.Linecast(position, destination, out hit, TTSUtils.ExceptLayerMask(10))) {
+		if (Physics.Linecast(position, destination, out hit, TTSUtils.ExceptLayerMask(new int[] {10, 26}))) {
 			if (debugMode) Debug.Log("Secondary Blocked Path");
 
 			destination = secondaryBlockedPathManeuver(next, position, hit);
@@ -124,10 +124,10 @@ public class TTSAIController : TTSBehaviour
 			Debug.DrawRay(origin, wing);
 			Debug.DrawRay(origin, -wing);
 
-		if (Physics.Linecast(origin, origin + wing, TTSUtils.ExceptLayerMask(10))) {
+		if (Physics.Linecast(origin, origin + wing, TTSUtils.ExceptLayerMask(new int[] {10, 26}))) {
 			direction += -wing * wallAvoidanceStrength;
 		}
-		if (Physics.Linecast(origin, origin - wing, TTSUtils.ExceptLayerMask(10))) {
+		if (Physics.Linecast(origin, origin - wing, TTSUtils.ExceptLayerMask(new int[] {10, 26}))) {
 			direction += wing * wallAvoidanceStrength;
 		}
 
@@ -138,10 +138,10 @@ public class TTSAIController : TTSBehaviour
 			Debug.DrawRay(origin, wing);
 			Debug.DrawRay(origin, -wing);
 
-			if (Physics.Linecast(origin, origin + wing, TTSUtils.ExceptLayerMask(10))) {
+			if (Physics.Linecast(origin, origin + wing, TTSUtils.ExceptLayerMask(new int[] {10, 26}))) {
 				direction += -wing * wallAvoidanceStrength;
 			}
-			if (Physics.Linecast(origin, origin - wing, TTSUtils.ExceptLayerMask(10))) {
+			if (Physics.Linecast(origin, origin - wing, TTSUtils.ExceptLayerMask(new int[] {10, 26}))) {
 				direction += wing * wallAvoidanceStrength;
 			}
 		}
@@ -203,7 +203,7 @@ public class TTSAIController : TTSBehaviour
 			pnt = wp.getPointOn(i / (resolution - 1));
 			pnt.y = position.y;
 
-			if (!Physics.Linecast(position, pnt, TTSUtils.ExceptLayerMask(10)) && Vector3.Distance(position, pnt) < Vector3.Distance(position, destination)) {
+			if (!Physics.Linecast(position, pnt, TTSUtils.ExceptLayerMask(new int[] {10, 26})) && Vector3.Distance(position, pnt) < Vector3.Distance(position, destination)) {
 				if (debugMode)
 					Debug.DrawLine(position, pnt);
 
@@ -222,7 +222,7 @@ public class TTSAIController : TTSBehaviour
 
 		if (detourDestination != Vector3.zero) {
 			Vector3 tempPos = next.getClosestSeenPoint(detourDestination, resolution);
-			if (!Physics.Linecast(position, detourDestination, TTSUtils.ExceptLayerMask(10)) && !Physics.Linecast(detourDestination, tempPos, TTSUtils.ExceptLayerMask(10))) {
+			if (!Physics.Linecast(position, detourDestination, TTSUtils.ExceptLayerMask(new int[] {10, 26})) && !Physics.Linecast(detourDestination, tempPos, TTSUtils.ExceptLayerMask(new int[] {10, 26}))) {
 				// Debug.Log("Detour Destination reused.");
 				return detourDestination;
 			}
@@ -256,10 +256,10 @@ public class TTSAIController : TTSBehaviour
 			}
 
 			// Check to see if there's anything in the way
-			if (!Physics.Linecast(position, rotatedVec1, TTSUtils.ExceptLayerMask(10)) && !Physics.Linecast(nextPosition1, rotatedVec1, TTSUtils.ExceptLayerMask(10))) {
+			if (!Physics.Linecast(position, rotatedVec1, TTSUtils.ExceptLayerMask(new int[] {10, 26})) && !Physics.Linecast(nextPosition1, rotatedVec1, TTSUtils.ExceptLayerMask(new int[] {10, 26}))) {
 				dist1 = (next.position - rotatedVec1).magnitude;
 			}
-			if (!Physics.Linecast(position, rotatedVec2, TTSUtils.ExceptLayerMask(10)) && !Physics.Linecast(nextPosition2, rotatedVec2, TTSUtils.ExceptLayerMask(10))) {
+			if (!Physics.Linecast(position, rotatedVec2, TTSUtils.ExceptLayerMask(new int[] {10, 26})) && !Physics.Linecast(nextPosition2, rotatedVec2, TTSUtils.ExceptLayerMask(new int[] {10, 26}))) {
 				dist2 = (next.position - rotatedVec2).magnitude;
 			}
 
