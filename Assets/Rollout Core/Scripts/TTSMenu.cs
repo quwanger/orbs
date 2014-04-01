@@ -175,6 +175,7 @@ public class TTSMenu : TTSBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
 		if (gameMode != TTSLevel.Gametype.Lobby) {
 			
 			playerText[0].guiText.text = ("Player" + (chosenOrb));
@@ -559,20 +560,24 @@ public class TTSMenu : TTSBehaviour {
 		// TIMETRIAL
 		if(direction == "right"){
 			if(gameMode == TTSLevel.Gametype.TimeTrial){
+				if(activePanel == 6 && !isTweening){
+					foreach (TTSRacerConfig player in players) {
+						if (player.ControllerID == chosenOrb) {
+							player.PerkA = (int)SelectedPerk;
+							player.PerkB = (int)SelectedPerkB;
+							player.RigType = (int)SelectedRig;
+							Debug.Log("Player " + (RigType)player.RigType);
+						}
+					}
+					dtp.GetComponent<TTSDataToPass>().players = this.players;
+					dtp.GetComponent<TTSDataToPass>().gametype = gameMode;
+				}
+
 				if(activePanel < 7 && !isTweening){
 					activePanel++;
 					if(activePanel == 5 || activePanel == 7){
 						if(!isTweening){
 							previousPanel = (activePanel-1);
-
-							foreach (TTSRacerConfig player in players) {
-								if (player.ControllerID == chosenOrb) {
-									player.PerkA = (int)SelectedPerk;
-									player.PerkB = (int)SelectedPerkB;
-									player.RigType = (int)SelectedRig;
-								}
-							}
-
 							isTweening = true;
 							movePanel();
 						}
@@ -580,6 +585,7 @@ public class TTSMenu : TTSBehaviour {
 				}
 				
 				if(activePanel == 7 && !isTweening){
+
 					if(SelectedLevel.ToString() == "level1")
 						Application.LoadLevel("city1-1");
 						
