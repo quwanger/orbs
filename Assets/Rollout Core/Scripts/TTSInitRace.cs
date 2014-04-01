@@ -17,7 +17,6 @@ public class TTSInitRace : MonoBehaviour
 
 	private int startingPointIndex = 0;
 
-	public enum RigTypes { Rhino, Scorpion, Default };
 	public enum CharacterTypes { character_yellow, character_purple, character_orange, character_blue, character_red, character_green};
 
 	//private string tempRigChoice = "Rig_Rhino";

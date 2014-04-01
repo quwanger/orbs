@@ -412,18 +412,18 @@ public class TTSPowerup : TTSBehaviour
 		if (tier == 1.0f) {
 			boost.duration = 1.0f * this.GetComponent<TTSRacer>().Offense;
 			boost.TargetForce = 80.0f * this.GetComponent<TTSRacer>().Offense;
-			if (owner) vfx.BoostEffect(1.0f);
+			if (owner && myCamera != null) vfx.BoostEffect(1.0f);
 		}
 		if (tier == 2.0f) {
 			boost.duration = 1.5f * this.GetComponent<TTSRacer>().Offense;
 			boost.TargetForce = 90.0f * this.GetComponent<TTSRacer>().Offense;
-			if (owner) vfx.BoostEffect(1.0f);
+			if (owner && myCamera != null) vfx.BoostEffect(1.0f);
 		}
 		if (tier == 3.0f) {
 			boost.duration = 3.0f * this.GetComponent<TTSRacer>().Offense;
 			boost.TargetForce = 100.0f * this.GetComponent<TTSRacer>().Offense;
 			boost.isTier3 = true;
-			if (owner) vfx.BoostEffect(1.0f);
+			if (owner && myCamera != null) vfx.BoostEffect(1.0f);
 		}
 
 		if (owner) { SendStaticPowerupDeploy(TTSPowerupNetworkTypes.Boost, tier); }

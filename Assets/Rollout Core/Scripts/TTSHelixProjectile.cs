@@ -113,6 +113,8 @@ public class TTSHelixProjectile : TTSBehaviour
 					other.gameObject.GetComponentInChildren<TTSShield>().duration = 2.0f;
 					other.gameObject.GetComponentInChildren<TTSShield>().absorbEffect.Play();
 					Explode(false);
+				}else{
+					Explode(false);
 				}
 			}else{
 				other.gameObject.GetComponent<TTSRacer>().DamageRacer(offensiveMultiplier * 0.7f);
