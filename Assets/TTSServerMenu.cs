@@ -108,6 +108,10 @@ public class TTSServerMenu : TTSBehaviour {
 			newLobby.networkUpdated = true;
 
 			lobbies.Add(newLobby);
+
+			if (highlightedLobby == null) {
+				SetHighlighter(newLobby);
+			}
 		}
 
 		newLobbies.Clear();

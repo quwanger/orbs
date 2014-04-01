@@ -9,8 +9,8 @@ using System.Collections.Generic;
 public class TTSClient : MonoBehaviour
 {
 	#region Configuration
-	public bool DebugMode = true;
-	public bool DebugRacerSpawn = true;
+	public bool DebugMode = false;
+	public bool DebugRacerSpawn = false;
 
 	public string SERVER_IP = "127.0.0.1";
 	public int SERVER_RECEIVE_PORT = 6666;

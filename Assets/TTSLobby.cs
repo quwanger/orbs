@@ -82,15 +82,15 @@ public class TTSLobby : MonoBehaviour
 			case TTSLevel.LevelType.backroad:
 				return "Backroad Blitz";
 			case TTSLevel.LevelType.cliff:
-				return "Cliff";
+				return "Cliffside Chaos";
 			case TTSLevel.LevelType.downtown:
-				return "Downtown";
+				return "Downtown Domination";
 			case TTSLevel.LevelType.future1:
-				return "future 1";
+				return "Digital Palace";
 			case TTSLevel.LevelType.future2:
-				return "future 2";
+				return "Vindicae";
 			case TTSLevel.LevelType.night:
-				return "Night time asdf";
+				return "Night Fright";
 		}
 		return "???";
 	}
