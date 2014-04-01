@@ -43,7 +43,7 @@ public class TTSLobby : MonoBehaviour
 
 	public void SetGUI() {
 		botsText.text = (BotsEnabled == true) ? "X" : "";
-		levelText.text = GetLevelString(Level);
+		levelText.text = GetLevelName();
 		playersText.text = NumRacers + "/" + MaxNumRacers;
 		roomText.text = Name;
 	}
@@ -77,8 +77,8 @@ public class TTSLobby : MonoBehaviour
 		Debug.Log("Lobby Received " + id + " " + Name);
 	}
 
-	public string GetLevelString(TTSLevel.LevelType level) {
-		switch(level){
+	public string GetLevelName() {
+		switch (Level) {
 			case TTSLevel.LevelType.backroad:
 				return "Backroad Blitz";
 			case TTSLevel.LevelType.cliff:

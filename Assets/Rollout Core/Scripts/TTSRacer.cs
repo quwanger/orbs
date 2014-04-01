@@ -653,10 +653,11 @@ public class TTSRacerNetHandler : TTSNetworkHandle
 		PerkA = config.PerkA;
 		PerkB = config.PerkB;
 		Character = config.CharacterType;
-		Name = (TTSBehaviour.CharacterTypes)Character + " " + (TTSBehaviour.RigType)Rig;
+		Name = ((TTSBehaviour.CharacterTypes)Character + " " + (TTSBehaviour.RigType)Rig).Substring(0, 16);
 		ControlType = config.LocalControlType;
 
 		Config = config;
+		Config.Name = Name;
 
 		//Client.LobbyRacerRegister(lobbyID, config);
 		client.LocalRacerRegister(this);

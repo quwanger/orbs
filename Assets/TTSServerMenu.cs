@@ -95,7 +95,6 @@ public class TTSServerMenu : TTSBehaviour {
 		
 		foreach (LobbyData lobby in newLobbies) {
 			TTSLobby newLobby = ((GameObject)Instantiate(lobbyElementGO)).GetComponent<TTSLobby>();
-			Debug.Log(newLobby);
 			newLobby.gameObject.transform.parent = this.transform;
 
 			newLobby.ID = lobby.ID;

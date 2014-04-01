@@ -49,7 +49,7 @@ public class TTSLobbyMenu : TTSBehaviour
 
 	public void OnLobbyJoin() {
 		// Populate info using lobby item
-		levelText.text = lobbyItem.Name;
+		levelTitle = lobbyItem.GetLevelName();
 
 		// Register it
 		lock (level.menu.players) {
@@ -90,6 +90,7 @@ public class TTSLobbyMenu : TTSBehaviour
 
 	#region From Network Thread
 	public void JoinLobby(TTSLobby lobby) {
+		lobbyItem = lobby;
 		lobbyID = lobby.ID;
 		lobbyJoined = true;
 		networkUpdated = true;
