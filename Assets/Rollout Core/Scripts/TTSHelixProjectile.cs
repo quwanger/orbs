@@ -39,7 +39,7 @@ public class TTSHelixProjectile : TTSBehaviour
 	#region unity functions
 	void Start() {
 
-		ProjectileStartVelocity = Random.Range(80.0f, 140.0f);
+		ProjectileStartVelocity = Random.Range(120.0f, 160.0f);
 
 		birth = Time.time;
 		audio.PlayOneShot(fire);
@@ -72,6 +72,8 @@ public class TTSHelixProjectile : TTSBehaviour
 
 			//move the projectile
 			this.rigidbody.velocity = (destinationPosition - this.transform.position).normalized * ProjectileStartVelocity;
+
+			ProjectileStartVelocity = ProjectileStartVelocity + 0.5f;
 			
 			if (netHandler != null && netHandler.owner)
 				netHandler.UpdatePowerup(transform.position, transform.rotation.eulerAngles, rigidbody.velocity);
