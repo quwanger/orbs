@@ -556,18 +556,32 @@ public class TTSMenu : TTSBehaviour {
 	}
 	
 	private void changePanels(string direction){
-		
+		// TIMETRIAL
 		if(direction == "right"){
 			if(gameMode == TTSLevel.Gametype.TimeTrial){
 				if(activePanel < 7 && !isTweening){
 					activePanel++;
-					if(activePanel == 5){
+					if(activePanel == 5 || activePanel == 7){
 						if(!isTweening){
 							previousPanel = (activePanel-1);
 							isTweening = true;
 							movePanel();
 						}
 					}
+				}
+				
+				if(activePanel == 7 && !isTweening){
+					if(SelectedLevel.ToString() == "level1")
+						Application.LoadLevel("city1-1");
+						
+					else if(SelectedLevel.ToString() == "level2")
+						Application.LoadLevel("city1-2");
+							
+					else if(SelectedLevel.ToString() == "level3")
+						Application.LoadLevel("rural1-1");
+							
+					else if(SelectedLevel.ToString() == "level4")
+						Application.LoadLevel("cliffsidechoas");
 				}
 			}
 			
