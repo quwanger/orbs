@@ -15,7 +15,7 @@ public class TTSClient : MonoBehaviour
 	public string SERVER_IP = "127.0.0.1";
 	public int SERVER_RECEIVE_PORT = 6666;
 	public int CLIENT_RECEIVE_PORT = 6969;
-	public int CLIENT_RECEIVE_TIMEOUT = 15000;
+	public int CLIENT_RECEIVE_TIMEOUT = 0;
 	#endregion
 
 	#region Network
@@ -70,7 +70,7 @@ public class TTSClient : MonoBehaviour
 		if (!isMultiplayer && !isLobby) return;
 
 		client = new UdpClient(CLIENT_RECEIVE_PORT);
-		client.Client.ReceiveTimeout = 15000;
+		client.Client.ReceiveTimeout = CLIENT_RECEIVE_TIMEOUT;
 
 		receiveThread = new Thread(new ThreadStart(PacketListener));
 		receiveThread.IsBackground = true;
@@ -218,8 +218,9 @@ public class TTSClient : MonoBehaviour
 
 				case TTSCommandTypes.RacerDeregister:
 					id = packet.ReadFloat();
-					Debug.Log("DEREGISTER RACER " + id);
+					if(DebugMode) Debug.Log("DEREGISTER RACER " + id);
 					// IMPLMENTE THIS
+					RegisteredRacerConfigs.RemoveAll(x => x.netID == id);
 					break;
 
 				case TTSCommandTypes.RacerAlreadyRegistered:
