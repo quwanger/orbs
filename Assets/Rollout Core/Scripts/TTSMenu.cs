@@ -164,7 +164,6 @@ public class TTSMenu : TTSBehaviour {
 		createCircles("Defense", -455, 98);
 		createCircles("Offense", -455, 128);
 		
-		
 		HighlightRig();
 		HighlightPerk();
 		HighlightPerkB();
@@ -173,7 +172,6 @@ public class TTSMenu : TTSBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
 		if (gameMode != TTSLevel.Gametype.Lobby) {
 			
 			playerText[0].guiText.text = ("Player" + (chosenOrb));
@@ -216,7 +214,7 @@ public class TTSMenu : TTSBehaviour {
 				if(Input.GetKeyDown("joystick 1 button 0")){
 						changePanels("right");
 				}
-			}
+			}	
 
 			//if(Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown("joystick 1 button 7"))
 			if(Input.GetKeyDown(KeyCode.Return))
@@ -242,6 +240,19 @@ public class TTSMenu : TTSBehaviour {
 				
 			Camera.main.enabled = false;
 			cameras[1].enabled = true;
+		}
+		int tempPlayers = numPlayers+1;
+		
+		if(gameMode == TTSLevel.Gametype.MultiplayerOnline || gameMode == TTSLevel.Gametype.TimeTrial){
+			if(Input.GetKeyDown("joystick " + tempPlayers + " button 0") && playerReady[0] == false){
+				if(activePanel == 6){
+					playerReady[0] = true;
+					numPlayers++;
+					TTSRacerConfig tempConfig = new TTSRacerConfig();
+					tempConfig.ControllerID = numPlayers;
+					players.Add(tempConfig);
+				}
+			}
 		}
 		
 		if(gameMode == TTSLevel.Gametype.MultiplayerLocal && activePanel == 3 && !isTweening){
@@ -547,7 +558,7 @@ public class TTSMenu : TTSBehaviour {
 			if(gameMode == TTSLevel.Gametype.TimeTrial){
 				if(activePanel < 7 && !isTweening){
 					activePanel++;
-					if(activePanel == 5 || activePanel == 7){
+					if(activePanel == 5){
 						if(!isTweening){
 							previousPanel = (activePanel-1);
 							isTweening = true;

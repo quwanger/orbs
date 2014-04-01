@@ -21,9 +21,9 @@ public class TTSLobbyMenu : TTSBehaviour
 	void Start() {
 		client = level.client;
 		// Create a player
-		TTSRacerConfig tempConfig = level.initRace.testRacerConfig(true);
-		tempConfig.Name = "BOBBY BOBB";
-		level.menu.players.Add(tempConfig);
+		//TTSRacerConfig tempConfig = level.initRace.testRacerConfig(true);
+		//tempConfig.Name = "BOBBY BOBB";
+		//level.menu.players.Add(tempConfig);
 
 		OnPlayerUpdate();
 		OnLevelUpdate();
@@ -33,9 +33,7 @@ public class TTSLobbyMenu : TTSBehaviour
 	void Update() {
 		if (!networkUpdated)
 			return;
-
-		Debug.Log("Players " + level.menu.players.Count);
-
+		
 		if (lobbyJoined) { OnLobbyJoin(); }
 
 		OnPlayerUpdate();
