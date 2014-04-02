@@ -9,7 +9,7 @@ public class TTSLevel : MonoBehaviour {
 	public List<Camera> _maincameras = new List<Camera>();
 	public List<Camera> _otherCameras = new List<Camera>();
 	
-	public enum Gametype {Lobby, MultiplayerLocal, MultiplayerOnline, TimeTrial};
+	public enum Gametype {Lobby, MultiplayerLocal, MultiplayerOnline, TimeTrial, Arcade};
 	public Gametype currentGameType = Gametype.MultiplayerLocal;
 	
 	public enum LevelType { cliff, night, backroad, downtown, future1, future2 };

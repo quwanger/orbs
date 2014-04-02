@@ -192,7 +192,7 @@ public class TTSMenu : TTSBehaviour {
 			
 			if(activePanel == 4 || activePanel == 5 || activePanel == 6){
 				// Y BUTTON RIG SELECT
-				if(Input.GetKeyDown(tempJoystick) || Input.GetKeyDown(KeyCode.Y)){
+				if(Input.GetKeyDown(tempJoystickB) || Input.GetKeyDown(KeyCode.Y)){
 					if (activePanel == 4) {
 						characterColor[activeColorIndex].guiTexture.enabled = false;
 

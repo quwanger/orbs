@@ -67,7 +67,7 @@ MonoBehaviour:
   hudPerkPool1: {fileID: 0}
   hudPerkPool2: {fileID: 0}
   BoostPrefab: {fileID: 100006, guid: f3a172c9924cf0944bb9de17cebc8f60, type: 2}
-  finishlineObject: {fileID: 0}
+  finishlineObject: {fileID: 100000, guid: e608aa00b6dff624cb4abc32347e7b3b, type: 2}
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -130,6 +130,8 @@ MonoBehaviour:
   AISlowDownDistance: 300
   hardTurnDistance: 100
   turnCautiousness: 4
+  wallAvoidanceDistance: 2
+  wallAvoidanceStrength: 2
 --- !u!114 &11400006
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -31,12 +31,41 @@ public class TTSFinishBox : TTSBehaviour {
 				foreach(GameObject m in minimap){
 					m.SetActive(false);
 				}
-				collision.gameObject.GetComponent<TTSRacer>().canMove=false;
+				
+				TTSRacer tempRacer = collision.gameObject.GetComponent<TTSRacer>();
+				
+				tempRacer.canMove=false;
+				tempRacer.finished = true;
+				if(tempRacer.player != TTSRacer.PlayerType.AI){
+					if(level.currentGameType == TTSLevel.Gametype.MultiplayerLocal){
+						//splitscreen fadeout stuff
+						//tempRacer.myCamera.GetComponent<TTSCameraFade>().StartFade(new Color(0,0,0,1.0f), 1.0f);
+					}
+				}
+				
 				addToFinishedRacers(collision.gameObject);
 				updateFinishScreens();
 				place++;
 			}
-		}	
+		}
+		
+		if(level.currentGameType == TTSLevel.Gametype.MultiplayerLocal){
+			foreach(GameObject racer in racers){
+				if(racer.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player){
+					if(!racer.GetComponent<TTSRacer>().finished){
+						return;
+					}
+				}
+			}
+		}else{
+			foreach(GameObject racer in racers){
+				if(!racer.GetComponent<TTSRacer>().finished){
+					return;
+				}
+			}
+		}
+		
+		level.raceHasFinished = true;
 	}
 	
 	public void createNewFinishPanel(GameObject racer, bool visible){
@@ -64,7 +93,7 @@ public class TTSFinishBox : TTSBehaviour {
 				}
 			}
 			
-			for(int i=0; i<panels.Count; i++){
+			for(int i=0; i<positions.Count; i++){
 				finishLine.GetComponent<TTSFinishline>().positions[i].text = positions[i];
 				finishLine.GetComponent<TTSFinishline>().rigs[i].text = rigs[i].ToString();
 				finishLine.GetComponent<TTSFinishline>().times[i].text = times[i];
@@ -89,10 +118,9 @@ public class TTSFinishBox : TTSBehaviour {
 		finishedRacer.place = place;
 		FinishedRacerStats.Add(go);
 		
-		if(racerToAdd.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.AI)
-			createNewFinishPanel(go, false);
-		else
+		if(racerToAdd.GetComponent<TTSRacer>().player != TTSRacer.PlayerType.AI){
 			createNewFinishPanel(go, true);
+		}
 		
 		//these are the lists that will be used to populate the list appearing on the right side of the finish panel
 		positions.Add (place.ToString());

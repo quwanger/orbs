@@ -32,14 +32,23 @@ public class TTSInitRace : MonoBehaviour
 
 	// Use this for initialization
 	void Start() {
+
+		level = GetComponent<TTSLevel>();
 		
 		// Menu passing in data
 		GameObject dataToPass = GameObject.Find("DataToPass");
 		if(dataToPass && dataToPass.GetComponent<TTSDataToPass>().gametype != TTSLevel.Gametype.Lobby){
 			racerConfigs = GameObject.Find("DataToPass").GetComponent<TTSDataToPass>().players;
-			gameType = GameObject.Find("DataToPass").GetComponent<TTSDataToPass>().gametype;
-
+			
 			numHumanPlayers = racerConfigs.FindAll(IsHuman).Count;
+			
+			if(numHumanPlayers == 1){
+				level.currentGameType = gameType = TTSLevel.Gametype.Arcade;
+			}else{
+				level.currentGameType = gameType = GameObject.Find("DataToPass").GetComponent<TTSDataToPass>().gametype;
+			}
+
+			
 
 			foreach (TTSRacerConfig config in racerConfigs) {
 				Debug.Log(config.ControllerID);
@@ -52,8 +61,6 @@ public class TTSInitRace : MonoBehaviour
 			Debug.Log(gameType);
 		}
 
-		level = GetComponent<TTSLevel>();
-
 		if (DebugMode || racerConfigs == null) {
 			Debug.Log("INIT RACE: GENERATING RACERS");
 
@@ -64,6 +71,10 @@ public class TTSInitRace : MonoBehaviour
 			}
 
 			for (int i = 0; i < numAIPlayers; i++) {
+				racerConfigs.Add(testRacerConfig(false));
+			}
+		} else if(gameType == TTSLevel.Gametype.MultiplayerLocal || gameType == TTSLevel.Gametype.Arcade ) {
+			for(int i=racerConfigs.Count; i<StartingPoints.Count; i++){
 				racerConfigs.Add(testRacerConfig(false));
 			}
 		}
