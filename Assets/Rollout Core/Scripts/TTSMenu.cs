@@ -193,23 +193,16 @@ public class TTSMenu : TTSBehaviour {
 			if(activePanel == 4 || activePanel == 5 || activePanel == 6){
 				// Y BUTTON RIG SELECT
 				if(Input.GetKeyDown(tempJoystick) || Input.GetKeyDown(KeyCode.Y)){
-					if(activePanel == 4){
-						if(activeColorIndex == 6){
-							activeColorIndex = 0;
-						}
-						
-						foreach(GameObject i in characterColor){
-							i.guiTexture.enabled = false;
-						}
-						
+					if (activePanel == 4) {
+						characterColor[activeColorIndex].guiTexture.enabled = false;
+
+						activeColorIndex = (activeColorIndex + 1) % characterColor.Length;
 						characterColor[activeColorIndex].guiTexture.enabled = true;
-						
-						activeColorIndex ++;
 					}
 				}
 				
 				if(Input.GetKeyDown(tempJoystick)){
-						changePanels("right");
+					changePanels("right");
 				}
 			}
 			

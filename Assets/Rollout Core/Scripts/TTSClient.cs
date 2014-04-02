@@ -632,7 +632,7 @@ public class TTSPacketWriter
 
 	public void AddData(string str, int size) {
 		byte[] temp = new byte[size], bytes = System.Text.Encoding.UTF8.GetBytes(str);
-		Buffer.BlockCopy(bytes, 0, temp, 0, size);
+		Buffer.BlockCopy(bytes, 0, temp, 0, bytes.Length);
 		AddData(temp);
 	}
 

@@ -119,8 +119,6 @@ public class TTSServerMenu : TTSBehaviour {
 
 	List<LobbyData> serverLobbies = new List<LobbyData>();
 	public void ReceiveLobby(LobbyData lobby) {
-		Debug.Log("START");
-
 		lock (serverLobbies) {
 			int index = serverLobbies.FindIndex(x => x.ID == lobby.ID);
 			if (index != -1) {
@@ -131,8 +129,6 @@ public class TTSServerMenu : TTSBehaviour {
 			}
 			networkUpdated = true;
 		}
-
-		Debug.Log("END");
 	}
 
 	public void OnLobbyUpdate(List<LobbyData> serverLobbies) {

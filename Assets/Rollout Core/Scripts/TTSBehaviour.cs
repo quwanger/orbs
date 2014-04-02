@@ -25,7 +25,7 @@ public class TTSBehaviour : MonoBehaviour {
 
 	public enum RigType { Rhino, Scorpion, Spider, Dragon, Antique, NextGen, Testing };
 
-	public enum CharacterTypes { Character_Default, Character1, Character2 };
+	public enum CharacterTypes { character_yellow, character_purple, character_orange, character_blue, character_red, character_green };
 
 	public enum PowerupType {None, EntropyCannon, DrezzStones, TimeBonus, SuperC, Shield, Helix, Shockwave, Leech, Lottery};
 	
