@@ -61,14 +61,12 @@ public class TTSPowerup : TTSBehaviour
 		GamePadState state;
 		PlayerIndex playerIndex;
 	#endif
-	
-	void Awake() {
-		pp2 = this.GetComponent<TTSPerkManager>().equiptPerkPool2;
-	}
 
 	void Start() {
 		ppFront = this.GetComponent<TTSRacer>().CurrentRig.powerupPositionsFront;
 		ppBack = this.GetComponent<TTSRacer>().CurrentRig.powerupPositionsBack;
+
+		pp2 = this.GetComponent<TTSPerkManager>().equiptPerkPool2;
 	}
 
 	#region monobehaviour methods
