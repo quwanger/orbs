@@ -66,7 +66,7 @@ public class TTSLevel : MonoBehaviour {
 	}
 	#endregion
 
-	#region Accessors
+	#region Accessors/Helpers
 	public TTSLevel level {
 		get {
 			return instance;
@@ -118,6 +118,25 @@ public class TTSLevel : MonoBehaviour {
 		Debug.LogError("Tried to set a readonly property: " + source);
 	}
 	
+	// Helpers
+	public string LevelTypeToFileName(LevelType type) {
+		switch (type) {
+			case LevelType.backroad:
+				return "city1-1";
+			case LevelType.downtown:
+				return "city1-2";
+			case LevelType.cliff:
+				return "cliffsidechoas";
+			case LevelType.future1:
+				return "future1-1";
+			case LevelType.future2:
+				return "future1-2";
+			case LevelType.night:
+				return "rural1-1";
+		}
+		return "hub-world";
+	}
+
 	#endregion
 	
 	

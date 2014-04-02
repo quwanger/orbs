@@ -755,7 +755,6 @@ public class TTSRacerNetHandler : TTSNetworkHandle
 		PerkA = config.PerkA;
 		PerkB = config.PerkB;
 		Character = config.CharacterType;
-		Debug.Log((TTSBehaviour.CharacterTypes)Character);
 
 		Name = ((TTSBehaviour.CharacterTypes)Character).ToString().Replace("character_", "");
 		Name += " " + (TTSBehaviour.RigType)Rig;

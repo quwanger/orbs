@@ -109,6 +109,10 @@ public class TTSClient : MonoBehaviour
 		}
 		SendPacket(UpdatePacket, true);
 
+		if (levelToLoad != -1) {
+			OnStartRace();
+		}
+
 		if (!isMultiplayer)
 			return;
 		// Code to run during in game.
@@ -172,6 +176,22 @@ public class TTSClient : MonoBehaviour
 			switch (command) {
 
 				#region Lobby
+
+				#region Lobby Countdown
+				case TTSCommandTypes.LobbyCountdownUpdate:
+					float timeLeft = packet.ReadFloat();
+					Debug.Log(timeLeft);
+					break;
+
+				case TTSCommandTypes.LobbyStopCountdown:
+					Debug.Log("COUNTDOWN STOPPED");
+					break;
+
+				case TTSCommandTypes.LobbyStartGame:
+					levelToLoad = packet.ReadInt32();
+					break;
+				#endregion
+
 				case TTSCommandTypes.LobbyRegisterOK:
 					LobbyID = packet.ReadInt32();
 					EnteredLobby = true;
@@ -240,6 +260,7 @@ public class TTSClient : MonoBehaviour
 					id = packet.ReadFloat();
 					netHandles[id].isServerRegistered = true;
 					int index = packet.ReadInt32(); // Starting point index
+					// IMPLEMENT THIS
 					break;
 
 				case TTSCommandTypes.PowerupRegisterOK:
@@ -250,7 +271,7 @@ public class TTSClient : MonoBehaviour
 				case TTSCommandTypes.RacerDeregister:
 					id = packet.ReadFloat();
 					if(DebugMode) Debug.Log("DEREGISTER RACER " + id);
-					// IMPLMENTE THIS
+					// IMPLMENT THIS
 					RegisteredRacerConfigs.RemoveAll(x => x.netID == id);
 					
 					if (isLobby) lobbyMenu.networkUpdated = true;
@@ -272,6 +293,14 @@ public class TTSClient : MonoBehaviour
 	}
 
 	#region In Lobby
+	int levelToLoad = -1;
+	public void OnStartRace() {
+		TTSLevel.LevelType levelType = (TTSLevel.LevelType)levelToLoad;
+		Debug.Log("LOAD " + level.LevelTypeToFileName(levelType));
+		Application.LoadLevel(level.LevelTypeToFileName(levelType));
+		levelToLoad = -1;
+	}
+
 	TTSServerMenu serverMenu;
 	TTSLobbyMenu lobbyMenu;
 	public void RequestLobbyInfo(TTSServerMenu menu) {
@@ -427,9 +456,18 @@ public static class TTSCommandTypes
 	public const int CloseConnection      = 9999;
 
 	// Lobby
-	public const int LobbyRegister     = 100;
-	public const int LobbyRegisterOK   = 101;
-	public const int LobbyRegisterFail = 109;
+	public const int LobbyRegister		= 100;
+	public const int LobbyRegisterOK	= 101;
+	public const int LobbyRegisterFail	= 109;
+	public const int LobbyInfoRequest	= 110;
+	public const int LobbyInfoReturn	= 111;
+	public const int LobbyStartGame		= 140;
+	public const int LobbyEndGame		= 141;
+	public const int LobbyCountdownUpdate	= 124;
+	public const int LobbyStopCountdown	= 125;
+
+	// Object Control
+	public const int GiveControl = 1111;
 
 	// Object
 	public const int ObjectUpdate            = 1004;

@@ -46,6 +46,7 @@ public class TTSInitRace : MonoBehaviour
 				Debug.Log((TTSBehaviour.RigType)config.RigType);
 				Debug.Log((TTSBehaviour.PerkType)config.PerkA);
 				Debug.Log((TTSBehaviour.PowerupType)config.PerkB);
+				Debug.Log((TTSBehaviour.CharacterTypes)config.CharacterType);
 				Debug.Log(config.Index);
 			}
 
