@@ -247,6 +247,7 @@ public class TTSMenu : TTSBehaviour {
 					numPlayers++;
 					TTSRacerConfig tempConfig = new TTSRacerConfig();
 					tempConfig.ControllerID = numPlayers;
+					tempConfig.Index = players.Count;
 					players.Add(tempConfig);
 				}
 			}
@@ -262,6 +263,7 @@ public class TTSMenu : TTSBehaviour {
 
 				TTSRacerConfig tempConfig = new TTSRacerConfig();
 				tempConfig.ControllerID = numPlayers;
+				tempConfig.Index = players.Count;
 
 				players.Add(tempConfig);
 			}
@@ -275,6 +277,7 @@ public class TTSMenu : TTSBehaviour {
 
 				TTSRacerConfig tempConfig = new TTSRacerConfig();
 				tempConfig.ControllerID = numPlayers;
+				tempConfig.Index = players.Count;
 
 				players.Add(tempConfig);
 			}
@@ -288,6 +291,7 @@ public class TTSMenu : TTSBehaviour {
 
 				TTSRacerConfig tempConfig = new TTSRacerConfig();
 				tempConfig.ControllerID = numPlayers;
+				tempConfig.Index = players.Count;
 
 				players.Add(tempConfig);
 			}
@@ -301,6 +305,7 @@ public class TTSMenu : TTSBehaviour {
 
 				TTSRacerConfig tempConfig = new TTSRacerConfig();
 				tempConfig.ControllerID = numPlayers;
+				tempConfig.Index = players.Count;
 
 				players.Add(tempConfig);
 			}

@@ -16,6 +16,7 @@ public class TTSInitRace : MonoBehaviour
 	public GameObject playericonBig;
 
 	private int startingPointIndex = 0;
+	int randomStartingIndex = 0;
 
 	//private string tempRigChoice = "Rig_Rhino";
 	private string tempRigChoice;
@@ -48,7 +49,7 @@ public class TTSInitRace : MonoBehaviour
 				level.currentGameType = gameType = GameObject.Find("DataToPass").GetComponent<TTSDataToPass>().gametype;
 			}
 
-			
+			randomStartingIndex = (int)Random.Range(0.0f, 10.0f);
 
 			foreach (TTSRacerConfig config in racerConfigs) {
 				Debug.Log(config.ControllerID);
@@ -67,15 +68,15 @@ public class TTSInitRace : MonoBehaviour
 			racerConfigs = new List<TTSRacerConfig>();
 
 			for (int i = 0; i < numHumanPlayers; i++) {
-				racerConfigs.Add(testRacerConfig(true));
+				racerConfigs.Add(testRacerConfig(true, racerConfigs.Count));
 			}
 
 			for (int i = 0; i < numAIPlayers; i++) {
-				racerConfigs.Add(testRacerConfig(false));
+				racerConfigs.Add(testRacerConfig(false, racerConfigs.Count));
 			}
 		} else if(gameType == TTSLevel.Gametype.MultiplayerLocal || gameType == TTSLevel.Gametype.Arcade ) {
 			for(int i=racerConfigs.Count; i<StartingPoints.Count; i++){
-				racerConfigs.Add(testRacerConfig(false));
+				racerConfigs.Add(testRacerConfig(false, i));
 			}
 		}
 
@@ -112,9 +113,9 @@ public class TTSInitRace : MonoBehaviour
 		}
 	}
 
-	public TTSRacerConfig testRacerConfig(bool Human) {
+	public TTSRacerConfig testRacerConfig(bool Human, int index) {
 		TTSRacerConfig config = new TTSRacerConfig();
-		config.Index = 99; // So that the racers will use the starting point index.
+		config.Index = (index != -1)?index:99; // So that the racers will use the starting point index.
 		config.RigType = Random.Range(0, Rigs.Count);
 		config.PerkA = (int)TTSBehaviour.PerkType.Acceleration;
 		config.PerkB = (int)TTSBehaviour.PowerupType.Leech;
@@ -134,7 +135,7 @@ public class TTSInitRace : MonoBehaviour
 	}
 
 	private void LobbyInitialize() {
-		InitToHuman(InstantiateRacer(testRacerConfig(true)));
+		InitToHuman(InstantiateRacer(testRacerConfig(true, 0)));
 	}
 
 	public GameObject InstantiateRacer() {
@@ -147,12 +148,12 @@ public class TTSInitRace : MonoBehaviour
 		config.RigType = (Rigs.Count > config.RigType) ? config.RigType : 0;
 		config.CharacterType = (Characters.Count > config.CharacterType) ? config.CharacterType : 0;
 		config.Index = (StartingPoints.Count > config.Index) ? config.Index : startingPointIndex;
-
+		
 		//gets the starting positions, sets them as taken if someone spawning on them already
+		startingPointIndex = (config.Index + randomStartingIndex) % StartingPoints.Count; // Always the next starting position. Loop around if array out of bounds.
 		TTSStartingPoint startPoint = StartingPoints[config.Index].GetComponent<TTSStartingPoint>();
 		startPoint.isTaken = true;
-		startingPointIndex = (config.Index + 1) % StartingPoints.Count; // Always the next starting position. Loop around if array out of bounds.
-
+		
 		// Instantiate the gameobjects.
 		GameObject rig = (GameObject)Instantiate(getRig((TTSBehaviour.RigType)config.RigType), startPoint.transform.position, startPoint.transform.rotation);
 		GameObject character = (GameObject)Instantiate(Characters[config.CharacterType], startPoint.transform.position, startPoint.transform.rotation);

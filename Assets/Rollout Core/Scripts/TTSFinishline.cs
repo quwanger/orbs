@@ -24,32 +24,15 @@ public class TTSFinishline : MonoBehaviour {
 	public GUIText[] positions;
 	public GUIText[] rigs;
 	public GUIText[] times;
+	public GUIText[] playernames;
+	public GUIText[] colours;
+	
 	
 	//populate gui stuff with the information stored in myFinishedRacer;
 	
 	public void PopulatePanel(){
 		//levelName
-		switch(Application.loadedLevelName){
-			case("city1-1"):
-				levelName.text = "Backroad Blitz";
-			break;
-			
-			case("city1-2"):
-				levelName.text = "Downtown Domination";
-			break;
-
-			case("rural-1"):
-				levelName.text = "Night Fright";
-			break;
-			
-			case("cliffsidecoas"):
-				levelName.text = "Cliffside Chaos";
-			break;
-			
-			case("future1-1"):
-				levelName.text = "Digital Palace";
-			break;	
-		}
+		PopulateTrackName();
 		
 		placement.text = myFinishedRacer.place.ToString();
 		
@@ -82,5 +65,29 @@ public class TTSFinishline : MonoBehaviour {
 		//best time
 		
 		//world time
+	}
+	
+	public void PopulateTrackName(){
+		switch(Application.loadedLevelName){
+			case("city1-1"):
+				levelName.text = "Backroad Blitz";
+			break;
+			
+			case("city1-2"):
+				levelName.text = "Downtown Domination";
+			break;
+
+			case("rural-1"):
+				levelName.text = "Night Fright";
+			break;
+			
+			case("cliffsidecoas"):
+				levelName.text = "Cliffside Chaos";
+			break;
+			
+			case("future1-1"):
+				levelName.text = "Digital Palace";
+			break;	
+		}
 	}
 }

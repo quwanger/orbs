@@ -19,6 +19,7 @@ public class TTSHubZoning : TTSBehaviour {
 			level.GetComponent<TTSMenu>().gameMode = TTSLevel.Gametype.TimeTrial;
 			level.GetComponent<TTSMenu>().activePanel = 4;
 			level.GetComponent<TTSMenu>().movePanel();
+			
 			//level.GetComponent<TTSMenu>().panels[4].SetActive(true);
 			//iTween.MoveTo(level.GetComponent<TTSMenu>().panels[4]], iTween.Hash("x", 0.5, "time", 2.0f, "onComplete", "stoppedTweening", "onCompleteTarget", gameObject));
 		}

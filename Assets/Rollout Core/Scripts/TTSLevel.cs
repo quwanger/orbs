@@ -63,6 +63,11 @@ public class TTSLevel : MonoBehaviour {
 			if(Input.GetKeyDown(KeyCode.O)) Debug.Log("O");
 			if(Input.GetKeyDown(KeyCode.P)) Debug.Log("P");
 		}
+		
+		if(raceHasFinished){
+			if(Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown("joystick 1 button 0"))	Application.LoadLevel(Application.loadedLevel);
+			if(Input.GetKeyDown(KeyCode.B) || Input.GetKeyDown("joystick 1 button 1")) Application.LoadLevel("hub-world");
+		}
 	}
 	#endregion
 

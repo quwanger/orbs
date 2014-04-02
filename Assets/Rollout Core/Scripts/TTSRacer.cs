@@ -267,8 +267,13 @@ public class TTSRacer : TTSBehaviour
 		if (player == PlayerType.Player) {
 			if (playerNum == 1) {
 				if(level.useKeyboard) {
-					vInput = Input.GetAxis ("Key_YAxis");
-					hInput = Input.GetAxis ("Key_XAxis");
+					if(!level.DebugMode){
+						vInput = Input.GetAxis("L_YAxis_1");
+						hInput = Input.GetAxis("L_XAxis_1");
+					}else{
+						vInput = Input.GetAxis ("Key_YAxis");
+						hInput = Input.GetAxis ("Key_XAxis");
+					}
 				}
 
 				#if UNITY_STANDALONE_WIN && !UNITY_EDITOR

@@ -7,10 +7,13 @@ public class TTSFinishBox : TTSBehaviour {
 	public List<GameObject> panels = new List<GameObject>();
 	public GameObject racerStatGameObject;
 	public GameObject racerFinishPanel;
+	public GameObject racerFinishPanelSplitscreen;
 	
 	public List<string> positions = new List<string>();
 	public List<RigType> rigs = new List<RigType>();
 	public List<string> times = new List<string>();
+	public List<string> colour = new List<string>();
+	public List<string> playerName = new List<string>();
 	
 	public int place = 1;
 	
@@ -18,6 +21,10 @@ public class TTSFinishBox : TTSBehaviour {
 	// Use this for initialization
 	void Start () {
 		minimap = GameObject.FindGameObjectsWithTag("minimap");
+		
+		if(level.currentGameType == TTSLevel.Gametype.MultiplayerLocal){
+			createNewSplitscreenFinishPanel();
+		}
 	}
 	
 	// Update is called once per frame
@@ -39,7 +46,7 @@ public class TTSFinishBox : TTSBehaviour {
 				if(tempRacer.player != TTSRacer.PlayerType.AI){
 					if(level.currentGameType == TTSLevel.Gametype.MultiplayerLocal){
 						//splitscreen fadeout stuff
-						//tempRacer.myCamera.GetComponent<TTSCameraFade>().StartFade(new Color(0,0,0,1.0f), 1.0f);
+						tempRacer.myCamera.GetComponent<TTSCameraFade>().StartFade(new Color(0,0,0,1.0f), 0.5f);
 					}
 				}
 				
@@ -66,6 +73,25 @@ public class TTSFinishBox : TTSBehaviour {
 		}
 		
 		level.raceHasFinished = true;
+		
+		if(level.currentGameType == TTSLevel.Gametype.MultiplayerLocal){
+			
+			int tempCounter = 0;
+			
+			foreach(Camera camera in level.cameras){
+				if(tempCounter==0){
+					camera.rect = new Rect(0, 0, 1.0f, 1.0f);
+					camera.GetComponent<TTSCameraFade>().StartFade(new Color(0,0,0,0), 0.1f);
+				}else{
+					camera.gameObject.SetActive(false);
+				}
+				tempCounter++;
+			}
+			
+			foreach(GameObject finishLine in panels){
+				finishLine.SetActive(true);
+			}
+		}	
 	}
 	
 	public void createNewFinishPanel(GameObject racer, bool visible){
@@ -80,6 +106,12 @@ public class TTSFinishBox : TTSBehaviour {
 		panels.Add (go);
 		
 		go.GetComponent<TTSFinishline>().PopulatePanel();
+	}
+	
+	public void createNewSplitscreenFinishPanel(){
+		GameObject go = (GameObject)Instantiate(racerFinishPanelSplitscreen);
+		go.GetComponent<TTSFinishline>().PopulateTrackName();
+		panels.Add (go);
 	}
 	
 	public void updateFinishScreens(){
@@ -97,6 +129,10 @@ public class TTSFinishBox : TTSBehaviour {
 				finishLine.GetComponent<TTSFinishline>().positions[i].text = positions[i];
 				finishLine.GetComponent<TTSFinishline>().rigs[i].text = rigs[i].ToString();
 				finishLine.GetComponent<TTSFinishline>().times[i].text = times[i];
+				if(level.currentGameType == TTSLevel.Gametype.MultiplayerLocal)
+					finishLine.GetComponent<TTSFinishline>().colours[i].text = colour[i];
+				if(level.currentGameType == TTSLevel.Gametype.MultiplayerLocal)
+					finishLine.GetComponent<TTSFinishline>().playernames[i].text = playerName[i];
 			}
 		}
 	}
@@ -118,13 +154,22 @@ public class TTSFinishBox : TTSBehaviour {
 		finishedRacer.place = place;
 		FinishedRacerStats.Add(go);
 		
-		if(racerToAdd.GetComponent<TTSRacer>().player != TTSRacer.PlayerType.AI){
-			createNewFinishPanel(go, true);
+		//only make one screen per player if it's not splitscreen
+		if(level.currentGameType != TTSLevel.Gametype.MultiplayerLocal){
+			if(racerToAdd.GetComponent<TTSRacer>().player != TTSRacer.PlayerType.AI){
+				createNewFinishPanel(go, true);
+			}
 		}
 		
 		//these are the lists that will be used to populate the list appearing on the right side of the finish panel
 		positions.Add (place.ToString());
 		rigs.Add(racerToAdd.GetComponent<TTSRacer>().CurrentRig.rigType);
 		times.Add(finishedRacer.time);
+		colour.Add(racerToAdd.GetComponent<TTSRacer>().displayMeshComponent.gameObject.GetComponent<TTSCharacterColour>().CharacterColour);
+		if(racerToAdd.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.AI){
+			playerName.Add("AI " + racerToAdd.GetComponent<TTSRacer>().playerNum);
+		}else{
+			playerName.Add("Player " + racerToAdd.GetComponent<TTSRacer>().playerNum);
+		}
 	}
 }
