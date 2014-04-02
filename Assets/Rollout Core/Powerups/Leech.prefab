@@ -141,7 +141,7 @@ AudioSource:
   serializedVersion: 3
   m_audioClip: {fileID: 8300000, guid: a4467c75f195144c6b2af9e751a8738d, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: .200000003
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -288,7 +288,10 @@ MonoBehaviour:
   nextWaypoint: {fileID: 0}
   destinationPosition: {x: 0, y: 0, z: 0}
   beeping: {fileID: 0}
+  racerStuck: 0
   stuckMaterial: {fileID: 2100000, guid: f8c061fa99a6d44fd9eae9d0ab9a056e, type: 2}
+  leechesInPack: 0
+  racersAheadOfLeechOwner: 0
 --- !u!135 &13500000
 SphereCollider:
   m_ObjectHideFlags: 1

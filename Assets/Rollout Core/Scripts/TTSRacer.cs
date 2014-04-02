@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR
 using XInputDotNetPure;
 #endif
 
@@ -136,7 +136,7 @@ public class TTSRacer : TTSBehaviour
 	public int rigID;
 
 	//XInput
-	#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
+	#if UNITY_STANDALONE_WIN || UNITY_EDITOR
 		PlayerIndex playerIndex;
 		GamePadState state;
 	#endif
@@ -271,7 +271,7 @@ public class TTSRacer : TTSBehaviour
 					hInput = Input.GetAxis ("Key_XAxis");
 				}
 
-				#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
+				#if UNITY_STANDALONE_WIN || UNITY_EDITOR
 				else if(!level.useKeyboard) {
 					state = GamePad.GetState(PlayerIndex.One);
 					vInput = state.Triggers.Right;
@@ -279,7 +279,7 @@ public class TTSRacer : TTSBehaviour
 				}
 				#endif
 
-				#if UNITY_STANDALONE_OSX || UNITY_EDITOR
+				#if UNITY_STANDALONE_OSX && !UNITY_EDITOR
 				else if(!level.useKeyboard) {
 					vInput = Input.GetAxis("L_YAxis_1");
 					hInput = Input.GetAxis("L_XAxis_1");
@@ -287,37 +287,37 @@ public class TTSRacer : TTSBehaviour
 				#endif
 			} else if (playerNum == 2) {
 
-				#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
+				#if UNITY_STANDALONE_WIN || UNITY_EDITOR
 					state = GamePad.GetState(PlayerIndex.Two);
 					vInput = state.Triggers.Right;
 					hInput = state.ThumbSticks.Left.X;
 				#endif
 
-				#if UNITY_STANDALONE_OSX || UNITY_EDITOR
+				#if UNITY_STANDALONE_OSX && !UNITY_EDITOR
 					vInput = Input.GetAxis("L_YAxis_2");
 					hInput = Input.GetAxis("L_XAxis_2");
 				#endif
 			} else if (playerNum == 3) {
 
-				#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
+				#if UNITY_STANDALONE_WIN || UNITY_EDITOR
 					state = GamePad.GetState(PlayerIndex.Three);
 					vInput = state.Triggers.Right;
 					hInput = state.ThumbSticks.Left.X;
 				#endif
 
-				#if UNITY_STANDALONE_OSX || UNITY_EDITOR
+				#if UNITY_STANDALONE_OSX && !UNITY_EDITOR
 					vInput = Input.GetAxis("L_YAxis_3");
 					hInput = Input.GetAxis("L_XAxis_3");
 				#endif
 			} else if (playerNum == 4) {
 
-				#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
+				#if UNITY_STANDALONE_WIN || UNITY_EDITOR
 					state = GamePad.GetState(PlayerIndex.Four);
 					vInput = state.Triggers.Right;
 					hInput = state.ThumbSticks.Left.X;
 				#endif
 
-				#if UNITY_STANDALONE_OSX || UNITY_EDITOR
+				#if UNITY_STANDALONE_OSX && !UNITY_EDITOR
 					vInput = Input.GetAxis("L_YAxis_4");
 					hInput = Input.GetAxis("L_XAxis_4");
 				#endif
@@ -421,11 +421,13 @@ public class TTSRacer : TTSBehaviour
 
 		if (onGround) {
 			RacerSounds.pitch = Mathf.Max(Mathf.Lerp(RacerSounds.pitch, TTSUtils.Remap(rigidbody.velocity.magnitude + offset, 0f, 100.0f, 0.5f, 1.0f, false), 0.1f), 0);
-			RacerSounds.volume = Mathf.Max(Mathf.Lerp(RacerSounds.volume, TTSUtils.Remap(rigidbody.velocity.magnitude + offset, 0f, 100.0f, 0.5f, 1f, false), 0.1f) * 1.5f, 0); // Needs Cleaning
+			//RacerSounds.volume = Mathf.Max(Mathf.Lerp(RacerSounds.volume, TTSUtils.Remap(rigidbody.velocity.magnitude + offset, 0f, 100.0f, 0.5f, 1f, false), 0.1f) * 1.5f, 0); // Needs Cleaning
+			RacerSounds.volume = 0.35f;
 		}
 		else {
 			RacerSounds.pitch = Mathf.Max(Mathf.Lerp(RacerSounds.pitch, TTSUtils.Remap(Mathf.Abs(vInput), 0.0f, 1.0f, 0.5f, 1.0f, false), 0.1f), 0);
-			RacerSounds.volume = Mathf.Max(Mathf.Lerp(RacerSounds.volume, TTSUtils.Remap(Mathf.Abs(vInput), 0.0f, 1.0f, 0.5f, 1.0f, false) * 1.5f, 0), 0); // Needs cleaning
+			//RacerSounds.volume = Mathf.Max(Mathf.Lerp(RacerSounds.volume, TTSUtils.Remap(Mathf.Abs(vInput), 0.0f, 1.0f, 0.5f, 1.0f, false) * 1.5f, 0), 0); // Needs cleaning
+			RacerSounds.volume = 0.20f;
 		}
 	}
 
