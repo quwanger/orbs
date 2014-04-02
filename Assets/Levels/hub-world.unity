@@ -24929,6 +24929,7 @@ GameObject:
   - 4: {fileID: 1953706109}
   - 33: {fileID: 1953706111}
   - 23: {fileID: 1953706110}
+  - 64: {fileID: 1953706112}
   m_Layer: 0
   m_Name: backFloor
   m_TagString: Untagged
@@ -24973,6 +24974,19 @@ MeshFilter:
     type: 3}
   m_PrefabInternal: {fileID: 105755945}
   m_GameObject: {fileID: 1953706108}
+  m_Mesh: {fileID: 4300058, guid: 2a6891ee09ecf2946abd2d11dca5a07d, type: 3}
+--- !u!64 &1953706112
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1953706108}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_SmoothSphereCollisions: 0
+  m_Convex: 0
   m_Mesh: {fileID: 4300058, guid: 2a6891ee09ecf2946abd2d11dca5a07d, type: 3}
 --- !u!1 &1957161445
 GameObject:
