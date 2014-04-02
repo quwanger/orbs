@@ -233,17 +233,6 @@ public class TTSClient : MonoBehaviour
 					config.LocalControlType = TTSUtils.EnumToInt(TTSRacer.PlayerType.Multiplayer);
 					RegisteredRacerConfigs.Add(config);
 
-					if (DebugMode) {
-						Debug.Log("PLAYER RECEIVED: " +
-							config.Index + " " +
-							(TTSBehaviour.RigType)config.RigType + " " +
-							(TTSBehaviour.PerkType)config.PerkA + " " +
-							(TTSBehaviour.PowerupType)config.PerkB + " Name:" +
-							config.Name + " " +
-							(TTSRacer.PlayerType)config.ControlType + " " +
-							(TTSRacer.PlayerType)config.LocalControlType);
-					}
-
 					if (isLobby) {
 						lobbyMenu.networkUpdated = true;
 					}
@@ -301,6 +290,7 @@ public class TTSClient : MonoBehaviour
 	#region In Lobby
 	int levelToLoad = -1;
 	public void OnStartRace() {
+		level.menu.SaveRacers();
 		TTSLevel.LevelType levelType = (TTSLevel.LevelType)levelToLoad;
 		Debug.Log("LOAD " + level.LevelTypeToFileName(levelType));
 		Application.LoadLevel(level.LevelTypeToFileName(levelType));
@@ -342,26 +332,12 @@ public class TTSClient : MonoBehaviour
 		SendPacket(packet);
 	}
 
-	public void LobbyRacerRegister(int lobby, TTSRacerConfig config) {
-		if(!isMultiplayer && !isLobby)
-			return;
+	public void LeaveLobby() {
+		RegisteredRacerConfigs.Clear();
 
-		LocalRacerConfigs.Add(config);
-
-		TTSPacketWriter tempPacket = new TTSPacketWriter();
-		tempPacket.AddData(TTSCommandTypes.RacerRegister);
-		tempPacket.AddData(-1); // Given from the server
-		tempPacket.AddData(config.RigType);
-		tempPacket.AddData(config.PerkA);
-		tempPacket.AddData(config.PerkB);
-		tempPacket.AddData(config.CharacterType);
-		tempPacket.AddData(config.Name, 16);
-		tempPacket.AddData(config.ControlType);
-
-		if (UpdatePacket.WillOverflow(tempPacket.Length)) {
-			SendPacket(UpdatePacket, true);
-		}
-		UpdatePacket.AddData(tempPacket.GetMinimizedData());
+		UpdatePacket.ClearData();
+		UpdatePacket.AddData(TTSCommandTypes.CloseConnection);
+		SendPacket(UpdatePacket);
 	}
 	#endregion
 

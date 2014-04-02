@@ -548,6 +548,12 @@ public class TTSMenu : TTSBehaviour {
 			break;
 		}
 	}
+
+	public void SaveRacers() {
+		dtp.GetComponent<TTSDataToPass>().players = this.players;
+		dtp.GetComponent<TTSDataToPass>().players.AddRange(level.client.RegisteredRacerConfigs);
+		dtp.GetComponent<TTSDataToPass>().gametype = gameMode;
+	}
 	
 	private void changePanels(string direction){
 		// TIMETRIAL
@@ -620,11 +626,8 @@ public class TTSMenu : TTSBehaviour {
 								player.PerkB = (int)SelectedPerkB;
 								player.RigType = (int)SelectedRig;
 								player.CharacterType = (int)characterColor[activeColorIndex].GetComponent<TTSCharacter>().characterType;
-								Debug.Log(characterColor[activeColorIndex].GetComponent<TTSCharacter>().characterType);
 							}
 						}
-						dtp.GetComponent<TTSDataToPass>().players = this.players;
-						dtp.GetComponent<TTSDataToPass>().gametype = gameMode;
 						// go to mp menu
 						activePanel = 1;
 						previousPanel = 6;

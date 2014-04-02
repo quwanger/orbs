@@ -32,12 +32,14 @@ public class TTSInitRace : MonoBehaviour
 
 	// Use this for initialization
 	void Start() {
+
+		level = GetComponent<TTSLevel>();
 		
 		// Menu passing in data
 		GameObject dataToPass = GameObject.Find("DataToPass");
 		if(dataToPass && dataToPass.GetComponent<TTSDataToPass>().gametype != TTSLevel.Gametype.Lobby){
 			racerConfigs = GameObject.Find("DataToPass").GetComponent<TTSDataToPass>().players;
-			gameType = GameObject.Find("DataToPass").GetComponent<TTSDataToPass>().gametype;
+			level.currentGameType = gameType = GameObject.Find("DataToPass").GetComponent<TTSDataToPass>().gametype;
 
 			numHumanPlayers = racerConfigs.FindAll(IsHuman).Count;
 
@@ -52,8 +54,6 @@ public class TTSInitRace : MonoBehaviour
 
 			Debug.Log(gameType);
 		}
-
-		level = GetComponent<TTSLevel>();
 
 		if (DebugMode || racerConfigs == null) {
 			Debug.Log("INIT RACE: GENERATING RACERS");
@@ -96,6 +96,7 @@ public class TTSInitRace : MonoBehaviour
 					break;
 
 				case TTSRacer.PlayerType.Multiplayer:
+					InitToMultiplayer(InstantiateRacer(config), config);
 					break;
 
 			}
