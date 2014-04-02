@@ -29,9 +29,6 @@ public class TTSPerkManager : TTSBehaviour {
 			case PerkType.Handling:
 				doHandling();
 				break;
-			case PerkType.HotStart:
-				doHotStart();
-				break;
 			case PerkType.ManOWar:
 				doManOWar();
 				break;
@@ -53,6 +50,11 @@ public class TTSPerkManager : TTSBehaviour {
 			case PerkType.PhotoFinish:
 				doPhotoFinish();
 				break;
+			case PerkType.HotStart:
+				if(!hot && level.raceHasStarted){
+					doHotStart();
+				}
+			break;
 			default:
 				break;
 		}
@@ -72,12 +74,9 @@ public class TTSPerkManager : TTSBehaviour {
 	}
 	
 	private void doHotStart() {
-		if(!hot && level.raceHasStarted){
-			//Debug.Log("Hot Start");
-			hot = true;
-			PowerupType p = getRandomPowerup();
-			this.GetComponent<TTSPowerup>().GivePowerup(p);
-		}
+		hot = true;
+		PowerupType p = getRandomPowerup();
+		this.GetComponent<TTSPowerup>().GivePowerup(p);
 	}
 	
 	private void doAcceleration(){

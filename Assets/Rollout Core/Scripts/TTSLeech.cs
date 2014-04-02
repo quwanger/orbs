@@ -66,6 +66,10 @@ public class TTSLeech : TTSBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		
+		if(nextWaypoint == null)
+			LeechExplosion();
+		
 		if(!isInitiated)
 			initialMovement();
 		else
@@ -183,9 +187,11 @@ public class TTSLeech : TTSBehaviour {
 			
 		}
 		
-		if(nextWaypoint.getDifferenceFromEnd(this.transform.position) < 7.0f){
-			if(!racerFound && !racerStuck){
-				resetWaypoints(nextWaypoint);
+		if(nextWaypoint != null){
+			if(nextWaypoint.getDifferenceFromEnd(this.transform.position) < 7.0f){
+				if(!racerFound && !racerStuck){
+					resetWaypoints(nextWaypoint);
+				}
 			}
 		}
 	}
@@ -211,7 +217,8 @@ public class TTSLeech : TTSBehaviour {
 	}
 	
 	private void randomizeTarget(){
-		this.destinationPosition = nextWaypoint.getPointOn(Random.Range(0f,1.0f)) + nextWaypoint.transform.up * (Random.Range(-0.5f,0.5f) * nextWaypoint.boxHeight);
+		if(nextWaypoint != null)
+			this.destinationPosition = nextWaypoint.getPointOn(Random.Range(0f,1.0f)) + nextWaypoint.transform.up * (Random.Range(-0.5f,0.5f) * nextWaypoint.boxHeight);
 		//this.destinationPosition.z -= 10.0f;
 	}
 	

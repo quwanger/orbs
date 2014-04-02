@@ -56,7 +56,7 @@ public class TTSFinishBox : TTSBehaviour {
 			}
 		}
 		
-		if(level.currentGameType == TTSLevel.Gametype.MultiplayerLocal){
+		/*if(level.currentGameType == TTSLevel.Gametype.MultiplayerLocal){
 			foreach(GameObject racer in racers){
 				if(racer.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player){
 					if(!racer.GetComponent<TTSRacer>().finished){
@@ -70,9 +70,18 @@ public class TTSFinishBox : TTSBehaviour {
 					return;
 				}
 			}
+		}*/
+		
+		//to check if all human racers are finished the race
+		foreach(GameObject racer in racers){
+			if(racer.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player){
+				if(!racer.GetComponent<TTSRacer>().finished){
+					return;
+				}
+			}
 		}
 		
-		level.raceHasFinished = true;
+		level.humanPlayersFinished = true;
 		
 		if(level.currentGameType == TTSLevel.Gametype.MultiplayerLocal){
 			
@@ -91,7 +100,16 @@ public class TTSFinishBox : TTSBehaviour {
 			foreach(GameObject finishLine in panels){
 				finishLine.SetActive(true);
 			}
-		}	
+		}
+		
+		//this is to check if all racers have finished the race
+		foreach(GameObject racer in racers){
+			if(!racer.GetComponent<TTSRacer>().finished){
+				return;
+			}
+		}
+		
+		level.raceHasFinished = true;
 	}
 	
 	public void createNewFinishPanel(GameObject racer, bool visible){

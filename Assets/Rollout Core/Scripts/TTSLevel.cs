@@ -19,6 +19,7 @@ public class TTSLevel : MonoBehaviour {
 	
 	public bool raceHasStarted = false;
 	public bool raceHasFinished = false;
+	public bool humanPlayersFinished = false;
 	public GameObject countdown;
 	public bool DebugMode = true;
 	public bool PerksEnabled = true;
@@ -64,7 +65,7 @@ public class TTSLevel : MonoBehaviour {
 			if(Input.GetKeyDown(KeyCode.P)) Debug.Log("P");
 		}
 		
-		if(raceHasFinished){
+		if(humanPlayersFinished){
 			if(Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown("joystick 1 button 0"))	Application.LoadLevel(Application.loadedLevel);
 			if(Input.GetKeyDown(KeyCode.B) || Input.GetKeyDown("joystick 1 button 1")) Application.LoadLevel("hub-world");
 		}
