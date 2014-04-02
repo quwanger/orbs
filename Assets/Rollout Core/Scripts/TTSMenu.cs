@@ -559,7 +559,7 @@ public class TTSMenu : TTSBehaviour {
 							player.PerkA = (int)SelectedPerk;
 							player.PerkB = (int)SelectedPerkB;
 							player.RigType = (int)SelectedRig;
-							Debug.Log("Player " + (RigType)player.RigType);
+							player.CharacterType = (int)characterColor[activeColorIndex].GetComponent<TTSCharacter>().characterType;
 						}
 					}
 					dtp.GetComponent<TTSDataToPass>().players = this.players;
@@ -619,6 +619,7 @@ public class TTSMenu : TTSBehaviour {
 								player.PerkA = (int)SelectedPerk;
 								player.PerkB = (int)SelectedPerkB;
 								player.RigType = (int)SelectedRig;
+								player.CharacterType = (int)characterColor[activeColorIndex].GetComponent<TTSCharacter>().characterType;
 							}
 						}
 						// go to mp menu
@@ -679,6 +680,7 @@ public class TTSMenu : TTSBehaviour {
 								player.PerkA = (int)SelectedPerk;
 								player.PerkB = (int)SelectedPerkB;
 								player.RigType = (int)SelectedRig;
+								player.CharacterType = (int)characterColor[activeColorIndex].GetComponent<TTSCharacter>().characterType;
 							}
 						}
 

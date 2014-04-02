@@ -8357,6 +8357,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 736137941}
   - 131: {fileID: 736137942}
+  - 114: {fileID: 736137943}
   m_Layer: 0
   m_Name: Orange
   m_TagString: Untagged
@@ -8394,6 +8395,22 @@ GUITexture:
   m_RightBorder: 0
   m_TopBorder: 0
   m_BottomBorder: 0
+--- !u!114 &736137943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 736137940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bca06b2accee4ce78a6faf0552dd72f, type: 3}
+  m_Name: 
+  accelerationIncrease: 1500
+  speedIncrease: 75
+  handlingIncrease: 2000
+  offenseIncrease: .300000012
+  defenseIncrease: .300000012
+  characterType: 2
 --- !u!1 &737612223
 GameObject:
   m_ObjectHideFlags: 0
@@ -9668,6 +9685,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 807114385}
   - 131: {fileID: 807114386}
+  - 114: {fileID: 807114387}
   m_Layer: 0
   m_Name: Purple
   m_TagString: Untagged
@@ -9705,6 +9723,22 @@ GUITexture:
   m_RightBorder: 0
   m_TopBorder: 0
   m_BottomBorder: 0
+--- !u!114 &807114387
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 807114384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bca06b2accee4ce78a6faf0552dd72f, type: 3}
+  m_Name: 
+  accelerationIncrease: 1500
+  speedIncrease: 75
+  handlingIncrease: 2000
+  offenseIncrease: .300000012
+  defenseIncrease: .300000012
+  characterType: 1
 --- !u!1 &811112030
 GameObject:
   m_ObjectHideFlags: 0
@@ -12057,6 +12091,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1000608211}
   - 131: {fileID: 1000608212}
+  - 114: {fileID: 1000608213}
   m_Layer: 0
   m_Name: Blue
   m_TagString: Untagged
@@ -12094,6 +12129,22 @@ GUITexture:
   m_RightBorder: 0
   m_TopBorder: 0
   m_BottomBorder: 0
+--- !u!114 &1000608213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1000608210}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bca06b2accee4ce78a6faf0552dd72f, type: 3}
+  m_Name: 
+  accelerationIncrease: 1500
+  speedIncrease: 75
+  handlingIncrease: 2000
+  offenseIncrease: .300000012
+  defenseIncrease: .300000012
+  characterType: 3
 --- !u!1 &1001032841
 GameObject:
   m_ObjectHideFlags: 0
@@ -14761,6 +14812,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1201880623}
   - 131: {fileID: 1201880624}
+  - 114: {fileID: 1201880625}
   m_Layer: 0
   m_Name: Red
   m_TagString: Untagged
@@ -14798,6 +14850,22 @@ GUITexture:
   m_RightBorder: 0
   m_TopBorder: 0
   m_BottomBorder: 0
+--- !u!114 &1201880625
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1201880622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bca06b2accee4ce78a6faf0552dd72f, type: 3}
+  m_Name: 
+  accelerationIncrease: 1500
+  speedIncrease: 75
+  handlingIncrease: 2000
+  offenseIncrease: .300000012
+  defenseIncrease: .300000012
+  characterType: 4
 --- !u!1 &1209304452
 GameObject:
   m_ObjectHideFlags: 0
@@ -18896,6 +18964,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1544723850}
   - 131: {fileID: 1544723851}
+  - 114: {fileID: 1544723852}
   m_Layer: 0
   m_Name: Green
   m_TagString: Untagged
@@ -18933,6 +19002,22 @@ GUITexture:
   m_RightBorder: 0
   m_TopBorder: 0
   m_BottomBorder: 0
+--- !u!114 &1544723852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1544723849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bca06b2accee4ce78a6faf0552dd72f, type: 3}
+  m_Name: 
+  accelerationIncrease: 1500
+  speedIncrease: 75
+  handlingIncrease: 2000
+  offenseIncrease: .300000012
+  defenseIncrease: .300000012
+  characterType: 5
 --- !u!1 &1554496505
 GameObject:
   m_ObjectHideFlags: 0
@@ -21110,6 +21195,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1720214263}
   - 131: {fileID: 1720214264}
+  - 114: {fileID: 1720214265}
   m_Layer: 0
   m_Name: Yellow
   m_TagString: Untagged
@@ -21147,6 +21233,22 @@ GUITexture:
   m_RightBorder: 0
   m_TopBorder: 0
   m_BottomBorder: 0
+--- !u!114 &1720214265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1720214262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bca06b2accee4ce78a6faf0552dd72f, type: 3}
+  m_Name: 
+  accelerationIncrease: 1500
+  speedIncrease: 75
+  handlingIncrease: 2000
+  offenseIncrease: .300000012
+  defenseIncrease: .300000012
+  characterType: 0
 --- !u!1 &1720357870
 GameObject:
   m_ObjectHideFlags: 0
