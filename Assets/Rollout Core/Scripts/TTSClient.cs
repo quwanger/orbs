@@ -33,18 +33,8 @@ public class TTSClient : MonoBehaviour
 	public List<TTSRacerConfig> RegisteredRacerConfigs = new List<TTSRacerConfig>();
 
 	// Status
-	public bool isMultiplayer{
-		get{
-			if(level == null) return false;
-			return level.currentGameType == TTSLevel.Gametype.MultiplayerOnline;
-		}
-	}
-	public bool isLobby {
-		get {
-			if(level == null) return false;
-			return level.currentGameType == TTSLevel.Gametype.Lobby;
-		}
-	}
+	public bool isMultiplayer;
+	public bool isLobby;
 	public bool EnteredLobby = false;
 	public bool InGame = false;
 	public int LobbyID = 0;
@@ -62,12 +52,16 @@ public class TTSClient : MonoBehaviour
 
 	// Use this for initialization
 	void Start() {
-		sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-		serverAddr = IPAddress.Parse(SERVER_IP);
-		endPoint = new IPEndPoint(serverAddr, SERVER_RECEIVE_PORT);
 
 		level = GetComponent<TTSLevel>();
 		initRace = GetComponent<TTSInitRace>();
+
+		isLobby = (level != null) ? level.currentGameType == TTSLevel.Gametype.Lobby : false;
+		isMultiplayer = (level != null) ? level.currentGameType == TTSLevel.Gametype.MultiplayerOnline : false;
+
+		sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+		serverAddr = IPAddress.Parse(SERVER_IP);
+		endPoint = new IPEndPoint(serverAddr, SERVER_RECEIVE_PORT);
 
 		if (!isMultiplayer && !isLobby) return;
 
@@ -233,10 +227,22 @@ public class TTSClient : MonoBehaviour
 					config.RigType = packet.ReadInt32();
 					config.PerkA = packet.ReadInt32();
 					config.PerkB = packet.ReadInt32();
+					config.CharacterType = packet.ReadInt32();
 					config.Name = packet.Read16CharString();
 					config.ControlType = packet.ReadInt32();
 					config.LocalControlType = TTSUtils.EnumToInt(TTSRacer.PlayerType.Multiplayer);
 					RegisteredRacerConfigs.Add(config);
+
+					if (DebugMode) {
+						Debug.Log("PLAYER RECEIVED: " +
+							config.Index + " " +
+							(TTSBehaviour.RigType)config.RigType + " " +
+							(TTSBehaviour.PerkType)config.PerkA + " " +
+							(TTSBehaviour.PowerupType)config.PerkB + " Name:" +
+							config.Name + " " +
+							(TTSRacer.PlayerType)config.ControlType + " " +
+							(TTSRacer.PlayerType)config.LocalControlType);
+					}
 
 					if (isLobby) {
 						lobbyMenu.networkUpdated = true;
