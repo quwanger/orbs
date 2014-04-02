@@ -160,9 +160,6 @@ public class TTSClient : MonoBehaviour
 	}
 
 	public void PacketHandler(byte[] data) {
-		if(!isMultiplayer && !isLobby)
-			return;
-
 		TTSPacketReader packet = new TTSPacketReader(data);
 
 		int command = packet.ReadInt32();
