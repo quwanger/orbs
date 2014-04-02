@@ -121,6 +121,14 @@ public class TTSClient : MonoBehaviour
 			spawnRacers.Clear();
 		}
 	}
+
+	void OnDestroy() {
+		isRunning = false;
+		if (client.Client != null) {
+			client.Client.Close();
+		}
+	}
+
 	void OnApplicationQuit() {
 		isRunning = false;
 
@@ -128,7 +136,9 @@ public class TTSClient : MonoBehaviour
 			UpdatePacket.ClearData();
 			UpdatePacket.AddData(TTSCommandTypes.CloseConnection);
 			SendPacket(UpdatePacket);
+		}
 
+		if (client.Client != null) {
 			client.Client.Close();
 		}
 	}
