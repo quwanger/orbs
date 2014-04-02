@@ -124,7 +124,7 @@ public class TTSClient : MonoBehaviour
 
 	void OnDestroy() {
 		isRunning = false;
-		if (client.Client != null) {
+		if (client != null) {
 			client.Client.Close();
 		}
 	}
@@ -138,7 +138,7 @@ public class TTSClient : MonoBehaviour
 			SendPacket(UpdatePacket);
 		}
 
-		if (client.Client != null) {
+		if (client != null) {
 			client.Client.Close();
 		}
 	}
