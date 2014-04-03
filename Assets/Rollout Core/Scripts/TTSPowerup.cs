@@ -600,7 +600,8 @@ public class TTSPowerup : TTSBehaviour
 		go.GetComponent<ParticleSystem>().startSize = startSize;
 		go.GetComponent<TTSShockwave>().power = go.GetComponent<TTSShockwave>().power * 2.0f * GetComponent<TTSRacer>().Offense;
 		go.GetComponent<TTSShockwave>().radius = go.GetComponent<TTSShockwave>().radius * power * GetComponent<TTSRacer>().Offense;
-		go.GetComponent<TTSShockwave>().upwardsForce = go.GetComponent<TTSShockwave>().upwardsForce * power * GetComponent<TTSRacer>().Offense;
+		//go.GetComponent<TTSShockwave>().upwardsForce = go.GetComponent<TTSShockwave>().upwardsForce * power * GetComponent<TTSRacer>().Offense;
+		go.GetComponent<TTSShockwave>().upwardsForce = 0;
 		go.GetComponent<TTSShockwave>().Activate(this.gameObject);
 		go.transform.parent = this.transform;
 

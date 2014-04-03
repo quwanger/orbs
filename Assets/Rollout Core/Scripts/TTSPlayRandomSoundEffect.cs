@@ -5,7 +5,7 @@ public class TTSPlayRandomSoundEffect : MonoBehaviour {
 	
 	public AudioClip[] sounds;
 	private AudioSource audioSource;
-	private float MAX_VOLUME = 0.6f;
+	private float MAX_VOLUME = 0.1f;
 	
 	void Start() {
 		if (sounds.Length < 1) {

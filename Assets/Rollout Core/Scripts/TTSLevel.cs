@@ -56,7 +56,7 @@ public class TTSLevel : MonoBehaviour {
 	}
 
 	void Update() {
-		if(DebugMode) {
+		if(DebugMode || !DebugMode) {
 			if(Input.GetKeyDown(KeyCode.T))	Application.LoadLevel("city1-1");
 			if(Input.GetKeyDown(KeyCode.Y)) Application.LoadLevel("city1-2");
 			if(Input.GetKeyDown(KeyCode.U)) Application.LoadLevel("rural1-1");

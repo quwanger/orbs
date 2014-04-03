@@ -23,6 +23,11 @@ public class TTSMenu : TTSBehaviour {
 	public string[] playersRigs;
 	public string[] playersPerkA;
 	public string[] playersPerkB;
+
+	public AudioClip backSound;
+	public AudioClip hoverSound;
+	public AudioClip selectSound;
+	public AudioClip transSound;
 	
 	public GameObject dtp;
 	
@@ -217,7 +222,7 @@ public class TTSMenu : TTSBehaviour {
 			if(Input.GetKeyDown(KeyCode.Return))
 				changePanels("right");
 			
-			if(Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown("joystick 1 button 6"))
+			if(Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown("joystick 1 button 1"))
 				changePanels("left");			
 
 			//if(panels[4].transform.position.x == 0.5 || panels[5].transform.position.x == 0.5 || 
@@ -405,24 +410,28 @@ public class TTSMenu : TTSBehaviour {
 			if(direction == "left"){
 				if(index == 12 || index == 22 || index == 32){
 					index -= 1;
+					audio.PlayOneShot(hoverSound);
 				}
 			}
 
 			else if(direction == "right"){
 				if(index == 11 || index == 21 || index == 31){
 					index += 1;
+					audio.PlayOneShot(hoverSound);
 				}
 			}
 			
 			else if(direction == "down"){
 				if(index < 30){
 					index += 10;
+					audio.PlayOneShot(hoverSound);
 				}
 			}
 
 			else if(direction == "up"){
 				if(index > 20){
 					index -= 10;
+					audio.PlayOneShot(hoverSound);
 				}
 			}
 		}
@@ -432,24 +441,28 @@ public class TTSMenu : TTSBehaviour {
 			if(direction == "left"){
 				if(index%10 > 1){
 					index -= 1;
+					audio.PlayOneShot(hoverSound);
 				}
 			}
 			
 			else if(direction == "right"){
 				if(index%10 < 3){
 					index += 1;
+					audio.PlayOneShot(hoverSound);
 				}
 			}
 			
 			else if(direction == "down"){
 				if(index==11 || index==12 || index==13){
 					index += 10;
+					audio.PlayOneShot(hoverSound);
 				}
 			}
 			
 			else if(direction == "up"){
 				if(index==21 || index==22 || index==23){
 					index -= 10;
+					audio.PlayOneShot(hoverSound);
 				}
 			}
 		}
@@ -459,24 +472,28 @@ public class TTSMenu : TTSBehaviour {
 			if(direction == "right"){
 				if(index%10 == 1 || index%10 == 2){
 					index ++;
+					audio.PlayOneShot(hoverSound);
 				}
 			}
 			
 			if(direction == "left"){
 				if(index%10 == 2 || index%10 == 3){
 					index --;
+					audio.PlayOneShot(hoverSound);
 				}
 			}
 			
 			if(direction == "up"){
 				if(index>20 && index<34){
 					index -= 10;
+					audio.PlayOneShot(hoverSound);
 				}
 			}
 			
 			if(direction =="down"){
 				if(index>10 && index<24){
 					index += 10;
+					audio.PlayOneShot(hoverSound);
 				}
 			}			
 		}
@@ -486,12 +503,14 @@ public class TTSMenu : TTSBehaviour {
 			if(direction == "right"){
 				if(index == 1){
 					index = 2;
+					audio.PlayOneShot(hoverSound);
 				}
 			}
 				
 			if(direction == "left"){
 				if(index == 2){
 					index = 1;
+					audio.PlayOneShot(hoverSound);
 				}
 			}
 		}
@@ -501,12 +520,14 @@ public class TTSMenu : TTSBehaviour {
 			if(direction == "up"){
 				if(index == 2){
 					index = 1;
+					audio.PlayOneShot(hoverSound);
 				}
 			}
 				
 			if(direction == "down"){
 				if(index == 1){
 					index = 2;
+					audio.PlayOneShot(hoverSound);
 				}
 			}
 		}
@@ -713,12 +734,14 @@ public class TTSMenu : TTSBehaviour {
 		
 		if(direction == "left"){
 			if(gameMode == TTSLevel.Gametype.TimeTrial){
-				if(activePanel > 4){
+				if(activePanel > 4 && !isTweening){
 					activePanel--;
-					if(activePanel == 4 || activePanel == 6 && !isTweening){
-						previousPanel = (activePanel+1);
-						isTweening = true;
-						movePanel();
+					if(activePanel == 4 || activePanel == 6){
+						if(!isTweening){
+							previousPanel = (activePanel+1);
+							isTweening = true;
+							movePanel();
+						}
 					}
 				}
 			}
@@ -738,6 +761,8 @@ public class TTSMenu : TTSBehaviour {
 		if(activePanel == 4 || activePanel == 5 || activePanel == 6)
 			playerStatistics.transform.parent = panels[activePanel].transform;
 		
+		audio.PlayOneShot(transSound);
+
 		// move in next panel
 		iTween.MoveTo(panels[activePanel], iTween.Hash("x", 0.5, "time", 2.0f, "onComplete", "stoppedTweening", "onCompleteTarget", gameObject));
 				
