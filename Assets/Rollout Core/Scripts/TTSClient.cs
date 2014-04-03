@@ -363,16 +363,23 @@ public class TTSClient : MonoBehaviour
 	public void LocalObjectRegister(TTSNetworkHandle handler) {
 		if(!isMultiplayer && !isLobby)
 			return;
-			
-		if (handler.canForfeitControl) {
-			if (netHandles.ContainsKey(handler.id)) // Someone else is controlling object
+
+		if (netHandles.ContainsKey(handler.id)) {
+			if (handler.canForfeitControl) { // Someone else is controlling object
 				handler.owner = false;
-		}
-		else { // If the object must be controlled, generate a new non-zero key
-			while (netHandles.ContainsKey(handler.id) || handler.id == 0.0f && handler.owner) {
-				handler.SetNetID(UnityEngine.Random.value * 100);
 			}
+			else {
+				while (netHandles.ContainsKey(handler.id) || handler.id == 0.0f && handler.owner) {
+					handler.SetNetID(UnityEngine.Random.value * 100);
+				}
+				netHandles.Add(handler.id, handler);
+			}
+
 		}
+		else {
+			netHandles.Add(handler.id, handler);
+		}
+
 		if(DebugMode)
 			Debug.Log("Registering " + handler.id);
 
@@ -380,11 +387,8 @@ public class TTSClient : MonoBehaviour
 			ServerObjectRegister(handler, UpdatePacket);
 		}
 		else if (isLobby) {
-
 			ServerObjectRegister(handler, UpdatePacket);
 		}
-
-		netHandles.Add(handler.id, handler);
 	}
 
 	// Writes the necessary register code to the given packet writer
