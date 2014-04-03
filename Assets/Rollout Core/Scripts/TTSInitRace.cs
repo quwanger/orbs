@@ -171,7 +171,8 @@ public class TTSInitRace : MonoBehaviour
 		racer.GetComponent<TTSRacer>().rigID = config.RigType;
 
 		//sets an id for each racer
-		racer.GetComponent<TTSRacer>().playerNum = playerIDCounter;
+		racer.GetComponent<TTSRacer>().playerNum = config.racerID;
+		racer.GetComponent<TTSRacer>().playerControllerNum = config.racerControllerID;
 		playerIDCounter++;
 
 		//instantiates minimap icon
@@ -297,7 +298,7 @@ public class TTSInitRace : MonoBehaviour
 		//and changing what each camera sees
 		switch (numHumanPlayers) {
 			case 2:
-				if (humanPlayerCounter == 1) {
+				if (racer.GetComponent<TTSRacer>().playerNum == 1) {
 					//Set the position for the camera, minimap and fadeout
 					tempCamera.camera.rect = new Rect(0, 0.5f, 1.0f, 0.5f);
 					tempMinimap.camera.rect = new Rect(0.02f, 0.52f, 0.125f, 0.25f);
@@ -348,7 +349,7 @@ public class TTSInitRace : MonoBehaviour
 				break;
 
 			case 3:
-				if (humanPlayerCounter == 1) {
+				if (racer.GetComponent<TTSRacer>().playerNum == 1) {
 					tempCamera.camera.rect = new Rect(0, 0.5f, 1.0f, 0.5f);
 					tempMinimap.camera.rect = new Rect(0.02f, 0.52f, 0.25f, 0.50f);
 					tempMinimap.camera.cullingMask |= (1 << 12);
@@ -369,7 +370,7 @@ public class TTSInitRace : MonoBehaviour
 					tempCamera.camera.cullingMask &= ~(1 << 13);
 					tempCamera.camera.cullingMask &= ~(1 << 14);
 				}
-				else if (humanPlayerCounter == 2) {
+				else if (racer.GetComponent<TTSRacer>().playerNum == 2) {
 					tempCamera.camera.rect = new Rect(0, 0, 0.5f, 0.5f);
 					tempMinimap.camera.rect = new Rect(0.02f, 0.02f, 0.125f, 0.25f);
 					tempMinimap.camera.cullingMask |= (1 << 13);
@@ -414,7 +415,7 @@ public class TTSInitRace : MonoBehaviour
 				break;
 
 			case 4:
-				if (humanPlayerCounter == 1) {
+				if (racer.GetComponent<TTSRacer>().playerNum == 1) {
 					tempCamera.camera.rect = new Rect(0, 0.5f, 0.5f, 0.5f);
 					tempMinimap.camera.rect = new Rect(0.02f, 0.52f, 0.125f, 0.25f);
 					tempMinimap.camera.cullingMask |= (1 << 12);
@@ -436,7 +437,7 @@ public class TTSInitRace : MonoBehaviour
 					tempCamera.camera.cullingMask &= ~(1 << 14);
 					tempCamera.camera.cullingMask &= ~(1 << 15);
 				}
-				else if (humanPlayerCounter == 2) {
+				else if (racer.GetComponent<TTSRacer>().playerNum == 2) {
 					tempCamera.camera.rect = new Rect(0.5f, 0.5f, 0.5f, 0.5f);
 					tempMinimap.camera.rect = new Rect(0.52f, 0.52f, 0.125f, 0.25f);
 					tempMinimap.camera.cullingMask |= (1 << 13);
@@ -458,7 +459,7 @@ public class TTSInitRace : MonoBehaviour
 					tempCamera.camera.cullingMask &= ~(1 << 14);
 					tempCamera.camera.cullingMask &= ~(1 << 15);
 				}
-				else if (humanPlayerCounter == 3) {
+				else if (racer.GetComponent<TTSRacer>().playerNum == 3) {
 					tempCamera.camera.rect = new Rect(0, 0, 0.5f, 0.5f);
 					tempMinimap.camera.rect = new Rect(0.02f, 0.02f, 0.125f, 0.25f);
 					tempMinimap.camera.cullingMask |= (1 << 14);

@@ -106,6 +106,7 @@ public class TTSRacer : TTSBehaviour
 	public Quaternion respawnRotation;
 	
 	public int playerNum;
+	public int playerControllerNum;
 	
 	public int numHelix = 0;
 	#endregion
@@ -214,6 +215,10 @@ public class TTSRacer : TTSBehaviour
 			vfx = myCamera.GetComponent<TTSCameraEffects>();
 			myCamera.GetComponent<TTSCameraFade>().SetScreenOverlayColor(new Color(0, 0, 0, 0));
 		}
+
+		if(level.currentGameType == TTSLevel.Gametype.Lobby) {
+			playerControllerNum = 1;
+		}
 	}
 
 	// Runs after the racer is initialized with the rigs
@@ -269,71 +274,29 @@ public class TTSRacer : TTSBehaviour
 				if(level.useKeyboard) {
 					if(!level.DebugMode){
 						#if UNITY_STANDALONE_WIN || UNITY_EDITOR
-						state = GamePad.GetState(PlayerIndex.One);
-						vInput = state.Triggers.Right;
-						hInput = state.ThumbSticks.Left.X;
+						CheckControllerWindows();
 						#endif
 						
 						#if UNITY_STANDALONE_OSX && !UNITY_EDITOR
-						vInput = Input.GetAxis("L_YAxis_1");
-						hInput = Input.GetAxis("L_XAxis_1");
+						//CheckControllerMac();
 						#endif
 					}else{
 						vInput = Input.GetAxis ("Key_YAxis");
 						hInput = Input.GetAxis ("Key_XAxis");
 					}
+				}else{
+					CheckControllerWindows();
+					//CheckControllerMac();
 				}
-
-				#if UNITY_STANDALONE_WIN || UNITY_EDITOR
-				else if(!level.useKeyboard) {
-					state = GamePad.GetState(PlayerIndex.One);
-					vInput = state.Triggers.Right;
-					hInput = state.ThumbSticks.Left.X;
-				}
-				#endif
-
-				#if UNITY_STANDALONE_OSX && !UNITY_EDITOR
-				else if(!level.useKeyboard) {
-					vInput = Input.GetAxis("L_YAxis_1");
-					hInput = Input.GetAxis("L_XAxis_1");
-				}
-				#endif
 			} else if (playerNum == 2) {
-
-				#if UNITY_STANDALONE_WIN || UNITY_EDITOR
-					state = GamePad.GetState(PlayerIndex.Two);
-					vInput = state.Triggers.Right;
-					hInput = state.ThumbSticks.Left.X;
-				#endif
-
-				#if UNITY_STANDALONE_OSX && !UNITY_EDITOR
-					vInput = Input.GetAxis("L_YAxis_2");
-					hInput = Input.GetAxis("L_XAxis_2");
-				#endif
+				CheckControllerWindows();
+				//CheckControllerMac();
 			} else if (playerNum == 3) {
-
-				#if UNITY_STANDALONE_WIN || UNITY_EDITOR
-					state = GamePad.GetState(PlayerIndex.Three);
-					vInput = state.Triggers.Right;
-					hInput = state.ThumbSticks.Left.X;
-				#endif
-
-				#if UNITY_STANDALONE_OSX && !UNITY_EDITOR
-					vInput = Input.GetAxis("L_YAxis_3");
-					hInput = Input.GetAxis("L_XAxis_3");
-				#endif
+				CheckControllerWindows();
+				//CheckControllerMac();
 			} else if (playerNum == 4) {
-
-				#if UNITY_STANDALONE_WIN || UNITY_EDITOR
-					state = GamePad.GetState(PlayerIndex.Four);
-					vInput = state.Triggers.Right;
-					hInput = state.ThumbSticks.Left.X;
-				#endif
-
-				#if UNITY_STANDALONE_OSX && !UNITY_EDITOR
-					vInput = Input.GetAxis("L_YAxis_4");
-					hInput = Input.GetAxis("L_XAxis_4");
-				#endif
+				CheckControllerWindows();
+				//CheckControllerMac();
 			}
 		}
 		else if (player == PlayerType.Multiplayer) {
@@ -527,6 +490,54 @@ public class TTSRacer : TTSBehaviour
 	public void StopRacer() {
 		rigidbody.velocity = new Vector3(0, 0, 0);
 	}
+
+	public void CheckControllerWindows(){
+		#if UNITY_STANDALONE_WIN || UNITY_EDITOR
+			switch(playerControllerNum){
+				case(1):
+					state = GamePad.GetState(PlayerIndex.One);
+					break;
+				case(2):
+					state = GamePad.GetState(PlayerIndex.Two);
+					break;
+				case(3):
+					state = GamePad.GetState(PlayerIndex.Three);
+					break;
+				case(4):
+					state = GamePad.GetState(PlayerIndex.Four);
+					break;
+				default:
+					break;
+			}
+			vInput = state.Triggers.Right;
+			hInput = state.ThumbSticks.Left.X;
+		#endif
+	}
+
+	public void CheckControllerMac(){
+		#if UNITY_STANDALONE_OSX && !UNITY_EDITOR
+			switch(playerControllerNum){
+				case(1):
+					vInput = Input.GetAxis("L_YAxis_1");
+					hInput = Input.GetAxis("L_XAxis_1");
+					break;
+				case(2):
+					vInput = Input.GetAxis("L_YAxis_2");
+					hInput = Input.GetAxis("L_XAxis_2");
+					break;
+				case(3):
+					vInput = Input.GetAxis("L_YAxis_3");
+					hInput = Input.GetAxis("L_XAxis_3");
+					break;
+				case(4):
+					vInput = Input.GetAxis("L_YAxis_4");
+					hInput = Input.GetAxis("L_XAxis_4");
+					break;
+				default:
+					break;
+			}
+		#endif
+	}
 	
 	public void DelayedRespawn() {
 		if(myCamera != null)
@@ -719,6 +730,8 @@ public class TTSRacerConfig
 	public int PerkA;
 	public int PerkB;
 	public string Name;
+	public int racerID;
+	public int racerControllerID;
 
 	/// <summary>
 	/// Can either be Player, AI, or Multiplayer

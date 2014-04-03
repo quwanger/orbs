@@ -18,6 +18,9 @@ public class TTSPowerup : TTSBehaviour
 
 	public GameObject hudPowerup;
 
+	public string consumeButton;
+	public string powerupShootBackwardsButton;
+
 	public int ammo = 0;
 	
 	public GameObject myCamera{
@@ -88,10 +91,24 @@ public class TTSPowerup : TTSBehaviour
 
 		//if you hit space or the 'a' button on an Xbox controller
 		if (AvailablePowerup != PowerupType.None) {
+			#if UNITY_STANDALONE_WIN || UNITY_EDITOR
+
+				CheckControllerWindows();
+
+				if (state.Buttons.A == ButtonState.Pressed)
+					ConsumePowerup();
+			#endif
+
+
+			#if UNITY_STANDALONE_OSX && !UNITY_EDITOR
+
+				CheckControllerMac();
+
+				if (Input.GetKeyDown(consumeButton)) 
+					ConsumePowerup();
+			#endif
+
 			if (this.gameObject.GetComponent<TTSRacer>().playerNum == 1) {
-				#if UNITY_STANDALONE_WIN || UNITY_EDITOR
-				state = GamePad.GetState(PlayerIndex.One);
-				#endif
 
 				if (level.useKeyboard) {
 					if(level.DebugMode){
@@ -104,65 +121,6 @@ public class TTSPowerup : TTSBehaviour
 						}
 					}
 				}
-
-				#if UNITY_STANDALONE_OSX && !UNITY_EDITOR
-				else if (Input.GetKeyDown("joystick 1 button 16")) {
-					Debug.Log("A pressed");
-					ConsumePowerup();
-				}
-				#endif
-
-				#if UNITY_STANDALONE_WIN || UNITY_EDITOR
-				else if( state.Buttons.A == ButtonState.Pressed) {
-					Debug.Log ("CONSOLE");
-					ConsumePowerup();
-				}
-				#endif
-			}
-			else if (this.gameObject.GetComponent<TTSRacer>().playerNum == 2) {
-				#if UNITY_STANDALONE_WIN || UNITY_EDITOR
-				state = GamePad.GetState(PlayerIndex.Two);
-				#endif
-
-				#if UNITY_STANDALONE_OSX && !UNITY_EDITOR
-				if (Input.GetKeyDown("joystick 2 button 16"))
-					ConsumePowerup();
-				#endif
-
-				#if UNITY_STANDALONE_WIN || UNITY_EDITOR
-				if (state.Buttons.A == ButtonState.Pressed)
-					ConsumePowerup();
-				#endif
-			}
-			else if (this.gameObject.GetComponent<TTSRacer>().playerNum == 3) {
-				#if UNITY_STANDALONE_WIN || UNITY_EDITOR
-				state = GamePad.GetState(PlayerIndex.Three);
-				#endif
-
-				#if UNITY_STANDALONE_OSX && !UNITY_EDITOR
-				if (Input.GetKeyDown("joystick 3 button 16")) 
-					ConsumePowerup();
-				#endif
-
-				#if UNITY_STANDALONE_WIN || UNITY_EDITOR
-				if (state.Buttons.A == ButtonState.Pressed)
-					ConsumePowerup();
-				#endif
-			}
-			else if (this.gameObject.GetComponent<TTSRacer>().playerNum == 4) {
-				#if UNITY_STANDALONE_WIN || UNITY_EDITOR
-				state = GamePad.GetState(PlayerIndex.Four);
-				#endif
-
-				#if UNITY_STANDALONE_OSX && !UNITY_EDITOR
-				if (Input.GetKeyDown("joystick 4 button 16")) 
-					ConsumePowerup();
-				#endif
-				
-				#if UNITY_STANDALONE_WIN || UNITY_EDITOR
-				if (state.Buttons.A == ButtonState.Pressed)
-					ConsumePowerup();
-				#endif
 			}
 		}
 
@@ -337,6 +295,69 @@ public class TTSPowerup : TTSBehaviour
 
 
 	#region public methods
+	public void CheckControllerWindows(){
+		#if UNITY_STANDALONE_WIN || UNITY_EDITOR
+			switch(this.GetComponent<TTSRacer>().playerControllerNum){
+				case(1):
+					state = GamePad.GetState(PlayerIndex.One);
+					break;
+				case(2):
+					state = GamePad.GetState(PlayerIndex.Two);
+					break;
+				case(3):
+					state = GamePad.GetState(PlayerIndex.Three);
+					break;
+				case(4):
+					state = GamePad.GetState(PlayerIndex.Four);
+					break;
+				default:
+					break;
+			}
+		#endif
+	}
+
+	public void CheckControllerMac(){
+		#if UNITY_STANDALONE_OSX && !UNITY_EDITOR
+			switch(this.GetComponent<TTSRacer>().playerControllerNum){
+				case(1):
+					consumeButton = "joystick 1 button 16";
+					break;
+				case(2):
+					consumeButton = "joystick 2 button 16";
+					break;
+				case(3):
+					consumeButton = "joystick 3 button 16";
+					break;
+				case(4):
+					consumeButton = "joystick 4 button 16";
+					break;
+				default:
+					break;
+			}
+		#endif
+	}
+
+	public void CheckControllerMacAnalog(){
+		#if UNITY_STANDALONE_OSX && !UNITY_EDITOR
+			switch(this.GetComponent<TTSRacer>().playerControllerNum){
+				case(1):
+					powerupShootBackwardsButton = "R_YAxis_1";
+					break;
+				case(2):
+					powerupShootBackwardsButton = "R_YAxis_2";
+					break;
+				case(3):
+					powerupShootBackwardsButton = "R_YAxis_3";
+					break;
+				case(4):
+					powerupShootBackwardsButton = "R_YAxis_4";
+					break;
+				default:
+					break;
+			}
+		#endif
+	}
+
 	public void Leech(int _tier) {
 
 		//int leechesPerRacer = Mathf.CeilToInt(ammo/(this.gameObject.GetComponent<TTSRacer>().place-1));
@@ -677,64 +698,30 @@ public class TTSPowerup : TTSBehaviour
 	#endregion
 	
 	public bool CheckForwardAnalog(){
-		if(this.gameObject.GetComponent<TTSRacer>().playerNum == 1) {
-			#if UNITY_STANDALONE_WIN || UNITY_EDITOR
-				state = GamePad.GetState(PlayerIndex.One);
-			#endif
 
+		#if UNITY_STANDALONE_WIN || UNITY_EDITOR
+		CheckControllerWindows();
+		if(state.ThumbSticks.Left.Y == -1.0f)
+			return false;
+		#endif
+
+		#if UNITY_STANDALONE_OSX && !UNITY_EDITOR
+			CheckControllerMacAnalog();
+			if(Input.GetAxis(powerupShootBackwardsButton) == -1.0f) {
+				return false;
+			}
+		#endif
+
+		if(this.gameObject.GetComponent<TTSRacer>().playerNum == 1) {
 			if(level.useKeyboard){
-				if(Input.GetKey (KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)){
-					return false;
+				if(level.DebugMode){
+					if(Input.GetKey (KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)){
+						return false;
+					}
+				}else{
+					//do controller stuff that I can't remember right now
 				}
 			}
-
-			#if UNITY_STANDALONE_OSX && !UNITY_EDITOR
-				if(Input.GetAxis("R_YAxis_1") == -1.0f) {
-					return false;
-				}
-			#endif
-
-			#if UNITY_STANDALONE_WIN || UNITY_EDITOR
-				else if(state.ThumbSticks.Left.Y == -1.0f){
-					return false;
-				}
-			#endif
-		} else if(this.gameObject.GetComponent<TTSRacer>().playerNum == 2) {
-			#if UNITY_STANDALONE_OSX && !UNITY_EDITOR
-				if(Input.GetAxis("R_YAxis_2") == -1.0f) {
-					return false;
-				}
-			#endif
-
-			#if UNITY_STANDALONE_WIN || UNITY_EDITOR
-				state = GamePad.GetState(PlayerIndex.Two);
-				if(state.ThumbSticks.Left.Y == -1.0f)
-					return false;
-			#endif
-		} else if(this.gameObject.GetComponent<TTSRacer>().playerNum == 3) {
-			#if UNITY_STANDALONE_OSX && !UNITY_EDITOR
-				if(Input.GetAxis("R_YAxis_3") == -1.0f) {
-					return false;
-				}
-			#endif
-
-			#if UNITY_STANDALONE_WIN || UNITY_EDITOR
-				state = GamePad.GetState(PlayerIndex.Three);
-				if(state.ThumbSticks.Left.Y == -1.0f)
-					return false;
-			#endif
-		} else if(this.gameObject.GetComponent<TTSRacer>().playerNum == 4) {
-			#if UNITY_STANDALONE_OSX && !UNITY_EDITOR
-				if(Input.GetAxis("R_YAxis_4") == -1.0f) {
-					return false;
-				}
-			#endif
-
-			#if UNITY_STANDALONE_WIN || UNITY_EDITOR
-				state = GamePad.GetState(PlayerIndex.Four);
-				if(state.ThumbSticks.Left.Y == -1.0f)
-					return false;
-			#endif
 		}
 
 		return true;

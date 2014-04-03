@@ -3306,7 +3306,7 @@ MonoBehaviour:
   playericonBig: {fileID: 100000, guid: 43ed54951cf5c48d4b58e3cead59c7a0, type: 2}
   numHumanPlayers: 1
   numAIPlayers: 0
-  gameType: 0
+  gameType: 1
 --- !u!114 &66764694
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3336,12 +3336,12 @@ MonoBehaviour:
   _otherCameras: []
   currentGameType: 1
   currentLevel: 2
-  useKeyboard: 1
+  useKeyboard: 0
   raceHasStarted: 0
   raceHasFinished: 0
   humanPlayersFinished: 0
   countdown: {fileID: 1059491069}
-  DebugMode: 1
+  DebugMode: 0
   PerksEnabled: 1
   fonts:
   - {fileID: 12800000, guid: f9929be8a43d15b408cb23dd53efaaa4, type: 3}
@@ -33929,10 +33929,18 @@ Prefab:
       objectReference: {fileID: 1059491069}
     - target: {fileID: 11400002, guid: 66b1082218c3fc643bf095d7cf975069, type: 2}
       propertyPath: DebugMode
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11400006, guid: 66b1082218c3fc643bf095d7cf975069, type: 2}
       propertyPath: numHumanPlayers
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 66b1082218c3fc643bf095d7cf975069, type: 2}
+      propertyPath: useKeyboard
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400006, guid: 66b1082218c3fc643bf095d7cf975069, type: 2}
+      propertyPath: gameType
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []

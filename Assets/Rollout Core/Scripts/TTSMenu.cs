@@ -1,6 +1,9 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR
+using XInputDotNetPure;
+#endif
 
 public class TTSMenu : TTSBehaviour {
 	
@@ -46,6 +49,7 @@ public class TTSMenu : TTSBehaviour {
 	public GameObject[] characterColor;
 	private int activeColorIndex;
 	public int[] playerID;
+	public int[] playerControllerID;
 	public int[] ID;
 	
 	
@@ -126,6 +130,14 @@ public class TTSMenu : TTSBehaviour {
 	// Server Menu
 	public TTSServerMenu serverMenu;
 
+	//XInput
+	#if UNITY_STANDALONE_WIN || UNITY_EDITOR
+		PlayerIndex playerIndex;
+		GamePadState state;
+	#endif
+
+	public 
+
 	// Use this for initialization
 	void Start () {		
 		previousPanel = 8;
@@ -178,6 +190,10 @@ public class TTSMenu : TTSBehaviour {
 		HighlightLevel();
 	}
 	
+	bool isAPressed = false;
+	bool isBPressed = false;
+	bool isYPressed = false;
+
 	// Update is called once per frame
 	void Update () {
 
@@ -191,39 +207,63 @@ public class TTSMenu : TTSBehaviour {
 			string tempJoystickB = "joystick 1 button 3";
 
 			if (gameMode == TTSLevel.Gametype.MultiplayerLocal) {
-				tempJoystick = ("joystick " + playerID[chosenOrb-1] + " button 0");
-				tempJoystickB = ("joystick " + playerID[chosenOrb-1] + " button 3");
+				tempJoystick = ("joystick " + playerControllerID[chosenOrb-1] + " button 0");
+				tempJoystickB = ("joystick " + playerControllerID[chosenOrb-1] + " button 3");
 			}
 			
 			if(activePanel == 4 || activePanel == 5 || activePanel == 6){
 				// Y BUTTON RIG SELECT
-				if(Input.GetKeyDown(tempJoystickB) || Input.GetKeyDown(KeyCode.Y)){
+				if((GetButtonDown(playerControllerID[chosenOrb-1], "Y") && !isYPressed) || Input.GetKeyDown(KeyCode.Y)){
+					isYPressed = true;
 					if (activePanel == 4) {
 						characterColor[activeColorIndex].guiTexture.enabled = false;
 
 						activeColorIndex = (activeColorIndex + 1) % characterColor.Length;
 						characterColor[activeColorIndex].guiTexture.enabled = true;
 					}
+				} else if(GetButtonDown(playerControllerID[chosenOrb-1], "Y") == false){
+					isYPressed = false;
 				}
 				
-				if(Input.GetKeyDown(tempJoystick)){
+				// if(Input.GetKeyDown(tempJoystick)){
+				if(GetButtonDown(playerControllerID[chosenOrb-1], "A") && !isAPressed){
+					isAPressed = true;
 					changePanels("right");
+				} else if(GetButtonDown(playerControllerID[chosenOrb-1], "A") == false) {
+					isAPressed = false;
 				}
 			}
 			
-			else if(activePanel == 0 || activePanel == 1 || activePanel == 2 || activePanel == 3 || activePanel == 7)
-			{
-				if(Input.GetKeyDown("joystick 1 button 0")){
-						changePanels("right");
+			// else if()
+			// {
+			// 	// if(Input.GetKeyDown("joystick 1 button 0")){
+			// 	if(GetButtonDown(playerControllerID[chosenOrb-1], "A") && !isAPressed){
+			// 		isAPressed = true;
+			// 		changePanels("right");
+			// 	} else if(GetButtonDown(playerControllerID[chosenOrb-1], "A") == false) {
+			// 		isAPressed = false;
+			// 	}
+			// }	
+			else if(activePanel == 0 || activePanel == 1 || activePanel == 2 || activePanel == 7 || activePanel == 3){
+				// if(Input.GetKeyDown("joystick 1 button 0")){
+				if(GetButtonDown(1, "A") && !isAPressed){
+					isAPressed = true;
+					changePanels("right");
+				} else if(GetButtonDown(1, "A") == false) {
+					isAPressed = false;
 				}
-			}	
+			}
 
 			//if(Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown("joystick 1 button 7"))
 			if(Input.GetKeyDown(KeyCode.Return))
 				changePanels("right");
 			
-			if(Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown("joystick 1 button 1"))
-				changePanels("left");			
+			if(Input.GetKeyDown(KeyCode.Backspace) || (GetButtonDown(playerControllerID[chosenOrb-1], "B") && !isBPressed)){//Input.GetKeyDown("joystick 1 button 1"))
+				changePanels("left");
+				isBPressed = true;
+			} else if(GetButtonDown(playerControllerID[chosenOrb-1], "B") == false){
+				isBPressed = false;
+			}
 
 			//if(panels[4].transform.position.x == 0.5 || panels[5].transform.position.x == 0.5 || 
 			//   panels[6].transform.position.x == 0.5 || panels[7].transform.position.x == 0.5)
@@ -246,7 +286,9 @@ public class TTSMenu : TTSBehaviour {
 		int tempPlayers = numPlayers+1;
 		
 		if(gameMode == TTSLevel.Gametype.MultiplayerOnline || gameMode == TTSLevel.Gametype.TimeTrial){
-			if((Input.GetKeyDown("joystick " + tempPlayers + " button 0") || Input.GetKeyDown(KeyCode.Return)) && playerReady[0] == false){
+			// if((Input.GetKeyDown("joystick " + tempPlayers + " button 0") || Input.GetKeyDown(KeyCode.Return)) && playerReady[0] == false){
+			if(((GetButtonDown(playerControllerID[chosenOrb-1], "A") && !isAPressed) || Input.GetKeyDown(KeyCode.Return)) && playerReady[0] == false){
+				isAPressed = true;
 				if(activePanel == 6){
 					playerReady[0] = true;
 					numPlayers++;
@@ -256,12 +298,17 @@ public class TTSMenu : TTSBehaviour {
 					players.Add(tempConfig);
 				}
 			}
+			else if(GetButtonDown(playerControllerID[chosenOrb-1], "A") == false){
+				isAPressed = false;
+			}
 		}
 		
 		if(gameMode == TTSLevel.Gametype.MultiplayerLocal && activePanel == 3 && !isTweening){
-			if(Input.GetKeyDown("joystick 1 button 7") && playerReady[0] == false){
+			// if(Input.GetKeyDown("joystick 1 button 7") && playerReady[0] == false){
+			if(GetButtonDown(1, "Start") && playerReady[0] == false){
 				playerReady[0] = true;
-				playerID[numPlayers] = 1;
+				playerID[numPlayers] = numPlayers + 1;
+				playerControllerID[numPlayers] = 1;
 				readyUpB[numPlayers].SetActive(false);
 				readyUp[numPlayers].SetActive(true);
 				numPlayers++;
@@ -273,9 +320,10 @@ public class TTSMenu : TTSBehaviour {
 				players.Add(tempConfig);
 			}
 			
-			if(Input.GetKeyDown("joystick 2 button 7") && playerReady[1] == false){
+			if(GetButtonDown(2, "Start") && playerReady[1] == false){
 				playerReady[1] = true;
-				playerID[numPlayers] = 2;
+				playerID[numPlayers] = numPlayers + 1;
+				playerControllerID[numPlayers] = 2;
 				readyUpB[numPlayers].SetActive(false);
 				readyUp[numPlayers].SetActive(true);
 				numPlayers++;
@@ -287,9 +335,10 @@ public class TTSMenu : TTSBehaviour {
 				players.Add(tempConfig);
 			}
 			
-			if(Input.GetKeyDown("joystick 3 button 7") && playerReady[2] == false){
+			if(GetButtonDown(3, "Start") && playerReady[2] == false){
 				playerReady[2] = true;
-				playerID[numPlayers] = 3;
+				playerID[numPlayers] = numPlayers + 1;
+				playerControllerID[numPlayers] = 3;
 				readyUpB[numPlayers].SetActive(false);
 				readyUp[numPlayers].SetActive(true);
 				numPlayers++;
@@ -301,9 +350,10 @@ public class TTSMenu : TTSBehaviour {
 				players.Add(tempConfig);
 			}
 			
-			if(Input.GetKeyDown("joystick 4 button 7") && playerReady[3] == false){
+			if(GetButtonDown(4, "Start") && playerReady[3] == false){
 				playerReady[3] = true;
-				playerID[numPlayers] = 4;
+				playerID[numPlayers] = numPlayers + 1;
+				playerControllerID[numPlayers] = 4;
 				readyUpB[numPlayers].SetActive(false);
 				readyUp[numPlayers].SetActive(true);
 				numPlayers++;
@@ -318,6 +368,7 @@ public class TTSMenu : TTSBehaviour {
 	}
 	
 	private void menuControls(){
+
 		// if statement is to remove an error when starting a level
 		int index = 7;
 		if(activePanel != 8)
@@ -327,67 +378,74 @@ public class TTSMenu : TTSBehaviour {
 		string tempJoystickB = "DPad_YAxis_1";
 		
 		if(gameMode == TTSLevel.Gametype.MultiplayerLocal){	
-			tempJoystick = ("DPad_XAxis_" + playerID[chosenOrb-1]);
-			tempJoystickB = ("DPad_YAxis_" + playerID[chosenOrb-1]);
+			tempJoystick = ("DPad_XAxis_" + playerControllerID[chosenOrb-1]);
+			tempJoystickB = ("DPad_YAxis_" + playerControllerID[chosenOrb-1]);
 		}
-		
-		
+
+		Vector2 controlDirection = GetControlDirection(playerControllerID[chosenOrb-1]);
 		
 		if(activePanel == 4 || activePanel == 5 || activePanel == 6){
 			// CONTROLLER
-			if(Input.GetAxisRaw(tempJoystick) != 0 && !joystickDownX){
+			if(Mathf.Abs(controlDirection.x) > 0.5f && !joystickDownX){
 				joystickDownX = true;
-				if(Input.GetAxisRaw(tempJoystick) == 1){
+				if(controlDirection.x > 0){
 					//right
 					ChangeIndex("right", index);
-				}else{
+				}else if (controlDirection.x < 0){
 					//left
 					ChangeIndex("left", index);
 				}
-			}else if(Input.GetAxisRaw(tempJoystick) == 0 && joystickDownX){
+			}else if(Mathf.Abs(controlDirection.x) == 0 && joystickDownX){
 				joystickDownX = false;
 			}
 			
-			if(Input.GetAxisRaw(tempJoystickB) != 0 && !joystickDownY){
+			if(Mathf.Abs(controlDirection.y) > 0.5f && !joystickDownY){
 				joystickDownY = true;
-				if(Input.GetAxisRaw(tempJoystickB) == 1){
+				// if(Input.GetAxisRaw(tempJoystickB) == 1){
+				if(controlDirection.y > 0){
 					//up
 					ChangeIndex("up", index);
-				}else{
+				}else if (controlDirection.y < 0){
 					//down
 					ChangeIndex("down", index);
 				}
-			}else if(Input.GetAxisRaw(tempJoystickB) == 0 && joystickDownY){
+			}else if(controlDirection.y == 0 && joystickDownY){
 				joystickDownY = false;
 			}
 		}
 		
+		//player one should control panels 0, 1, 2, and 7
 		else if(activePanel == 0 || activePanel == 1 || activePanel == 2 || activePanel == 7)
 		{
+			controlDirection = GetControlDirection(1);
 			// CONTROLLER
-			if(Input.GetAxisRaw("DPad_XAxis_1") != 0 && !joystickDownX){
+			// if(Input.GetAxisRaw("DPad_XAxis_1") != 0 && !joystickDownX){
+			if(Mathf.Abs(controlDirection.x) > 0.5f && !joystickDownX){
 				joystickDownX = true;
-				if(Input.GetAxisRaw("DPad_XAxis_1") == 1){
+				if(controlDirection.x > 0){
 					//right
 					ChangeIndex("right", index);
-				}else{
+				}else if(controlDirection.x < 0){
 					//left
 					ChangeIndex("left", index);
 				}
-			}else if(Input.GetAxisRaw("DPad_XAxis_1") == 0 && joystickDownX){
+			}else if(controlDirection.x == 0 && joystickDownX){
 				joystickDownX = false;
 			}
 			
-			if(Input.GetAxisRaw("DPad_YAxis_1") != 0 && !joystickDownY){
+			// if(Input.GetAxisRaw("DPad_YAxis_1") != 0 && !joystickDownY){
+			if(Mathf.Abs(controlDirection.y) > 0.5f && !joystickDownY){
 				joystickDownY = true;
-				if(Input.GetAxisRaw("DPad_YAxis_1") == 1){
+				// if(Input.GetAxisRaw("DPad_YAxis_1") == 1){
+				if(controlDirection.y > 0){
 					//up
 					ChangeIndex("up", index);
-				}else{
+				// }else{
+				}else if(controlDirection.y < 0){
 					//down
 					ChangeIndex("down", index);
 				}
-			}else if(Input.GetAxisRaw("DPad_YAxis_1") == 0 && joystickDownY){
+			}else if(controlDirection.y == 0 && joystickDownY){
 				joystickDownY = false;
 			}
 		}
@@ -586,6 +644,8 @@ public class TTSMenu : TTSBehaviour {
 							player.PerkB = (int)SelectedPerkB;
 							player.RigType = (int)SelectedRig;
 							player.CharacterType = (int)characterColor[activeColorIndex].GetComponent<TTSCharacter>().characterType;
+							player.racerID = playerID[chosenOrb - 1];
+							player.racerControllerID = playerControllerID[chosenOrb - 1];
 						}
 					}
 					dtp.GetComponent<TTSDataToPass>().players = this.players;
@@ -616,6 +676,9 @@ public class TTSMenu : TTSBehaviour {
 							
 					else if(SelectedLevel.ToString() == "level4")
 						Application.LoadLevel("cliffsidechoas");
+
+					else if(SelectedLevel.ToString() == "level5")
+						Application.LoadLevel("future1-1");
 				}
 			}
 			
@@ -646,6 +709,8 @@ public class TTSMenu : TTSBehaviour {
 								player.PerkB = (int)SelectedPerkB;
 								player.RigType = (int)SelectedRig;
 								player.CharacterType = (int)characterColor[activeColorIndex].GetComponent<TTSCharacter>().characterType;
+								player.racerID = playerID[chosenOrb - 1];
+								player.racerControllerID = playerControllerID[chosenOrb - 1];
 							}
 						}
 						// go to mp menu
@@ -697,6 +762,9 @@ public class TTSMenu : TTSBehaviour {
 						
 						else if(SelectedLevel.ToString() == "level4")
 							Application.LoadLevel("cliffsidechoas");
+
+						else if(SelectedLevel.ToString() == "level5")
+							Application.LoadLevel("future1-1");
 					}
 
 					else if (activePanel == 7 && !isTweening) {
@@ -707,6 +775,10 @@ public class TTSMenu : TTSBehaviour {
 								player.PerkB = (int)SelectedPerkB;
 								player.RigType = (int)SelectedRig;
 								player.CharacterType = (int)characterColor[activeColorIndex].GetComponent<TTSCharacter>().characterType;
+								player.racerID = playerID[chosenOrb - 1];
+								player.racerControllerID = playerControllerID[chosenOrb - 1];
+
+								Debug.Log("Player " + player.racerID + " is controller by controller " + player.racerControllerID);
 							}
 						}
 
@@ -971,5 +1043,80 @@ public class TTSMenu : TTSBehaviour {
         	GUI.color = new Color(0, 0, 0, alphaFadeValue);
        		//GUI.DrawTexture( new Rect(0, 0, Screen.width, Screen.height ), Overlay);
 		}
+	}
+
+	Vector2 GetControlDirection(int player){
+		PlayerIndex playerIndex = PlayerIndex.One;
+
+		switch(player){
+			case 1:
+				playerIndex = PlayerIndex.One;
+				break;
+
+			case 2:
+				playerIndex = PlayerIndex.Two;
+				break;
+			
+			case 3:
+				playerIndex = PlayerIndex.Three;
+				break;
+			
+			case 4:
+				playerIndex = PlayerIndex.Four;
+				break;
+		}
+
+		state = GamePad.GetState(playerIndex);
+		// float VInput = state.ThumbSticks.Left.Y;
+		// float HInput = state.ThumbSticks.Left.X;
+
+		// Debug.Log(state.DPad.Up + " " + state.DPad.Down + " " + state.DPad.Left + " " + state.DPad.Right);
+
+		float VInput = (state.DPad.Up == ButtonState.Pressed) ? 1 : ((state.DPad.Down == ButtonState.Pressed)? -1 : 0);
+		float HInput = (state.DPad.Right == ButtonState.Pressed) ? 1 : ((state.DPad.Left == ButtonState.Pressed)? -1 : 0);
+
+		//Debug.Log(VInput + " " + HInput + " " + joystickDownY + joystickDownX);
+
+		return new Vector2(HInput, VInput);
+	}
+
+	bool GetButtonDown(int player, string button){
+		PlayerIndex playerIndex = PlayerIndex.One;
+
+		switch(player){
+			case 1:
+				playerIndex = PlayerIndex.One;
+				break;
+
+			case 2:
+				playerIndex = PlayerIndex.Two;
+				break;
+			
+			case 3:
+				playerIndex = PlayerIndex.Three;
+				break;
+			
+			case 4:
+				playerIndex = PlayerIndex.Four;
+				break;
+		}
+
+		state = GamePad.GetState(playerIndex);
+
+		switch(button){
+			case "A":
+			case "a":
+				return (state.Buttons.A == ButtonState.Pressed) ? true : false;
+
+			case "Y":
+			case "y":
+				return (state.Buttons.Y == ButtonState.Pressed) ? true : false;
+
+			case "Start":
+			case "start":
+				return (state.Buttons.Start == ButtonState.Pressed) ? true : false;
+		}
+
+		return false;
 	}
 }

@@ -61,8 +61,9 @@ public class TTSLevel : MonoBehaviour {
 			if(Input.GetKeyDown(KeyCode.Y)) Application.LoadLevel("city1-2");
 			if(Input.GetKeyDown(KeyCode.U)) Application.LoadLevel("rural1-1");
 			if(Input.GetKeyDown(KeyCode.I)) Application.LoadLevel("cliffsidechoas");
-			if(Input.GetKeyDown(KeyCode.O)) Debug.Log("O");
-			if(Input.GetKeyDown(KeyCode.P)) Debug.Log("P");
+			if(Input.GetKeyDown(KeyCode.O)) Application.LoadLevel("future1-1");
+			if(Input.GetKeyDown(KeyCode.P)) Application.LoadLevel("hub-world");
+			if(Input.GetKeyDown(KeyCode.R)) Application.LoadLevel(Application.loadedLevel);
 		}
 		
 		if(humanPlayersFinished){
