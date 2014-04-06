@@ -140,6 +140,7 @@ public class TTSMenu : TTSBehaviour {
 
 	// Use this for initialization
 	void Start () {		
+		players.Clear();
 		previousPanel = 8;
 		
 		playerText = GameObject.FindGameObjectsWithTag("playerText");
@@ -285,18 +286,20 @@ public class TTSMenu : TTSBehaviour {
 		}
 		int tempPlayers = numPlayers+1;
 		
-		if(gameMode == TTSLevel.Gametype.MultiplayerOnline || gameMode == TTSLevel.Gametype.TimeTrial){
+		if((gameMode == TTSLevel.Gametype.MultiplayerOnline || gameMode == TTSLevel.Gametype.TimeTrial)  && activePanel == 6 && !isTweening){
+			Debug.Log(activePanel);
 			// if((Input.GetKeyDown("joystick " + tempPlayers + " button 0") || Input.GetKeyDown(KeyCode.Return)) && playerReady[0] == false){
 			if(((GetButtonDown(playerControllerID[chosenOrb-1], "A") && !isAPressed) || Input.GetKeyDown(KeyCode.Return)) && playerReady[0] == false){
 				isAPressed = true;
-				if(activePanel == 6){
+				// if(activePanel == 6){
 					playerReady[0] = true;
 					numPlayers++;
 					TTSRacerConfig tempConfig = new TTSRacerConfig();
 					tempConfig.ControllerID = numPlayers;
 					tempConfig.Index = players.Count;
 					players.Add(tempConfig);
-				}
+					Debug.Log("players " + players.Count);
+				// }
 			}
 			else if(GetButtonDown(playerControllerID[chosenOrb-1], "A") == false){
 				isAPressed = false;
@@ -648,6 +651,7 @@ public class TTSMenu : TTSBehaviour {
 							player.racerControllerID = playerControllerID[chosenOrb - 1];
 						}
 					}
+					Debug.Log(players.Count);
 					dtp.GetComponent<TTSDataToPass>().players = this.players;
 					dtp.GetComponent<TTSDataToPass>().gametype = gameMode;
 				}

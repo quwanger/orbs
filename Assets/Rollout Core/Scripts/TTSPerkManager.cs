@@ -13,7 +13,11 @@ public class TTSPerkManager : TTSBehaviour {
 	private float distance;
 	private bool hasBoosted = false;
 	public GameObject BoostPrefab;
-	public GameObject finishlineObject;
+	public GameObject finishlineObject{
+		get{
+			return level.initRace.currentFinishBox;
+		}
+	}
 	
 	//hot start variables
 	private bool hot = false;
@@ -63,7 +67,7 @@ public class TTSPerkManager : TTSBehaviour {
 	private void doPhotoFinish() {
 		distance = Vector3.Distance(this.transform.position, finishlineObject.transform.position);
 		
-		if(distance < 170 && !hasBoosted){
+		if(distance < 300 && !hasBoosted){
 			hasBoosted = true;
 			TTSRacerSpeedBoost boost = gameObject.AddComponent<TTSRacerSpeedBoost>();	
 			boost.FireBoost(BoostPrefab);

@@ -18,6 +18,8 @@ public class TTSInitRace : MonoBehaviour
 	private int startingPointIndex = 0;
 	int randomStartingIndex = 0;
 
+	public GameObject currentFinishBox;
+
 	//private string tempRigChoice = "Rig_Rhino";
 	private string tempRigChoice;
 	//private string tempCharacterChoice = "Character_Default";
@@ -61,6 +63,8 @@ public class TTSInitRace : MonoBehaviour
 
 			Debug.Log(gameType);
 		}
+
+		Destroy(dataToPass);
 
 		if (DebugMode || racerConfigs == null) {
 			Debug.Log("INIT RACE: GENERATING RACERS");
@@ -251,6 +255,9 @@ public class TTSInitRace : MonoBehaviour
 		//sets the currentrig variable of the racer to the rig selecte above
 		tempRacer.GetComponent<TTSRacer>().CurrentRig = tempRig.GetComponent<TTSRig>();
 		tempRacer.GetComponent<TTSRacer>().rigID = rigID;
+		// tempRacer.GetComponent<TTSPerkManager>().finishlineObject = currentFinishBox;
+		Debug.Log(currentFinishBox);
+		Debug.Log(tempRacer.GetComponent<TTSPerkManager>().finishlineObject);
 		
 		// MENU LOAD
 		//tempRacer.GetComponent<TTSRacer>().CurrentRig = tempRig;

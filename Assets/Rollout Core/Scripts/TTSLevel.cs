@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-
-
+using XInputDotNetPure;
 
 public class TTSLevel : MonoBehaviour {
 
@@ -34,6 +33,9 @@ public class TTSLevel : MonoBehaviour {
 	public TTSInitRace initRace;
 	
 	public static TTSLevel instance { get; private set;}
+
+	PlayerIndex playerIndex;
+	GamePadState state;
 	
 	#region MonoBehaviour Methods
 	void Awake() {
@@ -67,8 +69,12 @@ public class TTSLevel : MonoBehaviour {
 		}
 		
 		if(humanPlayersFinished){
-			if(Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown("joystick 1 button 0"))	Application.LoadLevel(Application.loadedLevel);
-			if(Input.GetKeyDown(KeyCode.B) || Input.GetKeyDown("joystick 1 button 1")) Application.LoadLevel("hub-world");
+			bool isAPressed = (GamePad.GetState(PlayerIndex.One).Buttons.A == ButtonState.Pressed) ? true : false;
+			bool isBPressed = (GamePad.GetState(PlayerIndex.One).Buttons.B == ButtonState.Pressed) ? true : false;
+
+			Debug.Log("ALL RACERS FINISHED");
+			if(Input.GetKeyDown(KeyCode.A) || isAPressed)	Application.LoadLevel(Application.loadedLevel);
+			if(Input.GetKeyDown(KeyCode.B) || isBPressed) Application.LoadLevel("hub-world");
 		}
 	}
 	#endregion
@@ -212,4 +218,44 @@ public class TTSLevel : MonoBehaviour {
 	}
 	
 	#endregion
+
+	bool GetButtonDown(int player, string button){
+		PlayerIndex playerIndex = PlayerIndex.One;
+
+		switch(player){
+			case 1:
+				playerIndex = PlayerIndex.One;
+				break;
+
+			case 2:
+				playerIndex = PlayerIndex.Two;
+				break;
+			
+			case 3:
+				playerIndex = PlayerIndex.Three;
+				break;
+			
+			case 4:
+				playerIndex = PlayerIndex.Four;
+				break;
+		}
+
+		state = GamePad.GetState(playerIndex);
+
+		switch(button){
+			case "A":
+			case "a":
+				return (state.Buttons.A == ButtonState.Pressed) ? true : false;
+
+			case "Y":
+			case "y":
+				return (state.Buttons.Y == ButtonState.Pressed) ? true : false;
+
+			case "Start":
+			case "start":
+				return (state.Buttons.Start == ButtonState.Pressed) ? true : false;
+		}
+
+		return false;
+	}
 }

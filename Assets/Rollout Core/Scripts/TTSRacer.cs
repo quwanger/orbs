@@ -422,7 +422,7 @@ public class TTSRacer : TTSBehaviour
 			if(vfx != null)
 				vfx.DamageEffect(100.0f);
 			//RacerSfx.volume = collision.relativeVelocity.magnitude / TopSpeed / 1.5f;
-			RacerSfx.volume = collision.relativeVelocity.magnitude / 100.0f / 1.5f;
+			RacerSfx.volume = collision.relativeVelocity.magnitude / 150.0f / 1.5f;
 			RacerSfx.PlayOneShot(DamageSounds[Mathf.FloorToInt(Random.value * DamageSounds.Length)]);
 		}
 

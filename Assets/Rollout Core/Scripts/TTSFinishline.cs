@@ -81,7 +81,7 @@ public class TTSFinishline : MonoBehaviour {
 				levelName.text = "Night Fright";
 			break;
 			
-			case("cliffsidecoas"):
+			case("cliffsidechoas"):
 				levelName.text = "Cliffside Chaos";
 			break;
 			

@@ -3304,6 +3304,7 @@ MonoBehaviour:
   minimapGO: {fileID: 100000, guid: 427cc4e8f2e15b949ab8e2df99a0b486, type: 2}
   playericonSmall: {fileID: 100000, guid: 3635d8ce9f9159c43acbd463f00cc399, type: 2}
   playericonBig: {fileID: 100000, guid: 43ed54951cf5c48d4b58e3cead59c7a0, type: 2}
+  currentFinishBox: {fileID: 1879320054}
   numHumanPlayers: 1
   numAIPlayers: 0
   gameType: 1
@@ -17337,7 +17338,7 @@ AudioListener:
     type: 2}
   m_PrefabInternal: {fileID: 1598019232}
   m_GameObject: {fileID: 333064731}
-  m_Enabled: 0
+  m_Enabled: 1
 --- !u!114 &333064733
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17363,6 +17364,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 3ee00948acfea5545a60f851cdc16e52, type: 3}
   - {fileID: 8300000, guid: 5c10cce97f5404543993159e3424eeaf, type: 3}
   - {fileID: 8300000, guid: 835e098f591134a4892cc3731219c69b, type: 3}
+  - {fileID: 8300000, guid: 2046011d2ad026549aa09857451e615e, type: 3}
 --- !u!82 &333064734
 AudioSource:
   m_ObjectHideFlags: 0
@@ -33943,6 +33945,10 @@ Prefab:
       propertyPath: gameType
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 11400006, guid: 66b1082218c3fc643bf095d7cf975069, type: 2}
+      propertyPath: currentFinishBox
+      value: 
+      objectReference: {fileID: 1879320054}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 66b1082218c3fc643bf095d7cf975069, type: 2}
   m_RootGameObject: {fileID: 66764692}
@@ -91337,7 +91343,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 8100000, guid: e809d0016fa8b4b2e9bc82ea7ed11b07, type: 2}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8200000, guid: e809d0016fa8b4b2e9bc82ea7ed11b07, type: 2}
       propertyPath: m_Enabled
