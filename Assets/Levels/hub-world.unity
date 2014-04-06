@@ -1576,7 +1576,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400002, guid: 66b1082218c3fc643bf095d7cf975069, type: 2}
       propertyPath: useKeyboard
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11400002, guid: 66b1082218c3fc643bf095d7cf975069, type: 2}
       propertyPath: countdown
@@ -2018,6 +2018,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c875a05a55f8c2a4bb257e9345ed0f2c, type: 3}
   m_Name: 
   gametype: 0
+  levelToLoad: 
 --- !u!4 &181718702
 Transform:
   m_ObjectHideFlags: 0
@@ -8526,7 +8527,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 938a87cb998a84845b37775b874cfa09, type: 2}
+  - {fileID: 2100000, guid: 263b1256e013d0443b3fb34652fd88f6, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -15190,7 +15191,7 @@ MonoBehaviour:
   _otherCameras: []
   currentGameType: 0
   currentLevel: 2
-  useKeyboard: 1
+  useKeyboard: 0
   raceHasStarted: 0
   raceHasFinished: 0
   humanPlayersFinished: 0

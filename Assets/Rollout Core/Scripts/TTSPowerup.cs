@@ -111,14 +111,12 @@ public class TTSPowerup : TTSBehaviour
 			if (this.gameObject.GetComponent<TTSRacer>().playerNum == 1) {
 
 				if (level.useKeyboard) {
-					if(level.DebugMode){
-						if (Input.GetKeyDown("space")) {
-							ConsumePowerup();
-						}
-					}else{
-						if( state.Buttons.A == ButtonState.Pressed) {
-							ConsumePowerup();
-						}
+					if (Input.GetKeyDown("space")) {
+						ConsumePowerup();
+					}				
+				}else{
+					if( state.Buttons.A == ButtonState.Pressed) {
+						ConsumePowerup();
 					}
 				}
 			}
@@ -524,11 +522,15 @@ public class TTSPowerup : TTSBehaviour
 		if(CheckForwardAnalog()){
 			//shoot forward
 			go.transform.position = GetFrontPP().position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
-			go.rigidbody.velocity = this.rigidbody.velocity.normalized * Random.Range(rigidbody.velocity.magnitude + 50.0f, rigidbody.velocity.magnitude + 150.0f);
+			go.GetComponent<TTSEntropyCannonProjectile>().ProjectileDirectionVector = this.rigidbody.velocity.normalized;
+			go.GetComponent<TTSEntropyCannonProjectile>().ProjectileStartVelocity = Random.Range(this.gameObject.rigidbody.velocity.magnitude + 50.0f, this.gameObject.rigidbody.velocity.magnitude + 150.0f);
+			//go.rigidbody.velocity = this.rigidbody.velocity.normalized * Random.Range(this.gameObject.rigidbody.velocity.magnitude + 50.0f, this.gameObject.rigidbody.velocity.magnitude + 150.0f);
 		}else{
 			//shoot backwards
 			go.transform.position = GetBackPP().position + GetComponent<TTSRacer>().displayMeshComponent.forward * -3.5f;
-			go.rigidbody.velocity = this.rigidbody.velocity.normalized * Random.Range(rigidbody.velocity.magnitude + 50.0f, rigidbody.velocity.magnitude + 150.0f) * -1.0f;
+			go.GetComponent<TTSEntropyCannonProjectile>().ProjectileDirectionVector = this.rigidbody.velocity.normalized * -1.0f;
+			go.GetComponent<TTSEntropyCannonProjectile>().ProjectileStartVelocity = Random.Range(this.gameObject.rigidbody.velocity.magnitude + 50.0f, this.gameObject.rigidbody.velocity.magnitude + 150.0f);
+			//go.rigidbody.velocity = this.rigidbody.velocity.normalized * Random.Range(rigidbody.velocity.magnitude + 50.0f, rigidbody.velocity.magnitude + 150.0f) * -1.0f;
 		}
 
 

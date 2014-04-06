@@ -25,7 +25,8 @@ public class TTSInitRace : MonoBehaviour
 	//private string tempCharacterChoice = "Character_Default";
 	public int numHumanPlayers = 1;
 	public int numAIPlayers = 0;
-	
+	private int debugPlayerCounter = 1;
+
 	TTSLevel level;
 
 	public List<TTSRacerConfig> racerConfigs;
@@ -123,6 +124,11 @@ public class TTSInitRace : MonoBehaviour
 		config.RigType = Random.Range(0, Rigs.Count);
 		config.PerkA = (int)TTSBehaviour.PerkType.Acceleration;
 		config.PerkB = (int)TTSBehaviour.PowerupType.Leech;
+		config.racerID = debugPlayerCounter;
+		if(level.currentGameType == TTSLevel.Gametype.Debug){
+			config.racerControllerID = debugPlayerCounter;
+		}
+		debugPlayerCounter++;
 		if (Human) {
 			config.LocalControlType = TTSUtils.EnumToInt(TTSRacer.PlayerType.Player);
 		}

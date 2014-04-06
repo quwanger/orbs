@@ -272,7 +272,7 @@ public class TTSRacer : TTSBehaviour
 		if (player == PlayerType.Player) {
 			if (playerNum == 1) {
 				if(level.useKeyboard) {
-					if(!level.DebugMode){
+					/*if(!level.DebugMode){
 						#if UNITY_STANDALONE_WIN || UNITY_EDITOR
 						CheckControllerWindows();
 						#endif
@@ -280,10 +280,10 @@ public class TTSRacer : TTSBehaviour
 						#if UNITY_STANDALONE_OSX && !UNITY_EDITOR
 						//CheckControllerMac();
 						#endif
-					}else{
+					}else{*/
 						vInput = Input.GetAxis ("Key_YAxis");
 						hInput = Input.GetAxis ("Key_XAxis");
-					}
+					//}
 				}else{
 					CheckControllerWindows();
 					//CheckControllerMac();
