@@ -281,7 +281,6 @@ public class TTSRacer : TTSBehaviour
 						//CheckControllerMac();
 						#endif
 					}else{
-						Debug.Log("YOOO");
 						vInput = Input.GetAxis ("Key_YAxis");
 						hInput = Input.GetAxis ("Key_XAxis");
 					}
@@ -423,7 +422,7 @@ public class TTSRacer : TTSBehaviour
 			if(vfx != null)
 				vfx.DamageEffect(100.0f);
 			//RacerSfx.volume = collision.relativeVelocity.magnitude / TopSpeed / 1.5f;
-			RacerSfx.volume = collision.relativeVelocity.magnitude / 175.0f / 1.5f;
+			RacerSfx.volume = collision.relativeVelocity.magnitude / 150.0f / 1.5f;
 			RacerSfx.PlayOneShot(DamageSounds[Mathf.FloorToInt(Random.value * DamageSounds.Length)]);
 		}
 
