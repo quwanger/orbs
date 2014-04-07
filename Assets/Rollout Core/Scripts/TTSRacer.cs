@@ -83,7 +83,7 @@ public class TTSRacer : TTSBehaviour
 	#endregion
 
 	#region gameplay vars
-	public float TopSpeedInit = 100.0f;
+	public float TopSpeedInit = 20.0f;
 	public float AccelerationInit = 5000.0f;
 	public float HandlingInit = 8000.0f;
 	public float TopSpeed;
