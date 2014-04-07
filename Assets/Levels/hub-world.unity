@@ -1679,7 +1679,7 @@ MonoBehaviour:
   perkB: 4
   index: 11
   name: Super C Boosters
-  description: Becomes tier 2 on pickup.
+  description: A short speed boost. Becomes tier 2 on pickup.
 --- !u!131 &152901663
 GUITexture:
   m_ObjectHideFlags: 0
@@ -1971,7 +1971,8 @@ MonoBehaviour:
   perkB: 2
   index: 22
   name: Drezz Stones
-  description: Becomes tier 2 on pickup.
+  description: Attaches onto opposing racers, slowing them down over time. Becomes
+    tier 2 on pickup.
 --- !u!131 &171767864
 GUITexture:
   m_ObjectHideFlags: 0
@@ -3261,7 +3262,7 @@ MonoBehaviour:
   perkB: 7
   index: 12
   name: EMP Blast
-  description: Becomes tier 2 on pickup.
+  description: Pushes opposing players out of the way. Becomes tier 2 on pickup.
 --- !u!131 &297927987
 GUITexture:
   m_ObjectHideFlags: 0
@@ -8527,7 +8528,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 263b1256e013d0443b3fb34652fd88f6, type: 2}
+  - {fileID: 2100000, guid: 6fff1b35d8f3533408b59656b4a813d4, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -8589,7 +8590,7 @@ MonoBehaviour:
   perkB: 5
   index: 13
   name: Nanite Swarm
-  description: Becomes tier 2 on pickup.
+  description: Shield that protects you from projectiles. Becomes tier 2 on pickup.
 --- !u!131 &766940401
 GUITexture:
   m_ObjectHideFlags: 0
@@ -12107,7 +12108,7 @@ MonoBehaviour:
   perkB: 8
   index: 31
   name: Leech Drone
-  description: Becomes tier 2 on pickup.
+  description: Homes onto the next racer before detonating. Becomes tier 2 on pickup.
 --- !u!131 &1087345782
 GUITexture:
   m_ObjectHideFlags: 0
@@ -12836,7 +12837,7 @@ MonoBehaviour:
   perkB: 1
   index: 21
   name: Entropy Cannon
-  description: Becomes tier 2 on pickup.
+  description: Shoots a missile in a forward direction. Becomes tier 2 on pickup.
 --- !u!131 &1150275373
 GUITexture:
   m_ObjectHideFlags: 0
@@ -14100,6 +14101,14 @@ Prefab:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 46e8257b6e7288c48bfd28ca5020ae54, type: 2}
+    - target: {fileID: 100032, guid: c2225aa79230e8040b8bae1c3ccb79f9, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300030, guid: c2225aa79230e8040b8bae1c3ccb79f9, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 6fff1b35d8f3533408b59656b4a813d4, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c2225aa79230e8040b8bae1c3ccb79f9, type: 3}
   m_RootGameObject: {fileID: 1707755423}
@@ -16379,9 +16388,9 @@ MonoBehaviour:
   isSelected: 0
   rig: 0
   index: 12
-  speed: 4
-  acceleration: 10
-  handling: 7
+  speed: 5
+  acceleration: 8
+  handling: 8
   offense: 3
   defense: 7
   rigImage: {fileID: 862287350}
@@ -17338,7 +17347,7 @@ MonoBehaviour:
   perkB: 6
   index: 23
   name: Helix
-  description: Becomes tier 2 on pickup.
+  description: Homes an entropy cannon towards the next racer. Becomes tier 2 on pickup.
 --- !u!131 &1543521593
 GUITexture:
   m_ObjectHideFlags: 0
@@ -21563,7 +21572,7 @@ MonoBehaviour:
   perkB: 9
   index: 32
   name: Lottery
-  description: Two randomly selected powerups become tier 2 on pickup.
+  description: Tier 2 on pickup for two randomly selected powerups
 --- !u!131 &1818734801
 GUITexture:
   m_ObjectHideFlags: 0

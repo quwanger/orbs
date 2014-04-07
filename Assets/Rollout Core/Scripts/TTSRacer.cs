@@ -286,12 +286,21 @@ public class TTSRacer : TTSBehaviour
 				}
 			} else if (playerNum == 2) {
 				CheckControllerWindows();
+				if(state.Buttons.Back == ButtonState.Pressed){
+					DelayedRespawn();
+				}
 				//CheckControllerMac();
 			} else if (playerNum == 3) {
 				CheckControllerWindows();
+				if(state.Buttons.Back == ButtonState.Pressed){
+					DelayedRespawn();
+				}
 				//CheckControllerMac();
 			} else if (playerNum == 4) {
 				CheckControllerWindows();
+				if(state.Buttons.Back == ButtonState.Pressed){
+					DelayedRespawn();
+				}
 				//CheckControllerMac();
 			}
 
