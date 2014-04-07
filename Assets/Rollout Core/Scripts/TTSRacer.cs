@@ -272,20 +272,16 @@ public class TTSRacer : TTSBehaviour
 		if (player == PlayerType.Player) {
 			if (playerNum == 1) {
 				if(level.useKeyboard) {
-					/*if(!level.DebugMode){
-						#if UNITY_STANDALONE_WIN || UNITY_EDITOR
-						CheckControllerWindows();
-						#endif
-						
-						#if UNITY_STANDALONE_OSX && !UNITY_EDITOR
-						//CheckControllerMac();
-						#endif
-					}else{*/
-						vInput = Input.GetAxis ("Key_YAxis");
-						hInput = Input.GetAxis ("Key_XAxis");
-					//}
+					vInput = Input.GetAxis ("Key_YAxis");
+					hInput = Input.GetAxis ("Key_XAxis");
+					if(Input.GetKeyDown("/")){
+						DelayedRespawn();
+					}
 				}else{
 					CheckControllerWindows();
+					if(state.Buttons.Back == ButtonState.Pressed){
+						DelayedRespawn();
+					}
 					//CheckControllerMac();
 				}
 			} else if (playerNum == 2) {
@@ -297,6 +293,12 @@ public class TTSRacer : TTSBehaviour
 			} else if (playerNum == 4) {
 				CheckControllerWindows();
 				//CheckControllerMac();
+			}
+
+			if(level.useKeyboard){
+				
+			}else{
+				vInput -= state.Triggers.Left;
 			}
 		}
 		else if (player == PlayerType.Multiplayer) {
@@ -311,6 +313,11 @@ public class TTSRacer : TTSBehaviour
 
 		#region Vertical Input
 		if (onGround && rigidbody.velocity.magnitude < TopSpeed && canMove) {
+
+			if (vInput < 0f && Vector3.Project(rigidbody.velocity, displayMeshComponent.forward).magnitude < 5.0f) {
+				vInput = 0f;
+			}
+
 			rigidbody.AddForce(displayMeshComponent.forward * vInput * Time.deltaTime * Acceleration);
 
 			if (Mathf.Abs(rpm) > 15.0f) {
@@ -549,11 +556,24 @@ public class TTSRacer : TTSBehaviour
 	private void DelayedRespawnPart2(){
 		StopRacer();
 		canMove = false;
-		this.transform.rotation = respawnRotation;
-		this.transform.position = respawnPoint;
+		this.transform.rotation = FindRespawnRotation();
+		this.transform.position = FindRespawnPoint();
 		Invoke("AllowPlayerControl", respawnTime);
 		if(myCamera != null)
 			myCamera.GetComponent<TTSCameraFade>().StartFade(new Color(0,0,0,0), respawnTime);
+	}
+
+	public Vector3 FindRespawnPoint(){
+		Vector3 newPosition;
+		newPosition.x = currentWaypoint.transform.position.x;
+		newPosition.y = currentWaypoint.transform.position.y - (currentWaypoint.GetComponent<BoxCollider>().size.y/2.0f) + (this.gameObject.GetComponent<SphereCollider>().radius/2.0f);
+		newPosition.z = currentWaypoint.transform.position.z;
+
+		return newPosition;
+	}
+
+	public Quaternion FindRespawnRotation(){
+		return currentWaypoint.transform.rotation;
 	}
 	
 	private void AllowPlayerControl(){

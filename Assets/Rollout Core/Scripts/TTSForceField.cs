@@ -20,14 +20,14 @@ public class TTSForceField : TTSBehaviour {
 				collider.gameObject.GetComponent<TTSRacer>().IsPlayerControlled = false;
 			
 				//set the position of the player to their current waypoint
-				Vector3 newPosition;
+				/*Vector3 newPosition;
 				newPosition.x = collider.gameObject.GetComponent<TTSRacer>().currentWaypoint.transform.position.x;
 				newPosition.y = collider.gameObject.GetComponent<TTSRacer>().currentWaypoint.transform.position.y - (collider.gameObject.GetComponent<TTSRacer>().currentWaypoint.GetComponent<BoxCollider>().size.y/2.0f) + (collider.gameObject.GetComponent<SphereCollider>().radius/2.0f);
 				newPosition.z = collider.gameObject.GetComponent<TTSRacer>().currentWaypoint.transform.position.z;
-			
+
 				collider.gameObject.GetComponent<TTSRacer>().respawnPoint = newPosition;
 				collider.gameObject.GetComponent<TTSRacer>().respawnRotation = collider.gameObject.GetComponent<TTSRacer>().currentWaypoint.transform.rotation;
-			
+				*/
 				collider.gameObject.GetComponent<TTSRacer>().DelayedRespawn();
 			}
 	}

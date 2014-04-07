@@ -111,13 +111,16 @@ public class TTSPowerup : TTSBehaviour
 			if (this.gameObject.GetComponent<TTSRacer>().playerNum == 1) {
 
 				if (level.useKeyboard) {
+					Debug.Log("Keyboard");
 					if (Input.GetKeyDown("space")) {
 						ConsumePowerup();
 					}				
 				}else{
+					#if UNITY_STANDALONE_WIN
 					if( state.Buttons.A == ButtonState.Pressed) {
 						ConsumePowerup();
 					}
+					#endif
 				}
 			}
 		}
