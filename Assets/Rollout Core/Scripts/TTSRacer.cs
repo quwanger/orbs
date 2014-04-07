@@ -295,9 +295,7 @@ public class TTSRacer : TTSBehaviour
 				//CheckControllerMac();
 			}
 
-			if(level.useKeyboard){
-				
-			}else{
+			if(!level.useKeyboard){
 				vInput -= state.Triggers.Left;
 			}
 		}

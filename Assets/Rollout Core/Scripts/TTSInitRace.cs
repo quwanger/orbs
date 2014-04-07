@@ -65,7 +65,7 @@ public class TTSInitRace : MonoBehaviour
 			Debug.Log(gameType);
 		}
 
-		Destroy(dataToPass);
+		//Destroy(dataToPass);
 
 		if (DebugMode || racerConfigs == null) {
 			Debug.Log("INIT RACE: GENERATING RACERS");
