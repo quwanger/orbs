@@ -669,20 +669,32 @@ public class TTSMenu : TTSBehaviour {
 				
 				if(activePanel == 7 && !isTweening){
 
-					if(SelectedLevel.ToString() == "level1")
+					if(SelectedLevel.ToString() == "level1"){
+						dtp.GetComponent<TTSDataToPass>().levelToLoad = "city1-1";
 						Application.LoadLevel("city1-1");
 						
-					else if(SelectedLevel.ToString() == "level2")
+					}else if(SelectedLevel.ToString() == "level2"){
+						dtp.GetComponent<TTSDataToPass>().levelToLoad = "city1-2";
 						Application.LoadLevel("city1-2");
+					}
 							
-					else if(SelectedLevel.ToString() == "level3")
+					else if(SelectedLevel.ToString() == "level3"){
+						dtp.GetComponent<TTSDataToPass>().levelToLoad = "rural1-1";
 						Application.LoadLevel("rural1-1");
+					}
 							
-					else if(SelectedLevel.ToString() == "level4")
+					else if(SelectedLevel.ToString() == "level4"){
+						dtp.GetComponent<TTSDataToPass>().levelToLoad = "cliffsidechoas";
 						Application.LoadLevel("cliffsidechoas");
+					}
 
-					else if(SelectedLevel.ToString() == "level5")
+					else if(SelectedLevel.ToString() == "level5"){
+						dtp.GetComponent<TTSDataToPass>().levelToLoad = "future1-1";
 						Application.LoadLevel("future1-1");
+					}
+					
+
+					Application.LoadLevel("LoadingScene");
 				}
 			}
 			
@@ -755,20 +767,31 @@ public class TTSMenu : TTSBehaviour {
 					}
 										
 					else if(activePanel == 8 && !isTweening){
-						if(SelectedLevel.ToString() == "level1")
+						if(SelectedLevel.ToString() == "level1"){
+							dtp.GetComponent<TTSDataToPass>().levelToLoad = "city1-1";
 							Application.LoadLevel("city1-1");
-						
-						else if(SelectedLevel.ToString() == "level2")
+							
+						}else if(SelectedLevel.ToString() == "level2"){
+							dtp.GetComponent<TTSDataToPass>().levelToLoad = "city1-2";
 							Application.LoadLevel("city1-2");
-						
-						else if(SelectedLevel.ToString() == "level3")
+						}
+								
+						else if(SelectedLevel.ToString() == "level3"){
+							dtp.GetComponent<TTSDataToPass>().levelToLoad = "rural1-1";
 							Application.LoadLevel("rural1-1");
-						
-						else if(SelectedLevel.ToString() == "level4")
+						}
+								
+						else if(SelectedLevel.ToString() == "level4"){
+							dtp.GetComponent<TTSDataToPass>().levelToLoad = "cliffsidechoas";
 							Application.LoadLevel("cliffsidechoas");
+						}
 
-						else if(SelectedLevel.ToString() == "level5")
+						else if(SelectedLevel.ToString() == "level5"){
+							dtp.GetComponent<TTSDataToPass>().levelToLoad = "future1-1";
 							Application.LoadLevel("future1-1");
+						}
+
+						Application.LoadLevel("LoadingScene");
 					}
 
 					else if (activePanel == 7 && !isTweening) {
@@ -840,10 +863,10 @@ public class TTSMenu : TTSBehaviour {
 		audio.PlayOneShot(transSound);
 
 		// move in next panel
-		iTween.MoveTo(panels[activePanel], iTween.Hash("x", 0.5, "time", 2.0f, "onComplete", "stoppedTweening", "onCompleteTarget", gameObject));
+		iTween.MoveTo(panels[activePanel], iTween.Hash("x", 0.5, "time", 1.0f, "onComplete", "stoppedTweening", "onCompleteTarget", gameObject));
 				
 		// move out last panel
-		iTween.MoveTo(panels[previousPanel], iTween.Hash("x", 5, "time", 2.0f, "onComplete", "stoppedTweening", "onCompleteTarget", gameObject));
+		iTween.MoveTo(panels[previousPanel], iTween.Hash("x", 5, "time", 1.0f, "onComplete", "stoppedTweening", "onCompleteTarget", gameObject));
 	}
 	
 	public void stoppedTweening(){
@@ -915,6 +938,12 @@ public class TTSMenu : TTSBehaviour {
 						
 						if(p.GetComponent<TTSMenuItemPerk>().name == "Diamond Coat")
 							toggleCircles("Defense", numCircles[4]  + 3);
+
+						if(p.GetComponent<TTSMenuItemPerk>().name == "Evolution") {
+							toggleCircles("Acceleration", numCircles[0] + 1);
+							toggleCircles("Speed", numCircles[1] + 1);
+							toggleCircles("Handling", numCircles[2] + 1);
+						}
 					}
 				}
 			}

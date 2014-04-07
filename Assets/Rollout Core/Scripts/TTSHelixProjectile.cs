@@ -10,7 +10,7 @@ public class TTSHelixProjectile : TTSBehaviour
 	public GameObject explosion;
 	public AudioClip fire;
 	public float Timeout = 15.0f;
-	public float ProjectileAcceleration = 10.0f;
+	public float ProjectileAcceleration = 1.5f;
 	public float ProjectileStartVelocity = 100.0f;
 
 	public float offensiveMultiplier;
@@ -73,7 +73,7 @@ public class TTSHelixProjectile : TTSBehaviour
 			//move the projectile
 			this.rigidbody.velocity = (destinationPosition - this.transform.position).normalized * ProjectileStartVelocity;
 
-			ProjectileStartVelocity = ProjectileStartVelocity + 0.5f;
+			ProjectileStartVelocity = ProjectileStartVelocity + ProjectileAcceleration;
 			
 			if (netHandler != null && netHandler.owner)
 				netHandler.UpdatePowerup(transform.position, transform.rotation.eulerAngles, rigidbody.velocity);

@@ -8,7 +8,7 @@ public class TTSLevel : MonoBehaviour {
 	public List<Camera> _maincameras = new List<Camera>();
 	public List<Camera> _otherCameras = new List<Camera>();
 	
-	public enum Gametype {Lobby, MultiplayerLocal, MultiplayerOnline, TimeTrial, Arcade};
+	public enum Gametype {Lobby, MultiplayerLocal, MultiplayerOnline, TimeTrial, Arcade, Debug};
 	public Gametype currentGameType = Gametype.MultiplayerLocal;
 	
 	public enum LevelType { cliff, night, backroad, downtown, future1, future2 };
@@ -73,8 +73,14 @@ public class TTSLevel : MonoBehaviour {
 			bool isBPressed = (GamePad.GetState(PlayerIndex.One).Buttons.B == ButtonState.Pressed) ? true : false;
 
 			Debug.Log("ALL RACERS FINISHED");
-			if(Input.GetKeyDown(KeyCode.A) || isAPressed)	Application.LoadLevel(Application.loadedLevel);
-			if(Input.GetKeyDown(KeyCode.B) || isBPressed) Application.LoadLevel("hub-world");
+			if(Input.GetKeyDown(KeyCode.A) || isAPressed){
+				Application.LoadLevel(Application.loadedLevel);
+			}
+			if(Input.GetKeyDown(KeyCode.B) || isBPressed){
+				GameObject dataToPass = GameObject.Find("DataToPass");
+				Destroy(dataToPass);
+				Application.LoadLevel("hub-world");
+			}
 		}
 	}
 	#endregion

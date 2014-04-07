@@ -11,8 +11,9 @@ public class TTSEntropyCannonProjectile : MonoBehaviour {
 	public GameObject explosion;
 	public AudioClip fire;
 	public float Timeout = 5.0f;
-	public float ProjectileAcceleration = 10.0f;
+	public float ProjectileAcceleration = 1.5f;
 	public float ProjectileStartVelocity = 100.0f;
+	public Vector3 ProjectileDirectionVector;
 	
 	public float offensiveMultiplier;
 	
@@ -25,6 +26,8 @@ public class TTSEntropyCannonProjectile : MonoBehaviour {
 		birth = Time.time;
 		audio.PlayOneShot(fire);
 		
+		this.rigidbody.velocity = ProjectileDirectionVector * ProjectileStartVelocity;
+
 		RaycastHit hit;
         if (Physics.Raycast(transform.position, -Vector3.up, out hit, 100.0F)){
             initialDistanceToGround = checkDistanceToGround();
@@ -40,6 +43,9 @@ public class TTSEntropyCannonProjectile : MonoBehaviour {
 		}
 
 		if (netHandler == null || netHandler.owner) {
+
+			this.rigidbody.velocity = ProjectileDirectionVector * ProjectileStartVelocity;
+			ProjectileStartVelocity += ProjectileAcceleration;
 
 			if(checkDistanceToGround()!=initialDistanceToGround){
 				float newY = (this.gameObject.transform.position.y - checkDistanceToGround()) + initialDistanceToGround;

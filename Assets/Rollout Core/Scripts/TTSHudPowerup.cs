@@ -82,8 +82,8 @@ public class TTSHudPowerup : MonoBehaviour {
 	}
 	
 	public void ReturnToOriginalSize(){
-		iTween.ScaleTo(powerupFrame,iTween.Hash("scale", new Vector3 (0.4f,0.4f,0.4f) ,"time", frameScaleTime));
-		iTween.ScaleTo(powerupLevel,iTween.Hash("scale", new Vector3 (0.2f,0.2f,0.06092709f) ,"time", frameScaleTime));
-		iTween.ScaleTo(this.gameObject,iTween.Hash("scale", new Vector3 (0.2f,0.2f,0.2f) ,"time", frameScaleTime));
+		iTween.ScaleTo(powerupFrame,iTween.Hash("scale", new Vector3 (0.35f,0.35f,0.35f) ,"time", frameScaleTime));
+		iTween.ScaleTo(powerupLevel,iTween.Hash("scale", new Vector3 (0.35f,0.35f,0.1f) ,"time", frameScaleTime));
+		iTween.ScaleTo(this.gameObject,iTween.Hash("scale", new Vector3 (0.35f,0.35f,0.35f) ,"time", frameScaleTime));
 	}
 }
