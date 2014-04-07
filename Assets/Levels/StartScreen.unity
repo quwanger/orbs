@@ -544,6 +544,8 @@ GameObject:
   - 81: {fileID: 1627256480}
   - 114: {fileID: 1627256486}
   - 114: {fileID: 1627256488}
+  - 114: {fileID: 1627256485}
+  - 114: {fileID: 1627256487}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -611,6 +613,16 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
+--- !u!114 &1627256485
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1627256479}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b0a8f1e5cc6a054fb1194063308c0b4, type: 3}
+  m_Name: 
 --- !u!114 &1627256486
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -652,6 +664,16 @@ MonoBehaviour:
     type: 3}
   brightPassFilterShader: {fileID: 4800000, guid: 186c4c0d31e314f049595dcbaf4ca129,
     type: 3}
+--- !u!114 &1627256487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1627256479}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 626f08fcb2c45487f9299504ffcef1b5, type: 3}
+  m_Name: 
 --- !u!114 &1627256488
 MonoBehaviour:
   m_ObjectHideFlags: 0
