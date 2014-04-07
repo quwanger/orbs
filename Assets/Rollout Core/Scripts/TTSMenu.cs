@@ -863,10 +863,10 @@ public class TTSMenu : TTSBehaviour {
 		audio.PlayOneShot(transSound);
 
 		// move in next panel
-		iTween.MoveTo(panels[activePanel], iTween.Hash("x", 0.5, "time", 2.0f, "onComplete", "stoppedTweening", "onCompleteTarget", gameObject));
+		iTween.MoveTo(panels[activePanel], iTween.Hash("x", 0.5, "time", 1.0f, "onComplete", "stoppedTweening", "onCompleteTarget", gameObject));
 				
 		// move out last panel
-		iTween.MoveTo(panels[previousPanel], iTween.Hash("x", 5, "time", 2.0f, "onComplete", "stoppedTweening", "onCompleteTarget", gameObject));
+		iTween.MoveTo(panels[previousPanel], iTween.Hash("x", 5, "time", 1.0f, "onComplete", "stoppedTweening", "onCompleteTarget", gameObject));
 	}
 	
 	public void stoppedTweening(){
@@ -938,6 +938,12 @@ public class TTSMenu : TTSBehaviour {
 						
 						if(p.GetComponent<TTSMenuItemPerk>().name == "Diamond Coat")
 							toggleCircles("Defense", numCircles[4]  + 3);
+
+						if(p.GetComponent<TTSMenuItemPerk>().name == "Evolution") {
+							toggleCircles("Acceleration", numCircles[0] + 1);
+							toggleCircles("Speed", numCircles[1] + 1);
+							toggleCircles("Handling", numCircles[2] + 1);
+						}
 					}
 				}
 			}
