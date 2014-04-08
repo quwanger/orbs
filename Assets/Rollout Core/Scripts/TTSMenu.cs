@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using System;
 #if UNITY_STANDALONE_WIN || UNITY_EDITOR
 using XInputDotNetPure;
 #endif
@@ -236,18 +237,17 @@ public class TTSMenu : TTSBehaviour {
 				} else if(GetButtonDown(playerControllerID[chosenOrb-1], "A") == false) {
 					isAPressed = false;
 				}
+				
+				if(GetButtonDown(playerControllerID[chosenOrb-1], "B") && !isBPressed){
+					Debug.Log("bbutton");
+					isBPressed = true;
+					changePanels("left");
+				} else if(GetButtonDown(playerControllerID[chosenOrb-1], "B") == false){
+					isBPressed = false;
+				}
+				
 			}
-			
-			// else if()
-			// {
-			// 	// if(Input.GetKeyDown("joystick 1 button 0")){
-			// 	if(GetButtonDown(playerControllerID[chosenOrb-1], "A") && !isAPressed){
-			// 		isAPressed = true;
-			// 		changePanels("right");
-			// 	} else if(GetButtonDown(playerControllerID[chosenOrb-1], "A") == false) {
-			// 		isAPressed = false;
-			// 	}
-			// }	
+		
 			else if(activePanel == 0 || activePanel == 1 || activePanel == 2 || activePanel == 7 || activePanel == 3){
 				// if(Input.GetKeyDown("joystick 1 button 0")){
 				if(GetButtonDown(1, "A") && !isAPressed){
@@ -256,18 +256,21 @@ public class TTSMenu : TTSBehaviour {
 				} else if(GetButtonDown(1, "A") == false) {
 					isAPressed = false;
 				}
+				
+				if(GetButtonDown(1, "B") && !isBPressed){
+					isBPressed = true;
+					changePanels("left");
+				} else if(GetButtonDown(1, "B") == false) {
+					isBPressed = false;
+				}
 			}
 
 			//if(Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown("joystick 1 button 7"))
 			if(Input.GetKeyDown(KeyCode.Return))
 				changePanels("right");
 			
-			if(Input.GetKeyDown(KeyCode.Backspace) || (GetButtonDown(playerControllerID[chosenOrb-1], "B") && !isBPressed)){//Input.GetKeyDown("joystick 1 button 1"))
+			if(Input.GetKeyDown(KeyCode.Backspace))
 				changePanels("left");
-				isBPressed = true;
-			} else if(GetButtonDown(playerControllerID[chosenOrb-1], "B") == false){
-				isBPressed = false;
-			}
 
 			//if(panels[4].transform.position.x == 0.5 || panels[5].transform.position.x == 0.5 || 
 			//   panels[6].transform.position.x == 0.5 || panels[7].transform.position.x == 0.5)
@@ -768,17 +771,23 @@ public class TTSMenu : TTSBehaviour {
 					else if(indices[0] == 2){
 						gameMode = TTSLevel.Gametype.MultiplayerLocal;
 						activePanel+= 3;
-
 					}
-					
 					movePanel();
 				}
 				
 				else if(activePanel == 3 && !isTweening){
-					isTweening = true;
-					previousPanel = activePanel;
-					activePanel++;
-					movePanel();
+					// dont do anything until someone presses enter
+					if(numPlayers == 0){
+					}
+						
+					// enter selection
+					else{
+						isTweening = true;
+						previousPanel = activePanel;
+						activePanel++;
+						movePanel();
+					}
+					
 				}
 
 				else if(activePanel == 4 && !isTweening){
@@ -840,19 +849,95 @@ public class TTSMenu : TTSBehaviour {
 			if(gameMode == TTSLevel.Gametype.TimeTrial){
 				if(activePanel == 4 && !isTweening){
 					// go back to hub world
+					Application.LoadLevel(Application.loadedLevel);
 				}
 				
 				else if(activePanel == 5 && !isTweening){
 					// go back to rig select
-					
+					isTweening = true;
+					previousPanel = activePanel;
+					activePanel--;
+					movePanel();
 				}
 				
 				else if(activePanel == 6 && !isTweening){
+					previousPanel = activePanel;
+					activePanel--;
 					// go back to perk 1
 				}
 				
 				else if(activePanel == 7 && !isTweening){
+					isTweening = true;
+					previousPanel = activePanel;
+					activePanel--;
+					movePanel();
 					// go back to perk 2
+				}
+			}
+			
+			else if(gameMode == TTSLevel.Gametype.MultiplayerLocal){
+				if(activePanel == 3 && !isTweening){
+					// go to mp select
+					isTweening = true;
+					previousPanel = activePanel;
+					activePanel = 0;
+					movePanel();
+				}
+				
+				else if(activePanel == 4 && !isTweening){
+					// go to perk 2
+					if(chosenOrb > 1){
+						previousPanel = 4;
+						activePanel = 6;
+						chosenOrb--;
+						movePanel();
+					}
+					
+					// go to ready up
+					else if(chosenOrb == 1){
+						previousPanel = activePanel;
+						activePanel = 3;
+						
+						for(int i = 0; i < numPlayers; i++){
+							playerID[i] = 0;
+							playerControllerID[i] = 0;
+							readyUpB[i].SetActive(true);
+							readyUp[i].SetActive(false);
+						}
+						
+						playerReady[0] = false;
+						playerReady[1] = false;
+						playerReady[2] = false;
+						playerReady[3] = false;
+						players.Clear();
+						numPlayers = 0;
+						
+						movePanel();
+					}
+					isTweening = true;
+				}
+						
+				else if(activePanel == 5 && !isTweening){
+					// go to rig select
+					isTweening = true;
+					previousPanel = activePanel;
+					activePanel--;
+					movePanel();
+					
+				}
+				
+				else if(activePanel == 6 && !isTweening){
+					// go to perk 1
+					previousPanel = activePanel;
+					activePanel--;
+				}
+				
+				else if(activePanel == 7 && !isTweening){
+					// go to perk 2
+					isTweening = true;
+					previousPanel = activePanel;
+					activePanel--;
+					movePanel();
 				}
 			}
 		}
@@ -894,10 +979,10 @@ public class TTSMenu : TTSBehaviour {
 		audio.PlayOneShot(transSound);
 
 		// move in next panel
-		iTween.MoveTo(panels[activePanel], iTween.Hash("x", 0.5, "time", 1.0f, "onComplete", "stoppedTweening", "onCompleteTarget", gameObject));
+		iTween.MoveTo(panels[activePanel], iTween.Hash("x", 0.5, "time", 1.0f, "easeType", iTween.EaseType.easeOutCirc, "onComplete", "stoppedTweening", "onCompleteTarget", gameObject));
 				
 		// move out last panel
-		iTween.MoveTo(panels[previousPanel], iTween.Hash("x", 5, "time", 1.0f, "onComplete", "stoppedTweening", "onCompleteTarget", gameObject));
+		iTween.MoveTo(panels[previousPanel], iTween.Hash("x", 5, "time", 1.0f, "easeType", iTween.EaseType.easeOutQuad, "onComplete", "stoppedTweening", "onCompleteTarget", gameObject));
 	}
 	
 	public void stoppedTweening(){
@@ -1171,7 +1256,11 @@ public class TTSMenu : TTSBehaviour {
 			case "A":
 			case "a":
 				return (state.Buttons.A == ButtonState.Pressed) ? true : false;
-
+			
+			case "B":
+			case "b":
+				return (state.Buttons.B == ButtonState.Pressed) ? true : false;
+			
 			case "Y":
 			case "y":
 				return (state.Buttons.Y == ButtonState.Pressed) ? true : false;
