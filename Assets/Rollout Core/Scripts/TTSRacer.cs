@@ -793,6 +793,12 @@ public class TTSRacerNetHandler : TTSNetworkHandle
 			Config.netID = id;
 	}
 
+	public void SetIndex(int index) {
+		Index = index;
+		if (Config != null)
+			Config.Index = index;
+	}
+
 	public override byte[] GetNetworkRegister() {
 		writer.ClearData();
 		writer.AddData(registerCommand);

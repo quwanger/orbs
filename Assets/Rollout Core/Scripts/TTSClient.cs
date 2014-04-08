@@ -214,6 +214,12 @@ public class TTSClient : MonoBehaviour
 					}
 					break;
 
+				case TTSCommandTypes.RacerRegisterOK:
+					id = packet.ReadFloat();
+					netHandles[id].isServerRegistered = true;
+					((TTSRacerNetHandler)netHandles[id]).SetIndex(packet.ReadInt32()); // Starting point index
+					break;
+
 				case TTSCommandTypes.LobbyRegisterOK:
 					LobbyID = packet.ReadInt32();
 					EnteredLobby = true;
@@ -255,13 +261,6 @@ public class TTSClient : MonoBehaviour
 				case TTSCommandTypes.PowerupUpdate:
 					id = packet.ReadFloat(); // Racer Net handle
 					netHandles[id].ReceiveNetworkData(packet, command);
-					break;
-
-				case TTSCommandTypes.RacerRegisterOK:
-					id = packet.ReadFloat();
-					netHandles[id].isServerRegistered = true;
-					int index = packet.ReadInt32(); // Starting point index
-					// IMPLEMENT THIS
 					break;
 
 				case TTSCommandTypes.PowerupRegisterOK:
