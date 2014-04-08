@@ -134,6 +134,8 @@ public class TTSRacer : TTSBehaviour
 	// Networking
 	TTSRacerNetHandler netHandler;
 	public int rigID;
+	private System.DateTime lastNetUpdate;
+	private int updatesPerSecond = 4;
 
 	//XInput
 	#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
@@ -217,16 +219,19 @@ public class TTSRacer : TTSBehaviour
 	}
 
 	// Runs after the racer is initialized with the rigs
-	public void Initialized() {
+	public void Initialized(bool isNetwork) {
 
 		powerupManager = GetComponent<TTSPowerup>();
 
 		if (player == PlayerType.Player) {
-			SetNetHandler(new TTSRacerNetHandler(level.client, true, rigID));
+			if (isNetwork)
+				SetNetHandler(new TTSRacerNetHandler(level.client, true, rigID));
 		}
 		else if (player == PlayerType.AI) {
 			AIUtil = gameObject.AddComponent<TTSAIController>();
-			SetNetHandler(new TTSRacerNetHandler(level.client, true, rigID));
+
+			if (isNetwork)
+				SetNetHandler(new TTSRacerNetHandler(level.client, true, rigID));
 		}
 		else if (player == PlayerType.Multiplayer) {
 
@@ -253,8 +258,10 @@ public class TTSRacer : TTSBehaviour
 		if (player != PlayerType.Multiplayer)
 			CalculateBodyOrientation();
 
-		if(netHandler != null)
+		if (netHandler != null && (System.DateTime.Now - lastNetUpdate).Milliseconds > 1000 / updatesPerSecond) {
 			netHandler.UpdateRacer(position, displayMeshComponent.rotation.eulerAngles, rigidbody.velocity, vInput, hInput);
+			lastNetUpdate = System.DateTime.Now;
+		}
 
 		resultAccel = Mathf.Lerp(resultAccel, rigidbody.velocity.magnitude - PreviousVelocity.magnitude, 0.01f);
 		PreviousVelocity = rigidbody.velocity;
@@ -849,9 +856,9 @@ public class TTSRacerNetHandler : TTSNetworkHandle
 	}
 
 	public void UpdateRacer(Vector3 Pos, Vector3 Rot, Vector3 Speed, float VInput, float HInput) {
-		if (owner && isServerRegistered) { // Only send data if it's the owner
+		if (owner) { // Only send data if it's the owner
 
-			if (!isWriterUpdated) writer.ClearData();
+			if (!isWriterUpdated) writer.ClearData(); // Always clear..
 			isWriterUpdated = true;
 
 			writer.AddData(TTSCommandTypes.RacerUpdate);

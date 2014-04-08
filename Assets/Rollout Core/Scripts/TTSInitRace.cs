@@ -22,8 +22,10 @@ public class TTSInitRace : MonoBehaviour
 	//private string tempCharacterChoice = "Character_Default";
 	public int numHumanPlayers = 1;
 	public int numAIPlayers = 0;
-	
+
 	TTSLevel level;
+	public bool isMultiplayer;
+	public bool isLobby;
 
 	public List<TTSRacerConfig> racerConfigs;
 	
@@ -51,6 +53,9 @@ public class TTSInitRace : MonoBehaviour
 
 			Debug.Log(gameType);
 		}
+
+		isLobby = (level != null) ? level.currentGameType == TTSLevel.Gametype.Lobby : false;
+		isMultiplayer = (level != null) ? level.currentGameType == TTSLevel.Gametype.MultiplayerOnline : false;
 
 		if (DebugMode || racerConfigs == null) {
 			Debug.Log("INIT RACE: GENERATING RACERS");
@@ -241,7 +246,7 @@ public class TTSInitRace : MonoBehaviour
 		// MENU LOAD
 		//tempRacer.GetComponent<TTSRacer>().CurrentRig = tempRig;
 
-		tempRacer.GetComponent<TTSRacer>().Initialized();
+		//tempRacer.GetComponent<TTSRacer>().Initialized();
 
 		return tempRacer;
 	}
@@ -255,7 +260,7 @@ public class TTSInitRace : MonoBehaviour
 		racerControl.IsPlayerControlled = true;
 		racerControl.player = TTSRacer.PlayerType.Player;
 
-		racer.GetComponent<TTSRacer>().Initialized();
+		racer.GetComponent<TTSRacer>().Initialized(isMultiplayer || isLobby);
 
 		//Instantiates a minimap for each human player and sets it to follow a racer
 		GameObject tempMinimap = (GameObject)Instantiate(minimapGO);
@@ -528,14 +533,14 @@ public class TTSInitRace : MonoBehaviour
 		racer.GetComponent<TTSRacer>().IsPlayerControlled = true;
 		racer.GetComponent<TTSRacer>().player = TTSRacer.PlayerType.AI;
 
-		racer.GetComponent<TTSRacer>().Initialized();
+		racer.GetComponent<TTSRacer>().Initialized(isMultiplayer || isLobby);
 	}
 
 	private void InitToMultiplayer(GameObject racer, TTSRacerConfig config) {
 		racer.GetComponent<TTSRacer>().IsPlayerControlled = true;
 		racer.GetComponent<TTSRacer>().player = TTSRacer.PlayerType.Multiplayer;
 
-		racer.GetComponent<TTSRacer>().Initialized();
+		racer.GetComponent<TTSRacer>().Initialized(isMultiplayer || isLobby);
 
 		TTSRacerNetHandler handler = new TTSRacerNetHandler(level.client, false, config.netID);
 		handler.position = racer.transform.position;

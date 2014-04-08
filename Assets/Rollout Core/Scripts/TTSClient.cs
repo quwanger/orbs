@@ -85,7 +85,7 @@ public class TTSClient : MonoBehaviour
 
 	// Unity update. Used to send values
 	void Update() {
-		if (!EnteredLobby && !isMultiplayer) {
+		if (!isLobby && !isMultiplayer) {
 			foreach (KeyValuePair<float, TTSNetworkHandle> pair in netHandles) {
 				pair.Value.writer.ClearData();
 			}
@@ -93,10 +93,9 @@ public class TTSClient : MonoBehaviour
 		}
 
 		// Code to run during lobby
-
 		foreach (KeyValuePair<float, TTSNetworkHandle> pair in netHandles) {
 			TTSNetworkHandle handle = pair.Value;
-			if (handle.isServerRegistered && handle.owner) {
+			if (handle.owner) {
 				// First make sure the packet won't overflow
 				byte[] tempData = handle.GetNetworkUpdate();
 				if (UpdatePacket.WillOverflow(tempData.Length)) {
@@ -359,16 +358,16 @@ public class TTSClient : MonoBehaviour
 
 	public void LocalRacerRegister(TTSRacerNetHandler handler) {
 		handler.SetNetID(UnityEngine.Random.value * 100);
-		if(!isMultiplayer && !isLobby)
-			return;
+
+		Debug.Log("REGISTER RACER");
 
 		LocalObjectRegister(handler);
 		racerHandles.Add(handler.id, handler);
 	}
 
 	public void LocalObjectRegister(TTSNetworkHandle handler) {
-		if(!isMultiplayer && !isLobby)
-			return;
+		//if(!isMultiplayer && !isLobby)
+			//return;
 
 		if (netHandles.ContainsKey(handler.id) || handler.id == 0f) {
 			if (handler.canForfeitControl) { // Someone else is controlling object
