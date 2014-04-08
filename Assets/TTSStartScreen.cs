@@ -7,8 +7,12 @@ public class TTSStartScreen : MonoBehaviour {
 	private GamePadState state;
 	private PlayerIndex playerIndex;
 
+	private AudioSource MusicPlayer;
+	public AudioClip songToPlay;
+
 	// Use this for initialization
 	void Start () {
+		
 	}
 	
 	// Update is called once per frame
