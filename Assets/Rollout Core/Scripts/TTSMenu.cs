@@ -298,10 +298,14 @@ public class TTSMenu : TTSBehaviour {
 				createdSinglePlayer = true;
 				// if(activePanel == 6){
 				playerReady[0] = true;
+				playerID[numPlayers] = numPlayers + 1;
+				playerControllerID[numPlayers] = 1;
 				numPlayers++;
+			
 				TTSRacerConfig tempConfig = new TTSRacerConfig();
 				tempConfig.ControllerID = numPlayers;
 				tempConfig.Index = players.Count;
+			
 				players.Add(tempConfig);
 				Debug.Log("players " + players.Count);
 				// }
@@ -642,84 +646,59 @@ public class TTSMenu : TTSBehaviour {
 	}
 	
 	private void changePanels(string direction){
+		
 		// TIMETRIAL
 		if(direction == "right"){
+			
 			if(gameMode == TTSLevel.Gametype.TimeTrial)
 			{
-				if(activePanel < 8 && !isTweening){
+				// if you're on the rig panel and it's not tweening:
+				//		set isTweening to true
+				//		set PreviousPanel
+				//		increment activePanel
+				//		move the panels
+				if(activePanel == 4 && !isTweening){
+					isTweening = true;
+					previousPanel = activePanel;
 					activePanel++;
-					if(activePanel == 4 || activePanel == 5){
-						if(!isTweening){
-							previousPanel = (activePanel-1);
-							isTweening = true;
-							movePanel();
-						}
-					}
-										
-					else if(activePanel == 8 && !isTweening){
-						if(SelectedLevel.ToString() == "level1"){
-							dtp.GetComponent<TTSDataToPass>().levelToLoad = "city1-1";
-							Application.LoadLevel("city1-1");
-						
-						}else if(SelectedLevel.ToString() == "level2"){
-							dtp.GetComponent<TTSDataToPass>().levelToLoad = "city1-2";
-							Application.LoadLevel("city1-2");
-						}
-							
-						else if(SelectedLevel.ToString() == "level3"){
-							dtp.GetComponent<TTSDataToPass>().levelToLoad = "rural1-1";
-							Application.LoadLevel("rural1-1");
-						}
-							
-						else if(SelectedLevel.ToString() == "level4"){
-							dtp.GetComponent<TTSDataToPass>().levelToLoad = "cliffsidechoas";
-							Application.LoadLevel("cliffsidechoas");
-						}
-
-						else if(SelectedLevel.ToString() == "level5"){
-							dtp.GetComponent<TTSDataToPass>().levelToLoad = "future1-1";
-							Application.LoadLevel("future1-1");
-						}
-
-						Application.LoadLevel("LoadingScene");
-					}
-
-					else if (activePanel == 7 && !isTweening) {
-
-						foreach (TTSRacerConfig player in players) {
-							if (player.ControllerID == chosenOrb) {
-								player.PerkA = (int)SelectedPerk;
-								player.PerkB = (int)SelectedPerkB;
-								player.RigType = (int)SelectedRig;
-								player.CharacterType = (int)characterColor[activeColorIndex].GetComponent<TTSCharacter>().characterType;
-								player.racerID = playerID[chosenOrb - 1];
-								player.racerControllerID = playerControllerID[chosenOrb - 1];
-
-								Debug.Log("Player " + player.racerID + " is controller by controller " + player.racerControllerID);
-							}
-						}
-
-						// go to levelSelect
-						if (chosenOrb == numPlayers) {
-							previousPanel = (activePanel-1);
-							dtp.GetComponent<TTSDataToPass>().players = this.players;
-							dtp.GetComponent<TTSDataToPass>().gametype = gameMode;
-							movePanel();
-						}
+					movePanel();
+				}
+				
+				else if(activePanel == 5 && !isTweening){
+					previousPanel = activePanel;
+					activePanel++;
+				}
+				
+				else if(activePanel == 6){
+					isTweening = true;
+					previousPanel = activePanel;
+					activePanel++;
 					
-						// go to rigMenu
-						else if(chosenOrb != numPlayers && !isTweening){
-							activePanel = 4;
-							previousPanel = 6;
-							chosenOrb++;
-							movePanel();
+					foreach (TTSRacerConfig player in players) {
+						if (player.ControllerID == chosenOrb) {
+							player.PerkA = (int)SelectedPerk;
+							player.PerkB = (int)SelectedPerkB;
+							player.RigType = (int)SelectedRig;
+							player.CharacterType = (int)characterColor[activeColorIndex].GetComponent<TTSCharacter>().characterType;
+							player.racerID = playerID[chosenOrb - 1];
+							player.racerControllerID = playerControllerID[chosenOrb - 1];
+							
+							Debug.Log("Player " + player.racerID + " is controller by controller " + player.racerControllerID);
 						}
-
-						isTweening = true;
 					}
+					
+					dtp.GetComponent<TTSDataToPass>().players = this.players;
+					dtp.GetComponent<TTSDataToPass>().gametype = gameMode;
+					
+					movePanel();
+				}
+				
+				else if(activePanel == 7 && !isTweening){
+					previousPanel = activePanel;
+					levelSelection();
 				}
 			}
-
+		 
 			// ONLINE
 			else if (gameMode == TTSLevel.Gametype.MultiplayerOnline) {
 				// mp 
@@ -772,111 +751,105 @@ public class TTSMenu : TTSBehaviour {
 			// SPLITSCREEN
 			else if (gameMode == TTSLevel.Gametype.MultiplayerLocal) {
 				if(activePanel == 0 && !isTweening){
-					activePanel += 3;
-					previousPanel = (activePanel - 3);
 					isTweening = true;
+					previousPanel = activePanel;
+					activePanel += 3;
 					movePanel();
 				}
 				
-				else if(activePanel < 8 && !isTweening){
+				else if(activePanel == 3 && !isTweening){
+					isTweening = true;
+					previousPanel = activePanel;
 					activePanel++;
-					if(activePanel == 4 || activePanel == 5){
-						if(!isTweening){
-							previousPanel = (activePanel-1);
-							isTweening = true;
-							movePanel();
-						}
-					}
-										
-					else if(activePanel == 8 && !isTweening){
-						if(SelectedLevel.ToString() == "level1"){
-							dtp.GetComponent<TTSDataToPass>().levelToLoad = "city1-1";
-							Application.LoadLevel("city1-1");
+					movePanel();
+				}
+
+				else if(activePanel == 4 && !isTweening){
+					isTweening = true;
+					previousPanel = activePanel;
+					activePanel++;
+					movePanel();
+				}
+				
+				else if(activePanel == 5 && !isTweening){
+					previousPanel = activePanel;
+					activePanel++;
+				}
+				
+				else if(activePanel == 6){	
+					foreach (TTSRacerConfig player in players) {
+						if (player.ControllerID == chosenOrb) {
+							player.PerkA = (int)SelectedPerk;
+							player.PerkB = (int)SelectedPerkB;
+							player.RigType = (int)SelectedRig;
+							player.CharacterType = (int)characterColor[activeColorIndex].GetComponent<TTSCharacter>().characterType;
+							player.racerID = playerID[chosenOrb - 1];
+							player.racerControllerID = playerControllerID[chosenOrb - 1];
 							
-						}else if(SelectedLevel.ToString() == "level2"){
-							dtp.GetComponent<TTSDataToPass>().levelToLoad = "city1-2";
-							Application.LoadLevel("city1-2");
+							Debug.Log("Player " + player.racerID + " is controller by controller " + player.racerControllerID);
 						}
-								
-						else if(SelectedLevel.ToString() == "level3"){
-							dtp.GetComponent<TTSDataToPass>().levelToLoad = "rural1-1";
-							Application.LoadLevel("rural1-1");
-						}
-								
-						else if(SelectedLevel.ToString() == "level4"){
-							dtp.GetComponent<TTSDataToPass>().levelToLoad = "cliffsidechoas";
-							Application.LoadLevel("cliffsidechoas");
-						}
-
-						else if(SelectedLevel.ToString() == "level5"){
-							dtp.GetComponent<TTSDataToPass>().levelToLoad = "future1-1";
-							Application.LoadLevel("future1-1");
-						}
-
-						Application.LoadLevel("LoadingScene");
 					}
-
-					else if (activePanel == 7 && !isTweening) {
-
-						foreach (TTSRacerConfig player in players) {
-							if (player.ControllerID == chosenOrb) {
-								player.PerkA = (int)SelectedPerk;
-								player.PerkB = (int)SelectedPerkB;
-								player.RigType = (int)SelectedRig;
-								player.CharacterType = (int)characterColor[activeColorIndex].GetComponent<TTSCharacter>().characterType;
-								player.racerID = playerID[chosenOrb - 1];
-								player.racerControllerID = playerControllerID[chosenOrb - 1];
-
-								Debug.Log("Player " + player.racerID + " is controller by controller " + player.racerControllerID);
-							}
-						}
-
-						// go to levelSelect
-						if (chosenOrb == numPlayers) {
-							previousPanel = (activePanel-1);
-							dtp.GetComponent<TTSDataToPass>().players = this.players;
-							dtp.GetComponent<TTSDataToPass>().gametype = gameMode;
-							movePanel();
-						}
-						
-						// go to rigMenu
-						else if(chosenOrb != numPlayers && !isTweening){
-							activePanel = 4;
-							previousPanel = 6;
-							chosenOrb++;
-							movePanel();
-						}
-
-						isTweening = true;
+					
+					// go to levelSelect
+					if (chosenOrb == numPlayers) {
+						Debug.Log("single player");
+						previousPanel = activePanel;
+						activePanel++;
+						dtp.GetComponent<TTSDataToPass>().players = this.players;
+						dtp.GetComponent<TTSDataToPass>().gametype = gameMode;
+						movePanel();
 					}
+					
+					// go to rigMenu
+					else if(chosenOrb != numPlayers && !isTweening){
+						activePanel = 4;
+						previousPanel = 6;
+						chosenOrb++;
+						movePanel();
+					}	
+					
+					isTweening = true;
+				}
+				
+				else if(activePanel == 7 && !isTweening){
+					previousPanel = activePanel;
+					levelSelection();
 				}
 			}
+
 		}
 
 		if(direction == "left"){
-			Debug.Log("back");
-			if(gameMode == TTSLevel.Gametype.TimeTrial){
-				if(activePanel > 4 && !isTweening){
-					activePanel--;
-					if(activePanel == 4 || activePanel == 6){
-						if(!isTweening){
-							previousPanel = (activePanel+1);
-							isTweening = true;
-							movePanel();
-						}
-					}
-				}
+		}
+	}
+	
+	private void levelSelection(){
+		if(SelectedLevel.ToString() == "level1"){
+				dtp.GetComponent<TTSDataToPass>().levelToLoad = "city1-1";
+				Application.LoadLevel("city1-1");
+			}
+		
+			else if(SelectedLevel.ToString() == "level2"){
+				dtp.GetComponent<TTSDataToPass>().levelToLoad = "city1-2";
+				Application.LoadLevel("city1-2");
+			}
+							
+			else if(SelectedLevel.ToString() == "level3"){
+				dtp.GetComponent<TTSDataToPass>().levelToLoad = "rural1-1";
+				Application.LoadLevel("rural1-1");
+			}
+				
+			else if(SelectedLevel.ToString() == "level4"){
+				dtp.GetComponent<TTSDataToPass>().levelToLoad = "cliffsidechoas";
+				Application.LoadLevel("cliffsidechoas");
+			}
+
+			else if(SelectedLevel.ToString() == "level5"){
+				dtp.GetComponent<TTSDataToPass>().levelToLoad = "future1-1";
+				Application.LoadLevel("future1-1");
 			}
 			
-			else if(gameMode == TTSLevel.Gametype.MultiplayerLocal){
-				if(activePanel == 3){
-					activePanel -= 3;
-					previousPanel = (activePanel + 3);
-					isTweening = true;
-					movePanel();
-				}
-			}
-		}
+			Application.LoadLevel("LoadingScene");
 	}
 
 	public void movePanel() {
