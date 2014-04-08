@@ -219,22 +219,22 @@ public class TTSRacer : TTSBehaviour
 	}
 
 	// Runs after the racer is initialized with the rigs
-	public void Initialized(bool isNetwork) {
+	public void Initialized(bool isNetwork, TTSRacerConfig config) {
 
 		powerupManager = GetComponent<TTSPowerup>();
 
 		if (player == PlayerType.Player) {
 			if (isNetwork)
-				SetNetHandler(new TTSRacerNetHandler(level.client, true, rigID));
+				SetNetHandler(new TTSRacerNetHandler(level.client, true, rigID, config.netID));
 		}
 		else if (player == PlayerType.AI) {
 			AIUtil = gameObject.AddComponent<TTSAIController>();
 
 			if (isNetwork)
-				SetNetHandler(new TTSRacerNetHandler(level.client, true, rigID));
+				SetNetHandler(new TTSRacerNetHandler(level.client, true, rigID, config.netID));
 		}
 		else if (player == PlayerType.Multiplayer) {
-
+			Debug.Log("MULTIPLAYER INIT");
 		}
 
 		if (AIUtil == null)
@@ -772,12 +772,15 @@ public class TTSRacerNetHandler : TTSNetworkHandle
 		Config = config;
 		Config.Name = Name;
 
+		SetNetID(UnityEngine.Random.value * 100);
+
 		//Client.LobbyRacerRegister(lobbyID, config);
 		client.LocalRacerRegister(this);
 	}
 
-	public TTSRacerNetHandler(TTSClient Client, bool Owner, int rigID) {
+	public TTSRacerNetHandler(TTSClient Client, bool Owner, int rigID, float ID) {
 		type = "Racer";
+		id = ID;
 		registerCommand = TTSCommandTypes.RacerRegister;
 		owner = Owner;
 		client = Client;

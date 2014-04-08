@@ -255,6 +255,11 @@ public class TTSClient : MonoBehaviour
 				#region racers and powerups
 
 				case TTSCommandTypes.RacerUpdate:
+					id = packet.ReadFloat(); // Racer Net handle
+					Debug.Log(id);
+					netHandles[id].ReceiveNetworkData(packet, command);
+					break;
+
 				case TTSCommandTypes.PowerupStaticRegister:
 				case TTSCommandTypes.PowerupRegister:
 				case TTSCommandTypes.PowerupUpdate:
@@ -357,9 +362,6 @@ public class TTSClient : MonoBehaviour
 	}
 
 	public void LocalRacerRegister(TTSRacerNetHandler handler) {
-		if(handler.owner)
-			handler.SetNetID(UnityEngine.Random.value * 100);
-
 		LocalObjectRegister(handler);
 		racerHandles.Add(handler.id, handler);
 	}
