@@ -59,24 +59,28 @@ public class TTSClient : MonoBehaviour
 		isLobby = (level != null) ? level.currentGameType == TTSLevel.Gametype.Lobby : false;
 		isMultiplayer = (level != null) ? level.currentGameType == TTSLevel.Gametype.MultiplayerOnline : false;
 
-		sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-		serverAddr = IPAddress.Parse(SERVER_IP);
-		endPoint = new IPEndPoint(serverAddr, SERVER_RECEIVE_PORT);
+		InitConnection();
 
 		if (!isMultiplayer && !isLobby) return;
-
-		client = new UdpClient(CLIENT_RECEIVE_PORT);
-		client.Client.ReceiveTimeout = CLIENT_RECEIVE_TIMEOUT;
 
 		receiveThread = new Thread(new ThreadStart(PacketListener));
 		receiveThread.IsBackground = true;
 		receiveThread.Start();
-
-		InitConnection();
 	}
 
 	private void InitConnection() {
-		//ConnectToLobby(1);
+		// Get the IP from server
+		WebClient webClient = new WebClient();
+		string IpAddress = webClient.DownloadString("http://ugrad.bitdegree.ca/~sunmockyang/ORBS_IP.txt");
+		Debug.Log(IpAddress);
+		SERVER_IP = IpAddress;
+
+		sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+		serverAddr = IPAddress.Parse(SERVER_IP);
+		endPoint = new IPEndPoint(serverAddr, SERVER_RECEIVE_PORT);
+
+		client = new UdpClient(CLIENT_RECEIVE_PORT);
+		client.Client.ReceiveTimeout = CLIENT_RECEIVE_TIMEOUT;
 	}
 
 	// Unity update. Used to send values
@@ -185,6 +189,30 @@ public class TTSClient : MonoBehaviour
 					levelToLoad = packet.ReadInt32();
 					break;
 				#endregion
+				case TTSCommandTypes.RacerRegister:
+					TTSRacerConfig config = new TTSRacerConfig();
+					id = config.netID = packet.ReadFloat();
+					config.Index = packet.ReadInt32();
+					config.RigType = packet.ReadInt32();
+					config.PerkA = packet.ReadInt32();
+					config.PerkB = packet.ReadInt32();
+					config.CharacterType = packet.ReadInt32();
+					config.Name = packet.Read16CharString();
+					config.ControlType = packet.ReadInt32();
+					config.LocalControlType = TTSUtils.EnumToInt(TTSRacer.PlayerType.Multiplayer);
+
+					if(!RegisteredRacerConfigs.Exists(x=> x.netID == config.netID))
+						RegisteredRacerConfigs.Add(config);
+
+					if (isLobby) {
+						lobbyMenu.networkUpdated = true;
+					}
+
+					if (DebugRacerSpawn) {
+						Debug.Log("R	Received a racer " + id);
+						spawnRacers.Add(config);
+					}
+					break;
 
 				case TTSCommandTypes.LobbyRegisterOK:
 					LobbyID = packet.ReadInt32();
@@ -220,28 +248,6 @@ public class TTSClient : MonoBehaviour
 				#endregion
 
 				#region racers and powerups
-				case TTSCommandTypes.RacerRegister:
-					TTSRacerConfig config = new TTSRacerConfig();
-					id = config.netID = packet.ReadFloat();
-					config.Index = packet.ReadInt32();
-					config.RigType = packet.ReadInt32();
-					config.PerkA = packet.ReadInt32();
-					config.PerkB = packet.ReadInt32();
-					config.CharacterType = packet.ReadInt32();
-					config.Name = packet.Read16CharString();
-					config.ControlType = packet.ReadInt32();
-					config.LocalControlType = TTSUtils.EnumToInt(TTSRacer.PlayerType.Multiplayer);
-					RegisteredRacerConfigs.Add(config);
-
-					if (isLobby) {
-						lobbyMenu.networkUpdated = true;
-					}
-
-					if (DebugRacerSpawn) {
-						Debug.Log("R	Received a racer " + id);
-						spawnRacers.Add(config);
-					}
-					break;
 
 				case TTSCommandTypes.RacerUpdate:
 				case TTSCommandTypes.PowerupStaticRegister:
@@ -353,6 +359,7 @@ public class TTSClient : MonoBehaviour
 	}
 
 	public void LocalRacerRegister(TTSRacerNetHandler handler) {
+		handler.SetNetID(UnityEngine.Random.value * 100);
 		if(!isMultiplayer && !isLobby)
 			return;
 
@@ -364,7 +371,7 @@ public class TTSClient : MonoBehaviour
 		if(!isMultiplayer && !isLobby)
 			return;
 
-		if (netHandles.ContainsKey(handler.id)) {
+		if (netHandles.ContainsKey(handler.id) || handler.id == 0f) {
 			if (handler.canForfeitControl) { // Someone else is controlling object
 				handler.owner = false;
 			}
@@ -374,7 +381,6 @@ public class TTSClient : MonoBehaviour
 				}
 				netHandles.Add(handler.id, handler);
 			}
-
 		}
 		else {
 			netHandles.Add(handler.id, handler);
