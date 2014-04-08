@@ -833,6 +833,6 @@ public class TTSPowerupNetHandler : TTSNetworkHandle
 
 	public override byte[] GetNetworkUpdate() {
 		isWriterUpdated = false;
-		return writer.GetMinimizedData();
+		return writer.GetMinimizedData(true);
 	}
 }
