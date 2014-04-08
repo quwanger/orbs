@@ -839,6 +839,7 @@ GameObject:
   - 114: {fileID: 1627256487}
   - 114: {fileID: 1627256488}
   - 82: {fileID: 1627256489}
+  - 114: {fileID: 1627256490}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -912,7 +913,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1627256479}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ca7aa620514eece46be89dc54e518a5c, type: 3}
   m_Name: 
@@ -1044,6 +1045,16 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
+--- !u!114 &1627256490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1627256479}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 626f08fcb2c45487f9299504ffcef1b5, type: 3}
+  m_Name: 
 --- !u!1 &1638898398
 GameObject:
   m_ObjectHideFlags: 0

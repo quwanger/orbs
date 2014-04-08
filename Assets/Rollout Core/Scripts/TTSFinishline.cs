@@ -77,7 +77,7 @@ public class TTSFinishline : MonoBehaviour {
 				levelName.text = "Downtown Domination";
 			break;
 
-			case("rural-1"):
+			case("rural1-1"):
 				levelName.text = "Night Fright";
 			break;
 			
@@ -87,6 +87,10 @@ public class TTSFinishline : MonoBehaviour {
 			
 			case("future1-1"):
 				levelName.text = "Digital Palace";
+			break;
+
+			case("future1-2"):
+				levelName.text = "Vindiciae";
 			break;	
 		}
 	}

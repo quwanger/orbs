@@ -53,8 +53,12 @@ public class TTSCameraFade : MonoBehaviour
 		if (m_CurrentScreenOverlayColor.a > 0)
 		{			
             		GUI.depth = m_FadeGUIDepth;
-            		TTSFollowCamera fc = this.GetComponent<TTSFollowCamera>();
-            		GUI.Label(new Rect(fc.fadeX, fc.fadeY, fc.fadeWidth + 10, fc.fadeHeight + 10), m_FadeTexture, m_BackgroundStyle);
+            		if(this.GetComponent<TTSFollowCamera>()){
+	            		TTSFollowCamera fc = this.GetComponent<TTSFollowCamera>();
+	            		GUI.Label(new Rect(fc.fadeX, fc.fadeY, fc.fadeWidth + 10, fc.fadeHeight + 10), m_FadeTexture, m_BackgroundStyle);
+            		}else{
+            			GUI.Label(new Rect(0, 0, Screen.width, Screen.height), m_FadeTexture, m_BackgroundStyle);
+            		}
 		}
     }
  
