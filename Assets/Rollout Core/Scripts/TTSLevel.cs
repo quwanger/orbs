@@ -57,15 +57,46 @@ public class TTSLevel : MonoBehaviour {
 		}
 	}
 
+	void DestroyDataToPass(){
+		GameObject dataToPass = GameObject.Find("DataToPass");
+		Destroy(dataToPass);
+	}
+
 	void Update() {
 		if(DebugMode || !DebugMode) {
-			if(Input.GetKeyDown(KeyCode.T))	Application.LoadLevel("city1-1");
-			if(Input.GetKeyDown(KeyCode.Y)) Application.LoadLevel("city1-2");
-			if(Input.GetKeyDown(KeyCode.U)) Application.LoadLevel("rural1-1");
-			if(Input.GetKeyDown(KeyCode.I)) Application.LoadLevel("cliffsidechoas");
-			if(Input.GetKeyDown(KeyCode.O)) Application.LoadLevel("future1-1");
-			if(Input.GetKeyDown(KeyCode.P)) Application.LoadLevel("hub-world");
-			if(Input.GetKeyDown(KeyCode.R)) Application.LoadLevel(Application.loadedLevel);
+			if(Input.GetKey(KeyCode.RightShift) && Input.GetKey(KeyCode.Return)){
+				if(Input.GetKeyDown(KeyCode.T)){
+					DestroyDataToPass();
+					Application.LoadLevel("city1-1");
+				}
+				if(Input.GetKeyDown(KeyCode.Y)){
+					DestroyDataToPass();
+					Application.LoadLevel("city1-2");
+				}
+				if(Input.GetKeyDown(KeyCode.U)){
+					DestroyDataToPass();
+					Application.LoadLevel("rural1-1");
+				}
+				if(Input.GetKeyDown(KeyCode.I)){
+					DestroyDataToPass();
+					Application.LoadLevel("cliffsidechoas");
+				}
+				if(Input.GetKeyDown(KeyCode.O)){
+					DestroyDataToPass();
+					Application.LoadLevel("future1-1");
+				}
+				if(Input.GetKeyDown(KeyCode.P)){
+					DestroyDataToPass();
+					Application.LoadLevel("future1-2");
+				}
+				if(Input.GetKeyDown(KeyCode.LeftBracket)){
+					DestroyDataToPass();
+					Application.LoadLevel("hub-world");
+				}
+				if(Input.GetKeyDown(KeyCode.R)){
+					Application.LoadLevel(Application.loadedLevel);
+				}
+			}
 		}
 		
 		if(humanPlayersFinished){
