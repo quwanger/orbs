@@ -67,6 +67,7 @@ public class TTSRacer : TTSBehaviour
 	public TTSRig CurrentRig;
 	public bool canMove = false;
 	private float MinimumVelocityToAnimateSteering = 1.0f;
+	private float VibrationIntensity = 0;
 
 	private float resultAccel = 0.0f; // For sound calculation
 	public float rpm = 0;
@@ -427,10 +428,21 @@ public class TTSRacer : TTSBehaviour
 	
 		if(nextWaypoint)
 			goingWrongWay = CheckWrongWay();
+
+		//Debug.Log(VibrationIntensity);
+
+		if(VibrationIntensity > 1){
+			VibrationIntensity /= 2;
+		}else if(VibrationIntensity < 1){
+			VibrationIntensity = 0;
+		}
+		if(player == PlayerType.Player)
+			GamePad.SetVibration(WindowsCheckControllerToVibrate(), VibrationIntensity, VibrationIntensity);
 	}
 
 	#region Events
 	void OnCollisionEnter(Collision collision) {
+
 		onGround = true;
 		if (collision.relativeVelocity.magnitude > 15) {
 			if(vfx != null)
@@ -438,6 +450,13 @@ public class TTSRacer : TTSBehaviour
 			//RacerSfx.volume = collision.relativeVelocity.magnitude / TopSpeed / 1.5f;
 			RacerSfx.volume = collision.relativeVelocity.magnitude / 150.0f / 1.5f;
 			RacerSfx.PlayOneShot(DamageSounds[Mathf.FloorToInt(Random.value * DamageSounds.Length)]);
+			if(player == PlayerType.Player){
+				if(collision.relativeVelocity.magnitude > VibrationIntensity){
+					VibrationIntensity = collision.relativeVelocity.magnitude;
+
+				}
+				Debug.Log(collision.gameObject);
+			}
 		}
 
 		//spawn sparks (TODO: move this to a component script)
@@ -457,7 +476,7 @@ public class TTSRacer : TTSBehaviour
 
 	private bool CheckWrongWay(){
 
-		Vector3 toWaypoint = nextWaypoint.getClosestPoint(position) - position;
+		Vector3 toWaypoint = nextWaypoint.position - currentWaypoint.position;
 
 		float angle = Vector3.Angle(toWaypoint, lastForward);
 
@@ -503,6 +522,28 @@ public class TTSRacer : TTSBehaviour
 
 	public void StopRacer() {
 		rigidbody.velocity = new Vector3(0, 0, 0);
+	}
+
+	public XInputDotNetPure.PlayerIndex WindowsCheckControllerToVibrate(){
+		#if UNITY_STANDALONE_WIN || UNITY_EDITOR
+			switch(playerControllerNum){
+				case(1):
+					return PlayerIndex.One;
+					break;
+				case(2):
+					return PlayerIndex.Two;
+					break;
+				case(3):
+					return PlayerIndex.Three;
+					break;
+				case(4):
+					return PlayerIndex.Four;
+					break;
+				default:
+					return PlayerIndex.One;
+					break;
+			}
+		#endif
 	}
 
 	public void CheckControllerWindows(){

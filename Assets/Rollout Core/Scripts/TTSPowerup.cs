@@ -70,6 +70,10 @@ public class TTSPowerup : TTSBehaviour
 		ppBack = this.GetComponent<TTSRacer>().CurrentRig.powerupPositionsBack;
 
 		pp2 = this.GetComponent<TTSPerkManager>().equiptPerkPool2;
+
+		#if UNITY_STANDALONE_WIN || UNITY_EDITOR
+			CheckControllerWindows();
+		#endif
 	}
 
 	#region monobehaviour methods
@@ -95,8 +99,9 @@ public class TTSPowerup : TTSBehaviour
 
 				CheckControllerWindows();
 
-				if (state.Buttons.A == ButtonState.Pressed)
+				if (state.Buttons.A == ButtonState.Pressed){
 					ConsumePowerup();
+				}
 			#endif
 
 
@@ -706,8 +711,12 @@ public class TTSPowerup : TTSBehaviour
 
 		#if UNITY_STANDALONE_WIN || UNITY_EDITOR
 		CheckControllerWindows();
-		if(state.ThumbSticks.Left.Y == -1.0f)
+		/*if(state.ThumbSticks.Left.Y == -1.0f)
+			return false;*/
+		if(state.Buttons.LeftShoulder == 0)
 			return false;
+
+		Debug.Log(state.Buttons.LeftShoulder);
 		#endif
 
 		#if UNITY_STANDALONE_OSX && !UNITY_EDITOR
