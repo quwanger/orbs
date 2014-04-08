@@ -135,6 +135,8 @@ public class TTSRacer : TTSBehaviour
 	// Networking
 	TTSRacerNetHandler netHandler;
 	public int rigID;
+	private System.DateTime lastNetUpdate;
+	private int updatesPerSecond = 4;
 
 	//XInput
 	#if UNITY_STANDALONE_WIN || UNITY_EDITOR
@@ -222,19 +224,22 @@ public class TTSRacer : TTSBehaviour
 	}
 
 	// Runs after the racer is initialized with the rigs
-	public void Initialized() {
+	public void Initialized(bool isNetwork, TTSRacerConfig config) {
 
 		powerupManager = GetComponent<TTSPowerup>();
 
 		if (player == PlayerType.Player) {
-			SetNetHandler(new TTSRacerNetHandler(level.client, true, rigID));
+			if (isNetwork)
+				SetNetHandler(new TTSRacerNetHandler(level.client, true, rigID, config.netID));
 		}
 		else if (player == PlayerType.AI) {
 			AIUtil = gameObject.AddComponent<TTSAIController>();
-			SetNetHandler(new TTSRacerNetHandler(level.client, true, rigID));
+
+			if (isNetwork)
+				SetNetHandler(new TTSRacerNetHandler(level.client, true, rigID, config.netID));
 		}
 		else if (player == PlayerType.Multiplayer) {
-
+			Debug.Log("MULTIPLAYER INIT");
 		}
 
 		if (AIUtil == null)
@@ -258,8 +263,10 @@ public class TTSRacer : TTSBehaviour
 		if (player != PlayerType.Multiplayer)
 			CalculateBodyOrientation();
 
-		if(netHandler != null)
+		if (netHandler != null && (System.DateTime.Now - lastNetUpdate).Milliseconds > 1000 / updatesPerSecond) {
 			netHandler.UpdateRacer(position, displayMeshComponent.rotation.eulerAngles, rigidbody.velocity, vInput, hInput);
+			lastNetUpdate = System.DateTime.Now;
+		}
 
 		resultAccel = Mathf.Lerp(resultAccel, rigidbody.velocity.magnitude - PreviousVelocity.magnitude, 0.01f);
 		PreviousVelocity = rigidbody.velocity;
@@ -810,7 +817,6 @@ public class TTSRacerNetHandler : TTSNetworkHandle
 		PerkA = config.PerkA;
 		PerkB = config.PerkB;
 		Character = config.CharacterType;
-		Debug.Log((TTSBehaviour.CharacterTypes)Character);
 
 		Name = ((TTSBehaviour.CharacterTypes)Character).ToString().Replace("character_", "");
 		Name += " " + (TTSBehaviour.RigType)Rig;
@@ -821,12 +827,15 @@ public class TTSRacerNetHandler : TTSNetworkHandle
 		Config = config;
 		Config.Name = Name;
 
+		SetNetID(UnityEngine.Random.value * 100);
+
 		//Client.LobbyRacerRegister(lobbyID, config);
 		client.LocalRacerRegister(this);
 	}
 
-	public TTSRacerNetHandler(TTSClient Client, bool Owner, int rigID) {
+	public TTSRacerNetHandler(TTSClient Client, bool Owner, int rigID, float ID) {
 		type = "Racer";
+		id = ID;
 		registerCommand = TTSCommandTypes.RacerRegister;
 		owner = Owner;
 		client = Client;
@@ -847,6 +856,12 @@ public class TTSRacerNetHandler : TTSNetworkHandle
 		id = ID;
 		if (Config != null)
 			Config.netID = id;
+	}
+
+	public void SetIndex(int index) {
+		Index = index;
+		if (Config != null)
+			Config.Index = index;
 	}
 
 	public override byte[] GetNetworkRegister() {
@@ -899,9 +914,9 @@ public class TTSRacerNetHandler : TTSNetworkHandle
 	}
 
 	public void UpdateRacer(Vector3 Pos, Vector3 Rot, Vector3 Speed, float VInput, float HInput) {
-		if (owner && isServerRegistered) { // Only send data if it's the owner
+		if (owner) { // Only send data if it's the owner
 
-			if (!isWriterUpdated) writer.ClearData();
+			if (!isWriterUpdated) writer.ClearData(); // Always clear..
 			isWriterUpdated = true;
 
 			writer.AddData(TTSCommandTypes.RacerUpdate);

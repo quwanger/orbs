@@ -5222,6 +5222,7 @@ Transform:
   - {fileID: 1102834763}
   - {fileID: 1409256302}
   - {fileID: 1456398027}
+  - {fileID: 524578044}
   - {fileID: 431522928}
   - {fileID: 1084042904}
   - {fileID: 771177553}
@@ -5287,6 +5288,7 @@ MonoBehaviour:
   - {fileID: 431522929}
   - {fileID: 771177554}
   - {fileID: 982611751}
+  countdownText: {fileID: 524578045}
   nullPlayerText: Waiting for player
 --- !u!1 &523125174
 GameObject:
@@ -5316,6 +5318,53 @@ Transform:
   - {fileID: 152901661}
   - {fileID: 1886189556}
   m_Father: {fileID: 228297208}
+--- !u!1 &524578043
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 524578044}
+  - 132: {fileID: 524578045}
+  m_Layer: 24
+  m_Name: countdown-text
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &524578044
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 524578043}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 10}
+  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 520510161}
+--- !u!132 &524578045
+GUIText:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 524578043}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Text: waiting for player...
+  m_Anchor: 0
+  m_Alignment: 0
+  m_PixelOffset: {x: -200, y: -200}
+  m_LineSpacing: 1
+  m_TabSize: 4
+  m_Font: {fileID: 12800000, guid: 5626f396e8600b14dbb97bd446954aec, type: 3}
+  m_Material: {fileID: 0}
+  m_FontSize: 0
+  m_FontStyle: 0
+  m_PixelCorrect: 1
+  m_RichText: 1
 --- !u!1 &524984472
 GameObject:
   m_ObjectHideFlags: 0
@@ -15270,6 +15319,8 @@ MonoBehaviour:
   currentFinishBox: {fileID: 0}
   numHumanPlayers: 1
   numAIPlayers: 0
+  isMultiplayer: 0
+  isLobby: 0
   gameType: 0
 --- !u!114 &1357254833
 MonoBehaviour:
@@ -15310,6 +15361,7 @@ MonoBehaviour:
   - 
   - 
   - 
+  createdSinglePlayer: 0
   backSound: {fileID: 8300000, guid: 7b48a12dbc9c7bc4b9d7eaadedcc300b, type: 3}
   hoverSound: {fileID: 8300000, guid: ca15fd5b088a9e94c88d856b96de4c41, type: 3}
   selectSound: {fileID: 8300000, guid: 71214caa4f7019b4c8b94f890e051b5c, type: 3}
@@ -15409,9 +15461,12 @@ MonoBehaviour:
   SERVER_RECEIVE_PORT: 6666
   CLIENT_RECEIVE_PORT: 6969
   CLIENT_RECEIVE_TIMEOUT: 0
+  isMultiplayer: 0
+  isLobby: 0
   EnteredLobby: 0
   InGame: 0
   LobbyID: 0
+  lobbyCountdownTime: -1
 --- !u!82 &1357254836
 AudioSource:
   m_ObjectHideFlags: 0

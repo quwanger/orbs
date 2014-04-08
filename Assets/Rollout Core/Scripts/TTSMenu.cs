@@ -640,6 +640,12 @@ public class TTSMenu : TTSBehaviour {
 			break;
 		}
 	}
+
+	public void SaveRacers() {
+		dtp.GetComponent<TTSDataToPass>().players = this.players;
+		dtp.GetComponent<TTSDataToPass>().players.AddRange(level.client.RegisteredRacerConfigs);
+		dtp.GetComponent<TTSDataToPass>().gametype = gameMode;
+	}
 	
 	private void changePanels(string direction){
 		// TIMETRIAL
