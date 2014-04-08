@@ -762,7 +762,7 @@ public class TTSMenu : TTSBehaviour {
 					
 					if(indices[0] == 1){
 						gameMode = TTSLevel.Gametype.MultiplayerOnline;
-						activePanel++;
+						activePanel+= 4;
 					}
 					
 					else if(indices[0] == 2){
@@ -770,6 +770,7 @@ public class TTSMenu : TTSBehaviour {
 						activePanel+= 3;
 
 					}
+					
 					movePanel();
 				}
 				
@@ -843,6 +844,7 @@ public class TTSMenu : TTSBehaviour {
 				
 				else if(activePanel == 5 && !isTweening){
 					// go back to rig select
+					
 				}
 				
 				else if(activePanel == 6 && !isTweening){
