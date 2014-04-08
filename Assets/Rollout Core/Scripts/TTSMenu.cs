@@ -199,6 +199,7 @@ public class TTSMenu : TTSBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+		Debug.Log(gameMode);
 
 		if (gameMode != TTSLevel.Gametype.Lobby) {
 			
@@ -655,7 +656,6 @@ public class TTSMenu : TTSBehaviour {
 		
 		// TIMETRIAL
 		if(direction == "right"){
-			
 			if(gameMode == TTSLevel.Gametype.TimeTrial)
 			{
 				// if you're on the rig panel and it's not tweening:
@@ -759,7 +759,17 @@ public class TTSMenu : TTSBehaviour {
 				if(activePanel == 0 && !isTweening){
 					isTweening = true;
 					previousPanel = activePanel;
-					activePanel += 3;
+					
+					if(indices[0] == 1){
+						gameMode = TTSLevel.Gametype.MultiplayerOnline;
+						activePanel++;
+					}
+					
+					else if(indices[0] == 2){
+						gameMode = TTSLevel.Gametype.MultiplayerLocal;
+						activePanel+= 3;
+
+					}
 					movePanel();
 				}
 				
@@ -826,6 +836,23 @@ public class TTSMenu : TTSBehaviour {
 		}
 
 		if(direction == "left"){
+			if(gameMode == TTSLevel.Gametype.TimeTrial){
+				if(activePanel == 4 && !isTweening){
+					// go back to hub world
+				}
+				
+				else if(activePanel == 5 && !isTweening){
+					// go back to rig select
+				}
+				
+				else if(activePanel == 6 && !isTweening){
+					// go back to perk 1
+				}
+				
+				else if(activePanel == 7 && !isTweening){
+					// go back to perk 2
+				}
+			}
 		}
 	}
 	
@@ -886,13 +913,13 @@ public class TTSMenu : TTSBehaviour {
 	
 	private void HighlightMPSelect(){
 		if(indices[0] == 1){
-			gameMode = TTSLevel.Gametype.MultiplayerOnline;
+			//gameMode = TTSLevel.Gametype.MultiplayerOnline;
 			topHighlighter.SetActive(true);
 			botHighlighter.SetActive(false);
 		}
 		
 		else if(indices[0] == 2){
-			gameMode = TTSLevel.Gametype.MultiplayerLocal;
+			//gameMode = TTSLevel.Gametype.MultiplayerLocal;
 			topHighlighter.SetActive(false);
 			botHighlighter.SetActive(true);
 		}
