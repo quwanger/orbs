@@ -16,6 +16,7 @@ public class TTSClient : MonoBehaviour
 	public int SERVER_RECEIVE_PORT = 6666;
 	public int CLIENT_RECEIVE_PORT = 6969;
 	public int CLIENT_RECEIVE_TIMEOUT = 0;
+	public int UpdatesPerSecond = 4;
 	#endregion
 
 	#region Network

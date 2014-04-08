@@ -93,9 +93,7 @@ public class TTSPowerup : TTSBehaviour
 		if (AvailablePowerup != PowerupType.None) {
 			#if UNITY_STANDALONE_WIN || UNITY_EDITOR
 
-				CheckControllerWindows();
-
-				if (state.Buttons.A == ButtonState.Pressed)
+				if (CheckControllerWindows() && state.Buttons.A == ButtonState.Pressed)
 					ConsumePowerup();
 			#endif
 
@@ -296,7 +294,7 @@ public class TTSPowerup : TTSBehaviour
 
 
 	#region public methods
-	public void CheckControllerWindows(){
+	public bool CheckControllerWindows(){
 		#if UNITY_STANDALONE_WIN || UNITY_EDITOR
 			switch(this.GetComponent<TTSRacer>().playerControllerNum){
 				case(1):
@@ -312,9 +310,11 @@ public class TTSPowerup : TTSBehaviour
 					state = GamePad.GetState(PlayerIndex.Four);
 					break;
 				default:
-					break;
+					return false;
 			}
-		#endif
+			return true;
+	#endif
+			return false;
 	}
 
 	public void CheckControllerMac(){
@@ -766,6 +766,8 @@ public class TTSPowerupNetHandler : TTSNetworkHandle
 
 	public float RacerID = -1.0f;
 
+	private System.DateTime lastNetUpdate;
+
 	public TTSPowerupNetHandler() {
 		type = "Static Powerup";
 		// For static powerups only. Class is used only for storage.
@@ -814,15 +816,18 @@ public class TTSPowerupNetHandler : TTSNetworkHandle
 
 	public void UpdatePowerup(Vector3 Pos, Vector3 Rot, Vector3 Speed) {
 		if (owner && isServerRegistered) { // Only send data if it's the owner
+			if ((System.DateTime.Now - lastNetUpdate).Milliseconds > 1000 / client.UpdatesPerSecond) {
+				if (!isWriterUpdated) writer.ClearData();
+				isWriterUpdated = true;
 
-			if (!isWriterUpdated) writer.ClearData();
-			isWriterUpdated = true;
+				writer.AddData(TTSCommandTypes.PowerupUpdate);
+				writer.AddData(id);
+				writer.AddData(Pos);
+				writer.AddData(Rot);
+				writer.AddData(Speed);
 
-			writer.AddData(TTSCommandTypes.PowerupUpdate);
-			writer.AddData(id);
-			writer.AddData(Pos);
-			writer.AddData(Rot);
-			writer.AddData(Speed);
+				lastNetUpdate = System.DateTime.Now;
+			}
 		}
 	}
 
