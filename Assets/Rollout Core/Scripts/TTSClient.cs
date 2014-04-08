@@ -33,21 +33,12 @@ public class TTSClient : MonoBehaviour
 	public List<TTSRacerConfig> RegisteredRacerConfigs = new List<TTSRacerConfig>();
 
 	// Status
-	public bool isMultiplayer{
-		get{
-			if(level == null) return false;
-			return level.currentGameType == TTSLevel.Gametype.MultiplayerOnline;
-		}
-	}
-	public bool isLobby {
-		get {
-			if(level == null) return false;
-			return level.currentGameType == TTSLevel.Gametype.Lobby;
-		}
-	}
+	public bool isMultiplayer;
+	public bool isLobby;
 	public bool EnteredLobby = false;
 	public bool InGame = false;
 	public int LobbyID = 0;
+	public float lobbyCountdownTime = -1f;
 
 	// Game networking
 	// One global collection of IDs and handles
@@ -62,32 +53,40 @@ public class TTSClient : MonoBehaviour
 
 	// Use this for initialization
 	void Start() {
-		sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-		serverAddr = IPAddress.Parse(SERVER_IP);
-		endPoint = new IPEndPoint(serverAddr, SERVER_RECEIVE_PORT);
 
 		level = GetComponent<TTSLevel>();
 		initRace = GetComponent<TTSInitRace>();
 
-		if (!isMultiplayer && !isLobby) return;
+		isLobby = (level != null) ? level.currentGameType == TTSLevel.Gametype.Lobby : false;
+		isMultiplayer = (level != null) ? level.currentGameType == TTSLevel.Gametype.MultiplayerOnline : false;
 
-		client = new UdpClient(CLIENT_RECEIVE_PORT);
-		client.Client.ReceiveTimeout = CLIENT_RECEIVE_TIMEOUT;
+		InitConnection();
+
+		if (!isMultiplayer && !isLobby) return;
 
 		receiveThread = new Thread(new ThreadStart(PacketListener));
 		receiveThread.IsBackground = true;
 		receiveThread.Start();
-
-		InitConnection();
 	}
 
 	private void InitConnection() {
-		//ConnectToLobby(1);
+		// Get the IP from server
+		WebClient webClient = new WebClient();
+		string IpAddress = webClient.DownloadString("http://ugrad.bitdegree.ca/~sunmockyang/ORBS_IP.txt");
+		Debug.Log(IpAddress);
+		SERVER_IP = IpAddress;
+
+		sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+		serverAddr = IPAddress.Parse(SERVER_IP);
+		endPoint = new IPEndPoint(serverAddr, SERVER_RECEIVE_PORT);
+
+		client = new UdpClient(CLIENT_RECEIVE_PORT);
+		client.Client.ReceiveTimeout = CLIENT_RECEIVE_TIMEOUT;
 	}
 
 	// Unity update. Used to send values
 	void Update() {
-		if (!EnteredLobby && !isMultiplayer) {
+		if (!isLobby && !isMultiplayer) {
 			foreach (KeyValuePair<float, TTSNetworkHandle> pair in netHandles) {
 				pair.Value.writer.ClearData();
 			}
@@ -95,10 +94,9 @@ public class TTSClient : MonoBehaviour
 		}
 
 		// Code to run during lobby
-
 		foreach (KeyValuePair<float, TTSNetworkHandle> pair in netHandles) {
 			TTSNetworkHandle handle = pair.Value;
-			if (handle.isServerRegistered && handle.owner) {
+			if (handle.owner) {
 				// First make sure the packet won't overflow
 				byte[] tempData = handle.GetNetworkUpdate();
 				if (UpdatePacket.WillOverflow(tempData.Length)) {
@@ -108,6 +106,10 @@ public class TTSClient : MonoBehaviour
 			}
 		}
 		SendPacket(UpdatePacket, true);
+
+		if (levelToLoad != -1) {
+			OnStartRace();
+		}
 
 		if (!isMultiplayer)
 			return;
@@ -172,6 +174,53 @@ public class TTSClient : MonoBehaviour
 			switch (command) {
 
 				#region Lobby
+
+				#region Lobby Countdown
+				case TTSCommandTypes.LobbyCountdownUpdate:
+					lobbyCountdownTime = packet.ReadFloat();
+					break;
+
+				case TTSCommandTypes.LobbyStopCountdown:
+					Debug.Log("COUNTDOWN STOPPED");
+					lobbyCountdownTime = -1f;
+					break;
+
+				case TTSCommandTypes.LobbyStartGame:
+					levelToLoad = packet.ReadInt32();
+					break;
+				#endregion
+
+				case TTSCommandTypes.RacerRegister:
+					TTSRacerConfig config = new TTSRacerConfig();
+					id = config.netID = packet.ReadFloat();
+					config.Index = packet.ReadInt32();
+					config.RigType = packet.ReadInt32();
+					config.PerkA = packet.ReadInt32();
+					config.PerkB = packet.ReadInt32();
+					config.CharacterType = packet.ReadInt32();
+					config.Name = packet.Read16CharString();
+					config.ControlType = packet.ReadInt32();
+					config.LocalControlType = TTSUtils.EnumToInt(TTSRacer.PlayerType.Multiplayer);
+
+					if(!RegisteredRacerConfigs.Exists(x=> x.netID == config.netID))
+						RegisteredRacerConfigs.Add(config);
+
+					if (isLobby) {
+						lobbyMenu.networkUpdated = true;
+					}
+
+					if (DebugRacerSpawn) {
+						Debug.Log("R	Received a racer " + id);
+						spawnRacers.Add(config);
+					}
+					break;
+
+				case TTSCommandTypes.RacerRegisterOK:
+					id = packet.ReadFloat();
+					netHandles[id].isServerRegistered = true;
+					((TTSRacerNetHandler)netHandles[id]).SetIndex(packet.ReadInt32()); // Starting point index
+					break;
+
 				case TTSCommandTypes.LobbyRegisterOK:
 					LobbyID = packet.ReadInt32();
 					EnteredLobby = true;
@@ -206,40 +255,17 @@ public class TTSClient : MonoBehaviour
 				#endregion
 
 				#region racers and powerups
-				case TTSCommandTypes.RacerRegister:
-					TTSRacerConfig config = new TTSRacerConfig();
-					id = config.netID = packet.ReadFloat();
-					config.Index = packet.ReadInt32();
-					config.RigType = packet.ReadInt32();
-					config.PerkA = packet.ReadInt32();
-					config.PerkB = packet.ReadInt32();
-					config.Name = packet.Read16CharString();
-					config.ControlType = packet.ReadInt32();
-					config.LocalControlType = TTSUtils.EnumToInt(TTSRacer.PlayerType.Multiplayer);
-					RegisteredRacerConfigs.Add(config);
-
-					if (isLobby) {
-						lobbyMenu.networkUpdated = true;
-					}
-
-					if (DebugRacerSpawn) {
-						Debug.Log("R	Received a racer " + id);
-						spawnRacers.Add(config);
-					}
-					break;
 
 				case TTSCommandTypes.RacerUpdate:
+					id = packet.ReadFloat(); // Racer Net handle
+					netHandles[id].ReceiveNetworkData(packet, command);
+					break;
+
 				case TTSCommandTypes.PowerupStaticRegister:
 				case TTSCommandTypes.PowerupRegister:
 				case TTSCommandTypes.PowerupUpdate:
 					id = packet.ReadFloat(); // Racer Net handle
 					netHandles[id].ReceiveNetworkData(packet, command);
-					break;
-
-				case TTSCommandTypes.RacerRegisterOK:
-					id = packet.ReadFloat();
-					netHandles[id].isServerRegistered = true;
-					int index = packet.ReadInt32(); // Starting point index
 					break;
 
 				case TTSCommandTypes.PowerupRegisterOK:
@@ -250,7 +276,7 @@ public class TTSClient : MonoBehaviour
 				case TTSCommandTypes.RacerDeregister:
 					id = packet.ReadFloat();
 					if(DebugMode) Debug.Log("DEREGISTER RACER " + id);
-					// IMPLMENTE THIS
+					// IMPLMENT THIS
 					RegisteredRacerConfigs.RemoveAll(x => x.netID == id);
 					
 					if (isLobby) lobbyMenu.networkUpdated = true;
@@ -272,6 +298,15 @@ public class TTSClient : MonoBehaviour
 	}
 
 	#region In Lobby
+	int levelToLoad = -1;
+	public void OnStartRace() {
+		level.menu.SaveRacers();
+		TTSLevel.LevelType levelType = (TTSLevel.LevelType)levelToLoad;
+		Debug.Log("LOAD " + level.LevelTypeToFileName(levelType));
+		Application.LoadLevel(level.LevelTypeToFileName(levelType));
+		levelToLoad = -1;
+	}
+
 	TTSServerMenu serverMenu;
 	TTSLobbyMenu lobbyMenu;
 	public void RequestLobbyInfo(TTSServerMenu menu) {
@@ -307,26 +342,12 @@ public class TTSClient : MonoBehaviour
 		SendPacket(packet);
 	}
 
-	public void LobbyRacerRegister(int lobby, TTSRacerConfig config) {
-		if(!isMultiplayer && !isLobby)
-			return;
+	public void LeaveLobby() {
+		RegisteredRacerConfigs.Clear();
 
-		LocalRacerConfigs.Add(config);
-
-		TTSPacketWriter tempPacket = new TTSPacketWriter();
-		tempPacket.AddData(TTSCommandTypes.RacerRegister);
-		tempPacket.AddData(-1); // Given from the server
-		tempPacket.AddData(config.RigType);
-		tempPacket.AddData(config.PerkA);
-		tempPacket.AddData(config.PerkB);
-		tempPacket.AddData(config.CharacterType);
-		tempPacket.AddData(config.Name, 16);
-		tempPacket.AddData(config.ControlType);
-
-		if (UpdatePacket.WillOverflow(tempPacket.Length)) {
-			SendPacket(UpdatePacket, true);
-		}
-		UpdatePacket.AddData(tempPacket.GetMinimizedData());
+		UpdatePacket.ClearData();
+		UpdatePacket.AddData(TTSCommandTypes.CloseConnection);
+		SendPacket(UpdatePacket);
 	}
 	#endregion
 
@@ -342,26 +363,29 @@ public class TTSClient : MonoBehaviour
 	}
 
 	public void LocalRacerRegister(TTSRacerNetHandler handler) {
-		if(!isMultiplayer && !isLobby)
-			return;
-
 		LocalObjectRegister(handler);
 		racerHandles.Add(handler.id, handler);
 	}
 
 	public void LocalObjectRegister(TTSNetworkHandle handler) {
-		if(!isMultiplayer && !isLobby)
-			return;
-			
-		if (handler.canForfeitControl) {
-			if (netHandles.ContainsKey(handler.id)) // Someone else is controlling object
+		//if(!isMultiplayer && !isLobby)
+			//return;
+
+		if (netHandles.ContainsKey(handler.id) || handler.id == 0f) {
+			if (handler.canForfeitControl) { // Someone else is controlling object
 				handler.owner = false;
-		}
-		else { // If the object must be controlled, generate a new non-zero key
-			while (netHandles.ContainsKey(handler.id) || handler.id == 0.0f && handler.owner) {
-				handler.SetNetID(UnityEngine.Random.value * 100);
+			}
+			else {
+				while (netHandles.ContainsKey(handler.id) || handler.id == 0.0f && handler.owner) {
+					handler.SetNetID(UnityEngine.Random.value * 100);
+				}
+				netHandles.Add(handler.id, handler);
 			}
 		}
+		else {
+			netHandles.Add(handler.id, handler);
+		}
+
 		if(DebugMode)
 			Debug.Log("Registering " + handler.id);
 
@@ -369,11 +393,8 @@ public class TTSClient : MonoBehaviour
 			ServerObjectRegister(handler, UpdatePacket);
 		}
 		else if (isLobby) {
-
 			ServerObjectRegister(handler, UpdatePacket);
 		}
-
-		netHandles.Add(handler.id, handler);
 	}
 
 	// Writes the necessary register code to the given packet writer
@@ -427,9 +448,18 @@ public static class TTSCommandTypes
 	public const int CloseConnection      = 9999;
 
 	// Lobby
-	public const int LobbyRegister     = 100;
-	public const int LobbyRegisterOK   = 101;
-	public const int LobbyRegisterFail = 109;
+	public const int LobbyRegister		= 100;
+	public const int LobbyRegisterOK	= 101;
+	public const int LobbyRegisterFail	= 109;
+	public const int LobbyInfoRequest	= 110;
+	public const int LobbyInfoReturn	= 111;
+	public const int LobbyStartGame		= 140;
+	public const int LobbyEndGame		= 141;
+	public const int LobbyCountdownUpdate	= 124;
+	public const int LobbyStopCountdown	= 125;
+
+	// Object Control
+	public const int GiveControl = 1111;
 
 	// Object
 	public const int ObjectUpdate            = 1004;

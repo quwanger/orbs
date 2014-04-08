@@ -28,6 +28,8 @@ public class TTSInitRace : MonoBehaviour
 	private int debugPlayerCounter = 1;
 
 	TTSLevel level;
+	public bool isMultiplayer;
+	public bool isLobby;
 
 	public List<TTSRacerConfig> racerConfigs;
 	
@@ -43,10 +45,9 @@ public class TTSInitRace : MonoBehaviour
 		GameObject dataToPass = GameObject.Find("DataToPass");
 		if(dataToPass && dataToPass.GetComponent<TTSDataToPass>().gametype != TTSLevel.Gametype.Lobby){
 			racerConfigs = GameObject.Find("DataToPass").GetComponent<TTSDataToPass>().players;
-			
 			numHumanPlayers = racerConfigs.FindAll(IsHuman).Count;
-			
-			if(numHumanPlayers == 1){
+
+			if (numHumanPlayers == 1 && GameObject.Find("DataToPass").GetComponent<TTSDataToPass>().gametype != TTSLevel.Gametype.MultiplayerOnline) {
 				level.currentGameType = gameType = TTSLevel.Gametype.Arcade;
 			}else{
 				level.currentGameType = gameType = GameObject.Find("DataToPass").GetComponent<TTSDataToPass>().gametype;
@@ -55,17 +56,16 @@ public class TTSInitRace : MonoBehaviour
 			randomStartingIndex = (int)Random.Range(0.0f, 10.0f);
 
 			foreach (TTSRacerConfig config in racerConfigs) {
-				Debug.Log(config.ControllerID);
-				Debug.Log((TTSBehaviour.RigType)config.RigType);
-				Debug.Log((TTSBehaviour.PerkType)config.PerkA);
-				Debug.Log((TTSBehaviour.PowerupType)config.PerkB);
+				Debug.Log("RACER FOUND" + config.Name);
+				Debug.Log(config.netID);
 				Debug.Log(config.Index);
 			}
 
 			Debug.Log(gameType);
 		}
 
-		//Destroy(dataToPass);
+		isLobby = (level != null) ? level.currentGameType == TTSLevel.Gametype.Lobby : false;
+		isMultiplayer = (level != null) ? level.currentGameType == TTSLevel.Gametype.MultiplayerOnline : false;
 
 		if (DebugMode || racerConfigs == null) {
 			Debug.Log("INIT RACE: GENERATING RACERS");
@@ -104,14 +104,15 @@ public class TTSInitRace : MonoBehaviour
 			switch ((TTSRacer.PlayerType)config.LocalControlType) {
 
 				case TTSRacer.PlayerType.Player:
-					InitToHuman(InstantiateRacer(config));
+					InitToHuman(InstantiateRacer(config), config);
 					break;
 
 				case TTSRacer.PlayerType.AI:
-					InitToAI(InstantiateRacer(config));
+					InitToAI(InstantiateRacer(config), config);
 					break;
 
 				case TTSRacer.PlayerType.Multiplayer:
+					InitToMultiplayer(InstantiateRacer(config), config);
 					break;
 
 			}
@@ -145,7 +146,7 @@ public class TTSInitRace : MonoBehaviour
 	}
 
 	private void LobbyInitialize() {
-		InitToHuman(InstantiateRacer(testRacerConfig(true, 0)));
+		InitToHuman(InstantiateRacer(testRacerConfig(true, 0)), null);
 	}
 
 	public GameObject InstantiateRacer() {
@@ -268,21 +269,21 @@ public class TTSInitRace : MonoBehaviour
 		// MENU LOAD
 		//tempRacer.GetComponent<TTSRacer>().CurrentRig = tempRig;
 
-		tempRacer.GetComponent<TTSRacer>().Initialized();
+		//tempRacer.GetComponent<TTSRacer>().Initialized();
 
 		return tempRacer;
 	}
 
 	//For minimap ID and camera ID
 	private int humanPlayerCounter = 1;
-	private void InitToHuman(GameObject racer) {
+	private void InitToHuman(GameObject racer, TTSRacerConfig config) {
 		//set to player controlled and set the player type to Player
 		TTSRacer racerControl = racer.GetComponent<TTSRacer>();
 
 		racerControl.IsPlayerControlled = true;
 		racerControl.player = TTSRacer.PlayerType.Player;
 
-		racer.GetComponent<TTSRacer>().Initialized();
+		racer.GetComponent<TTSRacer>().Initialized(isMultiplayer || isLobby, config);
 
 		//Instantiates a minimap for each human player and sets it to follow a racer
 		// GameObject tempMinimap = (GameObject)Instantiate(minimapGO);
@@ -549,20 +550,20 @@ public class TTSInitRace : MonoBehaviour
 		humanPlayerCounter++;
 	}
 
-	private void InitToAI(GameObject racer) {
+	private void InitToAI(GameObject racer, TTSRacerConfig config) {
 		//this is for AI only
 		//set the player type to AI
 		racer.GetComponent<TTSRacer>().IsPlayerControlled = true;
 		racer.GetComponent<TTSRacer>().player = TTSRacer.PlayerType.AI;
 
-		racer.GetComponent<TTSRacer>().Initialized();
+		racer.GetComponent<TTSRacer>().Initialized(isMultiplayer || isLobby, config);
 	}
 
 	private void InitToMultiplayer(GameObject racer, TTSRacerConfig config) {
 		racer.GetComponent<TTSRacer>().IsPlayerControlled = true;
 		racer.GetComponent<TTSRacer>().player = TTSRacer.PlayerType.Multiplayer;
 
-		racer.GetComponent<TTSRacer>().Initialized();
+		racer.GetComponent<TTSRacer>().Initialized(isMultiplayer || isLobby, config);
 
 		TTSRacerNetHandler handler = new TTSRacerNetHandler(level.client, false, config.netID);
 		handler.position = racer.transform.position;
