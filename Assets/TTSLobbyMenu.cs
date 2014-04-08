@@ -17,6 +17,7 @@ public class TTSLobbyMenu : TTSBehaviour
 	public GUIText levelText;
 	public GUIText playerCountText;
 	public GUIText[] playerTexts = new GUIText[6];
+	public GUIText countdownText;
 
 	public string nullPlayerText = "Waiting for player";
 
@@ -31,6 +32,13 @@ public class TTSLobbyMenu : TTSBehaviour
 
 	// Update is called once per frame
 	void Update() {
+		if (client.lobbyCountdownTime == -1f) {
+			countdownText.text = "Waiting for players";
+		}
+		else {
+			countdownText.text = "Countdown to Race: " + Mathf.RoundToInt(client.lobbyCountdownTime);
+		}
+
 		if (!networkUpdated)
 			return;
 		

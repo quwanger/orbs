@@ -38,6 +38,7 @@ public class TTSClient : MonoBehaviour
 	public bool EnteredLobby = false;
 	public bool InGame = false;
 	public int LobbyID = 0;
+	public float lobbyCountdownTime = -1f;
 
 	// Game networking
 	// One global collection of IDs and handles
@@ -176,18 +177,19 @@ public class TTSClient : MonoBehaviour
 
 				#region Lobby Countdown
 				case TTSCommandTypes.LobbyCountdownUpdate:
-					float timeLeft = packet.ReadFloat();
-					Debug.Log(timeLeft);
+					lobbyCountdownTime = packet.ReadFloat();
 					break;
 
 				case TTSCommandTypes.LobbyStopCountdown:
 					Debug.Log("COUNTDOWN STOPPED");
+					lobbyCountdownTime = -1f;
 					break;
 
 				case TTSCommandTypes.LobbyStartGame:
 					levelToLoad = packet.ReadInt32();
 					break;
 				#endregion
+
 				case TTSCommandTypes.RacerRegister:
 					TTSRacerConfig config = new TTSRacerConfig();
 					id = config.netID = packet.ReadFloat();
@@ -256,7 +258,6 @@ public class TTSClient : MonoBehaviour
 
 				case TTSCommandTypes.RacerUpdate:
 					id = packet.ReadFloat(); // Racer Net handle
-					Debug.Log(id);
 					netHandles[id].ReceiveNetworkData(packet, command);
 					break;
 
