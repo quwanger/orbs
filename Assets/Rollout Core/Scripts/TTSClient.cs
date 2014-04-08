@@ -357,9 +357,8 @@ public class TTSClient : MonoBehaviour
 	}
 
 	public void LocalRacerRegister(TTSRacerNetHandler handler) {
-		handler.SetNetID(UnityEngine.Random.value * 100);
-
-		Debug.Log("REGISTER RACER");
+		if(handler.owner)
+			handler.SetNetID(UnityEngine.Random.value * 100);
 
 		LocalObjectRegister(handler);
 		racerHandles.Add(handler.id, handler);
