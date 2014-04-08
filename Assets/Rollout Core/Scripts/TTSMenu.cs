@@ -200,7 +200,6 @@ public class TTSMenu : TTSBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		Debug.Log(gameMode);
 
 		if (gameMode != TTSLevel.Gametype.Lobby) {
 			
