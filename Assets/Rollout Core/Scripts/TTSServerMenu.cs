@@ -1,5 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR
+using XInputDotNetPure;
+#endif
 
 public class TTSServerMenu : TTSBehaviour {
 	public TTSClient client;
@@ -13,7 +16,7 @@ public class TTSServerMenu : TTSBehaviour {
 	public List<TTSLobby> lobbies = new List<TTSLobby>();
 	
 	public TTSLobby highlightedLobby;
-		
+	public AudioClip hoverSound;
 	public List<TTSLobby> inProgressLobbies {
 		get {
 			return lobbies.FindAll(x => x.InProgress == true);
@@ -26,6 +29,11 @@ public class TTSServerMenu : TTSBehaviour {
 		}
 	}
 	public TTSLobbyMenu lobbyMenu;
+	
+	#if UNITY_STANDALONE_WIN || UNITY_EDITOR
+		PlayerIndex playerIndex;
+		GamePadState state;
+	#endif
 
 	// Use this for initialization
 	void Start () {
@@ -33,18 +41,31 @@ public class TTSServerMenu : TTSBehaviour {
 		client.RequestLobbyInfo(this);
 		lastUpdate = -5.0f;
 	}
-
+	
+	public bool joystickDownY = false;
 	// Update is called once per frame
 	void Update () {
 		AddNewLobbies();
 		SetPositions();
 		
 		if(level.menu.activePanel == 1){
-			if(Input.GetKeyDown(KeyCode.W))
+			Vector2 controlDirection = GetControlDirection(1);
+			if(Input.GetKeyDown(KeyCode.W) || (controlDirection.y > 0.5f && !joystickDownY)){
 				UpButton();
+				audio.PlayOneShot(hoverSound);
+				joystickDownY = true;
+				
+			}
 			
-			if(Input.GetKeyDown(KeyCode.S))
+			else if(Input.GetKeyDown(KeyCode.S) || (controlDirection.y < -0.5f && !joystickDownY)){
 				DownButton();
+				audio.PlayOneShot(hoverSound);
+				joystickDownY = true;
+			}
+			
+			else if(Mathf.Abs(controlDirection.y) < 0.5f && joystickDownY){
+				joystickDownY = false;
+			}
 		}
 
 		if ((Time.time - lastUpdate) > RequestInterval) {
@@ -223,6 +244,41 @@ public class TTSServerMenu : TTSBehaviour {
 		lobbyMenu.JoinLobby(joinedLobby);
 	}
 	#endregion
+
+	Vector2 GetControlDirection(int player){
+		PlayerIndex playerIndex = PlayerIndex.One;
+
+		switch(player){
+			case 1:
+				playerIndex = PlayerIndex.One;
+				break;
+
+			case 2:
+				playerIndex = PlayerIndex.Two;
+				break;
+			
+			case 3:
+				playerIndex = PlayerIndex.Three;
+				break;
+			
+			case 4:
+				playerIndex = PlayerIndex.Four;
+				break;
+		}
+
+		state = GamePad.GetState(playerIndex);
+		// float VInput = state.ThumbSticks.Left.Y;
+		// float HInput = state.ThumbSticks.Left.X;
+
+		// Debug.Log(state.DPad.Up + " " + state.DPad.Down + " " + state.DPad.Left + " " + state.DPad.Right);
+
+		float VInput = (state.DPad.Up == ButtonState.Pressed) ? 1 : ((state.DPad.Down == ButtonState.Pressed)? -1 : 0);
+		float HInput = (state.DPad.Right == ButtonState.Pressed) ? 1 : ((state.DPad.Left == ButtonState.Pressed)? -1 : 0);
+
+		//Debug.Log(VInput + " " + HInput + " " + joystickDownY + joystickDownX);
+
+		return new Vector2(HInput, VInput);
+	}
 }
 
 public struct LobbyData

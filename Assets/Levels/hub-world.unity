@@ -15364,8 +15364,10 @@ MonoBehaviour:
   createdSinglePlayer: 0
   backSound: {fileID: 8300000, guid: 7b48a12dbc9c7bc4b9d7eaadedcc300b, type: 3}
   hoverSound: {fileID: 8300000, guid: ca15fd5b088a9e94c88d856b96de4c41, type: 3}
-  selectSound: {fileID: 8300000, guid: 71214caa4f7019b4c8b94f890e051b5c, type: 3}
+  selectSound: {fileID: 8300000, guid: a4f0a2e6363a4c847bfd4cffc768df0b, type: 3}
   transSound: {fileID: 8300000, guid: 1aca23afae8d61c4c94f43106c3a8d9a, type: 3}
+  lockSound: {fileID: 8300000, guid: 32d3e9f5145ed6a42a1ae17e5e1b9394, type: 3}
+  unlockSound: {fileID: 8300000, guid: 3a3a702bd7200ea44b02d5cb14581da5, type: 3}
   dtp: {fileID: 181718700}
   joystickDownX: 0
   joystickDownY: 0
@@ -15422,6 +15424,9 @@ MonoBehaviour:
   indices: 0000000000000000000000000000000000000000000000000000000000000000
   topHighlighter: {fileID: 1922959256}
   botHighlighter: {fileID: 1284093902}
+  lockHighlighter: {fileID: 0}
+  lockHighlighterB: {fileID: 0}
+  lockImage: {fileID: 2800000, guid: 3338a51cef4d48348afefed3e932e0f1, type: 3}
   activePanel: 0
   previousPanel: 0
   numPlayers: 0
@@ -20001,6 +20006,7 @@ GameObject:
   - 4: {fileID: 1731168036}
   - 131: {fileID: 1731168037}
   - 114: {fileID: 1731168038}
+  - 82: {fileID: 1731168039}
   m_Layer: 24
   m_Name: Multiplayer
   m_TagString: Untagged
@@ -20073,7 +20079,65 @@ MonoBehaviour:
   highlighter: {fileID: 570149395}
   lobbies: []
   highlightedLobby: {fileID: 0}
+  hoverSound: {fileID: 8300000, guid: ca15fd5b088a9e94c88d856b96de4c41, type: 3}
   lobbyMenu: {fileID: 520510163}
+  joystickDownY: 0
+--- !u!82 &1731168039
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1731168035}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
 --- !u!1 &1734480240
 GameObject:
   m_ObjectHideFlags: 0
