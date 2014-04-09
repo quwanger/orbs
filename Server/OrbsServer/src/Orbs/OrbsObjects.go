@@ -3,24 +3,26 @@
 package Orbs
 
 type OrbsRacer struct {
-	ID          float32
-	Index       int
-	RigType     int
-	Perk1Type   int
-	Perk2Type   int
-	Name        string
-	ControlType int
-	Owner       *OrbsConnection
+	ID            float32
+	Index         int
+	RigType       int
+	PerkAType     int
+	PerkBType     int
+	CharacterType int
+	Name          string
+	ControlType   int
+	Owner         *OrbsConnection
 
 	isReady bool
 }
 
-func (this *OrbsRacer) Init(id float32, index int, rig int, perk1 int, perk2 int, name string, controlType int, owner *OrbsConnection) {
+func (this *OrbsRacer) Init(id float32, index int, rig int, perkA int, perkB int, character int, name string, controlType int, owner *OrbsConnection) {
 	this.ID = id
 	this.Index = index
 	this.RigType = rig
-	this.Perk1Type = perk1
-	this.Perk2Type = perk2
+	this.PerkAType = perkA
+	this.PerkBType = perkB
+	this.CharacterType = character
 	this.Name = name
 	this.ControlType = controlType
 	this.Owner = owner

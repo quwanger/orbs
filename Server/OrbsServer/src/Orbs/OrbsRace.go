@@ -4,7 +4,9 @@ import (
 	"OrbsCommandTypes"
 	"Packets"
 	"fmt"
+	// "math/rand"
 	"net"
+	"time"
 )
 
 type OrbsRace struct {
@@ -16,10 +18,11 @@ type OrbsRace struct {
 	PowerupPlatforms map[float32]*OrbsPowerupPlatform
 }
 
-func (this *OrbsRace) InitRace(connections map[string]*OrbsConnection, objToOwner map[float32]*OrbsConnection, racers map[float32]*OrbsRacer) {
+func (this *OrbsRace) InitRace(connections map[string]*OrbsConnection, objToOwner map[float32]*OrbsConnection, racers map[float32]*OrbsRacer, lobby *OrbsLobby) {
 	this.Connections = connections
 	this.ObjToOwner = objToOwner
 	this.Racers = racers
+	this.Lobby = lobby
 
 	this.PowerupPlatforms = make(map[float32]*OrbsPowerupPlatform)
 }
@@ -60,6 +63,9 @@ func (this *OrbsRace) ProcessPacket(sender *net.UDPAddr, reader *Packets.PacketR
 		case OrbsCommandTypes.PowerupPlatformSpawn:
 			this.powerupPlatformSpawn(this.Connections[ip], reader)
 
+		// 160
+		case OrbsCommandTypes.RaceStartReady:
+			this.connectionReady(this.Connections[ip])
 		}
 
 		command = reader.ReadInt32()
@@ -74,12 +80,49 @@ func (this *OrbsRace) ProcessPacket(sender *net.UDPAddr, reader *Packets.PacketR
 
 // Command Processors
 
+func (this *OrbsRace) connectionReady(connection *OrbsConnection) {
+	println(connection.IPAddress, "is ready")
+	connection.IsRaceReady = true
+
+	var everyoneReady bool = true
+	for _, value := range this.Connections {
+		if value.IsRaceReady == false {
+			everyoneReady = false
+			break
+		}
+	}
+
+	if everyoneReady {
+		// Reset everyone
+		for _, value := range this.Connections {
+			value.IsRaceReady = false
+		}
+
+		// Send the countdown begin command
+		go this.startRace()
+	}
+}
+
+func (this *OrbsRace) startRace() {
+	time.Sleep(2000 * time.Millisecond)
+	println("STARTING RACE")
+
+	var returnPacket = new(Packets.PacketWriter)
+	returnPacket.InitPacket()
+
+	returnPacket.WriteInt(OrbsCommandTypes.RaceStartCountdown)
+
+	for i := 0; i < 5; i++ {
+		this.writeBroadcastData(returnPacket.GetMinimalData())
+		this.Lobby.BroadcastPacket()
+	}
+}
+
 func (this *OrbsRace) powerupPlatformSpawn(connection *OrbsConnection, reader *Packets.PacketReader) {
 	platformID := reader.ReadFloat32()
 	powerupType := reader.ReadInt32()
 
-	// fmt.Printf("Race:	Platform Update: '%v' with %v\n", platformID, powerupType)
-	fmt.Printf("")
+	fmt.Printf("Race:	Platform Update: '%v' with %v\n", platformID, powerupType)
 
 	if this.objExists(platformID) && this.ObjToOwner[platformID] == connection {
 
@@ -127,8 +170,27 @@ func (this *OrbsRace) powerupPlatformRegister(connection *OrbsConnection, reader
 	connection.WriteData(returnPacket.GetMinimalData())
 }
 
-func (this *OrbsRace) powerupPlatformDeRegister(id float32) {
+func (this *OrbsRace) powerupPlatformDeregister(platformID float32, connection *OrbsConnection) {
+	// Find a new connection to give it to.
+	var newConnection *OrbsConnection
+	for _, value := range this.Connections {
+		if value != connection {
+			newConnection = value
+			break
+		}
+	}
 
+	// Update existing platform data
+	this.PowerupPlatforms[platformID].Owner = newConnection
+	this.ObjToOwner[platformID] = newConnection
+
+	// Create packet telling client to take control of an object
+	var commandPacket = new(Packets.PacketWriter)
+	commandPacket.InitPacket()
+	commandPacket.WriteInt(OrbsCommandTypes.GiveControl)
+	commandPacket.WriteFloat32(platformID)
+
+	newConnection.WriteData(commandPacket.GetMinimalData())
 }
 
 func (this *OrbsRace) powerupUpdate(connection *OrbsConnection, reader *Packets.PacketReader) {

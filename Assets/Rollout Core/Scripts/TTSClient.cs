@@ -66,7 +66,8 @@ public class TTSClient : MonoBehaviour
 
 		if (!isMultiplayer && !isLobby) return;
 
-		RaceStartReady();
+		if(isMultiplayer)
+			RaceStartReady();
 
 		receiveThread = new Thread(new ThreadStart(PacketListener));
 		receiveThread.IsBackground = true;

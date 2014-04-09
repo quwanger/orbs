@@ -11,6 +11,7 @@ type OrbsConnection struct {
 	ReturnAddress *net.UDPAddr
 
 	IsEstablished bool
+	IsRaceReady   bool
 
 	OutPacket     *Packets.PacketWriter
 	OutConnection *net.UDPConn
@@ -36,6 +37,7 @@ func (this *OrbsConnection) Init(sender *net.UDPAddr, outConnection *net.UDPConn
 	this.OutPacket.InitPacket()
 
 	this.OutConnection = outConnection
+	this.IsRaceReady = false
 	// this.CommandSender = new(UnityCommand)
 	// this.CommandSender.Init(this.OutPacket, this.ReturnAddress, outConn)
 }
@@ -71,7 +73,7 @@ func (this *OrbsConnection) SendData(data []byte) {
 	n, _ := this.OutConnection.WriteToUDP(data, this.ReturnAddress)
 
 	if this.DebugMode {
-		fmt.Printf(">	Sent %v bytes to %v\n", n, this.IPAddress)
+		fmt.Printf(">*	Sent %v bytes to %v\n", n, this.IPAddress)
 	}
 }
 
