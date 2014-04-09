@@ -764,7 +764,7 @@ public class TTSPowerupNetHandler : TTSNetworkHandle
 	public Vector3 netPosition, netRotation, netSpeed;
 
 	public int framesSinceNetData = 0;
-	public const int ExplodeTimeout = 10;
+	public const int ExplodeTimeout = 60;
 
 	public int Type = -1;
 	public float Tier = -1.0f;
