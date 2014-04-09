@@ -65,6 +65,15 @@ public class TTSClient : MonoBehaviour
 
 		if (!isMultiplayer && !isLobby) return;
 
+		if (isMultiplayer) {
+			TTSPacketWriter writer = new TTSPacketWriter();
+			writer.AddData(TTSCommandTypes.RaceStartReady);
+
+			for (int i = 0; i < 5; i++) {
+				SendPacket(writer);
+			}
+		}
+
 		receiveThread = new Thread(new ThreadStart(PacketListener));
 		receiveThread.IsBackground = true;
 		receiveThread.Start();
@@ -458,6 +467,9 @@ public static class TTSCommandTypes
 	public const int LobbyEndGame		= 141;
 	public const int LobbyCountdownUpdate	= 124;
 	public const int LobbyStopCountdown	= 125;
+
+	public const int RaceStartCountdown = 150;
+	public const int RaceStartReady     = 160;
 
 	// Object Control
 	public const int GiveControl = 1111;
