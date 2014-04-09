@@ -70,7 +70,7 @@ public class TTSHelixProjectile : TTSBehaviour
 			this.rigidbody.velocity = (destinationPosition - this.transform.position).normalized * ProjectileStartVelocity;
 
 			if(racerFound){
-				ProjectileStartVelocity = homedRacer.rigidbody.velocity.magnitude * 1.5f;
+				ProjectileStartVelocity = homedRacer.rigidbody.velocity.magnitude * 1.1f;
 			}else{
 				ProjectileStartVelocity = ProjectileStartVelocity + ProjectileAcceleration;
 			}
