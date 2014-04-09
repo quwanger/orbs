@@ -9,7 +9,7 @@ public class TTSPowerup : TTSBehaviour
 {
 
 	public bool debug = false;
-	public int DebugTier = 1;
+	public int DebugTier = 3;
 
 	public PowerupType AvailablePowerup;
 	public PowerupType PreviouslyAvailablePowerup = PowerupType.None;
@@ -590,7 +590,7 @@ public class TTSPowerup : TTSBehaviour
 		go.transform.position = GetFrontPP().position + racer.displayMeshComponent.forward * 3.5f;
 		go.rigidbody.velocity = racer.rigidbody.velocity + (racer.rigidbody.velocity.normalized * 100.0f);
 
-		if (owner) { SendPowerupDeploy(TTSPowerupNetworkTypes.Helix, go); }
+		if (owner) { SendPowerupDeploy(TTSPowerupNetworkTypes.Helix3, go); }
 		else {
 			helix.SetNetHandler(handle);
 		}
@@ -690,6 +690,10 @@ public class TTSPowerup : TTSBehaviour
 					powerup.GetComponent<TTSHelixProjectile>().SetNetHandler(handler);
 					break;
 
+				case TTSPowerupNetworkTypes.Helix3:
+					powerup.GetComponent<TTSHelixProjectileTier3>().SetNetHandler(handler);
+					break;
+
 				case TTSPowerupNetworkTypes.Drezz:
 					powerup.GetComponent<TTSDrezzStone>().SetNetHandler(handler);
 					break;
@@ -747,6 +751,7 @@ public class TTSPowerupNetworkTypes
 	public const int Drezz = 6;
 	public const int Entropy = 7;
 	public const int Helix = 8;
+	public const int Helix3 = 9;
 
 	public static bool isStaticType(int type) {
 		return (type == TimeBonus || type == Shockwave || type == Shield || type == Boost);

@@ -741,6 +741,10 @@ public class TTSRacer : TTSBehaviour
 					powerupManager.FireHelix(false, handler);
 					break;
 
+				case TTSPowerupNetworkTypes.Helix3:
+					powerupManager.FireHelixTier3(false, handler);
+					break;
+
 				case TTSPowerupNetworkTypes.Drezz:
 					powerupManager.DropDrezzStone(false, handler);
 					break;
