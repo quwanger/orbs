@@ -40,8 +40,10 @@ public class TTSWaypointManager : MonoBehaviour {
 
 		// Go through each of the next waypoints
 		foreach (TTSWaypoint next in waypoint.nextWaypoints) {
-			next.addPreviousWaypoint(waypoint);
-			parseWaypoints(next);
+			if(!next.prevWaypoints.Contains(waypoint)){
+				next.addPreviousWaypoint(waypoint);
+				parseWaypoints(next);
+			}
 		}
 	}
 
