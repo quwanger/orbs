@@ -57,9 +57,6 @@ public class TTSLevel : MonoBehaviour {
 			if (currentGameType != Gametype.MultiplayerOnline) {
 				StartCountdown();
 			}
-			else {
-				client.RaceStartReady();
-			}
 		}
 	}
 
