@@ -34,6 +34,8 @@ public class TTSMenu : TTSBehaviour {
 	public AudioClip hoverSound;
 	public AudioClip selectSound;
 	public AudioClip transSound;
+	public AudioClip lockSound;
+	public AudioClip unlockSound;
 	
 	public GameObject dtp;
 	
@@ -119,6 +121,10 @@ public class TTSMenu : TTSBehaviour {
 	public GameObject topHighlighter;
 	public GameObject botHighlighter;
 	
+	public GameObject lockHighlighter;
+	public GameObject lockHighlighterB;
+	public Texture2D lockImage;
+	
 	// visible panel and the previously visible one
 	public int activePanel;
 	public int previousPanel;
@@ -142,8 +148,27 @@ public class TTSMenu : TTSBehaviour {
 	public 
 
 	// Use this for initialization
-	void Start () {		
+	void Start () {	
 		players.Clear();
+		
+		lockHighlighter = new GameObject("lockHighlighter");
+		lockHighlighter.AddComponent("GUITexture");
+		lockHighlighter.transform.parent = GameObject.Find("MenuPerks").transform;
+		lockHighlighter.layer = 24;
+		lockHighlighter.transform.localPosition = new Vector3(0.5f,0.5f,20);
+		lockHighlighter.transform.localScale = Vector3.zero;
+		lockHighlighter.guiTexture.texture = lockImage;
+		lockHighlighter.SetActive(false);
+		
+		lockHighlighterB = new GameObject("lockHighlighter");
+		lockHighlighterB.AddComponent("GUITexture");
+		lockHighlighterB.transform.parent = GameObject.Find("MenuPerks").transform;
+		lockHighlighterB.layer = 24;
+		lockHighlighterB.transform.localPosition = new Vector3(0.5f,0.5f,20);
+		lockHighlighterB.transform.localScale = Vector3.zero;
+		lockHighlighterB.guiTexture.texture = lockImage;
+		lockHighlighterB.SetActive(false);	
+		
 		previousPanel = 8;
 		
 		playerText = GameObject.FindGameObjectsWithTag("playerText");
@@ -221,7 +246,7 @@ public class TTSMenu : TTSBehaviour {
 					isYPressed = true;
 					if (activePanel == 4) {
 						characterColor[activeColorIndex].guiTexture.enabled = false;
-
+						audio.PlayOneShot(selectSound);
 						activeColorIndex = (activeColorIndex + 1) % characterColor.Length;
 						characterColor[activeColorIndex].guiTexture.enabled = true;
 					}
@@ -321,6 +346,7 @@ public class TTSMenu : TTSBehaviour {
 		if(gameMode == TTSLevel.Gametype.MultiplayerLocal && activePanel == 3 && !isTweening){
 			// if(Input.GetKeyDown("joystick 1 button 7") && playerReady[0] == false){
 			if(GetButtonDown(1, "Start") && playerReady[0] == false){
+				audio.PlayOneShot(selectSound);
 				playerReady[0] = true;
 				playerID[numPlayers] = numPlayers + 1;
 				playerControllerID[numPlayers] = 1;
@@ -336,6 +362,7 @@ public class TTSMenu : TTSBehaviour {
 			}
 			
 			if(GetButtonDown(2, "Start") && playerReady[1] == false){
+				audio.PlayOneShot(selectSound);
 				playerReady[1] = true;
 				playerID[numPlayers] = numPlayers + 1;
 				playerControllerID[numPlayers] = 2;
@@ -351,6 +378,7 @@ public class TTSMenu : TTSBehaviour {
 			}
 			
 			if(GetButtonDown(3, "Start") && playerReady[2] == false){
+				audio.PlayOneShot(selectSound);
 				playerReady[2] = true;
 				playerID[numPlayers] = numPlayers + 1;
 				playerControllerID[numPlayers] = 3;
@@ -366,6 +394,7 @@ public class TTSMenu : TTSBehaviour {
 			}
 			
 			if(GetButtonDown(4, "Start") && playerReady[3] == false){
+				audio.PlayOneShot(selectSound);
 				playerReady[3] = true;
 				playerID[numPlayers] = numPlayers + 1;
 				playerControllerID[numPlayers] = 4;
@@ -675,12 +704,28 @@ public class TTSMenu : TTSBehaviour {
 				else if(activePanel == 5 && !isTweening){
 					previousPanel = activePanel;
 					activePanel++;
+					audio.PlayOneShot(lockSound);
+					
+					//lock
+					foreach(GameObject l in _perks){
+						if(l.GetComponent<TTSMenuItemPerk>().index == indices[5]){
+							lockHighlighter.guiTexture.pixelInset = new Rect(l.guiTexture.pixelInset.x, l.guiTexture.pixelInset.y, 85, 85);
+							lockHighlighter.SetActive(true);
+						}
+					}
 				}
-				
+
 				else if(activePanel == 6){
 					isTweening = true;
 					previousPanel = activePanel;
 					activePanel++;
+					
+					foreach(GameObject l in _perks){
+						if(l.GetComponent<TTSMenuItemPerk>().index == indices[5]){
+							lockHighlighterB.guiTexture.pixelInset = new Rect(l.guiTexture.pixelInset.x, l.guiTexture.pixelInset.y, 85, 85);
+							lockHighlighterB.SetActive(true);
+						}
+					}
 					
 					foreach (TTSRacerConfig player in players) {
 						if (player.ControllerID == chosenOrb) {
@@ -709,50 +754,59 @@ public class TTSMenu : TTSBehaviour {
 		 
 			// ONLINE
 			else if (gameMode == TTSLevel.Gametype.MultiplayerOnline) {
-				// mp 
-				if(activePanel == 0 && !isTweening){
-					activePanel += 4;
-					previousPanel = (activePanel - 4);
+				if(activePanel == 4 && !isTweening){
+					// rig menu going to perk A
 					isTweening = true;
+					previousPanel = activePanel;
+					activePanel++;
 					movePanel();
 				}
 				
-				else if((activePanel == 4 || activePanel == 5 || activePanel == 6) && !isTweening){
+				else if(activePanel == 5 && !isTweening){
+					// perk A going to perk B
+					audio.PlayOneShot(lockSound);
+					previousPanel = activePanel;
 					activePanel++;
-					if(activePanel == 5){
-						if(!isTweening){
-							previousPanel = (activePanel-1);
-							isTweening = true;
-							movePanel();
+					
+					//lock
+					foreach(GameObject l in _perks){
+						if(l.GetComponent<TTSMenuItemPerk>().index == indices[5]){
+							lockHighlighter.guiTexture.pixelInset = new Rect(l.guiTexture.pixelInset.x, l.guiTexture.pixelInset.y, 85, 85);
+							lockHighlighter.SetActive(true);
 						}
-					}
-
-					else if (activePanel == 7 && !isTweening) {
-						foreach (TTSRacerConfig player in players) {
-							if (player.ControllerID == chosenOrb) {
-								player.PerkA = (int)SelectedPerk;
-								player.PerkB = (int)SelectedPerkB;
-								player.RigType = (int)SelectedRig;
-								player.CharacterType = (int)characterColor[activeColorIndex].GetComponent<TTSCharacter>().characterType;
-								player.racerID = playerID[chosenOrb - 1];
-								player.racerControllerID = playerControllerID[chosenOrb - 1];
-							}
-						}
-						// go to mp menu
-						activePanel = 1;
-						previousPanel = 6;
-						isTweening = true;
-						movePanel();
 					}
 				}
 				
-				// mp lobby
-				else if (activePanel == 1 && !isTweening) {
+				else if(activePanel == 6 && !isTweening){
+					// perk B going to mpMenu	
+					foreach (TTSRacerConfig player in players) {
+						if (player.ControllerID == chosenOrb) {
+							player.PerkA = (int)SelectedPerk;
+							player.PerkB = (int)SelectedPerkB;
+							player.RigType = (int)SelectedRig;
+							player.CharacterType = (int)characterColor[activeColorIndex].GetComponent<TTSCharacter>().characterType;
+							player.racerID = playerID[chosenOrb - 1];
+							player.racerControllerID = playerControllerID[chosenOrb - 1];
+						}
+					}	
+					
+					isTweening = true;
+					previousPanel = 6;
+					activePanel = 1;
+					movePanel();
+				}
+				
+				else if(activePanel == 1 && !isTweening){
+					// mpMenu to mpLobby
+					isTweening = true;
+					previousPanel = activePanel;
+					activePanel ++;
 					serverMenu.JoinLobby();
-					activePanel++;
-					previousPanel = (activePanel-1);
-					isTweening = true;
 					movePanel();
+				}
+				
+				else if(activePanel == 2 && !isTweening){
+					// lobby
 				}
 			}
 			
@@ -770,6 +824,22 @@ public class TTSMenu : TTSBehaviour {
 					else if(indices[0] == 2){
 						gameMode = TTSLevel.Gametype.MultiplayerLocal;
 						activePanel+= 3;
+								
+						// resets when a player is registered and entering splitscreen
+						if(numPlayers > 0){
+							for(int i = 0; i < numPlayers; i++){
+								playerID[i] = 0;
+								playerControllerID[i] = 0;
+								readyUpB[i].SetActive(true);
+								readyUp[i].SetActive(false);
+								playerReady[0] = false;
+								playerReady[1] = false;
+								playerReady[2] = false;
+								playerReady[3] = false;
+								players.Clear();
+								numPlayers = 0;
+							}	
+						}
 					}
 					movePanel();
 				}
@@ -797,8 +867,17 @@ public class TTSMenu : TTSBehaviour {
 				}
 				
 				else if(activePanel == 5 && !isTweening){
+					audio.PlayOneShot(lockSound);
 					previousPanel = activePanel;
 					activePanel++;
+					
+					//lock
+					foreach(GameObject l in _perks){
+						if(l.GetComponent<TTSMenuItemPerk>().index == indices[5]){
+							lockHighlighter.guiTexture.pixelInset = new Rect(l.guiTexture.pixelInset.x, l.guiTexture.pixelInset.y, 85, 85);
+							lockHighlighter.SetActive(true);
+						}
+					}
 				}
 				
 				else if(activePanel == 6){	
@@ -827,6 +906,8 @@ public class TTSMenu : TTSBehaviour {
 					
 					// go to rigMenu
 					else if(chosenOrb != numPlayers && !isTweening){
+						lockHighlighter.SetActive(false);
+						lockHighlighterB.SetActive(false);
 						activePanel = 4;
 						previousPanel = 6;
 						chosenOrb++;
@@ -862,20 +943,74 @@ public class TTSMenu : TTSBehaviour {
 				else if(activePanel == 6 && !isTweening){
 					previousPanel = activePanel;
 					activePanel--;
+					lockHighlighter.SetActive(false);
+					audio.PlayOneShot(unlockSound);
 					// go back to perk 1
 				}
 				
 				else if(activePanel == 7 && !isTweening){
 					isTweening = true;
 					previousPanel = activePanel;
-					activePanel--;
+					activePanel--;	
+					lockHighlighterB.SetActive(false);
 					movePanel();
 					// go back to perk 2
 				}
 			}
 			
+			else if(gameMode == TTSLevel.Gametype.MultiplayerOnline){
+				if(activePanel == 4 && !isTweening){
+					// go to mp select
+					isTweening = true;
+					previousPanel = activePanel;
+					activePanel = 0;
+					gameMode = TTSLevel.Gametype.MultiplayerLocal;
+					movePanel();
+				}
+				
+				else if(activePanel == 5 && !isTweening){
+					// go to rig select
+					isTweening = true;
+					previousPanel = activePanel;
+					activePanel--;
+					movePanel();
+				}
+				
+				else if(activePanel == 6 && !isTweening){
+					// go to perk A select
+					lockHighlighter.SetActive(false);
+					audio.PlayOneShot(unlockSound);
+					previousPanel = activePanel;
+					activePanel--;
+				}
+				
+				else if(activePanel == 1 && !isTweening){
+					// go to perk B select
+					lockHighlighterB.SetActive(false);
+					isTweening = true;
+					previousPanel = 1;
+					activePanel = 6;
+					movePanel();
+				}
+				
+				else if(activePanel == 2 && !isTweening){
+					// go to mpMenu
+					isTweening = true;
+					previousPanel = activePanel;
+					activePanel--;
+					Debug.Log("Leaving lobby");
+					level.client.LeaveLobby();
+					movePanel();
+				}
+			}
+			
 			else if(gameMode == TTSLevel.Gametype.MultiplayerLocal){
-				if(activePanel == 3 && !isTweening){
+				if(activePanel == 0 && !isTweening){
+					// go back to hub world
+					Application.LoadLevel(Application.loadedLevel);
+				}
+				
+				else if(activePanel == 3 && !isTweening){
 					// go to mp select
 					isTweening = true;
 					previousPanel = activePanel;
@@ -922,17 +1057,19 @@ public class TTSMenu : TTSBehaviour {
 					previousPanel = activePanel;
 					activePanel--;
 					movePanel();
-					
 				}
 				
 				else if(activePanel == 6 && !isTweening){
 					// go to perk 1
+					lockHighlighter.SetActive(false);
+					audio.PlayOneShot(unlockSound);
 					previousPanel = activePanel;
 					activePanel--;
 				}
 				
 				else if(activePanel == 7 && !isTweening){
 					// go to perk 2
+					lockHighlighterB.SetActive(false);
 					isTweening = true;
 					previousPanel = activePanel;
 					activePanel--;
