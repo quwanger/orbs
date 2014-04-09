@@ -507,9 +507,18 @@ public class TTSPowerup : TTSBehaviour
 
 	public GameObject DropDrezzStone(bool owner, TTSPowerupNetHandler handle) {
 		//GameObject go = (GameObject)Instantiate(DrezzStonePrefab, GetBackPP().position - GetComponent<TTSRacer>().displayMeshComponent.forward * 2.0f, this.gameObject.transform.rotation);
-		GameObject go = (GameObject)Instantiate(DrezzStonePrefab, GetBackPP().position, this.gameObject.transform.rotation);
-		go.GetComponent<TTSDrezzStone>().offensiveMultiplier = this.gameObject.GetComponent<TTSRacer>().Offense;
-		go.rigidbody.AddForce(Random.insideUnitCircle * 50f);
+		
+		GameObject go;
+
+		if(CheckForwardAnalog()){
+			go = (GameObject)Instantiate(DrezzStonePrefab, GetBackPP().position, this.gameObject.transform.rotation);
+			go.GetComponent<TTSDrezzStone>().offensiveMultiplier = this.gameObject.GetComponent<TTSRacer>().Offense;
+			go.rigidbody.AddForce(Random.insideUnitCircle * 50f);
+		}else{
+			go = (GameObject)Instantiate(DrezzStonePrefab, GetFrontPP().position, this.gameObject.transform.rotation);
+			go.GetComponent<TTSDrezzStone>().offensiveMultiplier = this.gameObject.GetComponent<TTSRacer>().Offense;
+			go.rigidbody.velocity = this.rigidbody.velocity * 1.5f;
+		}
 
 		if (owner) { SendPowerupDeploy(TTSPowerupNetworkTypes.Drezz, go); }
 		else {
