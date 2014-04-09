@@ -373,6 +373,7 @@ public class TTSClient : MonoBehaviour
 
 	public void LeaveLobby() {
 		RegisteredRacerConfigs.Clear();
+		netHandles.Clear();
 
 		UpdatePacket.ClearData();
 		UpdatePacket.AddData(TTSCommandTypes.CloseConnection);
