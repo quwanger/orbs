@@ -75,10 +75,18 @@ public class TTSClient : MonoBehaviour
 	}
 
 	private void InitConnection() {
-		// Get the IP from server
-		WebClient webClient = new WebClient();
-		string IpAddress = webClient.DownloadString("http://ugrad.bitdegree.ca/~sunmockyang/ORBS_IP.txt");
-		Debug.Log(IpAddress);
+		string IpAddress = "127.0.0.1";
+
+		try {
+			IpAddress = System.IO.File.ReadAllLines("ORBS_IP.txt")[0];
+			Debug.Log("FILE FOUND " + IpAddress);
+		}
+		catch (Exception e) {
+			// Get the IP from server
+			WebClient webClient = new WebClient();
+			IpAddress = webClient.DownloadString("http://ugrad.bitdegree.ca/~sunmockyang/ORBS_IP.txt");
+			Debug.Log("FILE NOT FOUND: " + IpAddress);
+		}
 		SERVER_IP = IpAddress;
 
 		sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
