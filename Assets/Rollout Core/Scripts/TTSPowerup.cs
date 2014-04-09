@@ -509,7 +509,12 @@ public class TTSPowerup : TTSBehaviour
 		
 		GameObject go;
 
-		if(CheckForwardAnalog()){
+		if(this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.AI){
+			//always shoot drezz stones backwards if player is AI
+			go = (GameObject)Instantiate(DrezzStonePrefab, GetBackPP().position, this.gameObject.transform.rotation);
+			go.GetComponent<TTSDrezzStone>().offensiveMultiplier = this.gameObject.GetComponent<TTSRacer>().Offense;
+			go.rigidbody.AddForce(Random.insideUnitCircle * 50f);
+		}else if(CheckForwardAnalog()){
 			go = (GameObject)Instantiate(DrezzStonePrefab, GetBackPP().position, this.gameObject.transform.rotation);
 			go.GetComponent<TTSDrezzStone>().offensiveMultiplier = this.gameObject.GetComponent<TTSRacer>().Offense;
 			go.rigidbody.AddForce(Random.insideUnitCircle * 50f);
@@ -535,7 +540,12 @@ public class TTSPowerup : TTSBehaviour
 		go.GetComponent<TTSEntropyCannonProjectile>().offensiveMultiplier = this.gameObject.GetComponent<TTSRacer>().Offense;
 		go.transform.rotation = GetComponent<TTSRacer>().displayMeshComponent.transform.rotation;
 
-		if(CheckForwardAnalog()){
+		if(this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.AI){
+			//always shoot forward if AI
+			go.transform.position = GetFrontPP().position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
+			go.GetComponent<TTSEntropyCannonProjectile>().ProjectileDirectionVector = this.rigidbody.velocity.normalized;
+			go.GetComponent<TTSEntropyCannonProjectile>().ProjectileStartVelocity = Random.Range(this.gameObject.rigidbody.velocity.magnitude + 50.0f, this.gameObject.rigidbody.velocity.magnitude + 150.0f);
+		}else if(CheckForwardAnalog()){
 			//shoot forward
 			go.transform.position = GetFrontPP().position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
 			go.GetComponent<TTSEntropyCannonProjectile>().ProjectileDirectionVector = this.rigidbody.velocity.normalized;

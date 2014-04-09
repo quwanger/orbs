@@ -73,7 +73,7 @@ public class TTSLeech : TTSBehaviour {
 		if (!isInitiated)
 			initialMovement();
 		else {
-			if (netHandler == null || netHandler.owner) {
+			if (netHandler == null || netHandler.owner || !netHandler.isNetworkUpdated) {
 				doHoming();
 
 				if(netHandler != null)
