@@ -35,7 +35,8 @@ public class TTSFloatHud : TTSBehaviour {
 		Vector3 transcam = boundCamera.position + (boundCamera.forward * 10f);
 		transform.position = Vector3.Lerp(transform.position, transcam,0.9f);
 		transform.rotation = Quaternion.Lerp(transform.rotation, boundCamera.rotation, 0.7f);
-		timeDisplay.text = GameObject.Find("TTSLevel").GetComponent<TTSTimeManager>().GetCurrentTimeString();
+		if(!level.humanPlayersFinished)
+			timeDisplay.text = GameObject.Find("TTSLevel").GetComponent<TTSTimeManager>().GetCurrentTimeString();
 		
 		displayBacking.renderer.material.color = Color.Lerp(displayBacking.renderer.material.color, initialBackingColor, 0.04f);
 		

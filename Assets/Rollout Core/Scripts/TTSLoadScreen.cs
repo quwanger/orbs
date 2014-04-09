@@ -3,33 +3,29 @@ using System.Collections;
 
 public class TTSLoadScreen : MonoBehaviour {
 
-	private bool canLoad = false;
 	public string levelToLoad;
 	
-	void Awake() {
-		//GetComponent<TTSSceneTransition>().transitionToSceneWithLoad(GameObject.Find("TTSPM").GetComponent<TTSPersistenceManager>().NextScene);
-		//GetComponent<TTSSceneTransition>().transitionToSceneWithLoad(PlayerPrefs.GetString("Next Scene"));
-
+	void Start(){
 		GameObject dataToPass = GameObject.Find("DataToPass");
-
-		levelToLoad = dataToPass.GetComponent<TTSDataToPass>().levelToLoad;
-
-		Invoke("BeginLevel", 5.0f);
+		if(dataToPass == null){
+			Debug.Log("NO DATATOPASS GAMEOBJECT DETECTED, LOADING CITY1-1");
+			levelToLoad = "city1-1";
+		}else{
+			levelToLoad = dataToPass.GetComponent<TTSDataToPass>().levelToLoad;
+		}
 	}
 	
 	void Update() {
-		Vector3 temp = transform.position;
-		temp.x += 0.5f * Time.deltaTime;
-		transform.position.Set (temp.x,temp.y,temp.z);
 
-		if(Application.GetStreamProgressForLevel(levelToLoad) ==1 && canLoad){
-   			Application.LoadLevel(levelToLoad);
+		if(Application.GetStreamProgressForLevel(levelToLoad) ==1){
+			//this.GetComponent<TTSCameraFade>().StartFade(new Color(0,0,0,1.0f), 2.0f);
+   			Invoke("BeginLevel", 5.0f);
 		}
 
 		
 	}
 
 	private void BeginLevel(){
-		canLoad = true;
+		Application.LoadLevel(levelToLoad);
 	}
 }

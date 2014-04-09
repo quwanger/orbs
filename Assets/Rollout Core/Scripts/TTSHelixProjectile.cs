@@ -57,10 +57,6 @@ public class TTSHelixProjectile : TTSBehaviour
 	// Update is called once per frame
 	void Update () {
 		if (netHandler == null || netHandler.owner) {
-			/*if(Time.time - birth > Timeout) {
-				Explode(false);
-			}*/
-		
 			//if the helix reaches the end, kill it
 			if (nextWaypoint == null) {
 				Explode(false);
@@ -73,7 +69,11 @@ public class TTSHelixProjectile : TTSBehaviour
 			//move the projectile
 			this.rigidbody.velocity = (destinationPosition - this.transform.position).normalized * ProjectileStartVelocity;
 
-			ProjectileStartVelocity = ProjectileStartVelocity + ProjectileAcceleration;
+			if(racerFound){
+				ProjectileStartVelocity = homedRacer.rigidbody.velocity.magnitude * 1.1f;
+			}else{
+				ProjectileStartVelocity = ProjectileStartVelocity + ProjectileAcceleration;
+			}
 			
 			if (netHandler != null && netHandler.owner)
 				netHandler.UpdatePowerup(transform.position, transform.rotation.eulerAngles, rigidbody.velocity);

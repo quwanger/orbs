@@ -70,6 +70,10 @@ public class TTSPowerup : TTSBehaviour
 		ppBack = this.GetComponent<TTSRacer>().CurrentRig.powerupPositionsBack;
 
 		pp2 = this.GetComponent<TTSPerkManager>().equiptPerkPool2;
+
+		#if UNITY_STANDALONE_WIN || UNITY_EDITOR
+			CheckControllerWindows();
+		#endif
 	}
 
 	#region monobehaviour methods
@@ -95,8 +99,9 @@ public class TTSPowerup : TTSBehaviour
 
 				CheckControllerWindows();
 
-				if (state.Buttons.A == ButtonState.Pressed)
+				if (state.Buttons.A == ButtonState.Pressed){
 					ConsumePowerup();
+				}
 			#endif
 
 
@@ -502,9 +507,18 @@ public class TTSPowerup : TTSBehaviour
 
 	public GameObject DropDrezzStone(bool owner, TTSPowerupNetHandler handle) {
 		//GameObject go = (GameObject)Instantiate(DrezzStonePrefab, GetBackPP().position - GetComponent<TTSRacer>().displayMeshComponent.forward * 2.0f, this.gameObject.transform.rotation);
-		GameObject go = (GameObject)Instantiate(DrezzStonePrefab, GetBackPP().position, this.gameObject.transform.rotation);
-		go.GetComponent<TTSDrezzStone>().offensiveMultiplier = this.gameObject.GetComponent<TTSRacer>().Offense;
-		go.rigidbody.AddForce(Random.insideUnitCircle * 50f);
+		
+		GameObject go;
+
+		if(CheckForwardAnalog()){
+			go = (GameObject)Instantiate(DrezzStonePrefab, GetBackPP().position, this.gameObject.transform.rotation);
+			go.GetComponent<TTSDrezzStone>().offensiveMultiplier = this.gameObject.GetComponent<TTSRacer>().Offense;
+			go.rigidbody.AddForce(Random.insideUnitCircle * 50f);
+		}else{
+			go = (GameObject)Instantiate(DrezzStonePrefab, GetFrontPP().position, this.gameObject.transform.rotation);
+			go.GetComponent<TTSDrezzStone>().offensiveMultiplier = this.gameObject.GetComponent<TTSRacer>().Offense;
+			go.rigidbody.velocity = this.rigidbody.velocity * 1.5f;
+		}
 
 		if (owner) { SendPowerupDeploy(TTSPowerupNetworkTypes.Drezz, go); }
 		else {
@@ -706,8 +720,12 @@ public class TTSPowerup : TTSBehaviour
 
 		#if UNITY_STANDALONE_WIN || UNITY_EDITOR
 		CheckControllerWindows();
-		if(state.ThumbSticks.Left.Y == -1.0f)
+		/*if(state.ThumbSticks.Left.Y == -1.0f)
+			return false;*/
+		if(state.Buttons.LeftShoulder == 0)
 			return false;
+
+		Debug.Log(state.Buttons.LeftShoulder);
 		#endif
 
 		#if UNITY_STANDALONE_OSX && !UNITY_EDITOR
