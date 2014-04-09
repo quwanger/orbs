@@ -81,6 +81,13 @@ public class TTSHelixProjectileTier3 : TTSBehaviour
 
 			if (netHandler != null && netHandler.owner)
 				netHandler.UpdatePowerup(transform.position, transform.rotation.eulerAngles, rigidbody.velocity);
+
+			foreach (TTSPowerupNetHandler handler in netHandler.receivedPowerups) {
+				if (handler.Type == TTSPowerupNetworkTypes.Helix) {
+					SpawnNetHelix(handler);
+				}
+			}
+			netHandler.receivedPowerups.Clear();
 		}
 		else if (!netHandler.owner) {
 			GetNetworkUpdate();
@@ -105,6 +112,9 @@ public class TTSHelixProjectileTier3 : TTSBehaviour
 							go.GetComponent<TTSHelixProjectile>().offensiveMultiplier = offensiveMultiplier;
 							go.GetComponent<TTSHelixProjectile>().currentRacer = currentRacer;
 							go.rigidbody.velocity = (hit.transform.position - this.transform.position).normalized * ProjectileStartVelocity;
+							
+							SendHelixDeploy(go);
+							
 							hitRacers.Add(hit.gameObject);
 						}
 					}
@@ -118,6 +128,21 @@ public class TTSHelixProjectileTier3 : TTSBehaviour
 			destinationPosition = homedRacer.transform.position;
 		}
 		
+	}
+
+	private void SpawnNetHelix(TTSPowerupNetHandler handler) {
+		GameObject go = (GameObject)Instantiate(ProjectileToSpawn, this.transform.position, this.transform.rotation);
+		go.GetComponent<TTSHelixProjectile>().offensiveMultiplier = offensiveMultiplier;
+		go.GetComponent<TTSHelixProjectile>().currentRacer = currentRacer;
+
+		go.GetComponent<TTSHelixProjectile>().SetNetHandler(handler);
+	}
+
+	private void SendHelixDeploy(GameObject helix) {
+		if (!level.client.isMultiplayer) return;
+
+		TTSPowerupNetHandler handler = new TTSPowerupNetHandler(level.client, true, TTSPowerupNetworkTypes.Helix, netHandler.id);
+		helix.GetComponent<TTSHelixProjectile>().SetNetHandler(handler);
 	}
 
 	void OnTriggerEnter(Collider other) {

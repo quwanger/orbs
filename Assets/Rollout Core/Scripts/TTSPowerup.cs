@@ -773,6 +773,8 @@ public class TTSPowerupNetHandler : TTSNetworkHandle
 
 	private System.DateTime lastNetUpdate;
 
+	public List<TTSPowerupNetHandler> receivedPowerups = new List<TTSPowerupNetHandler>();
+
 	public TTSPowerupNetHandler() {
 		type = "Static Powerup";
 		// For static powerups only. Class is used only for storage.
@@ -812,11 +814,23 @@ public class TTSPowerupNetHandler : TTSNetworkHandle
 	}
 
 	public override void ReceiveNetworkData(TTSPacketReader reader, int command) {
-		netPosition = reader.ReadVector3();
-		netRotation = reader.ReadVector3();
-		netSpeed = reader.ReadVector3();
+		if (command == TTSCommandTypes.PowerupUpdate) {
+			netPosition = reader.ReadVector3();
+			netRotation = reader.ReadVector3();
+			netSpeed = reader.ReadVector3();
 
-		isNetworkUpdated = true;
+			isNetworkUpdated = true;
+		}
+		else if (command == TTSCommandTypes.PowerupRegister) {
+			float powerupID = reader.ReadFloat();
+			int powerupType = reader.ReadInt32();
+
+			TTSPowerupNetHandler handler = new TTSPowerupNetHandler(client, false, powerupID, powerupType, id);
+			Debug.Log("Powerup Powerup Register. Type: " + powerupType + " ID: " + powerupID);
+
+			if(Type == TTSPowerupNetworkTypes.Helix3) // Only work for helix so far.
+				receivedPowerups.Add(handler);
+		}
 	}
 
 	public void UpdatePowerup(Vector3 Pos, Vector3 Rot, Vector3 Speed) {
