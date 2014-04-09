@@ -131,6 +131,13 @@ public class TTSClient : MonoBehaviour
 
 	void OnDestroy() {
 		isRunning = false;
+
+		if (isMultiplayer) {
+			UpdatePacket.ClearData();
+			UpdatePacket.AddData(TTSCommandTypes.CloseConnection);
+			SendPacket(UpdatePacket);
+		}
+
 		if (client != null) {
 			client.Client.Close();
 		}
