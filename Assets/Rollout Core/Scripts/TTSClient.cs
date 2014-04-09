@@ -16,6 +16,7 @@ public class TTSClient : MonoBehaviour
 	public int SERVER_RECEIVE_PORT = 6666;
 	public int CLIENT_RECEIVE_PORT = 6969;
 	public int CLIENT_RECEIVE_TIMEOUT = 0;
+	public int UpdatesPerSecond = 10;
 	#endregion
 
 	#region Network
@@ -39,6 +40,7 @@ public class TTSClient : MonoBehaviour
 	public bool InGame = false;
 	public int LobbyID = 0;
 	public float lobbyCountdownTime = -1f;
+	public bool startRaceCountdown = false;
 
 	// Game networking
 	// One global collection of IDs and handles
@@ -63,6 +65,9 @@ public class TTSClient : MonoBehaviour
 		InitConnection();
 
 		if (!isMultiplayer && !isLobby) return;
+
+		if(isMultiplayer)
+			RaceStartReady();
 
 		receiveThread = new Thread(new ThreadStart(PacketListener));
 		receiveThread.IsBackground = true;
@@ -126,6 +131,16 @@ public class TTSClient : MonoBehaviour
 
 	void OnDestroy() {
 		isRunning = false;
+
+		if (isMultiplayer) {
+			UpdatePacket.ClearData();
+			UpdatePacket.AddData(TTSCommandTypes.CloseConnection);
+
+			for (int i = 0; i < 5; i++) {
+				SendPacket(UpdatePacket);
+			}
+		}
+
 		if (client != null) {
 			client.Client.Close();
 		}
@@ -233,6 +248,12 @@ public class TTSClient : MonoBehaviour
 					ReceiveLobbyInfo(packet);
 					break;
 
+				#endregion
+
+				#region Race
+				case TTSCommandTypes.RaceStartCountdown:
+					startRaceCountdown = true;
+					break;
 				#endregion
 
 				#region powerup platforms
@@ -352,6 +373,15 @@ public class TTSClient : MonoBehaviour
 	#endregion
 
 	#region In Game
+	public void RaceStartReady() {
+		TTSPacketWriter writer = new TTSPacketWriter();
+		writer.AddData(TTSCommandTypes.RaceStartReady);
+
+		for (int i = 0; i < 5; i++) {
+			SendPacket(writer);
+		}
+	}
+
 	// Send all the registered objects
 	private void ServerAllObjectsRegister() {
 		TTSPacketWriter writer = new TTSPacketWriter();
@@ -457,6 +487,9 @@ public static class TTSCommandTypes
 	public const int LobbyEndGame		= 141;
 	public const int LobbyCountdownUpdate	= 124;
 	public const int LobbyStopCountdown	= 125;
+
+	public const int RaceStartCountdown = 150;
+	public const int RaceStartReady     = 160;
 
 	// Object Control
 	public const int GiveControl = 1111;

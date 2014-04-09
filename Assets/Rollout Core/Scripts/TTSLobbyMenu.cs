@@ -32,7 +32,7 @@ public class TTSLobbyMenu : TTSBehaviour
 
 	// Update is called once per frame
 	void Update() {
-		if (client.lobbyCountdownTime == -1f) {
+		if (client.lobbyCountdownTime < 0f) {
 			countdownText.text = "Waiting for players";
 		}
 		else {

@@ -69,11 +69,20 @@ public class TTSLeech : TTSBehaviour {
 		
 		if(nextWaypoint == null)
 			LeechExplosion();
-		
-		if(!isInitiated)
+
+		if (!isInitiated)
 			initialMovement();
-		else
-			doHoming();
+		else {
+			if (netHandler == null || netHandler.owner) {
+				doHoming();
+
+				if(netHandler != null)
+					netHandler.UpdatePowerup(transform.position, transform.rotation.eulerAngles, rigidbody.velocity);
+			}
+			else if(!netHandler.owner) {
+				GetNetworkUpdate();
+			}
+		}
 	}
 	
 	private void initialMovement(){
@@ -123,8 +132,8 @@ public class TTSLeech : TTSBehaviour {
 				}
 		    }
 	}
-	
-	private void LeechExplosion(){
+
+	private void LeechExplosion() {
 		Vector3 explosionPos = transform.position;
 	    Collider[] colliders = Physics.OverlapSphere(explosionPos, explosionRadius);
 		
@@ -145,6 +154,12 @@ public class TTSLeech : TTSBehaviour {
 		
 		Destroy (this.gameObject);
 		Destroy (this);
+	}
+	void OnDestroy() {
+		if (netHandler != null) {
+			netHandler.DeregisterFromClient();
+			netHandler = null;
+		}
 	}
 	
 	private void ActivateHoming() {
@@ -231,6 +246,25 @@ public class TTSLeech : TTSBehaviour {
 
 	public void SetNetHandler(TTSPowerupNetHandler handler) {
 		this.netHandler = handler;
+	}
+
+	private void GetNetworkUpdate() {
+		if (netHandler.isNetworkUpdated) {
+			if (netHandler.netPosition != Vector3.zero) {
+				transform.position = Vector3.Lerp(transform.position, netHandler.netPosition, netHandler.networkInterpolation);
+			}
+			transform.rotation = Quaternion.Euler(netHandler.netRotation);
+			rigidbody.velocity = netHandler.netSpeed;
+
+			netHandler.isNetworkUpdated = false;
+			netHandler.framesSinceNetData = 0;
+		}
+		else {
+			netHandler.framesSinceNetData++;
+			if (netHandler.framesSinceNetData >= TTSPowerupNetHandler.ExplodeTimeout) {
+				LeechExplosion();
+			}
+		}
 	}
 	#endregion
 }

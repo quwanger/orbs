@@ -178,11 +178,6 @@ public class TTSHelixProjectile : TTSBehaviour
 	}
 
 	private void Explode(bool actually) {
-		if (netHandler != null) {
-			netHandler.DeregisterFromClient();
-			netHandler = null;
-		}
-
 		if (actually) {
 			Instantiate(explosion, this.transform.position, this.transform.rotation);
 		}
@@ -198,4 +193,10 @@ public class TTSHelixProjectile : TTSBehaviour
 		Destroy(this);
 	}
 
+	void OnDestroy() {
+		if (netHandler != null) {
+			netHandler.DeregisterFromClient();
+			netHandler = null;
+		}
+	}
 }

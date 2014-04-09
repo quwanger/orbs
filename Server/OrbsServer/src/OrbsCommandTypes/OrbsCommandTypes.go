@@ -15,6 +15,19 @@ const (
 	LobbyRegister     = 100
 	LobbyRegisterOK   = 101
 	LobbyRegisterFail = 109
+	LobbyInfoRequest  = 110
+	LobbyInfoReturn   = 111
+
+	LobbyStartGame       = 140
+	LobbyEndGame         = 141
+	LobbyCountdownUpdate = 124
+	LobbyStopCountdown   = 125
+
+	RaceStartCountdown = 150
+	RaceStartReady     = 160
+
+	// Object Control
+	GiveControl = 1111
 
 	// Object
 	ObjectUpdate            = 1004

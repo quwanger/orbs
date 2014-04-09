@@ -43,7 +43,7 @@ public class TTSFinishBox : TTSBehaviour {
 				
 				tempRacer.canMove=false;
 				tempRacer.finished = true;
-				if(tempRacer.player != TTSRacer.PlayerType.AI){
+				if(tempRacer.player == TTSRacer.PlayerType.Player){
 					if(level.currentGameType == TTSLevel.Gametype.MultiplayerLocal){
 						//splitscreen fadeout stuff
 						tempRacer.myCamera.GetComponent<TTSCameraFade>().StartFade(new Color(0,0,0,1.0f), 0.5f);
@@ -51,7 +51,9 @@ public class TTSFinishBox : TTSBehaviour {
 				}
 				
 				addToFinishedRacers(collision.gameObject);
-				updateFinishScreens();
+				if (tempRacer.player == TTSRacer.PlayerType.Player) {
+					updateFinishScreens();
+				}
 				place++;
 			}
 		}
@@ -174,7 +176,7 @@ public class TTSFinishBox : TTSBehaviour {
 		
 		//only make one screen per player if it's not splitscreen
 		if(level.currentGameType != TTSLevel.Gametype.MultiplayerLocal){
-			if(racerToAdd.GetComponent<TTSRacer>().player != TTSRacer.PlayerType.AI){
+			if(racerToAdd.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player){
 				createNewFinishPanel(go, true);
 			}
 		}

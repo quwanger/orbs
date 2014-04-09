@@ -137,7 +137,6 @@ public class TTSRacer : TTSBehaviour
 	TTSRacerNetHandler netHandler;
 	public int rigID;
 	private System.DateTime lastNetUpdate;
-	private int updatesPerSecond = 4;
 
 	//XInput
 	#if UNITY_STANDALONE_WIN || UNITY_EDITOR
@@ -264,9 +263,8 @@ public class TTSRacer : TTSBehaviour
 		if (player != PlayerType.Multiplayer)
 			CalculateBodyOrientation();
 
-		if (netHandler != null && (System.DateTime.Now - lastNetUpdate).Milliseconds > 1000 / updatesPerSecond) {
+		if (netHandler != null) {
 			netHandler.UpdateRacer(position, displayMeshComponent.rotation.eulerAngles, rigidbody.velocity, vInput, hInput);
-			lastNetUpdate = System.DateTime.Now;
 		}
 
 		resultAccel = Mathf.Lerp(resultAccel, rigidbody.velocity.magnitude - PreviousVelocity.magnitude, 0.01f);
@@ -784,6 +782,10 @@ public class TTSRacer : TTSBehaviour
 					powerupManager.FireHelix(false, handler);
 					break;
 
+				case TTSPowerupNetworkTypes.Helix3:
+					powerupManager.FireHelixTier3(false, handler);
+					break;
+
 				case TTSPowerupNetworkTypes.Drezz:
 					powerupManager.DropDrezzStone(false, handler);
 					break;
@@ -844,6 +846,8 @@ public class TTSRacerNetHandler : TTSNetworkHandle
 	public Vector3 netPosition, netRotation, netSpeed;
 	public float networkVInput, networkHInput;
 	//public int networkPowerUpType, networkPowerUpTier;
+
+	private System.DateTime lastNetUpdate;
 
 	// Powerup
 	public List<TTSPowerupNetHandler> receivedPowerups = new List<TTSPowerupNetHandler>();
@@ -956,22 +960,26 @@ public class TTSRacerNetHandler : TTSNetworkHandle
 
 	public void UpdateRacer(Vector3 Pos, Vector3 Rot, Vector3 Speed, float VInput, float HInput) {
 		if (owner) { // Only send data if it's the owner
+			if ((System.DateTime.Now - lastNetUpdate).Milliseconds > 1000 / client.UpdatesPerSecond) {
 
-			if (!isWriterUpdated) writer.ClearData(); // Always clear..
-			isWriterUpdated = true;
+				if (!isWriterUpdated) writer.ClearData(); // Always clear..
+				isWriterUpdated = true;
 
-			writer.AddData(TTSCommandTypes.RacerUpdate);
-			writer.AddData(id);
-			writer.AddData(Pos);
-			writer.AddData(Rot);
-			writer.AddData(Speed);
-			writer.AddData(VInput);
-			writer.AddData(HInput);
+				writer.AddData(TTSCommandTypes.RacerUpdate);
+				writer.AddData(id);
+				writer.AddData(Pos);
+				writer.AddData(Rot);
+				writer.AddData(Speed);
+				writer.AddData(VInput);
+				writer.AddData(HInput);
+
+				lastNetUpdate = System.DateTime.Now;
+			}
 		}
 	}
 
 	public void SendStaticPowerup(int powerupType, float powerupTier) {
-		if (owner && isServerRegistered) { // Only send data if it's the owner
+		if (owner) { // Only send data if it's the owner
 			if (!isWriterUpdated) writer.ClearData();
 			isWriterUpdated = true;
 

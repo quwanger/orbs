@@ -5,6 +5,7 @@ public class TTSEntropyCannonProjectile : MonoBehaviour {
 	
 #region internal fields
 	private float birth;
+	private bool exploded = false;
 #endregion
 
 #region configuration fields
@@ -44,16 +45,18 @@ public class TTSEntropyCannonProjectile : MonoBehaviour {
 
 		if (netHandler == null || netHandler.owner) {
 
-			this.rigidbody.velocity = ProjectileDirectionVector * ProjectileStartVelocity;
-			ProjectileStartVelocity += ProjectileAcceleration;
+			if (!exploded) {
+				this.rigidbody.velocity = ProjectileDirectionVector * ProjectileStartVelocity;
+				ProjectileStartVelocity += ProjectileAcceleration;
 
-			if(checkDistanceToGround()!=initialDistanceToGround){
-				float newY = (this.gameObject.transform.position.y - checkDistanceToGround()) + initialDistanceToGround;
-				this.transform.position = new Vector3(this.transform.position.x, newY, this.transform.position.z);
+				if (checkDistanceToGround() != initialDistanceToGround) {
+					float newY = (this.gameObject.transform.position.y - checkDistanceToGround()) + initialDistanceToGround;
+					this.transform.position = new Vector3(this.transform.position.x, newY, this.transform.position.z);
+				}
+
+				if(netHandler != null)
+					netHandler.UpdatePowerup(transform.position, transform.rotation.eulerAngles, rigidbody.velocity);
 			}
-
-			if(netHandler != null)
-				netHandler.UpdatePowerup(transform.position, transform.rotation.eulerAngles, rigidbody.velocity);
 		}
 		else if(!netHandler.owner) {
 			GetNetworkUpdate();
@@ -120,21 +123,24 @@ public class TTSEntropyCannonProjectile : MonoBehaviour {
 	#endregion
 
 	private void Explode(bool actually) {
-		if (netHandler != null) {
-			netHandler.DeregisterFromClient();
-			netHandler = null;
-		}
-
+		exploded = true;
 		if (actually) {
 			Instantiate(explosion, this.transform.position, this.transform.rotation);
 		}
 			
 		foreach(Transform child in transform) {
-				Destroy(child.gameObject);
+			Destroy(child.gameObject);
 		}
 		//stop motion so the trail can end and destroy the parent GO.
 		this.GetComponent<SphereCollider>().enabled = false;
 		this.rigidbody.velocity = new Vector3(0f,0f,0f);
+	}
+
+	void OnDestroy() {
+		if (netHandler != null) {
+			netHandler.DeregisterFromClient();
+			netHandler = null;
+		}
 	}
 
 }

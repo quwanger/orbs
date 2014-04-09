@@ -9,7 +9,7 @@ public class TTSPowerup : TTSBehaviour
 {
 
 	public bool debug = false;
-	public int DebugTier = 1;
+	public int DebugTier = 3;
 
 	public PowerupType AvailablePowerup;
 	public PowerupType PreviouslyAvailablePowerup = PowerupType.None;
@@ -96,10 +96,7 @@ public class TTSPowerup : TTSBehaviour
 		//if you hit space or the 'a' button on an Xbox controller
 		if (AvailablePowerup != PowerupType.None) {
 			#if UNITY_STANDALONE_WIN || UNITY_EDITOR
-
-				CheckControllerWindows();
-
-				if (state.Buttons.A == ButtonState.Pressed){
+				if (CheckControllerWindows() && state.Buttons.A == ButtonState.Pressed){
 					ConsumePowerup();
 				}
 			#endif
@@ -301,7 +298,7 @@ public class TTSPowerup : TTSBehaviour
 
 
 	#region public methods
-	public void CheckControllerWindows(){
+	public bool CheckControllerWindows(){
 		#if UNITY_STANDALONE_WIN || UNITY_EDITOR
 			switch(this.GetComponent<TTSRacer>().playerControllerNum){
 				case(1):
@@ -317,9 +314,11 @@ public class TTSPowerup : TTSBehaviour
 					state = GamePad.GetState(PlayerIndex.Four);
 					break;
 				default:
-					break;
+					return false;
 			}
-		#endif
+			return true;
+	#endif
+			return false;
 	}
 
 	public void CheckControllerMac(){
@@ -604,7 +603,7 @@ public class TTSPowerup : TTSBehaviour
 		go.transform.position = GetFrontPP().position + racer.displayMeshComponent.forward * 3.5f;
 		go.rigidbody.velocity = racer.rigidbody.velocity + (racer.rigidbody.velocity.normalized * 100.0f);
 
-		if (owner) { SendPowerupDeploy(TTSPowerupNetworkTypes.Helix, go); }
+		if (owner) { SendPowerupDeploy(TTSPowerupNetworkTypes.Helix3, go); }
 		else {
 			helix.SetNetHandler(handle);
 		}
@@ -704,6 +703,10 @@ public class TTSPowerup : TTSBehaviour
 					powerup.GetComponent<TTSHelixProjectile>().SetNetHandler(handler);
 					break;
 
+				case TTSPowerupNetworkTypes.Helix3:
+					powerup.GetComponent<TTSHelixProjectileTier3>().SetNetHandler(handler);
+					break;
+
 				case TTSPowerupNetworkTypes.Drezz:
 					powerup.GetComponent<TTSDrezzStone>().SetNetHandler(handler);
 					break;
@@ -765,6 +768,7 @@ public class TTSPowerupNetworkTypes
 	public const int Drezz = 6;
 	public const int Entropy = 7;
 	public const int Helix = 8;
+	public const int Helix3 = 9;
 
 	public static bool isStaticType(int type) {
 		return (type == TimeBonus || type == Shockwave || type == Shield || type == Boost);
@@ -777,12 +781,16 @@ public class TTSPowerupNetHandler : TTSNetworkHandle
 	public Vector3 netPosition, netRotation, netSpeed;
 
 	public int framesSinceNetData = 0;
-	public const int ExplodeTimeout = 10;
+	public const int ExplodeTimeout = 60;
 
 	public int Type = -1;
 	public float Tier = -1.0f;
 
 	public float RacerID = -1.0f;
+
+	private System.DateTime lastNetUpdate;
+
+	public List<TTSPowerupNetHandler> receivedPowerups = new List<TTSPowerupNetHandler>();
 
 	public TTSPowerupNetHandler() {
 		type = "Static Powerup";
@@ -823,29 +831,44 @@ public class TTSPowerupNetHandler : TTSNetworkHandle
 	}
 
 	public override void ReceiveNetworkData(TTSPacketReader reader, int command) {
-		netPosition = reader.ReadVector3();
-		netRotation = reader.ReadVector3();
-		netSpeed = reader.ReadVector3();
+		if (command == TTSCommandTypes.PowerupUpdate) {
+			netPosition = reader.ReadVector3();
+			netRotation = reader.ReadVector3();
+			netSpeed = reader.ReadVector3();
 
-		isNetworkUpdated = true;
+			isNetworkUpdated = true;
+		}
+		else if (command == TTSCommandTypes.PowerupRegister) {
+			float powerupID = reader.ReadFloat();
+			int powerupType = reader.ReadInt32();
+
+			TTSPowerupNetHandler handler = new TTSPowerupNetHandler(client, false, powerupID, powerupType, id);
+			Debug.Log("Powerup Powerup Register. Type: " + powerupType + " ID: " + powerupID);
+
+			if(Type == TTSPowerupNetworkTypes.Helix3) // Only work for helix so far.
+				receivedPowerups.Add(handler);
+		}
 	}
 
 	public void UpdatePowerup(Vector3 Pos, Vector3 Rot, Vector3 Speed) {
 		if (owner && isServerRegistered) { // Only send data if it's the owner
+			if ((System.DateTime.Now - lastNetUpdate).Milliseconds > 1000 / client.UpdatesPerSecond) {
+				if (!isWriterUpdated) writer.ClearData();
+				isWriterUpdated = true;
 
-			if (!isWriterUpdated) writer.ClearData();
-			isWriterUpdated = true;
+				writer.AddData(TTSCommandTypes.PowerupUpdate);
+				writer.AddData(id);
+				writer.AddData(Pos);
+				writer.AddData(Rot);
+				writer.AddData(Speed);
 
-			writer.AddData(TTSCommandTypes.PowerupUpdate);
-			writer.AddData(id);
-			writer.AddData(Pos);
-			writer.AddData(Rot);
-			writer.AddData(Speed);
+				lastNetUpdate = System.DateTime.Now;
+			}
 		}
 	}
 
 	public override byte[] GetNetworkUpdate() {
 		isWriterUpdated = false;
-		return writer.GetMinimizedData();
+		return writer.GetMinimizedData(true);
 	}
 }

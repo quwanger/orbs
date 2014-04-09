@@ -5,8 +5,10 @@ import (
 	"OrbsCommandTypes"
 	"Packets"
 	"fmt"
+	"math/rand"
 	"net"
 	"strconv"
+	"time"
 )
 
 var DebugMode bool = true
@@ -15,6 +17,8 @@ var Lobbies []*Orbs.OrbsLobby
 var IPToLobby map[string]*Orbs.OrbsLobby
 
 func main() {
+	rand.Seed(time.Now().UTC().UnixNano())
+
 	InitServer()
 
 	for {
@@ -86,7 +90,10 @@ func ProcessPacket(sender *net.UDPAddr, reader *Packets.PacketReader) {
 }
 
 func ReturnAllLobbyInfo(sender *net.UDPAddr) {
-	println("Lobby Info Requested")
+	if DebugMode {
+		println("Lobby Info Requested")
+	}
+
 	var returnPacket = new(Packets.PacketWriter)
 	returnPacket.InitPacket()
 	returnPacket.WriteInt(OrbsCommandTypes.ReturnAllLobbies)
