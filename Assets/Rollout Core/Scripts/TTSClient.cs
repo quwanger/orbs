@@ -365,7 +365,7 @@ public class TTSClient : MonoBehaviour
 		writer.AddData(TTSCommandTypes.RaceStartReady);
 
 		for (int i = 0; i < 5; i++) {
-			client.SendPacket(writer);
+			SendPacket(writer);
 		}
 	}
 
