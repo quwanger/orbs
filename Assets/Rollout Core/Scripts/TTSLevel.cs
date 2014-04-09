@@ -20,6 +20,7 @@ public class TTSLevel : MonoBehaviour {
 	public bool raceHasFinished = false;
 	public bool humanPlayersFinished = false;
 	public GameObject countdown;
+	public bool countdownStarted = false;
 	public bool DebugMode = true;
 	public bool PerksEnabled = true;
 	
@@ -53,7 +54,12 @@ public class TTSLevel : MonoBehaviour {
 				}
 			}
 		}else{
-			StartCountdown();
+			if (currentGameType != Gametype.MultiplayerOnline) {
+				StartCountdown();
+			}
+			else {
+				client.RaceStartReady();
+			}
 		}
 	}
 
@@ -81,6 +87,10 @@ public class TTSLevel : MonoBehaviour {
 				Destroy(dataToPass);
 				Application.LoadLevel("hub-world");
 			}
+		}
+
+		if (currentGameType == Gametype.MultiplayerOnline && client.startRaceCountdown && countdownStarted == false) {
+			StartCountdown();
 		}
 	}
 	#endregion
@@ -179,6 +189,7 @@ public class TTSLevel : MonoBehaviour {
 		if(!DebugMode) {
 			if(countdown != null) {
 				countdown.GetComponent<Animation>().Play();
+				countdownStarted = true;
 			} else {
 				Debug.LogWarning("Countdown not assigned.");
 			}

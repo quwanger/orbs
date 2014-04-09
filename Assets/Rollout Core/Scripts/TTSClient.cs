@@ -40,6 +40,7 @@ public class TTSClient : MonoBehaviour
 	public bool InGame = false;
 	public int LobbyID = 0;
 	public float lobbyCountdownTime = -1f;
+	public bool startRaceCountdown = false;
 
 	// Game networking
 	// One global collection of IDs and handles
@@ -64,15 +65,6 @@ public class TTSClient : MonoBehaviour
 		InitConnection();
 
 		if (!isMultiplayer && !isLobby) return;
-
-		if (isMultiplayer) {
-			TTSPacketWriter writer = new TTSPacketWriter();
-			writer.AddData(TTSCommandTypes.RaceStartReady);
-
-			for (int i = 0; i < 5; i++) {
-				SendPacket(writer);
-			}
-		}
 
 		receiveThread = new Thread(new ThreadStart(PacketListener));
 		receiveThread.IsBackground = true;
@@ -245,6 +237,12 @@ public class TTSClient : MonoBehaviour
 
 				#endregion
 
+				#region Race
+				case TTSCommandTypes.RaceStartCountdown:
+					startRaceCountdown = true;
+					break;
+				#endregion
+
 				#region powerup platforms
 				case TTSCommandTypes.PowerupPlatformRegisterOK:
 					id = packet.ReadFloat();
@@ -362,6 +360,15 @@ public class TTSClient : MonoBehaviour
 	#endregion
 
 	#region In Game
+	public void RaceStartReady() {
+		TTSPacketWriter writer = new TTSPacketWriter();
+		writer.AddData(TTSCommandTypes.RaceStartReady);
+
+		for (int i = 0; i < 5; i++) {
+			client.SendPacket(writer);
+		}
+	}
+
 	// Send all the registered objects
 	private void ServerAllObjectsRegister() {
 		TTSPacketWriter writer = new TTSPacketWriter();
