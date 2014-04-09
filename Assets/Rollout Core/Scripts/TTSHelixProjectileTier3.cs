@@ -60,7 +60,7 @@ public class TTSHelixProjectileTier3 : TTSBehaviour
 
 	// Update is called once per frame
 	void Update () {
-		if (netHandler == null || netHandler.owner) {
+		if (netHandler == null || netHandler.owner || !netHandler.isNetworkUpdated) {
 			/*if(Time.time - birth > Timeout) {
 				Explode(false);
 			}*/
