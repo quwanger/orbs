@@ -80,9 +80,11 @@ public class TTSLobbyMenu : TTSBehaviour
 			guiIndex++;
 		}
 
-		foreach (TTSRacerConfig value in racerConfigs) {
-			playerTexts[guiIndex].text = value.Name;
-			guiIndex++;
+		lock (racerConfigs) {
+			foreach (TTSRacerConfig value in racerConfigs) {
+				playerTexts[guiIndex].text = value.Name;
+				guiIndex++;
+			}
 		}
 
 		playerCountText.text = guiIndex + "/" + playerTexts.Length;
