@@ -7,8 +7,8 @@ public class TTSStartScreen : MonoBehaviour {
 	private GamePadState state;
 	private PlayerIndex playerIndex;
 
-	private AudioSource MusicPlayer;
-	public AudioClip songToPlay;
+	private AudioSource startAudioSource;
+	public AudioClip pressStart;
 
 	// Use this for initialization
 	void Start () {
@@ -21,6 +21,10 @@ public class TTSStartScreen : MonoBehaviour {
 		state = GamePad.GetState(PlayerIndex.One);
 
 		if(state.Buttons.Start == ButtonState.Pressed || Input.GetKeyDown("return")) {
+			startAudioSource = gameObject.AddComponent<AudioSource>();
+			startAudioSource.clip = pressStart;
+			startAudioSource.volume = 0.5f;
+			startAudioSource.Play();
 			this.GetComponent<TTSCameraFade>().StartFade(new Color(0,0,0,1.0f), 2.0f);
 			Invoke("LoadHubWorld", 2.0f);
 		}

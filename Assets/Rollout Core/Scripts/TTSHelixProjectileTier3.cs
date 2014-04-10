@@ -77,8 +77,12 @@ public class TTSHelixProjectileTier3 : TTSBehaviour
 			//move the projectile
 			this.rigidbody.velocity = (destinationPosition - this.transform.position).normalized * ProjectileStartVelocity;
 			
-			ProjectileStartVelocity = ProjectileStartVelocity + ProjectileAcceleration;
-
+			if(racerFound){
+				ProjectileStartVelocity = homedRacer.rigidbody.velocity.magnitude * 1.5f;
+			}else{
+				ProjectileStartVelocity = ProjectileStartVelocity + ProjectileAcceleration;
+			}
+			
 			if (netHandler != null && netHandler.owner)
 				netHandler.UpdatePowerup(transform.position, transform.rotation.eulerAngles, rigidbody.velocity);
 

@@ -1095,31 +1095,34 @@ public class TTSMenu : TTSBehaviour {
 	
 	private void levelSelection(){
 		if(SelectedLevel.ToString() == "level1"){
-				dtp.GetComponent<TTSDataToPass>().levelToLoad = "city1-1";
-				Application.LoadLevel("city1-1");
-			}
-		
-			else if(SelectedLevel.ToString() == "level2"){
-				dtp.GetComponent<TTSDataToPass>().levelToLoad = "city1-2";
-				Application.LoadLevel("city1-2");
-			}
-							
-			else if(SelectedLevel.ToString() == "level3"){
-				dtp.GetComponent<TTSDataToPass>().levelToLoad = "rural1-1";
-				Application.LoadLevel("rural1-1");
-			}
-				
-			else if(SelectedLevel.ToString() == "level4"){
-				dtp.GetComponent<TTSDataToPass>().levelToLoad = "cliffsidechoas";
-				Application.LoadLevel("cliffsidechoas");
-			}
-
-			else if(SelectedLevel.ToString() == "level5"){
-				dtp.GetComponent<TTSDataToPass>().levelToLoad = "future1-1";
-				Application.LoadLevel("future1-1");
-			}
-			
+			dtp.GetComponent<TTSDataToPass>().levelToLoad = "city1-1";
 			Application.LoadLevel("LoadingScene");
+			//Application.LoadLevel("city1-1");
+		}
+		
+		else if(SelectedLevel.ToString() == "level2"){
+			dtp.GetComponent<TTSDataToPass>().levelToLoad = "city1-2";
+			Application.LoadLevel("LoadingScene");
+			//Application.LoadLevel("city1-2");
+		}
+							
+		else if(SelectedLevel.ToString() == "level3"){
+			dtp.GetComponent<TTSDataToPass>().levelToLoad = "rural1-1";
+			Application.LoadLevel("LoadingScene");
+			//Application.LoadLevel("rural1-1");
+		}
+				
+		else if(SelectedLevel.ToString() == "level4"){
+			dtp.GetComponent<TTSDataToPass>().levelToLoad = "cliffsidechoas";
+			Application.LoadLevel("LoadingScene");
+			//Application.LoadLevel("cliffsidechoas");
+		}
+
+		else if(SelectedLevel.ToString() == "level5"){
+			dtp.GetComponent<TTSDataToPass>().levelToLoad = "future1-1";
+			Application.LoadLevel("LoadingScene");
+			//Application.LoadLevel("future1-1");
+		}			
 	}
 
 	public void movePanel() {

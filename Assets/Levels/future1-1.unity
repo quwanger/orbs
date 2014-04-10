@@ -3307,6 +3307,8 @@ MonoBehaviour:
   currentFinishBox: {fileID: 1879320054}
   numHumanPlayers: 1
   numAIPlayers: 0
+  isMultiplayer: 0
+  isLobby: 0
   gameType: 1
 --- !u!114 &66764694
 MonoBehaviour:
@@ -3342,12 +3344,15 @@ MonoBehaviour:
   raceHasFinished: 0
   humanPlayersFinished: 0
   countdown: {fileID: 1059491069}
+  countdownStarted: 0
   DebugMode: 0
   PerksEnabled: 1
   fonts:
   - {fileID: 12800000, guid: f9929be8a43d15b408cb23dd53efaaa4, type: 3}
   client: {fileID: 0}
   initRace: {fileID: 0}
+  fakeBestTime: 02:49:48
+  fakeWorldRecord: 02:41:08
 --- !u!114 &66764696
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3388,9 +3393,14 @@ MonoBehaviour:
   SERVER_RECEIVE_PORT: 6666
   CLIENT_RECEIVE_PORT: 6969
   CLIENT_RECEIVE_TIMEOUT: 0
+  UpdatesPerSecond: 10
+  isMultiplayer: 0
+  isLobby: 0
   EnteredLobby: 0
   InGame: 0
   LobbyID: 0
+  lobbyCountdownTime: -1
+  startRaceCountdown: 0
 --- !u!114 &66764699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33952,6 +33962,14 @@ Prefab:
     - target: {fileID: 11400002, guid: 66b1082218c3fc643bf095d7cf975069, type: 2}
       propertyPath: currentGameType
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 66b1082218c3fc643bf095d7cf975069, type: 2}
+      propertyPath: fakeBestTime
+      value: 02:49:48
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 66b1082218c3fc643bf095d7cf975069, type: 2}
+      propertyPath: fakeWorldRecord
+      value: 02:41:08
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 66b1082218c3fc643bf095d7cf975069, type: 2}

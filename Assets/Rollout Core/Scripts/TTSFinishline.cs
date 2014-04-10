@@ -61,6 +61,11 @@ public class TTSFinishline : MonoBehaviour {
 		perksName.text = myFinishedRacer.perkpool1.ToString() + " & " + myFinishedRacer.perkpool2.ToString();
 		
 		thisTime.text = myFinishedRacer.time; //already a string
+
+		//hax
+		GameObject level = GameObject.Find("TTSLevel");
+		bestTime.text = level.GetComponent<TTSLevel>().fakeBestTime;
+		worldRecordTime.text = level.GetComponent<TTSLevel>().fakeWorldRecord;
 		
 		//best time
 		

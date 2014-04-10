@@ -32,6 +32,9 @@ public class TTSLevel : MonoBehaviour {
 
 	public TTSClient client;
 	public TTSInitRace initRace;
+
+	public string fakeBestTime;
+	public string fakeWorldRecord;
 	
 	public static TTSLevel instance { get; private set;}
 

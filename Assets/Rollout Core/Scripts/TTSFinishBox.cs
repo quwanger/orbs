@@ -51,7 +51,10 @@ public class TTSFinishBox : TTSBehaviour {
 				}
 				
 				addToFinishedRacers(collision.gameObject);
-				updateFinishScreens();
+
+				//if (tempRacer.player == TTSRacer.PlayerType.Player) {
+					updateFinishScreens();
+				//}
 				place++;
 			}
 		}
@@ -147,7 +150,8 @@ public class TTSFinishBox : TTSBehaviour {
 				finishLine.GetComponent<TTSFinishline>().positions[i].text = positions[i];
 				finishLine.GetComponent<TTSFinishline>().rigs[i].text = rigs[i].ToString();
 				finishLine.GetComponent<TTSFinishline>().times[i].text = times[i];
-				if (level.currentGameType == TTSLevel.Gametype.MultiplayerLocal) {
+				
+				if(level.currentGameType == TTSLevel.Gametype.MultiplayerLocal){
 					finishLine.GetComponent<TTSFinishline>().colours[i].text = colour[i];
 					finishLine.GetComponent<TTSFinishline>().playernames[i].text = playerName[i];
 				}
