@@ -386,7 +386,8 @@ public class TTSClient : MonoBehaviour
 		level.menu.SaveRacers();
 		TTSLevel.LevelType levelType = (TTSLevel.LevelType)levelToLoad;
 		Debug.Log("LOAD " + level.LevelTypeToFileName(levelType));
-		Application.LoadLevel(level.LevelTypeToFileName(levelType));
+		GameObject.Find("DataToPass").GetComponent<TTSDataToPass>().levelToLoad = level.LevelTypeToFileName(levelType);
+		Application.LoadLevel("LoadingScene");
 		levelToLoad = -1;
 	}
 
