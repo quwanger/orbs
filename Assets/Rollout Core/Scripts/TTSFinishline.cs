@@ -65,9 +65,9 @@ public class TTSFinishline : TTSBehaviour {
 		thisTime.text = myFinishedRacer.time; //already a string
 
 		//hax
-		GameObject level = GameObject.Find("TTSLevel");
-		bestTime.text = level.GetComponent<TTSLevel>().fakeBestTime;
-		worldRecordTime.text = level.GetComponent<TTSLevel>().fakeWorldRecord;
+		GameObject levelObj = level.gameObject;
+		bestTime.text = level.fakeBestTime;
+		worldRecordTime.text = level.fakeWorldRecord;
 		
 		if(level.currentGameType == TTSLevel.Gametype.MultiplayerOnline){
 			aButton.active = false;
