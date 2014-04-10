@@ -80,7 +80,7 @@ public class TTSServerMenu : TTSBehaviour {
 		if (!networkUpdated)
 			return;
 		
-		OnLobbyUpdate(serverLobbies);
+		OnLobbyUpdate();
 
 		int inLobbyIndex = 0;
 		int inProgressIndex = 0;
@@ -152,7 +152,7 @@ public class TTSServerMenu : TTSBehaviour {
 		}
 	}
 
-	public void OnLobbyUpdate(List<LobbyData> serverLobbies) {
+	public void OnLobbyUpdate() {
 		lock (serverLobbies) {
 			foreach (LobbyData lobby in serverLobbies) {
 				TTSLobby existingLobby = lobbies.Find(x => x.ID == lobby.ID);
@@ -225,17 +225,29 @@ public class TTSServerMenu : TTSBehaviour {
 		SetHighlighter(currentList[toIndex]);
 	}
 
+	public Texture availableHighlighter;
+	public Texture unavailableHighlighter;
 	private void SetHighlighter(TTSLobby destination) {
 		highlightedLobby = destination;
 		highlighter.guiTexture.pixelInset = destination.GetPosition();
+
+		if (availableHighlighter == null)
+			return;
+
+		if (highlightedLobby.InProgress) {
+			highlighter.guiTexture.texture = unavailableHighlighter;
+		}
+		else {
+			highlighter.guiTexture.texture = availableHighlighter;
+		}
 	}
 
 	public void JoinLobby() {
-		// Send request to server
-		client.ConnectToLobby(highlightedLobby.ID, this, lobbyMenu);//lobby.ID);
-
-		// Wait to join server screen
-
+		if (!highlightedLobby.InProgress) {
+			// Send request to server
+			client.ConnectToLobby(highlightedLobby.ID, this, lobbyMenu);
+			// Wait to join server screen
+		}
 	}
 
 	#region network thread

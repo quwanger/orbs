@@ -49,7 +49,7 @@ public class TTSLobby : MonoBehaviour
 	}
 
 	public void SetPosition(int index) {
-		int verticalOffset = ((InProgress)? -55 : 154) - index * 25;
+		int verticalOffset = ((InProgress)? 154 : -55) - index * 25;
 
 		botsText.pixelOffset = new Vector2(botsText.pixelOffset.x, verticalOffset);
 		levelText.pixelOffset = new Vector2(levelText.pixelOffset.x, verticalOffset);
@@ -58,7 +58,7 @@ public class TTSLobby : MonoBehaviour
 	}
 	
 	public Rect GetPosition(){
-		return new Rect(-539, botsText.pixelOffset.y-20, 1087, 20);
+		return new Rect(-539, botsText.pixelOffset.y-19, 1087, 20);
 	}
 
 	public void SetLevel(int levelID) {

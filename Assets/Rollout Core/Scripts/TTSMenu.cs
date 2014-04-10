@@ -287,6 +287,10 @@ public class TTSMenu : TTSBehaviour {
 				} else if(GetButtonDown(1, "B") == false) {
 					isBPressed = false;
 				}
+
+				if (lobbyJoined) {
+					changePanels("right");
+				}
 			}
 
 			//if(Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown("joystick 1 button 7"))
@@ -682,6 +686,11 @@ public class TTSMenu : TTSBehaviour {
 		dtp.GetComponent<TTSDataToPass>().players.AddRange(level.client.RegisteredRacerConfigs);
 		dtp.GetComponent<TTSDataToPass>().gametype = gameMode;
 	}
+
+	private bool lobbyJoined = false;
+	public void JoinLobby() {
+		lobbyJoined = true;
+	}
 	
 	private void changePanels(string direction){
 		
@@ -797,12 +806,17 @@ public class TTSMenu : TTSBehaviour {
 				}
 				
 				else if(activePanel == 1 && !isTweening){
-					// mpMenu to mpLobby
-					isTweening = true;
-					previousPanel = activePanel;
-					activePanel ++;
-					serverMenu.JoinLobby();
-					movePanel();
+					if (lobbyJoined) {
+						lobbyJoined = false;
+						// mpMenu to mpLobby
+						isTweening = true;
+						previousPanel = activePanel;
+						activePanel++;
+						movePanel();
+					}
+					else {
+						serverMenu.JoinLobby();
+					}
 				}
 				
 				else if(activePanel == 2 && !isTweening){

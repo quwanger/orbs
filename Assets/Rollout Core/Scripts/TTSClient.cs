@@ -29,6 +29,7 @@ public class TTSClient : MonoBehaviour
 	#endregion
 
 	TTSLevel level;
+	TTSMenu menu;
 	TTSInitRace initRace;
 
 	public List<TTSRacerConfig> RegisteredRacerConfigs = new List<TTSRacerConfig>();
@@ -37,7 +38,6 @@ public class TTSClient : MonoBehaviour
 	public bool isMultiplayer;
 	public bool isLobby;
 	public bool EnteredLobby = false;
-	public bool InGame = false;
 	public int LobbyID = 0;
 	public float lobbyCountdownTime = -1f;
 	public bool startRaceCountdown = false;
@@ -57,6 +57,7 @@ public class TTSClient : MonoBehaviour
 	void Start() {
 
 		level = GetComponent<TTSLevel>();
+		menu = GetComponent<TTSMenu>();
 		initRace = GetComponent<TTSInitRace>();
 
 		isLobby = (level != null) ? level.currentGameType == TTSLevel.Gametype.Lobby : false;
@@ -247,9 +248,9 @@ public class TTSClient : MonoBehaviour
 				case TTSCommandTypes.LobbyRegisterOK:
 					LobbyID = packet.ReadInt32();
 					EnteredLobby = true;
-					InGame = true;		// REMOVE THIS LATER
 					serverMenu.OnLobbyJoin(LobbyID);
 					ServerAllObjectsRegister();
+					menu.JoinLobby();
 					break;
 
 				case TTSCommandTypes.ReturnAllLobbies:
