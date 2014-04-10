@@ -51,9 +51,7 @@ public class TTSFinishBox : TTSBehaviour {
 				}
 				
 				addToFinishedRacers(collision.gameObject);
-				if (tempRacer.player == TTSRacer.PlayerType.Player) {
-					updateFinishScreens();
-				}
+				updateFinishScreens();
 				place++;
 			}
 		}
@@ -76,7 +74,7 @@ public class TTSFinishBox : TTSBehaviour {
 		
 		//to check if all human racers are finished the race
 		foreach(GameObject racer in racers){
-			if(racer.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player){
+			if (racer.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player || racer.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Multiplayer) {
 				if(!racer.GetComponent<TTSRacer>().finished){
 					return;
 				}
@@ -149,10 +147,10 @@ public class TTSFinishBox : TTSBehaviour {
 				finishLine.GetComponent<TTSFinishline>().positions[i].text = positions[i];
 				finishLine.GetComponent<TTSFinishline>().rigs[i].text = rigs[i].ToString();
 				finishLine.GetComponent<TTSFinishline>().times[i].text = times[i];
-				if(level.currentGameType == TTSLevel.Gametype.MultiplayerLocal)
+				if (level.currentGameType == TTSLevel.Gametype.MultiplayerLocal) {
 					finishLine.GetComponent<TTSFinishline>().colours[i].text = colour[i];
-				if(level.currentGameType == TTSLevel.Gametype.MultiplayerLocal)
 					finishLine.GetComponent<TTSFinishline>().playernames[i].text = playerName[i];
+				}
 			}
 		}
 	}
