@@ -306,7 +306,15 @@ public class TTSClient : MonoBehaviour
 					id = packet.ReadFloat();
 					if(DebugMode) Debug.Log("DEREGISTER RACER " + id);
 					// IMPLMENT THIS
-					RegisteredRacerConfigs.RemoveAll(x => x.netID == id);
+					lock (RegisteredRacerConfigs) {
+						int i;
+						for (i= 0; i < RegisteredRacerConfigs.Count; i++) {
+							if (RegisteredRacerConfigs[i].netID == id) {
+								break;
+							}
+						}
+						RegisteredRacerConfigs.RemoveAt(i);
+					}
 					
 					if (isLobby) lobbyMenu.networkUpdated = true;
 					break;
@@ -373,6 +381,7 @@ public class TTSClient : MonoBehaviour
 
 	public void LeaveLobby() {
 		RegisteredRacerConfigs.Clear();
+		netHandles.Clear();
 
 		UpdatePacket.ClearData();
 		UpdatePacket.AddData(TTSCommandTypes.CloseConnection);
