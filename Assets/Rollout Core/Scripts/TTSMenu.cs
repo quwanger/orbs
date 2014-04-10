@@ -926,6 +926,8 @@ public class TTSMenu : TTSBehaviour {
 			if(gameMode == TTSLevel.Gametype.TimeTrial){
 				if(activePanel == 4 && !isTweening){
 					// go back to hub world
+					GameObject dtp = GameObject.Find("DataToPass");
+					Destroy(dtp);
 					Application.LoadLevel(Application.loadedLevel);
 				}
 				
@@ -1004,6 +1006,8 @@ public class TTSMenu : TTSBehaviour {
 			else if(gameMode == TTSLevel.Gametype.MultiplayerLocal){
 				if(activePanel == 0 && !isTweening){
 					// go back to hub world
+					GameObject dtp = GameObject.Find("DataToPass");
+					Destroy(dtp);
 					Application.LoadLevel(Application.loadedLevel);
 				}
 				

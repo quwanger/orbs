@@ -63,6 +63,8 @@ public class TTSPauseMenu : TTSBehaviour {
 			{
 				isTweening = true;
 				iTween.MoveTo(this.gameObject, iTween.Hash("x", -5, "time", 0, "easeType", iTween.EaseType.easeOutCirc, "onComplete", "leavingMenu", "onCompleteTarget", gameObject));
+				GameObject dtp = GameObject.Find("DataToPass");
+				Destroy(dtp);
 				Application.LoadLevel("hub-world");
 			}
 		}
