@@ -542,20 +542,20 @@ public class TTSPowerup : TTSBehaviour
 
 		if(this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.AI){
 			//always shoot forward if AI
-			go.transform.position = GetFrontPP().position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
+			go.transform.position = GetFrontPP().position + GetComponent<TTSRacer>().displayMeshComponent.forward * 5.0f;
 			go.GetComponent<TTSEntropyCannonProjectile>().ProjectileDirectionVector = this.rigidbody.velocity.normalized;
-			go.GetComponent<TTSEntropyCannonProjectile>().ProjectileStartVelocity = Random.Range(this.gameObject.rigidbody.velocity.magnitude + 50.0f, this.gameObject.rigidbody.velocity.magnitude + 150.0f);
+			go.GetComponent<TTSEntropyCannonProjectile>().ProjectileStartVelocity = Random.Range(this.gameObject.rigidbody.velocity.magnitude + 100.0f, this.gameObject.rigidbody.velocity.magnitude + 175.0f);
 		}else if(CheckForwardAnalog()){
 			//shoot forward
-			go.transform.position = GetFrontPP().position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
+			go.transform.position = GetFrontPP().position + GetComponent<TTSRacer>().displayMeshComponent.forward * 5.0f;
 			go.GetComponent<TTSEntropyCannonProjectile>().ProjectileDirectionVector = this.rigidbody.velocity.normalized;
-			go.GetComponent<TTSEntropyCannonProjectile>().ProjectileStartVelocity = Random.Range(this.gameObject.rigidbody.velocity.magnitude + 50.0f, this.gameObject.rigidbody.velocity.magnitude + 150.0f);
+			go.GetComponent<TTSEntropyCannonProjectile>().ProjectileStartVelocity = Random.Range(this.gameObject.rigidbody.velocity.magnitude + 100.0f, this.gameObject.rigidbody.velocity.magnitude + 175.0f);
 			//go.rigidbody.velocity = this.rigidbody.velocity.normalized * Random.Range(this.gameObject.rigidbody.velocity.magnitude + 50.0f, this.gameObject.rigidbody.velocity.magnitude + 150.0f);
 		}else{
 			//shoot backwards
 			go.transform.position = GetBackPP().position + GetComponent<TTSRacer>().displayMeshComponent.forward * -3.5f;
 			go.GetComponent<TTSEntropyCannonProjectile>().ProjectileDirectionVector = this.rigidbody.velocity.normalized * -1.0f;
-			go.GetComponent<TTSEntropyCannonProjectile>().ProjectileStartVelocity = Random.Range(this.gameObject.rigidbody.velocity.magnitude + 50.0f, this.gameObject.rigidbody.velocity.magnitude + 150.0f);
+			go.GetComponent<TTSEntropyCannonProjectile>().ProjectileStartVelocity = Random.Range(this.gameObject.rigidbody.velocity.magnitude + 100.0f, this.gameObject.rigidbody.velocity.magnitude + 175.0f);
 			//go.rigidbody.velocity = this.rigidbody.velocity.normalized * Random.Range(rigidbody.velocity.magnitude + 50.0f, rigidbody.velocity.magnitude + 150.0f) * -1.0f;
 		}
 
@@ -632,17 +632,17 @@ public class TTSPowerup : TTSBehaviour
 	public GameObject DeployShockwave(float tier, bool owner) {
 		float power = 0, startSize = 0;
 
-		if (tier == 1f) {
+		if (tier == 1) {
 			power = 1.0f;
 			startSize = 0.02f;
 		}
-		else if (tier == 2f) {
+		else if (tier == 2) {
 			power = 2.0f;
 			startSize = 0.04f;
 		}
-		else if (tier == 3f) {
+		else if (tier == 3) {
 			power = 10.0f;
-			startSize = 0.01f;
+			startSize = 0.1f;
 		}
 
 		GameObject go = (GameObject) Instantiate(ShockwavePrefab, transform.position, Quaternion.identity);

@@ -70,7 +70,7 @@ public class TTSHelixProjectile : TTSBehaviour
 			this.rigidbody.velocity = (destinationPosition - this.transform.position).normalized * ProjectileStartVelocity;
 
 			if(racerFound){
-				ProjectileStartVelocity = homedRacer.rigidbody.velocity.magnitude * 1.3f;
+				ProjectileStartVelocity = homedRacer.rigidbody.velocity.magnitude * 1.5f;
 			}else{
 				ProjectileStartVelocity = ProjectileStartVelocity + ProjectileAcceleration;
 			}
@@ -119,7 +119,7 @@ public class TTSHelixProjectile : TTSBehaviour
 					Explode(false);
 				}
 			}else{
-				other.gameObject.GetComponent<TTSRacer>().DamageRacer(offensiveMultiplier * 0.7f);
+				other.gameObject.GetComponent<TTSRacer>().DamageRacer(offensiveMultiplier * 0.9f);
 				//Debug.Log("Racer " + other.gameObject.GetComponent<TTSRacer>().playerNum + " has been damaged by " + (offensiveMultiplier * 0.7f));
 				Explode(true);
 			}
