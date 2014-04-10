@@ -97,7 +97,13 @@ public class TTSPowerup : TTSBehaviour
 		if (AvailablePowerup != PowerupType.None) {
 			#if UNITY_STANDALONE_WIN || UNITY_EDITOR
 				if (CheckControllerWindows() && state.Buttons.A == ButtonState.Pressed){
-					ConsumePowerup();
+					if(GameObject.Find("PauseMenu")){
+						if(GameObject.Find ("PauseMenu").GetComponent<TTSPauseMenu>().paused == false){
+							ConsumePowerup();
+						}
+					}else{
+						ConsumePowerup();
+					}
 				}
 			#endif
 
@@ -120,7 +126,13 @@ public class TTSPowerup : TTSBehaviour
 				}else{
 					#if UNITY_STANDALONE_WIN
 					if( state.Buttons.A == ButtonState.Pressed) {
-						ConsumePowerup();
+						if(GameObject.Find("PauseMenu")){
+							if(GameObject.Find ("PauseMenu").GetComponent<TTSPauseMenu>().paused == false){
+								ConsumePowerup();
+							}
+						}else{
+							ConsumePowerup();
+						}
 					}
 					#endif
 				}

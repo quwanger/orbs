@@ -227,15 +227,12 @@ public class TTSMenu : TTSBehaviour {
 	void Update () {
 
 		if (gameMode != TTSLevel.Gametype.Lobby) {
-			
-			playerText[0].guiText.text = ("Player" + (chosenOrb));
-			playerText[1].guiText.text = ("Player" + (chosenOrb));
-			
-			
 			string tempJoystick = "joystick 1 button 0";
 			string tempJoystickB = "joystick 1 button 3";
 
 			if (gameMode == TTSLevel.Gametype.MultiplayerLocal) {
+				playerText[0].guiText.text = ("Player" + (chosenOrb));
+				playerText[1].guiText.text = ("Player" + (chosenOrb));
 				tempJoystick = ("joystick " + playerControllerID[chosenOrb-1] + " button 0");
 				tempJoystickB = ("joystick " + playerControllerID[chosenOrb-1] + " button 3");
 			}
@@ -943,6 +940,8 @@ public class TTSMenu : TTSBehaviour {
 			if(gameMode == TTSLevel.Gametype.TimeTrial){
 				if(activePanel == 4 && !isTweening){
 					// go back to hub world
+					GameObject dtp = GameObject.Find("DataToPass");
+					Destroy(dtp);
 					Application.LoadLevel(Application.loadedLevel);
 				}
 				
@@ -1021,6 +1020,8 @@ public class TTSMenu : TTSBehaviour {
 			else if(gameMode == TTSLevel.Gametype.MultiplayerLocal){
 				if(activePanel == 0 && !isTweening){
 					// go back to hub world
+					GameObject dtp = GameObject.Find("DataToPass");
+					Destroy(dtp);
 					Application.LoadLevel(Application.loadedLevel);
 				}
 				
@@ -1120,7 +1121,15 @@ public class TTSMenu : TTSBehaviour {
 
 		else if(SelectedLevel.ToString() == "level5"){
 			dtp.GetComponent<TTSDataToPass>().levelToLoad = "future1-1";
-			Application.LoadLevel("LoadingScene");
+			Application.LoadLevel("future1-1");
+		}
+	
+		else if(SelectedLevel.ToString() == "level6"){
+			dtp.GetComponent<TTSDataToPass>().levelToLoad = "future1-2";
+			Application.LoadLevel("future1-2");
+		}
+
+		Application.LoadLevel("LoadingScene");
 			//Application.LoadLevel("future1-1");
 		}			
 	}

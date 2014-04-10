@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class TTSFinishline : MonoBehaviour {
+public class TTSFinishline : TTSBehaviour {
 	
 	public GUIText levelName;
 	public GUIText placement;
@@ -12,6 +12,8 @@ public class TTSFinishline : MonoBehaviour {
 	public GUIText bestTime;
 	public GUIText worldRecordTime;
 	public GUITexture panel;
+	public GUITexture aButton;
+	public GUIText replayText;
 	
 	public bool isVisible = false;
 	
@@ -66,6 +68,11 @@ public class TTSFinishline : MonoBehaviour {
 		GameObject level = GameObject.Find("TTSLevel");
 		bestTime.text = level.GetComponent<TTSLevel>().fakeBestTime;
 		worldRecordTime.text = level.GetComponent<TTSLevel>().fakeWorldRecord;
+		
+		if(level.currentGameType == TTSLevel.Gametype.MultiplayerOnline){
+			aButton.active = false;
+			replayText.active = false;
+		}
 		
 		//best time
 		

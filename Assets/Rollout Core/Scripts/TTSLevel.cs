@@ -59,6 +59,8 @@ public class TTSLevel : MonoBehaviour {
 		}else{
 			if (currentGameType != Gametype.MultiplayerOnline) {
 				StartCountdown();
+			}else{
+				GameObject.Find ("PauseMenu").active = false;
 			}
 		}
 	}
@@ -106,13 +108,14 @@ public class TTSLevel : MonoBehaviour {
 		}
 		
 		if(humanPlayersFinished){
-			bool isAPressed = (GamePad.GetState(PlayerIndex.One).Buttons.A == ButtonState.Pressed) ? true : false;
+			//bool isAPressed = (GamePad.GetState(PlayerIndex.One).Buttons.A == ButtonState.Pressed) ? true : false;
 			bool isBPressed = (GamePad.GetState(PlayerIndex.One).Buttons.B == ButtonState.Pressed) ? true : false;
 
-			Debug.Log("ALL RACERS FINISHED");
+			/*Debug.Log("ALL RACERS FINISHED");
 			if(Input.GetKeyDown(KeyCode.A) || isAPressed){
 				Application.LoadLevel(Application.loadedLevel);
-			}
+			}*/
+			
 			if(Input.GetKeyDown(KeyCode.B) || isBPressed){
 				GameObject dataToPass = GameObject.Find("DataToPass");
 				Destroy(dataToPass);
