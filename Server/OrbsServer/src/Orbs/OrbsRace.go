@@ -65,7 +65,9 @@ func (this *OrbsRace) ProcessPacket(sender *net.UDPAddr, reader *Packets.PacketR
 
 		// 160
 		case OrbsCommandTypes.RaceStartReady:
-			this.connectionReady(this.Connections[ip])
+			if _, exists := this.Connections[ip]; exists {
+				this.connectionReady(this.Connections[ip])
+			}
 		}
 
 		command = reader.ReadInt32()

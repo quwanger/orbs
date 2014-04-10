@@ -106,6 +106,10 @@ func (this *OrbsLobby) ProcessPacket(sender *net.UDPAddr, reader *Packets.Packet
 // Command Processors
 
 func (this *OrbsLobby) racerRegister(connection *OrbsConnection, reader *Packets.PacketReader) {
+	if !this.connectionExists(connection.IPAddress) {
+		return
+	}
+
 	var racerID float32 = reader.ReadFloat32()
 	reader.EmptyRead4Bytes() // Ignore the racer index
 	var racerIndex int = len(this.racers)
@@ -233,7 +237,7 @@ func (this *OrbsLobby) Init(index int, name string) {
 	this.LobbyID = index
 	this.Name = name
 	this.PlayerLimit = 6
-	this.CountdownLength = 10
+	this.CountdownLength = 30
 	this.Level = rand.Int() % NumLevels
 	this.connections = make(map[string]*OrbsConnection)
 	this.objToOwner = make(map[float32]*OrbsConnection)
@@ -265,7 +269,7 @@ func (this *OrbsLobby) AddConnection(newConnection *OrbsConnection) bool {
 		this.connections[newConnection.IPAddress] = newConnection
 
 		// Check countdown
-		if len(this.connections) == 2 {
+		if len(this.connections) == 1 {
 			this.startCountdown()
 		}
 
@@ -312,6 +316,7 @@ func (this *OrbsLobby) Reset() {
 	this.objToOwner = make(map[float32]*OrbsConnection)
 	this.racers = make(map[float32]*OrbsRacer)
 	this.Race.InitRace(this.connections, this.objToOwner, this.racers, this)
+	this.Level = rand.Int() % NumLevels
 }
 
 // Helpers
