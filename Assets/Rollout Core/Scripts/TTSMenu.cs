@@ -1127,11 +1127,7 @@ public class TTSMenu : TTSBehaviour {
 		else if(SelectedLevel.ToString() == "level6"){
 			dtp.GetComponent<TTSDataToPass>().levelToLoad = "future1-2";
 			Application.LoadLevel("future1-2");
-		}
-
-		Application.LoadLevel("LoadingScene");
-			//Application.LoadLevel("future1-1");
-		}			
+		}	
 	}
 
 	public void movePanel() {
