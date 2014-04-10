@@ -96,7 +96,7 @@ public class TTSBehaviour : MonoBehaviour {
 				return Color.green;
 				
 			case CharacterTypes.character_orange:
-				return new Color32(255,127,39,255);
+				return new Color32(255,74,0,255);
 				
 			case CharacterTypes.character_purple:
 				return new Color32(128,0,255,255);
@@ -105,7 +105,7 @@ public class TTSBehaviour : MonoBehaviour {
 				return Color.red;
 				
 			case CharacterTypes.character_yellow:
-				return Color.yellow;
+				return new Color32(255,211,0,255);
 		}
 		return new Color32(70,70,70,255);
 	}

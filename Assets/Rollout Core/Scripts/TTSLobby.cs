@@ -88,7 +88,7 @@ public class TTSLobby : MonoBehaviour
 			case TTSLevel.LevelType.future1:
 				return "Digital Palace";
 			case TTSLevel.LevelType.future2:
-				return "Vindicae";
+				return "Vindiciae";
 			case TTSLevel.LevelType.night:
 				return "Night Fright";
 		}
