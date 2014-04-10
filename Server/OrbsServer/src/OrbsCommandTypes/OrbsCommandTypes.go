@@ -22,6 +22,7 @@ const (
 	LobbyEndGame         = 141
 	LobbyCountdownUpdate = 124
 	LobbyStopCountdown   = 125
+	LobbyGiveAIRacer     = 130
 
 	RaceStartCountdown = 150
 	RaceStartReady     = 160

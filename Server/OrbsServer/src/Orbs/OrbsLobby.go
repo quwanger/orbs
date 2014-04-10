@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-var NumLevels int = 5
+var NumLevels int = 6
 
 type OrbsLobby struct {
 	// Config
@@ -26,6 +26,7 @@ type OrbsLobby struct {
 	CountdownLength    float32
 	CountdownStart     time.Time
 	isCountdownStarted bool
+	aiRacersGiven      bool
 
 	// Status
 	InGame bool
@@ -59,6 +60,10 @@ func (this *OrbsLobby) ProcessPacket(sender *net.UDPAddr, reader *Packets.Packet
 		case OrbsCommandTypes.RacerRegister:
 			this.racerRegister(this.connections[ip], reader)
 
+		// 2012
+		case OrbsCommandTypes.RacerDeregister:
+			this.racerDeregister(this.connections[ip], reader.ReadFloat32())
+
 		// 2020
 		case OrbsCommandTypes.RacerReadyState:
 			this.racerReady(this.connections[ip], reader)
@@ -72,6 +77,8 @@ func (this *OrbsLobby) ProcessPacket(sender *net.UDPAddr, reader *Packets.Packet
 					this.Reset()
 				} else {
 					for _, value := range this.connections[ip].OwnedObjects {
+
+						println("OBJ ID", value)
 
 						if _, exists := this.racers[value]; exists {
 							// Remove racers
@@ -165,7 +172,6 @@ func (this *OrbsLobby) racerDeregister(connection *OrbsConnection, racerID float
 	packet.WriteFloat32(racerID)
 
 	this.writeBroadcastDataExceptSender(packet.GetMinimalData(), connection)
-
 	delete(this.racers, racerID)
 	delete(this.objToOwner, racerID)
 }
@@ -182,8 +188,6 @@ func (this *OrbsLobby) racerReady(connection *OrbsConnection, reader *Packets.Pa
 // Lobby race start/countdown
 
 func (this *OrbsLobby) startRace() {
-	this.InGame = true
-
 	var packet = new(Packets.PacketWriter)
 	packet.InitPacket()
 	packet.WriteInt(OrbsCommandTypes.LobbyStartGame)
@@ -211,6 +215,12 @@ func (this *OrbsLobby) runCountdown() {
 	if CountdownTimeLeft <= 0 && this.isCountdownStarted {
 		this.isCountdownStarted = false
 		this.startRace()
+	} else if this.isCountdownStarted && CountdownTimeLeft <= 5 && this.aiRacersGiven == false {
+		this.InGame = true
+		this.aiRacersGiven = true
+		this.giveAIRacer()
+		this.runCountdown()
+
 	} else if this.isCountdownStarted {
 		var packet = new(Packets.PacketWriter)
 		packet.InitPacket()
@@ -225,12 +235,40 @@ func (this *OrbsLobby) runCountdown() {
 }
 
 func (this *OrbsLobby) stopCountdown() {
+	this.aiRacersGiven = false
 	this.isCountdownStarted = false
+	this.InGame = false
 	var packet = new(Packets.PacketWriter)
 	packet.InitPacket()
 	packet.WriteInt(OrbsCommandTypes.LobbyStopCountdown)
 
 	this.writeBroadcastData(packet.GetMinimalData())
+	this.BroadcastPacket()
+
+	for key, value := range this.racers {
+		if value.ControlType == 1 { // IF AI
+			delete(this.racers, key)
+			delete(this.objToOwner, key)
+		}
+	}
+}
+
+func (this *OrbsLobby) giveAIRacer() {
+	var numAI int = this.PlayerLimit - len(this.racers)
+
+	var packet = new(Packets.PacketWriter)
+
+	for i := 0; i < numAI; i++ {
+		exists, randConn := this.RandomConnection()
+		if exists {
+			packet.InitPacket()
+			packet.WriteInt(OrbsCommandTypes.LobbyGiveAIRacer)
+			packet.WriteInt(len(this.racers) + i)
+			println("Random Connection to handle AI", randConn.IPAddress)
+			randConn.OutPacket.WriteBytes(packet.GetMinimalData())
+		}
+	}
+
 	this.BroadcastPacket()
 }
 
@@ -251,6 +289,8 @@ func (this *OrbsLobby) Init(index int, name string) {
 	this.Race.InitRace(this.connections, this.objToOwner, this.racers, this)
 
 	this.InGame = false
+	this.aiRacersGiven = false
+	this.isCountdownStarted = false
 
 	this.debugMode = false
 
@@ -273,7 +313,7 @@ func (this *OrbsLobby) AddConnection(newConnection *OrbsConnection) bool {
 		this.connections[newConnection.IPAddress] = newConnection
 
 		// Check countdown
-		if len(this.connections) == 1 {
+		if len(this.connections) == 2 {
 			this.startCountdown()
 		}
 
@@ -321,6 +361,8 @@ func (this *OrbsLobby) Reset() {
 	this.racers = make(map[float32]*OrbsRacer)
 	this.Race.InitRace(this.connections, this.objToOwner, this.racers, this)
 	this.Level = rand.Int() % NumLevels
+	this.aiRacersGiven = false
+	this.isCountdownStarted = false
 }
 
 // Helpers
@@ -343,6 +385,26 @@ func (this *OrbsLobby) BroadcastPacket() {
 	for _, value := range this.connections {
 		value.SendPacket()
 	}
+}
+
+func (this *OrbsLobby) RandomConnection() (bool, *OrbsConnection) {
+	if len(this.connections) == 0 {
+		return false, new(OrbsConnection)
+	}
+
+	var index int = rand.Int() % len(this.connections)
+
+	var i int = 0
+	var def *OrbsConnection
+	for _, value := range this.connections {
+		if i == index {
+			return true, value
+		}
+		def = value
+		i++
+	}
+
+	return true, def
 }
 
 func (this *OrbsLobby) connectionExists(ipAddress string) bool {
