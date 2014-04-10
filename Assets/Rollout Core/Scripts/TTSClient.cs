@@ -207,8 +207,22 @@ public class TTSClient : MonoBehaviour
 					break;
 
 				case TTSCommandTypes.LobbyStopCountdown:
-					Debug.Log("COUNTDOWN STOPPED");
 					lobbyCountdownTime = -1f;
+
+					lock (RegisteredRacerConfigs) {
+						int i;
+						for (i = 0; i < RegisteredRacerConfigs.Count; i++) {
+							if (RegisteredRacerConfigs[i].ControlType != (int)TTSRacer.PlayerType.Player) {
+								netHandles.Remove(RegisteredRacerConfigs[i].netID);
+							}
+						}
+						RegisteredRacerConfigs.Clear();
+					}
+
+					if (isLobby) {
+						lobbyMenu.networkUpdated = true;
+					}
+
 					break;
 
 				case TTSCommandTypes.LobbyStartGame:
@@ -351,7 +365,7 @@ public class TTSClient : MonoBehaviour
 
 		config.PerkA = TTSUtils.Rand.Next(System.Enum.GetValues(typeof(TTSBehaviour.PerkType)).Length); // rand enums
 		config.PerkB = TTSUtils.Rand.Next(System.Enum.GetValues(typeof(TTSBehaviour.PowerupType)).Length);
-		config.LocalControlType = TTSUtils.EnumToInt(TTSRacer.PlayerType.AI);
+		config.ControlType = config.LocalControlType = TTSUtils.EnumToInt(TTSRacer.PlayerType.AI);
 		config.CharacterType = TTSUtils.Rand.Next(6);
 
 		lock (netHandles) {
