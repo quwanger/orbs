@@ -7,7 +7,7 @@ using XInputDotNetPure;
 public class TTSServerMenu : TTSBehaviour {
 	public TTSClient client;
 	public float lastUpdate;
-	public float RequestInterval = 5.0f;
+	public float RequestInterval = 1.0f;
 	public bool networkUpdated = true;
 
 	public GameObject lobbyElementGO;

@@ -4787,7 +4787,7 @@ GUIText:
   m_Text: BOTS
   m_Anchor: 0
   m_Alignment: 0
-  m_PixelOffset: {x: -15, y: -22}
+  m_PixelOffset: {x: -15, y: -42}
   m_LineSpacing: 1
   m_TabSize: 4
   m_Font: {fileID: 12800000, guid: 50e4f7b96c1864ebc89f487f35dbc5ce, type: 3}
@@ -6040,7 +6040,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 570149396}
   - 131: {fileID: 570149397}
-  m_Layer: 0
+  m_Layer: 24
   m_Name: Highlighter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6771,7 +6771,7 @@ GUIText:
   m_Text: iN LOBBY
   m_Anchor: 0
   m_Alignment: 0
-  m_PixelOffset: {x: 359, y: 25.1000004}
+  m_PixelOffset: {x: 359, y: 3}
   m_LineSpacing: 1
   m_TabSize: 4
   m_Font: {fileID: 12800000, guid: 615834f2741f947fdb829fd371d0715a, type: 3}
@@ -9441,7 +9441,7 @@ GUIText:
   m_Text: PLAYERS
   m_Anchor: 0
   m_Alignment: 0
-  m_PixelOffset: {x: -154, y: -22}
+  m_PixelOffset: {x: -154, y: -42}
   m_LineSpacing: 1
   m_TabSize: 4
   m_Font: {fileID: 12800000, guid: 50e4f7b96c1864ebc89f487f35dbc5ce, type: 3}
@@ -18474,7 +18474,7 @@ GUIText:
   m_Text: LEVEL
   m_Anchor: 0
   m_Alignment: 0
-  m_PixelOffset: {x: 71, y: -22}
+  m_PixelOffset: {x: 71, y: -42}
   m_LineSpacing: 1
   m_TabSize: 4
   m_Font: {fileID: 12800000, guid: 50e4f7b96c1864ebc89f487f35dbc5ce, type: 3}
@@ -20148,8 +20148,10 @@ MonoBehaviour:
   hoverSound: {fileID: 8300000, guid: ca15fd5b088a9e94c88d856b96de4c41, type: 3}
   lobbyMenu: {fileID: 520510163}
   joystickDownY: 0
-  availableHighlighter: {fileID: 0}
-  unavailableHighlighter: {fileID: 0}
+  availableHighlighter: {fileID: 2800000, guid: 8e3688edce5a6414dbcf25ff142f36a7,
+    type: 3}
+  unavailableHighlighter: {fileID: 2800000, guid: 7321a6decb202cf44b919f272db4f7f5,
+    type: 3}
 --- !u!82 &1731168039
 AudioSource:
   m_ObjectHideFlags: 0
@@ -21381,7 +21383,7 @@ GUIText:
   m_Text: ROOM
   m_Anchor: 0
   m_Alignment: 0
-  m_PixelOffset: {x: -531.5, y: -22}
+  m_PixelOffset: {x: -531.5, y: -42}
   m_LineSpacing: 1
   m_TabSize: 4
   m_Font: {fileID: 12800000, guid: 50e4f7b96c1864ebc89f487f35dbc5ce, type: 3}

@@ -81,7 +81,7 @@ public class TTSLobbyMenu : TTSBehaviour
 				backgroundImage[2].active = true;
 			break;
 			
-			case("Vindicae"):
+			case("Vindiciae"):
 				backgroundImage[5].active = true;
 			break;
 			
