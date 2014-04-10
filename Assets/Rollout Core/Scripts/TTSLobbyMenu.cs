@@ -17,6 +17,8 @@ public class TTSLobbyMenu : TTSBehaviour
 	public GUIText levelText;
 	public GUIText playerCountText;
 	public GUIText[] playerTexts = new GUIText[6];
+	public GUITexture[] playerColor = new GUITexture[6];
+	public GUITexture[] backgroundImage = new GUITexture[6];
 	public GUIText countdownText;
 
 	public string nullPlayerText = "Waiting for player";
@@ -53,7 +55,41 @@ public class TTSLobbyMenu : TTSBehaviour
 	public void OnLobbyJoin() {
 		// Populate info using lobby item
 		levelTitle = lobbyItem.GetLevelName();
-
+		
+		foreach(GUITexture element in backgroundImage){
+			element.active = false;
+		}
+		
+		switch(levelTitle){
+			case("Backroad Blitz"):
+				backgroundImage[0].active = true;
+			break;
+			
+			case("Cliffside Chaos"):
+				backgroundImage[3].active = true;
+			break;
+			
+			case("Downtown Domination"):
+				backgroundImage[1].active = true;
+			break;
+			
+			case("Digital Palace"):
+				backgroundImage[4].active = true;
+			break;
+			
+			case("Night Fright"):
+				backgroundImage[2].active = true;
+			break;
+			
+			case("Vindicae"):
+				backgroundImage[5].active = true;
+			break;
+			
+		default:
+			break;
+			
+		}
+		
 		// Register it
 		lock (level.menu.players) {
 
@@ -77,11 +113,13 @@ public class TTSLobbyMenu : TTSBehaviour
 		foreach (TTSRacerConfig value in level.menu.players) {
 			playerTexts[guiIndex].text = value.Name;
 			//player color
+			playerColor[guiIndex].color = GetCharacterColor((CharacterTypes)value.CharacterType);
 			guiIndex++;
 		}
 
 		foreach (TTSRacerConfig value in racerConfigs) {
 			playerTexts[guiIndex].text = value.Name;
+			playerColor[guiIndex].color = GetCharacterColor((CharacterTypes)value.CharacterType);
 			guiIndex++;
 		}
 
@@ -89,6 +127,7 @@ public class TTSLobbyMenu : TTSBehaviour
 
 		for (int i = guiIndex; i < playerTexts.Length; i++) {
 			playerTexts[i].text = nullPlayerText;
+			playerColor[i].color = new Color32(70,70,70,255);
 		}
 	}
 

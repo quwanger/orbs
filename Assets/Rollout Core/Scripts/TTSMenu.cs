@@ -227,15 +227,12 @@ public class TTSMenu : TTSBehaviour {
 	void Update () {
 
 		if (gameMode != TTSLevel.Gametype.Lobby) {
-			
-			playerText[0].guiText.text = ("Player" + (chosenOrb));
-			playerText[1].guiText.text = ("Player" + (chosenOrb));
-			
-			
 			string tempJoystick = "joystick 1 button 0";
 			string tempJoystickB = "joystick 1 button 3";
 
 			if (gameMode == TTSLevel.Gametype.MultiplayerLocal) {
+				playerText[0].guiText.text = ("Player" + (chosenOrb));
+				playerText[1].guiText.text = ("Player" + (chosenOrb));
 				tempJoystick = ("joystick " + playerControllerID[chosenOrb-1] + " button 0");
 				tempJoystickB = ("joystick " + playerControllerID[chosenOrb-1] + " button 3");
 			}
@@ -1104,6 +1101,12 @@ public class TTSMenu : TTSBehaviour {
 				dtp.GetComponent<TTSDataToPass>().levelToLoad = "future1-1";
 				Application.LoadLevel("future1-1");
 			}
+		
+			else if(SelectedLevel.ToString() == "level6"){
+				dtp.GetComponent<TTSDataToPass>().levelToLoad = "future1-2";
+				Application.LoadLevel("future1-2");
+			}
+		
 			
 			Application.LoadLevel("LoadingScene");
 	}

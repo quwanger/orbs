@@ -6,6 +6,9 @@ public class TTSTimeManager : MonoBehaviour {
 	
 	public float timeInMillis = 0;
 	private float startTime = 0;
+	private float pauseTime;
+	private float resumeTime;
+	private float timeSpentPaused = 0;
 	
 	private bool running = false;
 	
@@ -17,7 +20,7 @@ public class TTSTimeManager : MonoBehaviour {
 	
 	void Update () {
 		if(running)
-			timeInMillis = Time.time - startTime - bonusTime;
+			timeInMillis = Time.time - startTime - bonusTime - timeSpentPaused;
 	}
 	
 	public string GetCurrentTimeString(){
@@ -33,7 +36,15 @@ public class TTSTimeManager : MonoBehaviour {
 		startTime = Time.time;
 	}
 	
+	public void ResumeTimer() {
+		resumeTime = Time.time;
+		timeSpentPaused = timeSpentPaused + (resumeTime - pauseTime);
+		Debug.Log ("TimeSpentPaused: " + timeSpentPaused);
+		running = true;
+	}
+	
 	public void StopTimer() {
+		pauseTime = Time.time;
 		running = false;
 	}
 	

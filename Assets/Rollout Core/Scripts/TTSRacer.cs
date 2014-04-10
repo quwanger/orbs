@@ -68,6 +68,7 @@ public class TTSRacer : TTSBehaviour
 	public bool canMove = false;
 	private float MinimumVelocityToAnimateSteering = 1.0f;
 	private float VibrationIntensity = 0;
+	public Vector3 pausedVelocity;
 
 	private float resultAccel = 0.0f; // For sound calculation
 	public float rpm = 0;

@@ -86,4 +86,27 @@ public class TTSBehaviour : MonoBehaviour {
 			return GameObject.Find("hud(Clone)").GetComponent<TTSFloatHud>();
 		}
 	}
+	
+	public static Color GetCharacterColor(CharacterTypes character){		
+		switch(character){
+			case CharacterTypes.character_blue:
+				return Color.blue;
+				
+			case CharacterTypes.character_green:
+				return Color.green;
+				
+			case CharacterTypes.character_orange:
+				return new Color32(255,127,39,255);
+				
+			case CharacterTypes.character_purple:
+				return new Color32(128,0,255,255);
+				
+			case CharacterTypes.character_red:
+				return Color.red;
+				
+			case CharacterTypes.character_yellow:
+				return Color.yellow;
+		}
+		return new Color32(70,70,70,255);
+	}
 }
