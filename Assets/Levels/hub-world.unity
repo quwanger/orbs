@@ -15319,6 +15319,8 @@ MonoBehaviour:
   - {fileID: 12800000, guid: f9929be8a43d15b408cb23dd53efaaa4, type: 3}
   client: {fileID: 0}
   initRace: {fileID: 0}
+  fakeBestTime: 
+  fakeWorldRecord: 
 --- !u!114 &1357254830
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15529,7 +15531,6 @@ MonoBehaviour:
   isMultiplayer: 0
   isLobby: 0
   EnteredLobby: 0
-  InGame: 0
   LobbyID: 0
   lobbyCountdownTime: -1
   startRaceCountdown: 0
@@ -20147,6 +20148,8 @@ MonoBehaviour:
   hoverSound: {fileID: 8300000, guid: ca15fd5b088a9e94c88d856b96de4c41, type: 3}
   lobbyMenu: {fileID: 520510163}
   joystickDownY: 0
+  availableHighlighter: {fileID: 0}
+  unavailableHighlighter: {fileID: 0}
 --- !u!82 &1731168039
 AudioSource:
   m_ObjectHideFlags: 0
