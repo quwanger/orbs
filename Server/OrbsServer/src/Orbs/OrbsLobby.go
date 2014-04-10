@@ -93,6 +93,8 @@ func (this *OrbsLobby) ProcessPacket(sender *net.UDPAddr, reader *Packets.Packet
 		default:
 			if this.InGame {
 				this.Race.ProcessPacket(sender, reader, command)
+			} else {
+				println("COMMAND %v not routed ", command)
 			}
 
 		}
@@ -180,6 +182,8 @@ func (this *OrbsLobby) racerReady(connection *OrbsConnection, reader *Packets.Pa
 // Lobby race start/countdown
 
 func (this *OrbsLobby) startRace() {
+	this.InGame = true
+
 	var packet = new(Packets.PacketWriter)
 	packet.InitPacket()
 	packet.WriteInt(OrbsCommandTypes.LobbyStartGame)
@@ -246,7 +250,7 @@ func (this *OrbsLobby) Init(index int, name string) {
 	this.Race = new(OrbsRace)
 	this.Race.InitRace(this.connections, this.objToOwner, this.racers, this)
 
-	this.InGame = true
+	this.InGame = false
 
 	this.debugMode = false
 
@@ -311,7 +315,7 @@ func (this *OrbsLobby) SendRacer(racer *OrbsRacer, connection *OrbsConnection) {
 
 func (this *OrbsLobby) Reset() {
 	fmt.Printf("	St	L:%v Reset\n", this.LobbyID)
-	this.InGame = true
+	this.InGame = false
 	this.connections = make(map[string]*OrbsConnection)
 	this.objToOwner = make(map[float32]*OrbsConnection)
 	this.racers = make(map[float32]*OrbsRacer)
