@@ -2,6 +2,12 @@ using UnityEngine;
 using System.Collections;
 
 public static class TTSUtils {
+
+	public static System.Random Rand = new System.Random();
+
+	public static float Random() {
+		return (float)Rand.NextDouble();
+	}
 	
 	public static float GetRelativeAngle(Vector3 firstVector, Vector3 secondVector) {
 		

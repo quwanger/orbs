@@ -32,8 +32,6 @@ public class TTSClient : MonoBehaviour
 	TTSMenu menu;
 	TTSInitRace initRace;
 
-	public List<TTSRacerConfig> RegisteredRacerConfigs = new List<TTSRacerConfig>();
-
 	// Status
 	public bool isMultiplayer;
 	public bool isLobby;
@@ -51,7 +49,7 @@ public class TTSClient : MonoBehaviour
 	List<TTSRacerConfig> spawnRacers = new List<TTSRacerConfig>();
 	List<TTSPowerupNetHandler> spawnPowerups = new List<TTSPowerupNetHandler>();
 
-	public List<TTSRacerConfig> LocalRacerConfigs = new List<TTSRacerConfig>();
+	public List<TTSRacerConfig> RegisteredRacerConfigs = new List<TTSRacerConfig>();
 
 	// Use this for initialization
 	void Start() {
@@ -101,22 +99,26 @@ public class TTSClient : MonoBehaviour
 	// Unity update. Used to send values
 	void Update() {
 		if (!isLobby && !isMultiplayer) {
-			foreach (KeyValuePair<float, TTSNetworkHandle> pair in netHandles) {
-				pair.Value.writer.ClearData();
+			lock (netHandles) {
+				foreach (KeyValuePair<float, TTSNetworkHandle> pair in netHandles) {
+					pair.Value.writer.ClearData();
+				}
 			}
 			return;
 		}
 
-		// Code to run during lobby
-		foreach (KeyValuePair<float, TTSNetworkHandle> pair in netHandles) {
-			TTSNetworkHandle handle = pair.Value;
-			if (handle.owner) {
-				// First make sure the packet won't overflow
-				byte[] tempData = handle.GetNetworkUpdate();
-				if (UpdatePacket.WillOverflow(tempData.Length)) {
-					SendPacket(UpdatePacket, true);
+		lock (netHandles) {
+			// Code to run during lobby
+			foreach (KeyValuePair<float, TTSNetworkHandle> pair in netHandles) {
+				TTSNetworkHandle handle = pair.Value;
+				if (handle.owner) {
+					// First make sure the packet won't overflow
+					byte[] tempData = handle.GetNetworkUpdate();
+					if (UpdatePacket.WillOverflow(tempData.Length)) {
+						SendPacket(UpdatePacket, true);
+					}
+					UpdatePacket.AddData(tempData);
 				}
-				UpdatePacket.AddData(tempData);
 			}
 		}
 		SendPacket(UpdatePacket, true);
@@ -213,6 +215,10 @@ public class TTSClient : MonoBehaviour
 					levelToLoad = packet.ReadInt32();
 					break;
 				#endregion
+
+				case TTSCommandTypes.LobbyGiveAIRacer:
+					ReceiveAIRacer(packet.ReadInt32());
+					break;
 
 				case TTSCommandTypes.RacerRegister:
 					TTSRacerConfig config = new TTSRacerConfig();
@@ -336,6 +342,31 @@ public class TTSClient : MonoBehaviour
 	}
 
 	#region In Lobby
+	public void ReceiveAIRacer(int index) {
+		TTSRacerConfig config = new TTSRacerConfig();
+		config.Index = (index != -1) ? index : 99; // So that the racers will use the starting point index.
+		config.RigType = TTSUtils.Rand.Next(System.Enum.GetValues(typeof(TTSBehaviour.RigType)).Length);
+		if((TTSBehaviour.RigType)config.RigType == TTSBehaviour.RigType.Testing)
+			config.RigType = (int)TTSBehaviour.RigType.Scorpion;
+
+		config.PerkA = TTSUtils.Rand.Next(System.Enum.GetValues(typeof(TTSBehaviour.PerkType)).Length); // rand enums
+		config.PerkB = TTSUtils.Rand.Next(System.Enum.GetValues(typeof(TTSBehaviour.PowerupType)).Length);
+		config.LocalControlType = TTSUtils.EnumToInt(TTSRacer.PlayerType.AI);
+		config.CharacterType = TTSUtils.Rand.Next(6);
+
+		lock (netHandles) {
+			TTSRacerNetHandler handler = new TTSRacerNetHandler(this, config, LobbyID);
+		}
+
+		lock (RegisteredRacerConfigs) {
+			RegisteredRacerConfigs.Add(config);
+		}
+
+		if (isLobby) {
+			lobbyMenu.networkUpdated = true;
+		}
+	}
+
 	int levelToLoad = -1;
 	public void OnStartRace() {
 		level.menu.SaveRacers();
@@ -425,7 +456,7 @@ public class TTSClient : MonoBehaviour
 			}
 			else {
 				while (netHandles.ContainsKey(handler.id) || handler.id == 0.0f && handler.owner) {
-					handler.SetNetID(UnityEngine.Random.value * 100);
+					handler.SetNetID(TTSUtils.Random() * 100);
 				}
 				netHandles.Add(handler.id, handler);
 			}
@@ -505,6 +536,7 @@ public static class TTSCommandTypes
 	public const int LobbyEndGame		= 141;
 	public const int LobbyCountdownUpdate	= 124;
 	public const int LobbyStopCountdown	= 125;
+	public const int LobbyGiveAIRacer	= 130;
 
 	public const int RaceStartCountdown = 150;
 	public const int RaceStartReady     = 160;

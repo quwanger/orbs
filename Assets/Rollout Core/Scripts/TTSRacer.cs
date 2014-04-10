@@ -872,7 +872,7 @@ public class TTSRacerNetHandler : TTSNetworkHandle
 		Config = config;
 		Config.Name = Name;
 
-		SetNetID(UnityEngine.Random.value * 100);
+		SetNetID(TTSUtils.Random() * 100);
 
 		//Client.LobbyRacerRegister(lobbyID, config);
 		client.LocalRacerRegister(this);
