@@ -265,11 +265,11 @@ public class TTSRacer : TTSBehaviour
 			CalculateBodyOrientation();
 
 		if (netHandler != null) {
-			netHandler.UpdateRacer(position, displayMeshComponent.rotation.eulerAngles, rigidbody.velocity, vInput, hInput);
+			netHandler.UpdateRacer(position, displayMeshComponent.rotation.eulerAngles, GetComponent<Rigidbody>().velocity, vInput, hInput);
 		}
 
-		resultAccel = Mathf.Lerp(resultAccel, rigidbody.velocity.magnitude - PreviousVelocity.magnitude, 0.01f);
-		PreviousVelocity = rigidbody.velocity;
+		resultAccel = Mathf.Lerp(resultAccel, GetComponent<Rigidbody>().velocity.magnitude - PreviousVelocity.magnitude, 0.01f);
+		PreviousVelocity = GetComponent<Rigidbody>().velocity;
 	}
 
 	private void CalculateInputForces() {
@@ -326,16 +326,16 @@ public class TTSRacer : TTSBehaviour
 		}
 
 		#region Vertical Input
-		if (onGround && rigidbody.velocity.magnitude < TopSpeed && canMove) {
+		if (onGround && GetComponent<Rigidbody>().velocity.magnitude < TopSpeed && canMove) {
 
-			if (vInput < 0f && Vector3.Project(rigidbody.velocity, displayMeshComponent.forward).magnitude < 5.0f) {
+			if (vInput < 0f && Vector3.Project(GetComponent<Rigidbody>().velocity, displayMeshComponent.forward).magnitude < 5.0f) {
 				vInput = 0f;
 			}
 
-			rigidbody.AddForce(displayMeshComponent.forward * vInput * Time.deltaTime * Acceleration);
+			GetComponent<Rigidbody>().AddForce(displayMeshComponent.forward * vInput * Time.deltaTime * Acceleration);
 
 			if (Mathf.Abs(rpm) > 15.0f) {
-				rigidbody.AddForce(TTSUtils.FlattenVector(lastForward * rpm / 20.0f * Time.deltaTime * Acceleration));
+				GetComponent<Rigidbody>().AddForce(TTSUtils.FlattenVector(lastForward * rpm / 20.0f * Time.deltaTime * Acceleration));
 				RacerSounds.pitch -= 0.05f;
 				rpm *= 0.8f;
 			}
@@ -343,7 +343,7 @@ public class TTSRacer : TTSBehaviour
 		}
 		else if (!onGround) {
 			float gravity = -30;
-			rigidbody.AddForce(displayMeshComponent.up * gravity);
+			GetComponent<Rigidbody>().AddForce(displayMeshComponent.up * gravity);
 
 			if (Mathf.Abs(vInput) > 0.1f) {
 				rpm = Mathf.Clamp(rpm +
@@ -357,7 +357,7 @@ public class TTSRacer : TTSBehaviour
 
 		// Horizontal Input
 		if (canMove) {
-			rigidbody.AddForce(displayMeshComponent.right * hInput * Time.deltaTime * Handling);
+			GetComponent<Rigidbody>().AddForce(displayMeshComponent.right * hInput * Time.deltaTime * Handling);
 		}
 
 	}
@@ -374,8 +374,8 @@ public class TTSRacer : TTSBehaviour
 			}else{
 				dmgLevel = 0.0f;
 			}
-			Vector3 damageVector = new Vector3(rigidbody.velocity.x * dmgLevel, rigidbody.velocity.y * dmgLevel, rigidbody.velocity.z * dmgLevel);
-			rigidbody.velocity = damageVector;
+			Vector3 damageVector = new Vector3(GetComponent<Rigidbody>().velocity.x * dmgLevel, GetComponent<Rigidbody>().velocity.y * dmgLevel, GetComponent<Rigidbody>().velocity.z * dmgLevel);
+			GetComponent<Rigidbody>().velocity = damageVector;
 		}
 	}
 
@@ -384,11 +384,11 @@ public class TTSRacer : TTSBehaviour
 			return;
 		
 		//Facing Direction...
-		if (new Vector2(rigidbody.velocity.x, rigidbody.velocity.z).magnitude > MinimumVelocityToAnimateSteering) {
+		if (new Vector2(GetComponent<Rigidbody>().velocity.x, GetComponent<Rigidbody>().velocity.z).magnitude > MinimumVelocityToAnimateSteering) {
 			//based on rigidbody velocity.
-			displayMeshComponent.forward = rigidbody.velocity;
+			displayMeshComponent.forward = GetComponent<Rigidbody>().velocity;
 
-			TiltAngle = Mathf.Lerp(TiltAngle, TTSUtils.GetRelativeAngle(rigidbody.velocity, PreviousVelocity) / 2, TiltRecoverySpeed);
+			TiltAngle = Mathf.Lerp(TiltAngle, TTSUtils.GetRelativeAngle(GetComponent<Rigidbody>().velocity, PreviousVelocity) / 2, TiltRecoverySpeed);
 
 			displayMeshComponent.RotateAround(displayMeshComponent.forward, TiltAngle);
 			//set the idle vec, so it doesnt get janky.
@@ -417,7 +417,7 @@ public class TTSRacer : TTSBehaviour
 		int offset = (resultAccel <= 0) ? -10 : 15;
 
 		if (onGround) {
-			RacerSounds.pitch = Mathf.Max(Mathf.Lerp(RacerSounds.pitch, TTSUtils.Remap(rigidbody.velocity.magnitude + offset, 0f, 100.0f, 0.5f, 1.0f, false), 0.1f), 0);
+			RacerSounds.pitch = Mathf.Max(Mathf.Lerp(RacerSounds.pitch, TTSUtils.Remap(GetComponent<Rigidbody>().velocity.magnitude + offset, 0f, 100.0f, 0.5f, 1.0f, false), 0.1f), 0);
 			//RacerSounds.volume = Mathf.Max(Mathf.Lerp(RacerSounds.volume, TTSUtils.Remap(rigidbody.velocity.magnitude + offset, 0f, 100.0f, 0.5f, 1f, false), 0.1f) * 1.5f, 0); // Needs Cleaning
 			RacerSounds.volume = 0.35f;
 		}
@@ -468,7 +468,7 @@ public class TTSRacer : TTSBehaviour
 		//spawn sparks (TODO: move this to a component script)
 		GameObject sparkClone = (GameObject)Instantiate(SparksEmitter);
 		sparkClone.transform.position = collision.contacts[0].point;
-		sparkClone.particleEmitter.emit = true;
+		sparkClone.GetComponent<ParticleEmitter>().emit = true;
 		sparkClone.transform.forward = displayMeshComponent.forward;
 	}
 
@@ -510,12 +510,12 @@ public class TTSRacer : TTSBehaviour
 	}
 
 	public void SlowToStop() {
-		rigidbody.velocity = Vector3.Lerp(rigidbody.velocity, new Vector3(0, 0, 0), stopSpeed);
+		GetComponent<Rigidbody>().velocity = Vector3.Lerp(GetComponent<Rigidbody>().velocity, new Vector3(0, 0, 0), stopSpeed);
 	}
 
 	public void SlowToStopToPosition(GameObject pos)
     {
-		rigidbody.velocity = Vector3.Lerp(rigidbody.velocity, new Vector3(0, 0, 0), stopSpeed);
+		GetComponent<Rigidbody>().velocity = Vector3.Lerp(GetComponent<Rigidbody>().velocity, new Vector3(0, 0, 0), stopSpeed);
     	StartCoroutine(pause(pos));
     }
 	
@@ -527,7 +527,7 @@ public class TTSRacer : TTSBehaviour
     }
 
 	public void StopRacer() {
-		rigidbody.velocity = new Vector3(0, 0, 0);
+		GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
 	}
 
 	public XInputDotNetPure.PlayerIndex WindowsCheckControllerToVibrate(){
@@ -650,7 +650,7 @@ public class TTSRacer : TTSBehaviour
 			Gizmos.DrawRay(transform.position, displayMeshComponent.forward * 10);
 
 			Gizmos.color = Color.magenta;
-			Gizmos.DrawRay(transform.position, rigidbody.velocity * 5);
+			Gizmos.DrawRay(transform.position, GetComponent<Rigidbody>().velocity * 5);
 
 			Gizmos.color = Color.cyan;
 			Gizmos.DrawRay(transform.position, lastForward * 5);
@@ -698,7 +698,7 @@ public class TTSRacer : TTSBehaviour
 		Vector3 steerDir = TTSUtils.FlattenVector(destination - position);
 
 		if (!level.DebugMode || level.racers.Length > 1 || (debugVInput == 0.0f && debugHInput == 0.0f)) {
-			vInput = AIUtil.verticalInput(vInput, nextWaypoint, position, rigidbody.velocity);
+			vInput = AIUtil.verticalInput(vInput, nextWaypoint, position, GetComponent<Rigidbody>().velocity);
 			hInput = TTSUtils.Remap(TTSUtils.GetRelativeAngle(lastForward, steerDir) * 2, -90.0f, 90.0f, -1.0f, 1.0f, true);
 		}
 
@@ -749,7 +749,7 @@ public class TTSRacer : TTSBehaviour
 			}
 		}
 		displayMeshComponent.rotation = Quaternion.Lerp(displayMeshComponent.rotation, Quaternion.Euler(netHandler.netRotation), netHandler.networkInterpolation * 10);
-		rigidbody.velocity = netHandler.netSpeed;
+		GetComponent<Rigidbody>().velocity = netHandler.netSpeed;
 
 		vInput = netHandler.networkVInput;// Mathf.Lerp(vInput, netHandler.networkVInput, netHandler.networkInterpolation * 5);
 		hInput = netHandler.networkHInput;// Mathf.Lerp(hInput, netHandler.networkHInput, netHandler.networkInterpolation * 5);

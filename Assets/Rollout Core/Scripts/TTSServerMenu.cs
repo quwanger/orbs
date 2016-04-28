@@ -52,14 +52,14 @@ public class TTSServerMenu : TTSBehaviour {
 			Vector2 controlDirection = GetControlDirection(1);
 			if(Input.GetKeyDown(KeyCode.W) || (controlDirection.y > 0.5f && !joystickDownY)){
 				UpButton();
-				audio.PlayOneShot(hoverSound);
+				GetComponent<AudioSource>().PlayOneShot(hoverSound);
 				joystickDownY = true;
 				
 			}
 			
 			else if(Input.GetKeyDown(KeyCode.S) || (controlDirection.y < -0.5f && !joystickDownY)){
 				DownButton();
-				audio.PlayOneShot(hoverSound);
+				GetComponent<AudioSource>().PlayOneShot(hoverSound);
 				joystickDownY = true;
 			}
 			
@@ -97,13 +97,13 @@ public class TTSServerMenu : TTSBehaviour {
 		if(highlightedLobby == null){
 			foreach(TTSLobby lobby in lobbies){
 				if(lobby.ID == 0){
-					highlighter.guiTexture.pixelInset = lobby.GetPosition();
+					highlighter.GetComponent<GUITexture>().pixelInset = lobby.GetPosition();
 				}
 			}
 		}	
 		
 		else{
-			highlighter.guiTexture.pixelInset = highlightedLobby.GetPosition();
+			highlighter.GetComponent<GUITexture>().pixelInset = highlightedLobby.GetPosition();
 		}
 	}
 
@@ -180,7 +180,7 @@ public class TTSServerMenu : TTSBehaviour {
 
 		if (highlightedLobby == null) {
 			highlightedLobby = lobbies[0];
-			highlighter.guiTexture.pixelInset = lobbies[0].GetPosition();
+			highlighter.GetComponent<GUITexture>().pixelInset = lobbies[0].GetPosition();
 		}
 		
 		bool InProgress = highlightedLobby.InProgress;
@@ -205,7 +205,7 @@ public class TTSServerMenu : TTSBehaviour {
 		
 		if(highlightedLobby == null){
 			highlightedLobby = lobbies[0];
-			highlighter.guiTexture.pixelInset = lobbies[0].GetPosition();
+			highlighter.GetComponent<GUITexture>().pixelInset = lobbies[0].GetPosition();
 		}
 		
 		bool InProgress = highlightedLobby.InProgress;
@@ -229,16 +229,16 @@ public class TTSServerMenu : TTSBehaviour {
 	public Texture unavailableHighlighter;
 	private void SetHighlighter(TTSLobby destination) {
 		highlightedLobby = destination;
-		highlighter.guiTexture.pixelInset = destination.GetPosition();
+		highlighter.GetComponent<GUITexture>().pixelInset = destination.GetPosition();
 
 		if (availableHighlighter == null)
 			return;
 
 		if (highlightedLobby.InProgress) {
-			highlighter.guiTexture.texture = unavailableHighlighter;
+			highlighter.GetComponent<GUITexture>().texture = unavailableHighlighter;
 		}
 		else {
-			highlighter.guiTexture.texture = availableHighlighter;
+			highlighter.GetComponent<GUITexture>().texture = availableHighlighter;
 		}
 	}
 

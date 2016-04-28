@@ -57,32 +57,32 @@ public class TTSLobbyMenu : TTSBehaviour
 		levelTitle = lobbyItem.GetLevelName();
 		
 		foreach(GUITexture element in backgroundImage){
-			element.active = false;
+			element.enabled = false;
 		}
 		
 		switch(levelTitle){
 			case("Backroad Blitz"):
-				backgroundImage[0].active = true;
+			backgroundImage[0].enabled = true;
 			break;
 			
 			case("Cliffside Chaos"):
-				backgroundImage[3].active = true;
+			backgroundImage[3].enabled = true;
 			break;
 			
 			case("Downtown Domination"):
-				backgroundImage[1].active = true;
+			backgroundImage[1].enabled = true;
 			break;
 			
 			case("Digital Palace"):
-				backgroundImage[4].active = true;
+			backgroundImage[4].enabled = true;
 			break;
 			
 			case("Night Fright"):
-				backgroundImage[2].active = true;
+			backgroundImage[2].enabled = true;
 			break;
 			
 			case("Vindiciae"):
-				backgroundImage[5].active = true;
+			backgroundImage[5].enabled = true;
 			break;
 			
 		default:

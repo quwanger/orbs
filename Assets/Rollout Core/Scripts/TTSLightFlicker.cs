@@ -18,8 +18,8 @@ public class TTSLightFlicker : MonoBehaviour {
 		
 		randomTemp = Random.Range(0.0f, 1.0f);
 		
-		if(randomTemp < offChance) light.enabled = false;
-		else light.enabled = true;
+		if(randomTemp < offChance) GetComponent<Light>().enabled = false;
+		else GetComponent<Light>().enabled = true;
 		
 
 	}

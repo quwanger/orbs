@@ -76,7 +76,7 @@ public class TTSDrezzStone : MonoBehaviour
 
 	void Update() {
 		if (netHandler != null && netHandler.owner) {
-			netHandler.UpdatePowerup(transform.position, transform.rotation.eulerAngles, rigidbody.velocity);
+			netHandler.UpdatePowerup(transform.position, transform.rotation.eulerAngles, GetComponent<Rigidbody>().velocity);
 		}
 		else if (netHandler != null) {
 			GetNetworkUpdate();
@@ -104,7 +104,7 @@ public class TTSDrezzStone : MonoBehaviour
 				transform.position = Vector3.Lerp(transform.position, netHandler.netPosition, netHandler.networkInterpolation);
 			}
 			transform.rotation = Quaternion.Euler(netHandler.netRotation);
-			rigidbody.velocity = netHandler.netSpeed;
+			GetComponent<Rigidbody>().velocity = netHandler.netSpeed;
 
 			netHandler.isNetworkUpdated = false;
 			netHandler.framesSinceNetData = 0;

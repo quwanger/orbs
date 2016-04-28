@@ -39,7 +39,7 @@ public class TTSPowerupPlatform : TTSBehaviour
 
 
 	void Start() {
-		audio.volume = 0.75f;
+		GetComponent<AudioSource>().volume = 0.75f;
 
 		//set an initial powerup for the platform
 
@@ -143,7 +143,7 @@ public class TTSPowerupPlatform : TTSBehaviour
 				pickedUp = true;
 
 				//play sound
-				audio.PlayOneShot(clip);
+				GetComponent<AudioSource>().PlayOneShot(clip);
 
 				//remove powerup
 				Destroy(powerupMesh);

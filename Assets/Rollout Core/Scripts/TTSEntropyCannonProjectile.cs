@@ -25,9 +25,9 @@ public class TTSEntropyCannonProjectile : MonoBehaviour {
 #region unity functions
 	void Start () {
 		birth = Time.time;
-		audio.PlayOneShot(fire);
+		GetComponent<AudioSource>().PlayOneShot(fire);
 		
-		this.rigidbody.velocity = ProjectileDirectionVector * ProjectileStartVelocity;
+		this.GetComponent<Rigidbody>().velocity = ProjectileDirectionVector * ProjectileStartVelocity;
 
 		RaycastHit hit;
         if (Physics.Raycast(transform.position, -Vector3.up, out hit, 100.0F)){
@@ -46,7 +46,7 @@ public class TTSEntropyCannonProjectile : MonoBehaviour {
 		if (netHandler == null || netHandler.owner) {
 
 			if (!exploded) {
-				this.rigidbody.velocity = ProjectileDirectionVector * ProjectileStartVelocity;
+				this.GetComponent<Rigidbody>().velocity = ProjectileDirectionVector * ProjectileStartVelocity;
 				ProjectileStartVelocity += ProjectileAcceleration;
 
 				if (checkDistanceToGround() != initialDistanceToGround) {
@@ -55,7 +55,7 @@ public class TTSEntropyCannonProjectile : MonoBehaviour {
 				}
 
 				if(netHandler != null)
-					netHandler.UpdatePowerup(transform.position, transform.rotation.eulerAngles, rigidbody.velocity);
+					netHandler.UpdatePowerup(transform.position, transform.rotation.eulerAngles, GetComponent<Rigidbody>().velocity);
 			}
 		}
 		else if(!netHandler.owner) {
@@ -70,7 +70,7 @@ public class TTSEntropyCannonProjectile : MonoBehaviour {
 				transform.position = Vector3.Lerp(transform.position, netHandler.netPosition, netHandler.networkInterpolation);
 			}
 			transform.rotation = Quaternion.Euler(netHandler.netRotation);
-			rigidbody.velocity = netHandler.netSpeed;
+			GetComponent<Rigidbody>().velocity = netHandler.netSpeed;
 
 			netHandler.isNetworkUpdated = false;
 			netHandler.framesSinceNetData = 0;
@@ -133,7 +133,7 @@ public class TTSEntropyCannonProjectile : MonoBehaviour {
 		}
 		//stop motion so the trail can end and destroy the parent GO.
 		this.GetComponent<SphereCollider>().enabled = false;
-		this.rigidbody.velocity = new Vector3(0f,0f,0f);
+		this.GetComponent<Rigidbody>().velocity = new Vector3(0f,0f,0f);
 	}
 
 	void OnDestroy() {

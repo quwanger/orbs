@@ -24,39 +24,39 @@ public class TTSHudPowerup : MonoBehaviour {
 	public void UpdateHudPowerup(TTSBehaviour.PowerupType p, int t){
 		switch(p) {
 			case TTSBehaviour.PowerupType.EntropyCannon:
-			this.gameObject.renderer.material.SetTexture("_MainTex", powerupImages[0]);
+			this.gameObject.GetComponent<Renderer>().material.SetTexture("_MainTex", powerupImages[0]);
 			break;
 			
 			case TTSBehaviour.PowerupType.Shockwave:
-			this.gameObject.renderer.material.SetTexture("_MainTex", powerupImages[1]);
+			this.gameObject.GetComponent<Renderer>().material.SetTexture("_MainTex", powerupImages[1]);
 			break;
 			
 			case TTSBehaviour.PowerupType.Shield:
-			this.gameObject.renderer.material.SetTexture("_MainTex", powerupImages[2]);
+			this.gameObject.GetComponent<Renderer>().material.SetTexture("_MainTex", powerupImages[2]);
 			break;
 			
 			case TTSBehaviour.PowerupType.Leech:
-			this.gameObject.renderer.material.SetTexture("_MainTex", powerupImages[3]);
+			this.gameObject.GetComponent<Renderer>().material.SetTexture("_MainTex", powerupImages[3]);
 			break;
 			
 			case TTSBehaviour.PowerupType.Helix:
-			this.gameObject.renderer.material.SetTexture("_MainTex", powerupImages[4]);
+			this.gameObject.GetComponent<Renderer>().material.SetTexture("_MainTex", powerupImages[4]);
 			break;
 			
 			case TTSBehaviour.PowerupType.DrezzStones:
-			this.gameObject.renderer.material.SetTexture("_MainTex", powerupImages[5]);
+			this.gameObject.GetComponent<Renderer>().material.SetTexture("_MainTex", powerupImages[5]);
 			break;
 			
 			case TTSBehaviour.PowerupType.SuperC:
-			this.gameObject.renderer.material.SetTexture("_MainTex", powerupImages[6]);
+			this.gameObject.GetComponent<Renderer>().material.SetTexture("_MainTex", powerupImages[6]);
 			break;
 			
 			case TTSBehaviour.PowerupType.None:
-			this.gameObject.renderer.material.SetTexture("_MainTex", powerupImages[8]);
+			this.gameObject.GetComponent<Renderer>().material.SetTexture("_MainTex", powerupImages[8]);
 			break;
 			
 			default:
-			this.gameObject.renderer.material.SetTexture("_MainTex", powerupImages[0]);
+			this.gameObject.GetComponent<Renderer>().material.SetTexture("_MainTex", powerupImages[0]);
 			break;
 		}
 		

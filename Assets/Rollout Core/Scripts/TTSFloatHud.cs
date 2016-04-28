@@ -27,7 +27,7 @@ public class TTSFloatHud : TTSBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-		initialBackingColor = displayBacking.renderer.material.color;
+		initialBackingColor = displayBacking.GetComponent<Renderer>().material.color;
 	}
 	
 	// Update is called once per frame
@@ -38,7 +38,7 @@ public class TTSFloatHud : TTSBehaviour {
 		if(!level.humanPlayersFinished)
 			timeDisplay.text = GameObject.Find("TTSLevel").GetComponent<TTSTimeManager>().GetCurrentTimeString();
 		
-		displayBacking.renderer.material.color = Color.Lerp(displayBacking.renderer.material.color, initialBackingColor, 0.04f);
+		displayBacking.GetComponent<Renderer>().material.color = Color.Lerp(displayBacking.GetComponent<Renderer>().material.color, initialBackingColor, 0.04f);
 		
 		if(racerToFollow.GetComponent<TTSRacer>().goingWrongWay){
 			if(!wrongway.active)
@@ -86,7 +86,7 @@ public class TTSFloatHud : TTSBehaviour {
 	
 #region vfx
 	public void FlashTimeForBonus() {
-		displayBacking.renderer.material.color = flashColor;
+		displayBacking.GetComponent<Renderer>().material.color = flashColor;
 		bonusTime.GetComponent<TextMesh>().text = "-" + time.bonusTime.ToString();
 	}
 #endregion

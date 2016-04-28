@@ -9,11 +9,11 @@ public class TTSCameraBoostEffect : TTSPerishingBehaviour {
 	
 
 	void Awake() {
-		startingFov = camera.fov;
-		fromFov = Mathf.Clamp(camera.fov * multiplier, startingFov, 150.0f);
+		startingFov = GetComponent<Camera>().fov;
+		fromFov = Mathf.Clamp(GetComponent<Camera>().fov * multiplier, startingFov, 150.0f);
 	}
 	
 	protected override void OnPerishingUpdate(float progress) {
-		camera.fov = Mathf.Lerp(camera.fov, Mathf.Lerp(fromFov, startingFov, progress), 0.05f);
+		GetComponent<Camera>().fov = Mathf.Lerp(GetComponent<Camera>().fov, Mathf.Lerp(fromFov, startingFov, progress), 0.05f);
 	}
 }

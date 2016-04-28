@@ -51,7 +51,7 @@ public class TTSBehaviour : MonoBehaviour {
 	
 	public AudioSource sfx {
 		get {
-			return Camera.main.audio;
+			return Camera.main.GetComponent<AudioSource>();
 		}
 	}
 

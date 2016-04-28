@@ -14,9 +14,9 @@ public class TTSPauseMenu : TTSBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-		highlighters[0].active = true;
-		highlighters[1].active = false;
-		highlighters[2].active = false;
+		highlighters[0].enabled = true;
+		highlighters[1].enabled = false;
+		highlighters[2].enabled = false;
 		
 	}
 	
@@ -77,10 +77,10 @@ public class TTSPauseMenu : TTSBehaviour {
 			
 			else if(changer == 1 || changer == 2){
 				foreach(GUITexture h in highlighters){
-					h.active = false;
+					h.enabled = false;
 				}
 				changer--;
-				highlighters[changer].active = true;
+				highlighters[changer].enabled = true;
 			}
 		}
 		
@@ -91,10 +91,10 @@ public class TTSPauseMenu : TTSBehaviour {
 			
 			else if(changer == 0 || changer == 1){
 				foreach(GUITexture h in highlighters){
-					h.active = false;
+					h.enabled = false;
 				}
 				changer++;
-				highlighters[changer].active = true;
+				highlighters[changer].enabled = true;
 				
 			}
 		}else if(controlDirection.y == 0 && joystickY){
@@ -108,14 +108,14 @@ public class TTSPauseMenu : TTSBehaviour {
 				if(racers != null){
 					foreach(GameObject racer in racers){
 						if(racer.GetComponent<TTSRacer>().playerNum == 1 && racer.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player){
-							racer.GetComponent<TTSRacer>().myCamera.camera.rect = new Rect(0, 0, 1.0f, 1.0f);
+							racer.GetComponent<TTSRacer>().myCamera.GetComponent<Camera>().rect = new Rect(0, 0, 1.0f, 1.0f);
 						}else{
 							if(racer.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)
 								racer.GetComponent<TTSRacer>().myCamera.active = false;
 						}
 						racer.GetComponent<TTSRacer>().canMove = false;
-						racer.GetComponent<TTSRacer>().pausedVelocity = racer.rigidbody.velocity;
-						racer.rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
+						racer.GetComponent<TTSRacer>().pausedVelocity = racer.GetComponent<Rigidbody>().velocity;
+						racer.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
 					}
 					if(level != null){
 						level.GetComponent<TTSTimeManager>().StopTimer();
@@ -131,25 +131,25 @@ public class TTSPauseMenu : TTSBehaviour {
 						if(racer.GetComponent<TTSRacer>().playerNum == 1 && racer.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player){
 							switch(level.initRace.numHumanPlayers){
 							case 1:
-								racer.GetComponent<TTSRacer>().myCamera.camera.rect = new Rect(0, 0, 1.0f, 1.0f);
+								racer.GetComponent<TTSRacer>().myCamera.GetComponent<Camera>().rect = new Rect(0, 0, 1.0f, 1.0f);
 								break;
 							case 2:
-								racer.GetComponent<TTSRacer>().myCamera.camera.rect = new Rect(0, 0.5f, 1.0f, 0.5f);
+								racer.GetComponent<TTSRacer>().myCamera.GetComponent<Camera>().rect = new Rect(0, 0.5f, 1.0f, 0.5f);
 								break;
 							case 3:
-								racer.GetComponent<TTSRacer>().myCamera.camera.rect = new Rect(0, 0.5f, 1.0f, 0.5f);
+								racer.GetComponent<TTSRacer>().myCamera.GetComponent<Camera>().rect = new Rect(0, 0.5f, 1.0f, 0.5f);
 								break;
 							case 4:
-								racer.GetComponent<TTSRacer>().myCamera.camera.rect = new Rect(0, 0.5f, 0.5f, 1.0f);
+								racer.GetComponent<TTSRacer>().myCamera.GetComponent<Camera>().rect = new Rect(0, 0.5f, 0.5f, 1.0f);
 								break;
 							}
 						}else{
 							if(racer.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.Player)
-								racer.GetComponent<TTSRacer>().myCamera.active = active;
+								racer.GetComponent<TTSRacer>().myCamera.SetActive(true);
 						}
 						racer.GetComponent<TTSRacer>().canMove = true;
-						racer.rigidbody.constraints = RigidbodyConstraints.None;
-						racer.rigidbody.velocity = racer.GetComponent<TTSRacer>().pausedVelocity;
+						racer.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+						racer.GetComponent<Rigidbody>().velocity = racer.GetComponent<TTSRacer>().pausedVelocity;
 					}
 					if(level != null){
 						level.GetComponent<TTSTimeManager>().ResumeTimer();

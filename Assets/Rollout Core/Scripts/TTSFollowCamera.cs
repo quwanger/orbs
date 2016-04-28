@@ -57,7 +57,7 @@ public class TTSFollowCamera : TTSBehaviour
 		racerTopSpeed = target.parent.GetComponent<TTSRacer>().TopSpeed;
 		cameraToTarget = target.forward * cameraDistance;
 
-		level.RegisterCamera(this.camera, false);
+		level.RegisterCamera(this.GetComponent<Camera>(), false);
 	}
 
 	void FixedUpdate ()
@@ -69,7 +69,7 @@ public class TTSFollowCamera : TTSBehaviour
 			this.transform.position = target.transform.position + transform.forward * 2;
 			this.transform.rotation = target.transform.rotation;
 
-			if (target.parent.GetComponent<TTSRacer>().rigidbody.velocity.sqrMagnitude > 3000) {
+			if (target.parent.GetComponent<TTSRacer>().GetComponent<Rigidbody>().velocity.sqrMagnitude > 3000) {
 				transform.position += Random.insideUnitSphere * 0.06f;
 			}
 		}
@@ -102,7 +102,7 @@ public class TTSFollowCamera : TTSBehaviour
 	}
 	Vector3 racerVelocity {
 		get {
-			return target.parent.rigidbody.velocity;
+			return target.parent.GetComponent<Rigidbody>().velocity;
 		}
 	}
 	Vector3 prevVelocity;
@@ -135,7 +135,7 @@ public class TTSFollowCamera : TTSBehaviour
 		//Linecast and solve camera clipping.
 		RaycastHit hit = new RaycastHit();
 		if (Physics.Linecast(targetPos, position, out hit, TTSUtils.ExceptLayerMask(new int[]{10, 2}))) {
-			if (hit.collider.gameObject.rigidbody == null) {
+			if (hit.collider.gameObject.GetComponent<Rigidbody>() == null) {
 				Vector3 buffer = (hit.point - position).normalized * 2.5f;
 				position = hit.point;
 			}
@@ -147,7 +147,7 @@ public class TTSFollowCamera : TTSBehaviour
 		height = Mathf.Lerp(height, Mathf.Max(baseHeight - racerVelocity.magnitude * 0.01f, minHeight), 0.1f);
 
 		// Camera FOV according to speed
-		camera.fov = Mathf.Lerp(camera.fov, TTSUtils.Remap(racerVelocity.magnitude, 40, racerTopSpeed * fovStartEffect, Base_FOV, Max_FOV, true), 0.05f);
+		GetComponent<Camera>().fov = Mathf.Lerp(GetComponent<Camera>().fov, TTSUtils.Remap(racerVelocity.magnitude, 40, racerTopSpeed * fovStartEffect, Base_FOV, Max_FOV, true), 0.05f);
 
 		if (GetComponent<Vignetting>().chromaticAberration > 0.0f) {
 			GetComponent<Vignetting>().chromaticAberration = Mathf.Lerp(GetComponent<Vignetting>().chromaticAberration, 0.0f, 0.1f);
@@ -174,7 +174,7 @@ public class TTSFollowCamera : TTSBehaviour
 			return;
 
 		// Speed squared magnitude
-		float speed = target.parent.GetComponent<TTSRacer> ().rigidbody.velocity.magnitude;
+		float speed = target.parent.GetComponent<TTSRacer> ().GetComponent<Rigidbody>().velocity.magnitude;
 
 		// Calculate the current rotation angles
 		float currentRotationAngle = transform.eulerAngles.y;
@@ -225,7 +225,7 @@ public class TTSFollowCamera : TTSBehaviour
 		distance = Mathf.Lerp (distance, TTSUtils.Remap (speed, racerTopSpeed * distanceStartEffect, racerTopSpeed, baseDistance, maxDistance, true), 0.02f);
 
 		// Camera FOV according to speed
-		camera.fov = Mathf.Lerp (camera.fov, TTSUtils.Remap (speed, 40, racerTopSpeed * fovStartEffect, Base_FOV, Max_FOV, true), 0.05f);
+		GetComponent<Camera>().fov = Mathf.Lerp (GetComponent<Camera>().fov, TTSUtils.Remap (speed, 40, racerTopSpeed * fovStartEffect, Base_FOV, Max_FOV, true), 0.05f);
 
 		// Camera Shake. (Note: If statement can be removed)
 		if (speed > racerTopSpeed * shakeStartEffect) {

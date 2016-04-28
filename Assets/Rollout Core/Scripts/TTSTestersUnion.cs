@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using System;
 
 public class TTSTestersUnion : MonoBehaviour {
 	
@@ -30,7 +32,7 @@ public class TTSTestersUnion : MonoBehaviour {
 	public IEnumerator logEvent(string eventTitle, string syslogStyleParams = "") {
 		WWWForm requestGen = new WWWForm();
 		
-		Hashtable headers = requestGen.headers;
+		Dictionary<string, string> headers = requestGen.headers;
 		
 		string url = "https://api.splunkstorm.com/1/inputs/http?index=eba281f0e2ba11e2a02d22000a1fd1d2&sourcetype=syslog";
 		

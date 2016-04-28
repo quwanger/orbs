@@ -525,15 +525,15 @@ public class TTSPowerup : TTSBehaviour
 			//always shoot drezz stones backwards if player is AI
 			go = (GameObject)Instantiate(DrezzStonePrefab, GetBackPP().position, this.gameObject.transform.rotation);
 			go.GetComponent<TTSDrezzStone>().offensiveMultiplier = this.gameObject.GetComponent<TTSRacer>().Offense;
-			go.rigidbody.AddForce(Random.insideUnitCircle * 50f);
+			go.GetComponent<Rigidbody>().AddForce(Random.insideUnitCircle * 50f);
 		}else if(CheckForwardAnalog()){
 			go = (GameObject)Instantiate(DrezzStonePrefab, GetBackPP().position, this.gameObject.transform.rotation);
 			go.GetComponent<TTSDrezzStone>().offensiveMultiplier = this.gameObject.GetComponent<TTSRacer>().Offense;
-			go.rigidbody.AddForce(Random.insideUnitCircle * 50f);
+			go.GetComponent<Rigidbody>().AddForce(Random.insideUnitCircle * 50f);
 		}else{
 			go = (GameObject)Instantiate(DrezzStonePrefab, GetFrontPP().position, this.gameObject.transform.rotation);
 			go.GetComponent<TTSDrezzStone>().offensiveMultiplier = this.gameObject.GetComponent<TTSRacer>().Offense;
-			go.rigidbody.velocity = this.rigidbody.velocity * 1.5f;
+			go.GetComponent<Rigidbody>().velocity = this.GetComponent<Rigidbody>().velocity * 1.5f;
 		}
 
 		if (owner) { SendPowerupDeploy(TTSPowerupNetworkTypes.Drezz, go); }
@@ -555,19 +555,19 @@ public class TTSPowerup : TTSBehaviour
 		if(this.GetComponent<TTSRacer>().player == TTSRacer.PlayerType.AI){
 			//always shoot forward if AI
 			go.transform.position = GetFrontPP().position + GetComponent<TTSRacer>().displayMeshComponent.forward * 5.0f;
-			go.GetComponent<TTSEntropyCannonProjectile>().ProjectileDirectionVector = this.rigidbody.velocity.normalized;
-			go.GetComponent<TTSEntropyCannonProjectile>().ProjectileStartVelocity = Random.Range(this.gameObject.rigidbody.velocity.magnitude + 100.0f, this.gameObject.rigidbody.velocity.magnitude + 175.0f);
+			go.GetComponent<TTSEntropyCannonProjectile>().ProjectileDirectionVector = this.GetComponent<Rigidbody>().velocity.normalized;
+			go.GetComponent<TTSEntropyCannonProjectile>().ProjectileStartVelocity = Random.Range(this.gameObject.GetComponent<Rigidbody>().velocity.magnitude + 100.0f, this.gameObject.GetComponent<Rigidbody>().velocity.magnitude + 175.0f);
 		}else if(CheckForwardAnalog()){
 			//shoot forward
 			go.transform.position = GetFrontPP().position + GetComponent<TTSRacer>().displayMeshComponent.forward * 5.0f;
-			go.GetComponent<TTSEntropyCannonProjectile>().ProjectileDirectionVector = this.rigidbody.velocity.normalized;
-			go.GetComponent<TTSEntropyCannonProjectile>().ProjectileStartVelocity = Random.Range(this.gameObject.rigidbody.velocity.magnitude + 100.0f, this.gameObject.rigidbody.velocity.magnitude + 175.0f);
+			go.GetComponent<TTSEntropyCannonProjectile>().ProjectileDirectionVector = this.GetComponent<Rigidbody>().velocity.normalized;
+			go.GetComponent<TTSEntropyCannonProjectile>().ProjectileStartVelocity = Random.Range(this.gameObject.GetComponent<Rigidbody>().velocity.magnitude + 100.0f, this.gameObject.GetComponent<Rigidbody>().velocity.magnitude + 175.0f);
 			//go.rigidbody.velocity = this.rigidbody.velocity.normalized * Random.Range(this.gameObject.rigidbody.velocity.magnitude + 50.0f, this.gameObject.rigidbody.velocity.magnitude + 150.0f);
 		}else{
 			//shoot backwards
 			go.transform.position = GetBackPP().position + GetComponent<TTSRacer>().displayMeshComponent.forward * -3.5f;
-			go.GetComponent<TTSEntropyCannonProjectile>().ProjectileDirectionVector = this.rigidbody.velocity.normalized * -1.0f;
-			go.GetComponent<TTSEntropyCannonProjectile>().ProjectileStartVelocity = Random.Range(this.gameObject.rigidbody.velocity.magnitude + 100.0f, this.gameObject.rigidbody.velocity.magnitude + 175.0f);
+			go.GetComponent<TTSEntropyCannonProjectile>().ProjectileDirectionVector = this.GetComponent<Rigidbody>().velocity.normalized * -1.0f;
+			go.GetComponent<TTSEntropyCannonProjectile>().ProjectileStartVelocity = Random.Range(this.gameObject.GetComponent<Rigidbody>().velocity.magnitude + 100.0f, this.gameObject.GetComponent<Rigidbody>().velocity.magnitude + 175.0f);
 			//go.rigidbody.velocity = this.rigidbody.velocity.normalized * Random.Range(rigidbody.velocity.magnitude + 50.0f, rigidbody.velocity.magnitude + 150.0f) * -1.0f;
 		}
 
@@ -601,7 +601,7 @@ public class TTSPowerup : TTSBehaviour
 
 		go.transform.rotation = racer.displayMeshComponent.transform.rotation;
 		go.transform.position = GetFrontPP().position + racer.displayMeshComponent.forward * 3.5f;
-		go.rigidbody.velocity = racer.rigidbody.velocity + (racer.rigidbody.velocity.normalized * 100.0f);
+		go.GetComponent<Rigidbody>().velocity = racer.GetComponent<Rigidbody>().velocity + (racer.GetComponent<Rigidbody>().velocity.normalized * 100.0f);
 
 		if (owner) { SendPowerupDeploy(TTSPowerupNetworkTypes.Helix, go); }
 		else {
@@ -623,7 +623,7 @@ public class TTSPowerup : TTSBehaviour
 
 		go.transform.rotation = racer.displayMeshComponent.transform.rotation;
 		go.transform.position = GetFrontPP().position + racer.displayMeshComponent.forward * 3.5f;
-		go.rigidbody.velocity = racer.rigidbody.velocity + (racer.rigidbody.velocity.normalized * 100.0f);
+		go.GetComponent<Rigidbody>().velocity = racer.GetComponent<Rigidbody>().velocity + (racer.GetComponent<Rigidbody>().velocity.normalized * 100.0f);
 
 		if (owner) { SendPowerupDeploy(TTSPowerupNetworkTypes.Helix3, go); }
 		else {
@@ -681,7 +681,7 @@ public class TTSPowerup : TTSBehaviour
 		go.GetComponent<TTSLeech>().racersAheadOfLeechOwner = this.gameObject.GetComponent<TTSRacer>().place - 1;
 		go.transform.rotation = GetComponent<TTSRacer>().displayMeshComponent.transform.rotation;
 		go.transform.position = this.gameObject.transform.position + GetComponent<TTSRacer>().displayMeshComponent.forward * 3.5f;
-		go.rigidbody.velocity = this.gameObject.rigidbody.velocity;
+		go.GetComponent<Rigidbody>().velocity = this.gameObject.GetComponent<Rigidbody>().velocity;
 
 		if (owner) { SendPowerupDeploy(TTSPowerupNetworkTypes.Leech, go); }
 		else {

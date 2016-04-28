@@ -46,7 +46,7 @@ public class TTSHelixProjectileTier3 : TTSBehaviour
 		ProjectileStartVelocity = Random.Range(120.0f, 160.0f);
 
 		birth = Time.time;
-		audio.PlayOneShot(fire);
+		GetComponent<AudioSource>().PlayOneShot(fire);
 
 		RaycastHit hit;
         if (Physics.Raycast(transform.position, -Vector3.up, out hit, 100.0F)){
@@ -75,16 +75,16 @@ public class TTSHelixProjectileTier3 : TTSBehaviour
 			FindDestination();
 
 			//move the projectile
-			this.rigidbody.velocity = (destinationPosition - this.transform.position).normalized * ProjectileStartVelocity;
+			this.GetComponent<Rigidbody>().velocity = (destinationPosition - this.transform.position).normalized * ProjectileStartVelocity;
 			
 			if(racerFound){
-				ProjectileStartVelocity = homedRacer.rigidbody.velocity.magnitude * 1.5f;
+				ProjectileStartVelocity = homedRacer.GetComponent<Rigidbody>().velocity.magnitude * 1.5f;
 			}else{
 				ProjectileStartVelocity = ProjectileStartVelocity + ProjectileAcceleration;
 			}
 			
 			if (netHandler != null && netHandler.owner)
-				netHandler.UpdatePowerup(transform.position, transform.rotation.eulerAngles, rigidbody.velocity);
+				netHandler.UpdatePowerup(transform.position, transform.rotation.eulerAngles, GetComponent<Rigidbody>().velocity);
 
 			foreach (TTSPowerupNetHandler handler in netHandler.receivedPowerups) {
 				if (handler.Type == TTSPowerupNetworkTypes.Helix) {
@@ -115,7 +115,7 @@ public class TTSHelixProjectileTier3 : TTSBehaviour
 							GameObject go = (GameObject)Instantiate(ProjectileToSpawn, this.transform.position, this.transform.rotation);
 							go.GetComponent<TTSHelixProjectile>().offensiveMultiplier = offensiveMultiplier;
 							go.GetComponent<TTSHelixProjectile>().currentRacer = currentRacer;
-							go.rigidbody.velocity = (hit.transform.position - this.transform.position).normalized * ProjectileStartVelocity;
+							go.GetComponent<Rigidbody>().velocity = (hit.transform.position - this.transform.position).normalized * ProjectileStartVelocity;
 							
 							SendHelixDeploy(go);
 							
@@ -161,7 +161,7 @@ public class TTSHelixProjectileTier3 : TTSBehaviour
 				}
 			}else{
 				other.gameObject.GetComponent<TTSRacer>().DamageRacer(offensiveMultiplier * 1.0f);
-				other.rigidbody.AddExplosionForce(25, this.transform.position, 10, -10);
+				other.GetComponent<Rigidbody>().AddExplosionForce(25, this.transform.position, 10, -10);
 				Explode(true);
 			}
 		}
@@ -182,7 +182,7 @@ public class TTSHelixProjectileTier3 : TTSBehaviour
 				transform.position = Vector3.Lerp(transform.position, netHandler.netPosition, netHandler.networkInterpolation);
 			}
 			transform.rotation = Quaternion.Euler(netHandler.netRotation);
-			rigidbody.velocity = netHandler.netSpeed;
+			GetComponent<Rigidbody>().velocity = netHandler.netSpeed;
 
 			netHandler.isNetworkUpdated = false;
 			netHandler.framesSinceNetData = 0;
@@ -228,7 +228,7 @@ public class TTSHelixProjectileTier3 : TTSBehaviour
 		}
 		//stop motion so the trail can end and destroy the parent GO.
 		this.GetComponent<SphereCollider>().enabled = false;
-		this.rigidbody.velocity = new Vector3(0f, 0f, 0f);
+		this.GetComponent<Rigidbody>().velocity = new Vector3(0f, 0f, 0f);
 
 		Destroy(this.gameObject);
 		Destroy(this);

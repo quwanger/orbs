@@ -28,35 +28,35 @@ public class TTSIndicator : MonoBehaviour {
 		switch(tempCamera.cameraNumber){
 		case 1:
 			this.gameObject.layer = 18;
-			tempCamera.camera.cullingMask &= ~(1 << 19);
-			tempCamera.camera.cullingMask &= ~(1 << 20);
-			tempCamera.camera.cullingMask &= ~(1 << 21);
-			tempCamera.camera.cullingMask &= ~(1 << 22);
-			tempCamera.camera.cullingMask &= ~(1 << 23);
+			tempCamera.GetComponent<Camera>().cullingMask &= ~(1 << 19);
+			tempCamera.GetComponent<Camera>().cullingMask &= ~(1 << 20);
+			tempCamera.GetComponent<Camera>().cullingMask &= ~(1 << 21);
+			tempCamera.GetComponent<Camera>().cullingMask &= ~(1 << 22);
+			tempCamera.GetComponent<Camera>().cullingMask &= ~(1 << 23);
 			break;
 		case 2:
 			this.gameObject.layer = 19;
-			tempCamera.camera.cullingMask &= ~(1 << 18);
-			tempCamera.camera.cullingMask &= ~(1 << 20);
-			tempCamera.camera.cullingMask &= ~(1 << 21);
-			tempCamera.camera.cullingMask &= ~(1 << 22);
-			tempCamera.camera.cullingMask &= ~(1 << 23);
+			tempCamera.GetComponent<Camera>().cullingMask &= ~(1 << 18);
+			tempCamera.GetComponent<Camera>().cullingMask &= ~(1 << 20);
+			tempCamera.GetComponent<Camera>().cullingMask &= ~(1 << 21);
+			tempCamera.GetComponent<Camera>().cullingMask &= ~(1 << 22);
+			tempCamera.GetComponent<Camera>().cullingMask &= ~(1 << 23);
 			break;
 		case 3:
 			this.gameObject.layer = 20;
-			tempCamera.camera.cullingMask &= ~(1 << 18);
-			tempCamera.camera.cullingMask &= ~(1 << 19);
-			tempCamera.camera.cullingMask &= ~(1 << 21);
-			tempCamera.camera.cullingMask &= ~(1 << 22);
-			tempCamera.camera.cullingMask &= ~(1 << 23);
+			tempCamera.GetComponent<Camera>().cullingMask &= ~(1 << 18);
+			tempCamera.GetComponent<Camera>().cullingMask &= ~(1 << 19);
+			tempCamera.GetComponent<Camera>().cullingMask &= ~(1 << 21);
+			tempCamera.GetComponent<Camera>().cullingMask &= ~(1 << 22);
+			tempCamera.GetComponent<Camera>().cullingMask &= ~(1 << 23);
 			break;
 		case 4:
 			this.gameObject.layer = 21;
-			tempCamera.camera.cullingMask &= ~(1 << 18);
-			tempCamera.camera.cullingMask &= ~(1 << 19);
-			tempCamera.camera.cullingMask &= ~(1 << 20);
-			tempCamera.camera.cullingMask &= ~(1 << 22);
-			tempCamera.camera.cullingMask &= ~(1 << 23);
+			tempCamera.GetComponent<Camera>().cullingMask &= ~(1 << 18);
+			tempCamera.GetComponent<Camera>().cullingMask &= ~(1 << 19);
+			tempCamera.GetComponent<Camera>().cullingMask &= ~(1 << 20);
+			tempCamera.GetComponent<Camera>().cullingMask &= ~(1 << 22);
+			tempCamera.GetComponent<Camera>().cullingMask &= ~(1 << 23);
 			break;
 		case 5:
 			this.gameObject.layer = 22;

@@ -67,8 +67,8 @@ public class TTSHudObject : TTSBehaviour {
 	}
 	
 	void calculateFrustrumSize() {
-		frustrumDimentions.y = 2.0f * 10f * Mathf.Tan(transform.parent.GetComponent<TTSFloatHud>().boundCamera.camera.fieldOfView * 0.5f * Mathf.Deg2Rad);
-		frustrumDimentions.x = frustrumDimentions.y * transform.parent.GetComponent<TTSFloatHud>().boundCamera.camera.aspect;
+		frustrumDimentions.y = 2.0f * 10f * Mathf.Tan(transform.parent.GetComponent<TTSFloatHud>().boundCamera.GetComponent<Camera>().fieldOfView * 0.5f * Mathf.Deg2Rad);
+		frustrumDimentions.x = frustrumDimentions.y * transform.parent.GetComponent<TTSFloatHud>().boundCamera.GetComponent<Camera>().aspect;
 		
 	}
 }

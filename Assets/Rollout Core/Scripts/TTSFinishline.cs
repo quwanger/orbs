@@ -70,8 +70,8 @@ public class TTSFinishline : TTSBehaviour {
 		worldRecordTime.text = level.fakeWorldRecord;
 		
 		if(level.currentGameType == TTSLevel.Gametype.MultiplayerOnline){
-			aButton.active = false;
-			replayText.active = false;
+			aButton.enabled = false;
+			replayText.enabled = false;
 		}
 		
 		//best time

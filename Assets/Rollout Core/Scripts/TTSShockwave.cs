@@ -11,11 +11,11 @@ public class TTSShockwave : TTSPerishingBehaviour {
 		Vector3 explosionPos = transform.position;
 	    Collider[] colliders = Physics.OverlapSphere(explosionPos, radius);
 	    foreach (Collider hit in colliders) {
-	        if (hit && hit.rigidbody){
+	        if (hit && hit.GetComponent<Rigidbody>()){
 				if(hit.GetComponent<TTSRacer>()){
 					if(hit.gameObject != currentRacer){
 						if(!hit.GetComponent<TTSRacer>().hasShield){
-							hit.rigidbody.AddExplosionForce(power*5, explosionPos, radius, upwardsForce);
+							hit.GetComponent<Rigidbody>().AddExplosionForce(power*5, explosionPos, radius, upwardsForce);
 						}else{
 							if(hit.gameObject.GetComponentInChildren<TTSShield>().tier3){
 								hit.gameObject.GetComponent<TTSPowerup>().GivePowerup(TTSBehaviour.PowerupType.Shockwave);
@@ -25,7 +25,7 @@ public class TTSShockwave : TTSPerishingBehaviour {
 						}
 					}
 				}else{
-	            	hit.rigidbody.AddExplosionForce(power, explosionPos, radius, 3.0F);
+	            	hit.GetComponent<Rigidbody>().AddExplosionForce(power, explosionPos, radius, 3.0F);
 				}
 			}
 	    }

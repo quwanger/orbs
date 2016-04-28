@@ -29,6 +29,8 @@ public class TTSLoadScreen : MonoBehaviour {
 			levelToLoad = dataToPass.GetComponent<TTSDataToPass>().levelToLoad;
 		}
 
+		Debug.Log ("LEVEL: " + levelToLoad);
+
        Invoke("BeginLoading", 5.0f);
     }
 

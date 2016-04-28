@@ -171,8 +171,8 @@ public class BulletExampleDynamicJS extends MonoBehaviour {
 								m_DecalsMesh.AddProjector (l_DecalProjector);
 								
 									// Get the required matrices.
-								var l_WorldToMeshMatrix = l_RaycastHit.collider.renderer.transform.worldToLocalMatrix;
-								var l_MeshToWorldMatrix = l_RaycastHit.collider.renderer.transform.localToWorldMatrix;
+								var l_WorldToMeshMatrix = l_RaycastHit.collider.GetComponent.<Renderer>().transform.worldToLocalMatrix;
+								var l_MeshToWorldMatrix = l_RaycastHit.collider.GetComponent.<Renderer>().transform.localToWorldMatrix;
 								
 									// Add the mesh data to the decals mesh, cut and offset it before we pass it
 									// to the decals instance to be displayed.

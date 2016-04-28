@@ -152,21 +152,21 @@ public class TTSMenu : TTSBehaviour {
 		players.Clear();
 		
 		lockHighlighter = new GameObject("lockHighlighter");
-		lockHighlighter.AddComponent("GUITexture");
+		lockHighlighter.AddComponent<GUITexture>();
 		lockHighlighter.transform.parent = GameObject.Find("MenuPerks").transform;
 		lockHighlighter.layer = 24;
 		lockHighlighter.transform.localPosition = new Vector3(0.5f,0.5f,20);
 		lockHighlighter.transform.localScale = Vector3.zero;
-		lockHighlighter.guiTexture.texture = lockImage;
+		lockHighlighter.GetComponent<GUITexture>().texture = lockImage;
 		lockHighlighter.SetActive(false);
 		
 		lockHighlighterB = new GameObject("lockHighlighter");
-		lockHighlighterB.AddComponent("GUITexture");
+		lockHighlighterB.AddComponent<GUITexture>();
 		lockHighlighterB.transform.parent = GameObject.Find("MenuPerks").transform;
 		lockHighlighterB.layer = 24;
 		lockHighlighterB.transform.localPosition = new Vector3(0.5f,0.5f,20);
 		lockHighlighterB.transform.localScale = Vector3.zero;
-		lockHighlighterB.guiTexture.texture = lockImage;
+		lockHighlighterB.GetComponent<GUITexture>().texture = lockImage;
 		lockHighlighterB.SetActive(false);	
 		
 		previousPanel = 8;
@@ -197,7 +197,7 @@ public class TTSMenu : TTSBehaviour {
 			_levels.Add(l);
 		
 		// set color of perk description font
-		perkDescription.guiText.font.material.color = new Color32(70, 70, 70, 255);
+		perkDescription.GetComponent<GUIText>().font.material.color = new Color32(70, 70, 70, 255);
 
 		// set the indices for each panel
 		for(int i = 0; i < 3; i++)
@@ -231,8 +231,8 @@ public class TTSMenu : TTSBehaviour {
 			string tempJoystickB = "joystick 1 button 3";
 
 			if (gameMode == TTSLevel.Gametype.MultiplayerLocal) {
-				playerText[0].guiText.text = ("Player" + (chosenOrb));
-				playerText[1].guiText.text = ("Player" + (chosenOrb));
+				playerText[0].GetComponent<GUIText>().text = ("Player" + (chosenOrb));
+				playerText[1].GetComponent<GUIText>().text = ("Player" + (chosenOrb));
 				tempJoystick = ("joystick " + playerControllerID[chosenOrb-1] + " button 0");
 				tempJoystickB = ("joystick " + playerControllerID[chosenOrb-1] + " button 3");
 			}
@@ -242,10 +242,10 @@ public class TTSMenu : TTSBehaviour {
 				if((GetButtonDown(playerControllerID[chosenOrb-1], "Y") && !isYPressed) || Input.GetKeyDown(KeyCode.Y)){
 					isYPressed = true;
 					if (activePanel == 4) {
-						characterColor[activeColorIndex].guiTexture.enabled = false;
-						audio.PlayOneShot(selectSound);
+						characterColor[activeColorIndex].GetComponent<GUITexture>().enabled = false;
+						GetComponent<AudioSource>().PlayOneShot(selectSound);
 						activeColorIndex = (activeColorIndex + 1) % characterColor.Length;
-						characterColor[activeColorIndex].guiTexture.enabled = true;
+						characterColor[activeColorIndex].GetComponent<GUITexture>().enabled = true;
 					}
 				} else if(GetButtonDown(playerControllerID[chosenOrb-1], "Y") == false){
 					isYPressed = false;
@@ -310,7 +310,7 @@ public class TTSMenu : TTSBehaviour {
 			racer.calcOrientation = false;
 			racer.ManualOrientation(new Vector3(spawn_sp.transform.position.x, spawn_sp.transform.position.y, spawn_sp.transform.position.z));
 			racer.SlowToStopToPosition(spawn_mp);
-			racer.rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+			racer.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
 				
 			Camera.main.enabled = false;
 			cameras[1].enabled = true;
@@ -347,7 +347,7 @@ public class TTSMenu : TTSBehaviour {
 		if(gameMode == TTSLevel.Gametype.MultiplayerLocal && activePanel == 3 && !isTweening){
 			// if(Input.GetKeyDown("joystick 1 button 7") && playerReady[0] == false){
 			if(GetButtonDown(1, "Start") && playerReady[0] == false){
-				audio.PlayOneShot(selectSound);
+				GetComponent<AudioSource>().PlayOneShot(selectSound);
 				playerReady[0] = true;
 				playerID[numPlayers] = numPlayers + 1;
 				playerControllerID[numPlayers] = 1;
@@ -363,7 +363,7 @@ public class TTSMenu : TTSBehaviour {
 			}
 			
 			if(GetButtonDown(2, "Start") && playerReady[1] == false){
-				audio.PlayOneShot(selectSound);
+				GetComponent<AudioSource>().PlayOneShot(selectSound);
 				playerReady[1] = true;
 				playerID[numPlayers] = numPlayers + 1;
 				playerControllerID[numPlayers] = 2;
@@ -379,7 +379,7 @@ public class TTSMenu : TTSBehaviour {
 			}
 			
 			if(GetButtonDown(3, "Start") && playerReady[2] == false){
-				audio.PlayOneShot(selectSound);
+				GetComponent<AudioSource>().PlayOneShot(selectSound);
 				playerReady[2] = true;
 				playerID[numPlayers] = numPlayers + 1;
 				playerControllerID[numPlayers] = 3;
@@ -395,7 +395,7 @@ public class TTSMenu : TTSBehaviour {
 			}
 			
 			if(GetButtonDown(4, "Start") && playerReady[3] == false){
-				audio.PlayOneShot(selectSound);
+				GetComponent<AudioSource>().PlayOneShot(selectSound);
 				playerReady[3] = true;
 				playerID[numPlayers] = numPlayers + 1;
 				playerControllerID[numPlayers] = 4;
@@ -513,28 +513,28 @@ public class TTSMenu : TTSBehaviour {
 			if(direction == "left"){
 				if(index == 12 || index == 22 || index == 32){
 					index -= 1;
-					audio.PlayOneShot(hoverSound);
+					GetComponent<AudioSource>().PlayOneShot(hoverSound);
 				}
 			}
 
 			else if(direction == "right"){
 				if(index == 11 || index == 21 || index == 31){
 					index += 1;
-					audio.PlayOneShot(hoverSound);
+					GetComponent<AudioSource>().PlayOneShot(hoverSound);
 				}
 			}
 			
 			else if(direction == "down"){
 				if(index < 30){
 					index += 10;
-					audio.PlayOneShot(hoverSound);
+					GetComponent<AudioSource>().PlayOneShot(hoverSound);
 				}
 			}
 
 			else if(direction == "up"){
 				if(index > 20){
 					index -= 10;
-					audio.PlayOneShot(hoverSound);
+					GetComponent<AudioSource>().PlayOneShot(hoverSound);
 				}
 			}
 		}
@@ -544,28 +544,28 @@ public class TTSMenu : TTSBehaviour {
 			if(direction == "left"){
 				if(index%10 > 1){
 					index -= 1;
-					audio.PlayOneShot(hoverSound);
+					GetComponent<AudioSource>().PlayOneShot(hoverSound);
 				}
 			}
 			
 			else if(direction == "right"){
 				if(index%10 < 3){
 					index += 1;
-					audio.PlayOneShot(hoverSound);
+					GetComponent<AudioSource>().PlayOneShot(hoverSound);
 				}
 			}
 			
 			else if(direction == "down"){
 				if(index==11 || index==12 || index==13){
 					index += 10;
-					audio.PlayOneShot(hoverSound);
+					GetComponent<AudioSource>().PlayOneShot(hoverSound);
 				}
 			}
 			
 			else if(direction == "up"){
 				if(index==21 || index==22 || index==23){
 					index -= 10;
-					audio.PlayOneShot(hoverSound);
+					GetComponent<AudioSource>().PlayOneShot(hoverSound);
 				}
 			}
 		}
@@ -575,28 +575,28 @@ public class TTSMenu : TTSBehaviour {
 			if(direction == "right"){
 				if(index%10 == 1 || index%10 == 2){
 					index ++;
-					audio.PlayOneShot(hoverSound);
+					GetComponent<AudioSource>().PlayOneShot(hoverSound);
 				}
 			}
 			
 			if(direction == "left"){
 				if(index%10 == 2 || index%10 == 3){
 					index --;
-					audio.PlayOneShot(hoverSound);
+					GetComponent<AudioSource>().PlayOneShot(hoverSound);
 				}
 			}
 			
 			if(direction == "up"){
 				if(index>20 && index<34){
 					index -= 10;
-					audio.PlayOneShot(hoverSound);
+					GetComponent<AudioSource>().PlayOneShot(hoverSound);
 				}
 			}
 			
 			if(direction =="down"){
 				if(index>10 && index<24){
 					index += 10;
-					audio.PlayOneShot(hoverSound);
+					GetComponent<AudioSource>().PlayOneShot(hoverSound);
 				}
 			}			
 		}
@@ -606,14 +606,14 @@ public class TTSMenu : TTSBehaviour {
 			if(direction == "right"){
 				if(index == 1){
 					index = 2;
-					audio.PlayOneShot(hoverSound);
+					GetComponent<AudioSource>().PlayOneShot(hoverSound);
 				}
 			}
 				
 			if(direction == "left"){
 				if(index == 2){
 					index = 1;
-					audio.PlayOneShot(hoverSound);
+					GetComponent<AudioSource>().PlayOneShot(hoverSound);
 				}
 			}
 		}
@@ -623,14 +623,14 @@ public class TTSMenu : TTSBehaviour {
 			if(direction == "up"){
 				if(index == 2){
 					index = 1;
-					audio.PlayOneShot(hoverSound);
+					GetComponent<AudioSource>().PlayOneShot(hoverSound);
 				}
 			}
 				
 			if(direction == "down"){
 				if(index == 1){
 					index = 2;
-					audio.PlayOneShot(hoverSound);
+					GetComponent<AudioSource>().PlayOneShot(hoverSound);
 				}
 			}
 		}
@@ -710,12 +710,12 @@ public class TTSMenu : TTSBehaviour {
 				else if(activePanel == 5 && !isTweening){
 					previousPanel = activePanel;
 					activePanel++;
-					audio.PlayOneShot(lockSound);
+					GetComponent<AudioSource>().PlayOneShot(lockSound);
 					
 					//lock
 					foreach(GameObject l in _perks){
 						if(l.GetComponent<TTSMenuItemPerk>().index == indices[5]){
-							lockHighlighter.guiTexture.pixelInset = new Rect(l.guiTexture.pixelInset.x, l.guiTexture.pixelInset.y, 85, 85);
+							lockHighlighter.GetComponent<GUITexture>().pixelInset = new Rect(l.GetComponent<GUITexture>().pixelInset.x, l.GetComponent<GUITexture>().pixelInset.y, 85, 85);
 							lockHighlighter.SetActive(true);
 						}
 					}
@@ -728,7 +728,7 @@ public class TTSMenu : TTSBehaviour {
 					
 					foreach(GameObject l in _perks){
 						if(l.GetComponent<TTSMenuItemPerk>().index == indices[5]){
-							lockHighlighterB.guiTexture.pixelInset = new Rect(l.guiTexture.pixelInset.x, l.guiTexture.pixelInset.y, 85, 85);
+							lockHighlighterB.GetComponent<GUITexture>().pixelInset = new Rect(l.GetComponent<GUITexture>().pixelInset.x, l.GetComponent<GUITexture>().pixelInset.y, 85, 85);
 							lockHighlighterB.SetActive(true);
 						}
 					}
@@ -770,14 +770,14 @@ public class TTSMenu : TTSBehaviour {
 				
 				else if(activePanel == 5 && !isTweening){
 					// perk A going to perk B
-					audio.PlayOneShot(lockSound);
+					GetComponent<AudioSource>().PlayOneShot(lockSound);
 					previousPanel = activePanel;
 					activePanel++;
 					
 					//lock
 					foreach(GameObject l in _perks){
 						if(l.GetComponent<TTSMenuItemPerk>().index == indices[5]){
-							lockHighlighter.guiTexture.pixelInset = new Rect(l.guiTexture.pixelInset.x, l.guiTexture.pixelInset.y, 85, 85);
+							lockHighlighter.GetComponent<GUITexture>().pixelInset = new Rect(l.GetComponent<GUITexture>().pixelInset.x, l.GetComponent<GUITexture>().pixelInset.y, 85, 85);
 							lockHighlighter.SetActive(true);
 						}
 					}
@@ -878,14 +878,14 @@ public class TTSMenu : TTSBehaviour {
 				}
 				
 				else if(activePanel == 5 && !isTweening){
-					audio.PlayOneShot(lockSound);
+					GetComponent<AudioSource>().PlayOneShot(lockSound);
 					previousPanel = activePanel;
 					activePanel++;
 					
 					//lock
 					foreach(GameObject l in _perks){
 						if(l.GetComponent<TTSMenuItemPerk>().index == indices[5]){
-							lockHighlighter.guiTexture.pixelInset = new Rect(l.guiTexture.pixelInset.x, l.guiTexture.pixelInset.y, 85, 85);
+							lockHighlighter.GetComponent<GUITexture>().pixelInset = new Rect(l.GetComponent<GUITexture>().pixelInset.x, l.GetComponent<GUITexture>().pixelInset.y, 85, 85);
 							lockHighlighter.SetActive(true);
 						}
 					}
@@ -957,7 +957,7 @@ public class TTSMenu : TTSBehaviour {
 					previousPanel = activePanel;
 					activePanel--;
 					lockHighlighter.SetActive(false);
-					audio.PlayOneShot(unlockSound);
+					GetComponent<AudioSource>().PlayOneShot(unlockSound);
 					// go back to perk 1
 				}
 				
@@ -992,7 +992,7 @@ public class TTSMenu : TTSBehaviour {
 				else if(activePanel == 6 && !isTweening){
 					// go to perk A select
 					lockHighlighter.SetActive(false);
-					audio.PlayOneShot(unlockSound);
+					GetComponent<AudioSource>().PlayOneShot(unlockSound);
 					previousPanel = activePanel;
 					activePanel--;
 				}
@@ -1077,7 +1077,7 @@ public class TTSMenu : TTSBehaviour {
 				else if(activePanel == 6 && !isTweening){
 					// go to perk 1
 					lockHighlighter.SetActive(false);
-					audio.PlayOneShot(unlockSound);
+					GetComponent<AudioSource>().PlayOneShot(unlockSound);
 					previousPanel = activePanel;
 					activePanel--;
 				}
@@ -1134,7 +1134,7 @@ public class TTSMenu : TTSBehaviour {
 		if(activePanel == 4 || activePanel == 5 || activePanel == 6)
 			playerStatistics.transform.parent = panels[activePanel].transform;
 		
-		audio.PlayOneShot(transSound);
+		GetComponent<AudioSource>().PlayOneShot(transSound);
 
 		// move in next panel
 		iTween.MoveTo(panels[activePanel], iTween.Hash("x", 0.5, "time", 1.0f, "easeType", iTween.EaseType.easeOutCirc, "onComplete", "stoppedTweening", "onCompleteTarget", gameObject));
@@ -1191,8 +1191,8 @@ public class TTSMenu : TTSBehaviour {
 			else{
 				SelectedPerk = p.GetComponent<TTSMenuItemPerk>().perk;
 				p.SetActive(true);
-				perkName.guiText.text = p.GetComponent<TTSMenuItemPerk>().name;
-				perkDescription.guiText.text = p.GetComponent<TTSMenuItemPerk>().description;
+				perkName.GetComponent<GUIText>().text = p.GetComponent<TTSMenuItemPerk>().name;
+				perkDescription.GetComponent<GUIText>().text = p.GetComponent<TTSMenuItemPerk>().description;
 					
 				foreach(GameObject r in _rigs){
 					if(r.GetComponent<TTSMenuItemRig>().rig == SelectedRig){
@@ -1232,8 +1232,8 @@ public class TTSMenu : TTSBehaviour {
 			else{
 				SelectedPerkB = p.GetComponent<TTSMenuItemPerk>().perkB;
 				p.SetActive(true);
-				perkName.guiText.text = p.GetComponent<TTSMenuItemPerk>().name;
-				perkDescription.guiText.text = p.GetComponent<TTSMenuItemPerk>().description;	
+				perkName.GetComponent<GUIText>().text = p.GetComponent<TTSMenuItemPerk>().name;
+				perkDescription.GetComponent<GUIText>().text = p.GetComponent<TTSMenuItemPerk>().description;	
 			}
 		}
 	}
@@ -1260,7 +1260,7 @@ public class TTSMenu : TTSBehaviour {
 				numCircles[3]  = r.GetComponent<TTSMenuItemRig>().offense;
 				numCircles[4]  = r.GetComponent<TTSMenuItemRig>().defense;
 				
-				rigName.guiText.text = SelectedRig.ToString();	
+				rigName.GetComponent<GUIText>().text = SelectedRig.ToString();	
 				
 				toggleAllCircles();
 			}	
@@ -1317,14 +1317,14 @@ public class TTSMenu : TTSBehaviour {
 	void createCircles(string parent, int x, int y){
 		for(int i = 1; i <= 13; i++){
 			GameObject obj = new GameObject("circle_" + parent + "_" + i.ToString());
-			obj.AddComponent("GUITexture");
+			obj.AddComponent<GUITexture>();
 			obj.transform.parent = GameObject.Find(parent).transform;
 			obj.layer = 24;
 			obj.transform.localPosition = new Vector3(0,0,5);
 			obj.transform.localScale = Vector3.zero;
-			obj.guiTexture.pixelInset = new Rect((x+(i*15)), y, 10, 10);
+			obj.GetComponent<GUITexture>().pixelInset = new Rect((x+(i*15)), y, 10, 10);
 			
-			obj.guiTexture.texture = circleImage;
+			obj.GetComponent<GUITexture>().texture = circleImage;
 			
 			if(parent == "Acceleration")
 				acceleration_circles.Add(obj);

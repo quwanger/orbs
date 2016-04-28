@@ -10,21 +10,21 @@ public class TTSExplosiveForce : TTSPerishingBehaviour {
 		Vector3 explosionPos = transform.position;
 	    Collider[] colliders = Physics.OverlapSphere(explosionPos, radius);
 	    foreach (Collider hit in colliders) {
-	        if (hit && hit.rigidbody){
+	        if (hit && hit.GetComponent<Rigidbody>()){
 				if(hit.GetComponent<TTSRacer>()){
 					
 					//handles self-explostion if necessary
 					if(hit.gameObject == currentRacer){
 						if(effectCurrentRacer){
 							if(!hit.GetComponent<TTSRacer>().hasShield){
-								hit.rigidbody.AddExplosionForce(power, explosionPos, radius, 3.0F);
+								hit.GetComponent<Rigidbody>().AddExplosionForce(power, explosionPos, radius, 3.0F);
 							}
 						}
 					}else if(!hit.GetComponent<TTSRacer>().hasShield){
-						hit.rigidbody.AddExplosionForce(power, explosionPos, radius, 3.0F);
+						hit.GetComponent<Rigidbody>().AddExplosionForce(power, explosionPos, radius, 3.0F);
 					}
 				}else{
-	            	hit.rigidbody.AddExplosionForce(power, explosionPos, radius, 3.0F);
+	            	hit.GetComponent<Rigidbody>().AddExplosionForce(power, explosionPos, radius, 3.0F);
 				}
 			}
 	    }

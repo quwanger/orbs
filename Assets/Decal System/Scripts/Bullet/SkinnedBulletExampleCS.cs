@@ -131,8 +131,8 @@ public class SkinnedBulletExampleCS : MonoBehaviour {
 						m_DecalsMesh.AddProjector (l_DecalProjector);
 						
 							// Get the required matrices.
-						Matrix4x4 l_WorldToMeshMatrix = l_RaycastHit.collider.renderer.transform.worldToLocalMatrix;
-						Matrix4x4 l_MeshToWorldMatrix = l_RaycastHit.collider.renderer.transform.localToWorldMatrix;
+						Matrix4x4 l_WorldToMeshMatrix = l_RaycastHit.collider.GetComponent<Renderer>().transform.worldToLocalMatrix;
+						Matrix4x4 l_MeshToWorldMatrix = l_RaycastHit.collider.GetComponent<Renderer>().transform.localToWorldMatrix;
 						
 							// Add the mesh data to the decals mesh, cut and offset it before we pass it
 							// to the decals instance to be displayed.

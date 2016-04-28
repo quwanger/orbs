@@ -42,7 +42,7 @@ public class TTSHelixProjectile : TTSBehaviour
 		ProjectileStartVelocity = Random.Range(120.0f, 160.0f);
 
 		birth = Time.time;
-		audio.PlayOneShot(fire);
+		GetComponent<AudioSource>().PlayOneShot(fire);
 
 		RaycastHit hit;
         if (Physics.Raycast(transform.position, -Vector3.up, out hit, 100.0F)){
@@ -67,16 +67,16 @@ public class TTSHelixProjectile : TTSBehaviour
 			FindDestination();
 
 			//move the projectile
-			this.rigidbody.velocity = (destinationPosition - this.transform.position).normalized * ProjectileStartVelocity;
+			this.GetComponent<Rigidbody>().velocity = (destinationPosition - this.transform.position).normalized * ProjectileStartVelocity;
 
 			if(racerFound){
-				ProjectileStartVelocity = homedRacer.rigidbody.velocity.magnitude * 1.5f;
+				ProjectileStartVelocity = homedRacer.GetComponent<Rigidbody>().velocity.magnitude * 1.5f;
 			}else{
 				ProjectileStartVelocity = ProjectileStartVelocity + ProjectileAcceleration;
 			}
 			
 			if (netHandler != null && netHandler.owner)
-				netHandler.UpdatePowerup(transform.position, transform.rotation.eulerAngles, rigidbody.velocity);
+				netHandler.UpdatePowerup(transform.position, transform.rotation.eulerAngles, GetComponent<Rigidbody>().velocity);
 		}
 		else if (!netHandler.owner) {
 			GetNetworkUpdate();
@@ -141,7 +141,7 @@ public class TTSHelixProjectile : TTSBehaviour
 				transform.position = Vector3.Lerp(transform.position, netHandler.netPosition, netHandler.networkInterpolation);
 			}
 			transform.rotation = Quaternion.Euler(netHandler.netRotation);
-			rigidbody.velocity = netHandler.netSpeed;
+			GetComponent<Rigidbody>().velocity = netHandler.netSpeed;
 
 			netHandler.isNetworkUpdated = false;
 			netHandler.framesSinceNetData = 0;
@@ -187,7 +187,7 @@ public class TTSHelixProjectile : TTSBehaviour
 		}
 		//stop motion so the trail can end and destroy the parent GO.
 		this.GetComponent<SphereCollider>().enabled = false;
-		this.rigidbody.velocity = new Vector3(0f, 0f, 0f);
+		this.GetComponent<Rigidbody>().velocity = new Vector3(0f, 0f, 0f);
 
 		Destroy(this.gameObject);
 		Destroy(this);

@@ -77,7 +77,7 @@ public class TTSLeech : TTSBehaviour {
 				doHoming();
 
 				if(netHandler != null)
-					netHandler.UpdatePowerup(transform.position, transform.rotation.eulerAngles, rigidbody.velocity);
+					netHandler.UpdatePowerup(transform.position, transform.rotation.eulerAngles, GetComponent<Rigidbody>().velocity);
 			}
 			else if(!netHandler.owner) {
 				GetNetworkUpdate();
@@ -87,7 +87,7 @@ public class TTSLeech : TTSBehaviour {
 	
 	private void initialMovement(){
 		//newPosition = new Vector3(transform.parent.transform.position.x + randX, transform.parent.transform.position.y + randY, transform.parent.transform.position.z);
-		this.rigidbody.velocity = currentRacer.rigidbody.velocity;
+		this.GetComponent<Rigidbody>().velocity = currentRacer.GetComponent<Rigidbody>().velocity;
 		transform.position = Vector3.Lerp(transform.position, newPosition, Time.deltaTime);
 	}
 	
@@ -111,9 +111,9 @@ public class TTSLeech : TTSBehaviour {
 			CheckForOtherRacers();
 		}else{
 			if(racerFound){
-				this.rigidbody.velocity = (destinationPosition - this.transform.position).normalized * homedRacer.rigidbody.velocity.magnitude * 2.0f;
+				this.GetComponent<Rigidbody>().velocity = (destinationPosition - this.transform.position).normalized * homedRacer.GetComponent<Rigidbody>().velocity.magnitude * 2.0f;
 			}else{
-				this.rigidbody.velocity = (destinationPosition - this.transform.position).normalized * leechVelocity;
+				this.GetComponent<Rigidbody>().velocity = (destinationPosition - this.transform.position).normalized * leechVelocity;
 			}
 			findDestination();
 		}
@@ -140,14 +140,14 @@ public class TTSLeech : TTSBehaviour {
 		Instantiate(explosion,this.transform.position,this.transform.rotation);
 		
 	    foreach (Collider hit in colliders) {
-	        if (hit && hit.rigidbody){
+	        if (hit && hit.GetComponent<Rigidbody>()){
 	        	if(hit.GetComponent<TTSRacer>()){
 	        		if(!hit.GetComponent<TTSRacer>().hasShield){
 	        			hit.GetComponent<TTSRacer>().DamageRacer(0.7f * currentRacer.GetComponent<TTSRacer>().Offense);
-	        			hit.rigidbody.AddExplosionForce(explosionPower * currentRacer.GetComponent<TTSRacer>().Offense, explosionPos, explosionRadius * currentRacer.GetComponent<TTSRacer>().Offense, -3.0F);
+	        			hit.GetComponent<Rigidbody>().AddExplosionForce(explosionPower * currentRacer.GetComponent<TTSRacer>().Offense, explosionPos, explosionRadius * currentRacer.GetComponent<TTSRacer>().Offense, -3.0F);
 	        		}
 	        	}else{
-	            	hit.rigidbody.AddExplosionForce(explosionPower * currentRacer.GetComponent<TTSRacer>().Offense, explosionPos, explosionRadius * currentRacer.GetComponent<TTSRacer>().Offense, -3.0F);
+	            	hit.GetComponent<Rigidbody>().AddExplosionForce(explosionPower * currentRacer.GetComponent<TTSRacer>().Offense, explosionPos, explosionRadius * currentRacer.GetComponent<TTSRacer>().Offense, -3.0F);
 	            }
 	        }
 	    }
@@ -187,7 +187,7 @@ public class TTSLeech : TTSBehaviour {
 			Collider[] colliders2 = Physics.OverlapSphere(this.transform.position, stickRadius);
 			foreach (Collider hit in colliders2) {
 				if (hit.gameObject == homedRacer){
-					this.rigidbody.velocity = new Vector3(0,0,0);
+					this.GetComponent<Rigidbody>().velocity = new Vector3(0,0,0);
 					stuckRacer = hit.gameObject;
 					positionDifference = this.transform.position - stuckRacer.transform.position;
 					racerStuck = true;
@@ -197,7 +197,7 @@ public class TTSLeech : TTSBehaviour {
 					break;
 				}
 			}
-			leechVelocity = homedRacer.rigidbody.velocity.magnitude + 10.0f;
+			leechVelocity = homedRacer.GetComponent<Rigidbody>().velocity.magnitude + 10.0f;
 			destinationPosition = homedRacer.transform.position;
 			
 		}
@@ -254,7 +254,7 @@ public class TTSLeech : TTSBehaviour {
 				transform.position = Vector3.Lerp(transform.position, netHandler.netPosition, netHandler.networkInterpolation);
 			}
 			transform.rotation = Quaternion.Euler(netHandler.netRotation);
-			rigidbody.velocity = netHandler.netSpeed;
+			GetComponent<Rigidbody>().velocity = netHandler.netSpeed;
 
 			netHandler.isNetworkUpdated = false;
 			netHandler.framesSinceNetData = 0;

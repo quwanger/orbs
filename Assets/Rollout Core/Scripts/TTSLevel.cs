@@ -236,7 +236,7 @@ public class TTSLevel : MonoBehaviour {
 		GameObject.Find("Soundtrack").GetComponent<TTSSoundtrackManager>().StartSoundtrack();
 		
 		foreach(GameObject racer in racers) {
-			racer.rigidbody.constraints = RigidbodyConstraints.None;
+			racer.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
 			racer.GetComponent<TTSRacer>().canMove = true;
 		}
 		

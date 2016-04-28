@@ -30,9 +30,9 @@ public class TTSRacerSpeedBoost : TTSPerishingBehaviour {
 
 		if(isPlatform){
 			//racerBeingBoosted.rigidbody.AddForce(racerBeingBoosted.rigidbody.velocity.normalized * 2.0f);
-			this.rigidbody.AddForce(GetComponent<TTSRacer>().displayMeshComponent.forward * _power);
+			this.GetComponent<Rigidbody>().AddForce(GetComponent<TTSRacer>().displayMeshComponent.forward * _power);
 		}else{
-			this.rigidbody.AddForce(GetComponent<TTSRacer>().displayMeshComponent.forward * Mathf.Lerp(TargetForce, 0.0f, progress));
+			this.GetComponent<Rigidbody>().AddForce(GetComponent<TTSRacer>().displayMeshComponent.forward * Mathf.Lerp(TargetForce, 0.0f, progress));
 		}
 
 		int counter = 0;
@@ -49,7 +49,7 @@ public class TTSRacerSpeedBoost : TTSPerishingBehaviour {
 		        if (hit.GetComponent<TTSRacer>() && hit.gameObject != this.gameObject){
 		        	//push racer
 		        	Vector3 directionVector = (hit.gameObject.transform.position - this.gameObject.transform.position).normalized;
-		        	hit.gameObject.rigidbody.AddForce(directionVector * tier3Strength);
+		        	hit.gameObject.GetComponent<Rigidbody>().AddForce(directionVector * tier3Strength);
 				}
 		    }
 		}

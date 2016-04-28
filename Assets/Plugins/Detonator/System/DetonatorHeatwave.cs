@@ -52,7 +52,7 @@ public class DetonatorHeatwave : DetonatorComponent {
 			//thought about this, and really, the wave would move linearly, fading in amplitude. 
 			s = Mathf.Lerp(_startSize,_maxSize,_normalizedTime);
 			
-			_heatwave.renderer.material.SetFloat("_BumpAmt", ((1-_normalizedTime) * distortion));
+			_heatwave.GetComponent<Renderer>().material.SetFloat("_BumpAmt", ((1-_normalizedTime) * distortion));
 			
 			_heatwave.gameObject.transform.localScale = new Vector3(s,s,s);
 			if (_elapsedTime > duration) Destroy(_heatwave.gameObject);
@@ -82,7 +82,7 @@ public class DetonatorHeatwave : DetonatorComponent {
 
                 if (!heatwaveMaterial) heatwaveMaterial = MyDetonator().heatwaveMaterial;
                 _material.CopyPropertiesFromMaterial(heatwaveMaterial);
-                _heatwave.renderer.material = _material;
+                _heatwave.GetComponent<Renderer>().material = _material;
                 _heatwave.transform.parent = this.transform;
 
                 _delayedExplosionStarted = false;

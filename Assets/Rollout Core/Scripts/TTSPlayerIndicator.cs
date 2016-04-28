@@ -19,7 +19,7 @@ public class TTSPlayerIndicator : TTSBehaviour {
 				//Debug.Log("Racer " + racers[i].GetComponent<TTSRacer>().playerNum + " is now being tracked by Camera " + this.GetComponent<TTSFollowCamera>().cameraNumber + ".");
 				GameObject tempIndicator = (GameObject)Instantiate(indicator);
 				tempIndicator.GetComponent<TTSIndicator>().racerToIndicate = racers[i];
-				tempIndicator.GetComponent<TTSIndicator>().myCamera = this.camera;
+				tempIndicator.GetComponent<TTSIndicator>().myCamera = this.GetComponent<Camera>();
 				//tempIndicator.transform.parent = this.gameObject.transform;
 				_indicators.Add(tempIndicator);
 			}

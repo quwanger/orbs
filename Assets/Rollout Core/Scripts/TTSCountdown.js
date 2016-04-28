@@ -8,19 +8,19 @@ var count1 : AudioClip;
 
 
 function playCount3() {
-	audio.PlayOneShot(count3);
+	GetComponent.<AudioSource>().PlayOneShot(count3);
 
 }
 
 
 function playCount2() {
-	audio.PlayOneShot(count2);
+	GetComponent.<AudioSource>().PlayOneShot(count2);
 
 }
 
 
 function playCount1() {
-	audio.PlayOneShot(count1);
+	GetComponent.<AudioSource>().PlayOneShot(count1);
 
 }
 
@@ -28,6 +28,6 @@ function playCount1() {
 
 
 function go() {
-	audio.PlayOneShot(countGO);
+	GetComponent.<AudioSource>().PlayOneShot(countGO);
 	GameObject.Find("TTSLevel").SendMessage("StartRace");
 }

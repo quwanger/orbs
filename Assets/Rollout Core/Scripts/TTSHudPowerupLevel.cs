@@ -9,23 +9,23 @@ public class TTSHudPowerupLevel : MonoBehaviour {
 		
 		switch(tier) {
 			case 0:
-			this.gameObject.renderer.material.SetTexture("_MainTex", levelImages[0]);
+			this.gameObject.GetComponent<Renderer>().material.SetTexture("_MainTex", levelImages[0]);
 			break;
 			
 			case 1:
-			this.gameObject.renderer.material.SetTexture("_MainTex", levelImages[1]);
+			this.gameObject.GetComponent<Renderer>().material.SetTexture("_MainTex", levelImages[1]);
 			break;
 			
 			case 2:
-			this.gameObject.renderer.material.SetTexture("_MainTex", levelImages[2]);
+			this.gameObject.GetComponent<Renderer>().material.SetTexture("_MainTex", levelImages[2]);
 			break;
 			
 			case 3:
-			this.gameObject.renderer.material.SetTexture("_MainTex", levelImages[3]);
+			this.gameObject.GetComponent<Renderer>().material.SetTexture("_MainTex", levelImages[3]);
 			break;
 			
 			default:
-			this.gameObject.renderer.material.SetTexture("_MainTex", levelImages[0]);
+			this.gameObject.GetComponent<Renderer>().material.SetTexture("_MainTex", levelImages[0]);
 			break;
 		}
 	}

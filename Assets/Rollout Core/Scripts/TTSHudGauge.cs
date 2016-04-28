@@ -18,8 +18,8 @@ public class TTSHudGauge : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if(data == Type.SPEED) {
-			this.ratio = boundRacer.rigidbody.velocity.magnitude / boundRacer.GetComponent<TTSRacer>().TopSpeed;
-			this.renderer.material.SetTextureOffset("_MainTex",new Vector2(0, ratio/2));
+			this.ratio = boundRacer.GetComponent<Rigidbody>().velocity.magnitude / boundRacer.GetComponent<TTSRacer>().TopSpeed;
+			this.GetComponent<Renderer>().material.SetTextureOffset("_MainTex",new Vector2(0, ratio/2));
 		}
 	}
 }
