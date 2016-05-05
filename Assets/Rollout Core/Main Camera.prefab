@@ -56,23 +56,25 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_LocalRotation: {x: 0, y: .799416482, z: 0, w: .600777268}
+  m_LocalRotation: {x: 0, y: 0.7994165, z: 0, w: 0.60077727}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400002}
+  m_RootOrder: 0
 --- !u!4 &400002
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100002}
-  m_LocalRotation: {x: 0, y: -.799416482, z: 0, w: .600777268}
-  m_LocalPosition: {x: 730.851562, y: 346.166229, z: 1120.55359}
+  m_LocalRotation: {x: 0, y: -0.7994165, z: 0, w: 0.60077727}
+  m_LocalPosition: {x: 730.85156, y: 346.16623, z: 1120.5536}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400000}
   m_Father: {fileID: 0}
+  m_RootOrder: 0
 --- !u!20 &2000000
 Camera:
   m_ObjectHideFlags: 1
@@ -82,16 +84,16 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: .192156866, g: .301960796, b: .474509805, a: .0196078438}
+  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0.019607844}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
     y: 0
     width: 1
     height: 1
-  near clip plane: .699999988
+  near clip plane: 0.7
   far clip plane: 12000
-  field of view: 72.9000015
+  field of view: 72.9
   orthographic: 0
   orthographic size: 100
   m_Depth: -1
@@ -100,7 +102,13 @@ Camera:
     m_Bits: 4294965247
   m_RenderingPath: 2
   m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
   m_HDR: 1
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
+  m_StereoMirrorMode: 0
 --- !u!65 &6500000
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -127,13 +135,15 @@ AudioSource:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
-  serializedVersion: 3
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: .25
+  m_Volume: 0.25
   m_Pitch: 1
   Loop: 1
   Mute: 0
+  Spatialize: 0
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
@@ -141,6 +151,8 @@ AudioSource:
   Pan2D: 0
   rolloffMode: 2
   BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
   rolloffCustomCurve:
     serializedVersion: 2
     m_Curve:
@@ -156,6 +168,7 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
+    m_RotationOrder: 4
   panLevelCustomCurve:
     serializedVersion: 2
     m_Curve:
@@ -166,6 +179,7 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
+    m_RotationOrder: 4
   spreadCustomCurve:
     serializedVersion: 2
     m_Curve:
@@ -176,6 +190,18 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!82 &8200002
 AudioSource:
   m_ObjectHideFlags: 1
@@ -183,13 +209,15 @@ AudioSource:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100002}
   m_Enabled: 1
-  serializedVersion: 3
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
   Loop: 1
   Mute: 0
+  Spatialize: 0
   Priority: 255
   DopplerLevel: 0
   MinDistance: 1
@@ -197,66 +225,69 @@ AudioSource:
   Pan2D: 0
   rolloffMode: 2
   BypassEffects: 1
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
   rolloffCustomCurve:
     serializedVersion: 2
     m_Curve:
-    - time: .00200000009
+    - time: 0.002
       value: 1
-      inSlope: -500.200928
-      outSlope: -500.200928
+      inSlope: -500.20093
+      outSlope: -500.20093
       tangentMode: 0
-    - time: .00400000019
-      value: .5
-      inSlope: -125.050232
-      outSlope: -125.050232
+    - time: 0.004
+      value: 0.5
+      inSlope: -125.05023
+      outSlope: -125.05023
       tangentMode: 0
-    - time: .00800000038
-      value: .25
+    - time: 0.008
+      value: 0.25
       inSlope: -31.262558
       outSlope: -31.262558
       tangentMode: 0
-    - time: .0160000008
-      value: .125
+    - time: 0.016
+      value: 0.125
       inSlope: -7.8156395
       outSlope: -7.8156395
       tangentMode: 0
-    - time: .0320000015
-      value: .0625
-      inSlope: -1.95390987
-      outSlope: -1.95390987
+    - time: 0.032
+      value: 0.0625
+      inSlope: -1.9539099
+      outSlope: -1.9539099
       tangentMode: 0
-    - time: .064000003
-      value: .03125
-      inSlope: -.488477468
-      outSlope: -.488477468
+    - time: 0.064
+      value: 0.03125
+      inSlope: -0.48847747
+      outSlope: -0.48847747
       tangentMode: 0
-    - time: .128000006
-      value: .015625
-      inSlope: -.122119367
-      outSlope: -.122119367
+    - time: 0.128
+      value: 0.015625
+      inSlope: -0.12211937
+      outSlope: -0.12211937
       tangentMode: 0
-    - time: .256000012
-      value: .0078125
-      inSlope: -.0305298418
-      outSlope: -.0305298418
+    - time: 0.256
+      value: 0.0078125
+      inSlope: -0.030529842
+      outSlope: -0.030529842
       tangentMode: 0
-    - time: .337925851
-      value: .00584798353
-      inSlope: -.0182096846
-      outSlope: -.0182096846
+    - time: 0.33792585
+      value: 0.0058479835
+      inSlope: -0.018209685
+      outSlope: -0.018209685
       tangentMode: 0
-    - time: .512000024
-      value: .00390625
-      inSlope: -.00763246045
-      outSlope: -.00763246045
+    - time: 0.512
+      value: 0.00390625
+      inSlope: -0.0076324604
+      outSlope: -0.0076324604
       tangentMode: 0
     - time: 1
-      value: .00200000009
-      inSlope: -.00200079847
-      outSlope: -.00200079847
+      value: 0.002
+      inSlope: -0.0020007985
+      outSlope: -0.0020007985
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
+    m_RotationOrder: 4
   panLevelCustomCurve:
     serializedVersion: 2
     m_Curve:
@@ -267,6 +298,7 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
+    m_RotationOrder: 0
   spreadCustomCurve:
     serializedVersion: 2
     m_Curve:
@@ -277,6 +309,18 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
 --- !u!92 &9200000
 Behaviour:
   m_ObjectHideFlags: 1
@@ -294,11 +338,12 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4b46f3f7b30265e49bd919bacfa89ed7, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   accelerationIncrease: 500
   speedIncrease: 25
   handlingIncrease: 750
-  offenseIncrease: .300000012
-  defenseIncrease: .300000012
+  offenseIncrease: 0.3
+  defenseIncrease: 0.3
   LOAD_RANDOM_TRACK: 0
   songToPlay: {fileID: 8300000, guid: 5c10cce97f5404543993159e3424eeaf, type: 3}
   tracks: []
@@ -312,6 +357,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ca7aa620514eece46be89dc54e518a5c, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   Overlay: {fileID: 2800000, guid: aa19bbb4a0550c4499ac6c2fed0cc341, type: 3}
 --- !u!114 &11400004
 MonoBehaviour:
@@ -323,13 +369,14 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bef3d242a13c447ac90c2d2dc213b1ea, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   mode: 0
-  intensity: .540000021
+  intensity: 0.54
   chromaticAberration: 0
-  axialAberration: .5
-  blur: .140000001
-  blurSpread: .99000001
-  luminanceDependency: .25
+  axialAberration: 0.5
+  blur: 0.14
+  blurSpread: 0.99
+  luminanceDependency: 0.25
   vignetteShader: {fileID: 4800000, guid: 627943dc7a9a74286b70a4f694a0acd5, type: 3}
   separableBlurShader: {fileID: 4800000, guid: e97c14fbb5ea04c3a902cc533d7fc5d1, type: 3}
   chromAberrationShader: {fileID: 4800000, guid: 2b4f29398d9484ccfa9fd220449f5eee,
@@ -344,26 +391,27 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 105410cefd4c4114cb6ad61953f89162, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   accelerationIncrease: 500
   speedIncrease: 25
   handlingIncrease: 750
-  offenseIncrease: .300000012
-  defenseIncrease: .300000012
+  offenseIncrease: 0.3
+  defenseIncrease: 0.3
   CameraMode: 0
   cameraNumber: 0
   target: {fileID: 0}
   distance: 5
   heightDamping: 2
   rotationDamping: 3
-  shakiness: .0299999993
+  shakiness: 0.03
   baseDistance: 5
   maxDistance: 7
-  Base_FOV: 72.9000015
+  Base_FOV: 72.9
   Max_FOV: 77
   distanceStartEffect: 0
-  heightStartEffect: .600000024
-  fovStartEffect: .600000024
-  shakeStartEffect: .699999988
+  heightStartEffect: 0.6
+  fovStartEffect: 0.6
+  shakeStartEffect: 0.7
   fadeWidth: 0
   fadeHeight: 0
   fadeX: 0
@@ -376,7 +424,7 @@ MonoBehaviour:
   height: 2
   baseHeight: 3.5
   minHeight: 2
-  heightFromTarget: .5
+  heightFromTarget: 0.5
 --- !u!114 &11400008
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -387,26 +435,28 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 83b39678ff6aa4fec8d135d231ba9cde, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   redChannel:
     serializedVersion: 2
     m_Curve:
     - time: 0
       value: 0
-      inSlope: .636674464
-      outSlope: .636674464
+      inSlope: 0.63667446
+      outSlope: 0.63667446
       tangentMode: 10
-    - time: .12668705
-      value: .080658406
-      inSlope: .844690084
-      outSlope: .844690084
+    - time: 0.12668705
+      value: 0.080658406
+      inSlope: 0.8446901
+      outSlope: 0.8446901
       tangentMode: 10
     - time: 1
       value: 1
-      inSlope: 1.05270576
-      outSlope: 1.05270576
+      inSlope: 1.0527058
+      outSlope: 1.0527058
       tangentMode: 10
     m_PreInfinity: 2
     m_PostInfinity: 2
+    m_RotationOrder: 4
   greenChannel:
     serializedVersion: 2
     m_Curve:
@@ -415,10 +465,10 @@ MonoBehaviour:
       inSlope: 1
       outSlope: 1
       tangentMode: 0
-    - time: .434935868
-      value: .393269181
-      inSlope: .999867916
-      outSlope: .999867916
+    - time: 0.43493587
+      value: 0.39326918
+      inSlope: 0.9998679
+      outSlope: 0.9998679
       tangentMode: 0
     - time: 1
       value: 1
@@ -427,6 +477,7 @@ MonoBehaviour:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
+    m_RotationOrder: 4
   blueChannel:
     serializedVersion: 2
     m_Curve:
@@ -442,6 +493,7 @@ MonoBehaviour:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
+    m_RotationOrder: 4
   useDepthCorrection: 0
   zCurve:
     serializedVersion: 2
@@ -458,6 +510,7 @@ MonoBehaviour:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
+    m_RotationOrder: 4
   depthRedChannel:
     serializedVersion: 2
     m_Curve:
@@ -473,6 +526,7 @@ MonoBehaviour:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
+    m_RotationOrder: 4
   depthGreenChannel:
     serializedVersion: 2
     m_Curve:
@@ -488,6 +542,7 @@ MonoBehaviour:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
+    m_RotationOrder: 4
   depthBlueChannel:
     serializedVersion: 2
     m_Curve:
@@ -503,7 +558,8 @@ MonoBehaviour:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-  saturation: 1.16999996
+    m_RotationOrder: 4
+  saturation: 1.17
   selectiveCc: 0
   selectiveFromColor: {r: 1, g: 1, b: 1, a: 1}
   selectiveToColor: {r: 1, g: 1, b: 1, a: 1}
@@ -525,15 +581,16 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1dad87ba4f1e04d6eb7f287e1f2e08fe, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   resolution: 0
   screenBlendMode: 1
   sunTransform: {fileID: 0}
   radialBlurIterations: 1
-  sunColor: {r: 0, g: .58041954, b: 1, a: 1}
-  sunShaftBlurRadius: 1.75999999
-  sunShaftIntensity: .219999999
-  useSkyBoxAlpha: .667999983
-  maxRadius: .751999974
+  sunColor: {r: 0, g: 0.58041954, b: 1, a: 1}
+  sunShaftBlurRadius: 1.76
+  sunShaftIntensity: 0.22
+  useSkyBoxAlpha: 0.668
+  maxRadius: 0.752
   useDepthTexture: 1
   sunShaftsShader: {fileID: 4800000, guid: d3b1c8c1036784176946f5cfbfb7fe4c, type: 3}
   simpleClearShader: {fileID: 4800000, guid: f688f89ed5eb847c5b19c934a0f1e772, type: 3}
@@ -543,30 +600,31 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100002}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a773099f140e846f7835d27351846623, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   tweakMode: 1
   screenBlendMode: 1
   hdr: 1
   sepBlurSpread: 1.87
   quality: 1
-  bloomIntensity: .200000003
-  bloomThreshhold: .300000012
-  bloomThreshholdColor: {r: .178937405, g: .531019151, b: .888059676, a: 1}
+  bloomIntensity: 0.2
+  bloomThreshhold: 0.3
+  bloomThreshholdColor: {r: 0.1789374, g: 0.53101915, b: 0.8880597, a: 1}
   bloomBlurIterations: 1
   hollywoodFlareBlurIterations: 1
   flareRotation: 0
   lensflareMode: 2
-  hollyStretchWidth: 1.77999997
+  hollyStretchWidth: 1.78
   lensflareIntensity: 1
-  lensflareThreshhold: .237000003
+  lensflareThreshhold: 0.237
   lensFlareSaturation: 2
-  flareColorA: {r: .400000006, g: .400000006, b: .800000012, a: .75}
-  flareColorB: {r: .400000006, g: .800000012, b: .800000012, a: .75}
-  flareColorC: {r: .800000012, g: .400000006, b: .800000012, a: .75}
-  flareColorD: {r: .800000012, g: .400000006, b: 0, a: .75}
+  flareColorA: {r: 0.4, g: 0.4, b: 0.8, a: 0.75}
+  flareColorB: {r: 0.4, g: 0.8, b: 0.8, a: 0.75}
+  flareColorC: {r: 0.8, g: 0.4, b: 0.8, a: 0.75}
+  flareColorD: {r: 0.8, g: 0.4, b: 0, a: 0.75}
   blurWidth: 1
   lensFlareVignetteMask: {fileID: 2800000, guid: 95ef4804fe0be4c999ddaa383536cde8,
     type: 3}
@@ -585,6 +643,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f7db9ec1392f34265817a55853e6ab07, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   filterType: 1
   preview: 0
   previewScale: {x: 10, y: 10, z: 10}
@@ -593,8 +652,8 @@ MonoBehaviour:
   maxVelocity: 10
   maxNumSamples: 17
   minVelocity: 0
-  velocityScale: .200000003
-  softZDistance: .00499999989
+  velocityScale: 0.2
+  softZDistance: 0.005
   velocityDownsample: 500
   excludeLayers:
     serializedVersion: 2
@@ -616,11 +675,12 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a76573c10807f164a96bc6349ffba554, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   accelerationIncrease: 500
   speedIncrease: 25
   handlingIncrease: 750
-  offenseIncrease: .300000012
-  defenseIncrease: .300000012
+  offenseIncrease: 0.3
+  defenseIncrease: 0.3
 --- !u!114 &11400018
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -631,11 +691,12 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53696d39b2616fa459958ac8a656c08d, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   accelerationIncrease: 500
   speedIncrease: 25
   handlingIncrease: 750
-  offenseIncrease: .300000012
-  defenseIncrease: .300000012
+  offenseIncrease: 0.3
+  defenseIncrease: 0.3
 --- !u!114 &11400020
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -646,12 +707,13 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9aaa3f5f2d574f228e4a21aa38b61e4, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   mode: 0
   showGeneratedNormals: 0
-  offsetScale: .200000003
+  offsetScale: 0.2
   blurRadius: 18
-  edgeThresholdMin: .0500000007
-  edgeThreshold: .200000003
+  edgeThresholdMin: 0.05
+  edgeThreshold: 0.2
   edgeSharpness: 4
   dlaaSharp: 0
   ssaaShader: {fileID: 4800000, guid: b3728d1488b02490cbd196c7941bf1f8, type: 3}
@@ -671,6 +733,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 626f08fcb2c45487f9299504ffcef1b5, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11400024
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -681,11 +744,12 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 606ad38e2aa1349eb97bb70ede650920, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   accelerationIncrease: 500
   speedIncrease: 25
   handlingIncrease: 750
-  offenseIncrease: .300000012
-  defenseIncrease: .300000012
+  offenseIncrease: 0.3
+  defenseIncrease: 0.3
   indicator: {fileID: 100000, guid: 5740d03fc0a6643608c329260b9fac6e, type: 2}
   _indicators: []
   _racersToFollow: []
@@ -707,4 +771,3 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 100002}
   m_IsPrefabParent: 1
-  m_IsExploded: 1

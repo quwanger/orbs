@@ -461,7 +461,7 @@ public class TTSRacer : TTSBehaviour
 					VibrationIntensity = collision.relativeVelocity.magnitude;
 
 				}
-				Debug.Log(collision.gameObject);
+				LogError (collision);
 			}
 		}
 
@@ -470,6 +470,12 @@ public class TTSRacer : TTSBehaviour
 		sparkClone.transform.position = collision.contacts[0].point;
 		sparkClone.GetComponent<ParticleEmitter>().emit = true;
 		sparkClone.transform.forward = displayMeshComponent.forward;
+	}
+
+	public void LogError(Collision collision)
+	{
+		ThesisData td = GameObject.Find ("Data(Clone)").GetComponent<ThesisData> ();
+		td.LogData (td.participantId, td.thesisTrack, td.thesisTrackVariation, td.thesisScheme, td.thesisTrial, 3, -1, -1, -1, -1, PreviousVelocity.magnitude, Time.time);
 	}
 
 	void OnCollisionStay(Collision collision) {

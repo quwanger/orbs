@@ -40,13 +40,13 @@ public class TTSFloatHud : TTSBehaviour {
 		
 		displayBacking.GetComponent<Renderer>().material.color = Color.Lerp(displayBacking.GetComponent<Renderer>().material.color, initialBackingColor, 0.04f);
 		
-		if(racerToFollow.GetComponent<TTSRacer>().goingWrongWay){
+		/*if(racerToFollow.GetComponent<TTSRacer>().goingWrongWay){
 			if(!wrongway.active)
 				wrongway.active = true;
 		}else{
 			if(wrongway.active)
 				wrongway.active = false;
-		}	
+		}*/	
 
 		if(previousPlace != racerToFollow.GetComponent<TTSRacer>().place){
 			//if the racer is in a new position

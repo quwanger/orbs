@@ -113,6 +113,9 @@ public class TTSFinishBox : TTSBehaviour {
 		}
 		
 		level.raceHasFinished = true;
+
+		GameObject.Find ("Data(Clone)").GetComponent<ThesisData> ().SaveData ();
+		Application.LoadLevel ("thesis_mainmenu");
 	}
 	
 	public void createNewFinishPanel(GameObject racer, bool visible){

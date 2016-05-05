@@ -5,7 +5,7 @@ public class TTSTimeManager : MonoBehaviour {
 	
 	
 	public float timeInMillis = 0;
-	private float startTime = 0;
+	public float startTime = 0;
 	private float pauseTime;
 	private float resumeTime;
 	private float timeSpentPaused = 0;
