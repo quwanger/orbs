@@ -91,7 +91,7 @@ public class TTSPowerupPlatform : TTSBehaviour
 			if (collider.gameObject == racer) {
 
 				ThesisData td = GameObject.Find ("Data(Clone)").GetComponent<ThesisData> ();
-				td.LogData (td.participantId, td.thesisTrack, td.thesisTrackVariation, td.thesisScheme, td.thesisTrial, 1, -1, -1, platformId, -1, racer.GetComponent<Rigidbody> ().velocity.magnitude, Time.time);
+				td.LogData (td.participantId, td.thesisTrack, td.thesisTrackVariation, td.thesisScheme, td.thesisTrial, 1, '`', false, racer.transform.position, -1, racer.GetComponent<Rigidbody> ().velocity.magnitude, Time.time);
 				collider.gameObject.GetComponent<TTSPowerup>().GivePowerup(this.currentPowerup);
 
 				// Play the pickup animation

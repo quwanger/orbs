@@ -14,6 +14,7 @@ GameObject:
   - 114: {fileID: 11400006}
   - 114: {fileID: 11400008}
   - 114: {fileID: 11400010}
+  - 114: {fileID: 11492828}
   m_Layer: 0
   m_Name: TTSLevel
   m_TagString: Untagged
@@ -32,6 +33,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
+  m_RootOrder: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -42,7 +44,9 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b63d4ab093cdc304486f813302608b78, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   timeInMillis: 0
+  startTime: 0
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -53,6 +57,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c572749314cba874386ddfa15af5dd68, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   _racers: []
   _maincameras: []
   _otherCameras: []
@@ -61,13 +66,17 @@ MonoBehaviour:
   useKeyboard: 1
   raceHasStarted: 0
   raceHasFinished: 0
+  humanPlayersFinished: 0
   countdown: {fileID: 0}
+  countdownStarted: 0
   DebugMode: 1
   PerksEnabled: 1
   fonts:
   - {fileID: 12800000, guid: f9929be8a43d15b408cb23dd53efaaa4, type: 3}
   client: {fileID: 0}
   initRace: {fileID: 0}
+  fakeBestTime: 
+  fakeWorldRecord: 
 --- !u!114 &11400004
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -78,6 +87,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 98427cc437fc53f40ab0947178818ee2, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   SpawnZone: {fileID: 0}
   EndPoints: []
 --- !u!114 &11400006
@@ -90,6 +100,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 594730c6d405c439c9a166e2348e236c, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   DebugMode: 0
   Rigs:
   - {fileID: 100000, guid: 26f3bdb906e294cf6b3a76f23cc527b2, type: 2}
@@ -112,8 +123,11 @@ MonoBehaviour:
   minimapGO: {fileID: 100000, guid: 427cc4e8f2e15b949ab8e2df99a0b486, type: 2}
   playericonSmall: {fileID: 100000, guid: 3635d8ce9f9159c43acbd463f00cc399, type: 2}
   playericonBig: {fileID: 100000, guid: 43ed54951cf5c48d4b58e3cead59c7a0, type: 2}
+  currentFinishBox: {fileID: 0}
   numHumanPlayers: 1
   numAIPlayers: 0
+  isMultiplayer: 0
+  isLobby: 0
   gameType: 0
 --- !u!114 &11400008
 MonoBehaviour:
@@ -125,11 +139,12 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eae201131d82e4a53a6083a3bb2fa652, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   accelerationIncrease: 500
   speedIncrease: 25
   handlingIncrease: 750
-  offenseIncrease: .300000012
-  defenseIncrease: .300000012
+  offenseIncrease: 0.3
+  defenseIncrease: 0.3
 --- !u!114 &11400010
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -140,15 +155,32 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fc0ba0762728f5e4f89f9f54328eab63, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   DebugMode: 0
   DebugRacerSpawn: 0
   SERVER_IP: 127.0.0.1
   SERVER_RECEIVE_PORT: 6666
   CLIENT_RECEIVE_PORT: 6969
   CLIENT_RECEIVE_TIMEOUT: 0
+  UpdatesPerSecond: 10
+  isMultiplayer: 0
+  isLobby: 0
   EnteredLobby: 0
-  InGame: 0
   LobbyID: 0
+  lobbyCountdownTime: -1
+  startRaceCountdown: 0
+--- !u!114 &11492828
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85bb5f60dcc1cc3409370c1e01a8982b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lerpMode: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -160,4 +192,3 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 100000}
   m_IsPrefabParent: 1
-  m_IsExploded: 1

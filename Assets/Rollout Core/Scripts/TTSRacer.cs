@@ -273,14 +273,25 @@ public class TTSRacer : TTSBehaviour
 	}
 
 	private void CalculateInputForces() {
+
+		ThesisData td = GameObject.FindObjectOfType<ThesisData> ().GetComponent<ThesisData> ();
+		ArduinoManager am = GameObject.FindObjectOfType<ArduinoManager> ().GetComponent<ArduinoManager> ();
+			
 		if (finished && !level.DebugMode) // No input when race is finished
 			return;
 
 		if (player == PlayerType.Player) {
 			if (playerNum == 1) {
 				if(level.useKeyboard) {
-					vInput = Input.GetAxis ("Key_YAxis");
-					hInput = Input.GetAxis ("Key_XAxis");
+					if (td.thesisScheme == 1) {
+						//vInput = am.rtValue + am.ltValue;
+						vInput = Input.GetAxis ("Key_YAxis");
+						hInput = Input.GetAxis ("Key_XAxis");
+					} else {
+						vInput = Input.GetAxis ("Key_YAxis");
+						hInput = am.stickValue;
+					}
+
 					if(Input.GetKeyDown("/")){
 						DelayedRespawn();
 					}
@@ -475,7 +486,7 @@ public class TTSRacer : TTSBehaviour
 	public void LogError(Collision collision)
 	{
 		ThesisData td = GameObject.Find ("Data(Clone)").GetComponent<ThesisData> ();
-		td.LogData (td.participantId, td.thesisTrack, td.thesisTrackVariation, td.thesisScheme, td.thesisTrial, 3, -1, -1, -1, -1, PreviousVelocity.magnitude, Time.time);
+		td.LogData (td.participantId, td.thesisTrack, td.thesisTrackVariation, td.thesisScheme, td.thesisTrial, 3, '`', false, this.transform.position, -1, PreviousVelocity.magnitude, Time.time);
 	}
 
 	void OnCollisionStay(Collision collision) {

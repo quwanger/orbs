@@ -29,7 +29,9 @@ public class TTSFinishBox : TTSBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
+		if (Input.GetKeyDown (KeyCode.E)) {
+			ForceFinish ();
+		}
 	}
 
 	void OnTriggerEnter(Collider collision) {
@@ -114,6 +116,13 @@ public class TTSFinishBox : TTSBehaviour {
 		
 		level.raceHasFinished = true;
 
+		ForceFinish();
+	}
+
+	public void ForceFinish()
+	{
+		ThesisData td = GameObject.Find ("Data(Clone)").GetComponent<ThesisData> ();
+		td.LogData (td.participantId, td.thesisTrack, td.thesisTrackVariation, td.thesisScheme, td.thesisTrial, 4, '`', false, GameObject.FindObjectOfType<TTSRacer>().transform.position, -1, GameObject.FindObjectOfType<TTSRacer>().GetComponent<Rigidbody>().velocity.magnitude, Time.time);
 		GameObject.Find ("Data(Clone)").GetComponent<ThesisData> ().SaveData ();
 		Application.LoadLevel ("thesis_mainmenu");
 	}

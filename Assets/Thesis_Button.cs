@@ -17,6 +17,7 @@ public class Thesis_Button : MonoBehaviour {
 	public GameObject trials;
 	public GameObject schemes;
 	public GameObject tracks;
+	public GameObject confirmation;
 
 	public void onButtonPressed()
 	{
@@ -29,16 +30,18 @@ public class Thesis_Button : MonoBehaviour {
 			ts.menuState = buttonId;
 			if (action) {
 				td.thesisScheme = 1;
+				title.text = "Action";
 			} else if (navigation) {
 				td.thesisScheme = 2;
+				title.text = "Navigation";
 			}
-			title.text = "Trial #";
 			schemes.SetActive (false);
 			trials.SetActive (true);
 		} else if (buttonId == 2) {
 			ts.menuState = buttonId;
 			td.thesisTrial = trial;
-			title.text = "Map";
+			title.text += "-Trial";
+			title.text += td.thesisTrial;
 			trials.SetActive (false);
 			tracks.SetActive (true);
 		} else if (buttonId == 3) {
@@ -47,26 +50,40 @@ public class Thesis_Button : MonoBehaviour {
 				td.thesisTrack = 1;
 				if (mirrored && reversed) {
 					td.thesisTrackVariation = 4;
+					td.levelToLoad = "SpeedReversedMirrored";
 				} else if (mirrored) {
 					td.thesisTrackVariation = 3;
+					td.levelToLoad = "SpeedMirrored";
 				} else if (reversed) {
 					td.thesisTrackVariation = 2;
+					td.levelToLoad = "SpeedReversed";
 				} else {
 					td.thesisTrackVariation = 1;
-					Application.LoadLevel ("Speed");
+					td.levelToLoad = "Speed";
 				}
 			} else {
 				td.thesisTrack = 2;
 				if (mirrored && reversed) {
 					td.thesisTrackVariation = 4;
+					td.levelToLoad = "Precision";
 				} else if (mirrored) {
 					td.thesisTrackVariation = 3;
+					td.levelToLoad = "Precision";
 				} else if (reversed) {
 					td.thesisTrackVariation = 2;
+					td.levelToLoad = "Precision";
 				} else {
 					td.thesisTrackVariation = 1;
+					td.levelToLoad = "Precision";
 				}
 			}
+			title.text += "-";
+			title.text += td.levelToLoad;
+			tracks.SetActive (false);
+			confirmation.SetActive (true);
+		}else if(buttonId == 99){
+			ts.menuState = buttonId;
+			Application.LoadLevel (td.levelToLoad);
 		} else if (buttonId == -1) {
 			switch (ts.menuState) {
 			case 0:
@@ -75,11 +92,29 @@ public class Thesis_Button : MonoBehaviour {
 				trials.SetActive (false);
 				schemes.SetActive (true);
 				ts.menuState--;
+				title.text = "Scheme";
 				break;
 			case 2:
 				tracks.SetActive (false);
 				trials.SetActive (true);
 				ts.menuState--;
+				if(title.text.Contains("Action"))
+					title.text = "Action";
+				else
+					title.text = "Navigation";
+				break;
+			case 3:
+				confirmation.SetActive (false);
+				tracks.SetActive (true);
+				ts.menuState--;
+				if (title.text.Contains ("Action")) {
+					title.text = "Action-";
+				} else {
+					title.text = "Navigation-";
+				}
+				title.text += td.thesisTrial;
+				break;
+			default:
 				break;
 			}
 

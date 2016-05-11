@@ -118,11 +118,18 @@ public class TTSPowerup : TTSBehaviour
 
 			if (this.gameObject.GetComponent<TTSRacer>().playerNum == 1) {
 
+				ThesisData td = GameObject.FindObjectOfType<ThesisData> ().GetComponent<ThesisData> ();
+
 				if (level.useKeyboard) {
-					Debug.Log("Keyboard");
-					if (Input.GetKeyDown("space")) {
-						ConsumePowerup();
-					}				
+					if (td.thesisScheme == 1) {
+						if (Input.GetKeyDown("k") || Input.GetKeyDown("l")) {
+							ConsumePowerup();
+						}
+					} else {
+						if (Input.GetKeyDown("w") || Input.GetKeyDown("s")) {
+							ConsumePowerup();
+						}
+					}
 				}else{
 					#if UNITY_STANDALONE_WIN
 					if( state.Buttons.A == ButtonState.Pressed) {
@@ -249,6 +256,9 @@ public class TTSPowerup : TTSBehaviour
 	}
 
 	public void ConsumePowerup() {
+
+		ThesisData td = GameObject.Find ("Data(Clone)").GetComponent<ThesisData> ();
+		td.LogData (td.participantId, td.thesisTrack, td.thesisTrackVariation, td.thesisScheme, td.thesisTrial, 2, '`', false, this.transform.position, tier, this.gameObject.GetComponent<Rigidbody>().velocity.magnitude, Time.time);
 
 		switch (AvailablePowerup) {
 			case PowerupType.EntropyCannon:
