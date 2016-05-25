@@ -118,7 +118,7 @@ public class ArduinoManager : MonoBehaviour {
 	public static string serialName = "COM5";
 	public SerialPort mySPort = new SerialPort(serialName, 9600);
 
-	public bool lerpMode = true;
+	public bool lerpMode = false;
 	private float[] previousBendValues = new float[2];
 	
 	private bool calibrateComplete = false;
@@ -130,6 +130,7 @@ public class ArduinoManager : MonoBehaviour {
 	public float rtValue = 0f;
 	public float ltValue = 0f;
 	public float stickValue = 0f;
+	public float previousStickValue = 0f;
 
 	public enum CustomGamepadButton
 	{
@@ -196,7 +197,7 @@ public class ArduinoManager : MonoBehaviour {
 
 					if (lerpMode) {
 						float currentVal = float.Parse (bendValues [j]);
-						previousBendValues [j] = Mathf.Lerp (previousBendValues [j], currentVal, 0.5f);
+						previousBendValues [j] = Mathf.Lerp (previousBendValues [j], currentVal, 0.9f);
 					} else {
 						previousBendValues [j] = float.Parse (bendValues [j]);
 					}
@@ -215,10 +216,14 @@ public class ArduinoManager : MonoBehaviour {
 						ltValue *= -1f;
 					}
 
-					stickValue = (floatBendValues [0] - floatBendValues [1])/1024f;
+					previousStickValue = stickValue;
+					stickValue = -(((floatBendValues [0] / 1024f) - (restValues [0] / 1024f)) - (((floatBendValues [1] / 1024f) - (restValues [1] / 1024f))));
+					stickValue = Mathf.Lerp (previousStickValue, stickValue, Time.deltaTime*100f);
+					//stickValue *= 1.3f;
+					//Debug.Log (stickValue);
 
-					GameObject.Find ("RTValue").GetComponent<Text> ().text = rtValue.ToString ();
-					GameObject.Find ("LTValue").GetComponent<Text> ().text = ltValue.ToString ();
+					GameObject.Find ("RTValue").GetComponent<Text> ().text = stickValue.ToString ();
+					//GameObject.Find ("LTValue").GetComponent<Text> ().text = ltValue.ToString ();
 				}
 				else
 				{

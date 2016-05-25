@@ -19,6 +19,13 @@ public class Thesis_Button : MonoBehaviour {
 	public GameObject tracks;
 	public GameObject confirmation;
 
+	public void ContinuePressed()
+	{
+		ThesisData td = GameObject.Find ("Data(Clone)").GetComponent<ThesisData> ();
+		td.SaveData ();
+		Application.LoadLevel ("thesis_mainmenu");
+	}
+
 	public void onButtonPressed()
 	{
 		ThesisData td = GameObject.FindObjectOfType<ThesisData> ().GetComponent<ThesisData>();
@@ -65,13 +72,13 @@ public class Thesis_Button : MonoBehaviour {
 				td.thesisTrack = 2;
 				if (mirrored && reversed) {
 					td.thesisTrackVariation = 4;
-					td.levelToLoad = "Precision";
+					td.levelToLoad = "PrecisionReversedMirrored";
 				} else if (mirrored) {
 					td.thesisTrackVariation = 3;
-					td.levelToLoad = "Precision";
+					td.levelToLoad = "PrecisionMirrored";
 				} else if (reversed) {
 					td.thesisTrackVariation = 2;
-					td.levelToLoad = "Precision";
+					td.levelToLoad = "PrecisionReversed";
 				} else {
 					td.thesisTrackVariation = 1;
 					td.levelToLoad = "Precision";

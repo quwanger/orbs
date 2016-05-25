@@ -57,6 +57,6 @@ public class TTSSoundtrackManager : TTSBehaviour {
 	}
 	
 	public void StartSoundtrack() {
-		this.GetComponent<AudioSource>().Play();
+		//this.GetComponent<AudioSource>().Play();
 	}
 }

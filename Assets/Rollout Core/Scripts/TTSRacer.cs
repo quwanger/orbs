@@ -284,8 +284,8 @@ public class TTSRacer : TTSBehaviour
 			if (playerNum == 1) {
 				if(level.useKeyboard) {
 					if (td.thesisScheme == 1) {
-						//vInput = am.rtValue + am.ltValue;
-						vInput = Input.GetAxis ("Key_YAxis");
+						vInput = (am.rtValue + am.ltValue)*3f;
+						//vInput = Input.GetAxis ("Key_YAxis");
 						hInput = Input.GetAxis ("Key_XAxis");
 					} else {
 						vInput = Input.GetAxis ("Key_YAxis");

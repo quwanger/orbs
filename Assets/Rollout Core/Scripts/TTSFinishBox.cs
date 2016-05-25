@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class TTSFinishBox : TTSBehaviour {
 	
@@ -103,7 +104,7 @@ public class TTSFinishBox : TTSBehaviour {
 			}
 			
 			foreach(GameObject finishLine in panels){
-				finishLine.SetActive(true);
+				//finishLine.SetActive(true);
 			}
 		}
 		
@@ -123,8 +124,12 @@ public class TTSFinishBox : TTSBehaviour {
 	{
 		ThesisData td = GameObject.Find ("Data(Clone)").GetComponent<ThesisData> ();
 		td.LogData (td.participantId, td.thesisTrack, td.thesisTrackVariation, td.thesisScheme, td.thesisTrial, 4, '`', false, GameObject.FindObjectOfType<TTSRacer>().transform.position, -1, GameObject.FindObjectOfType<TTSRacer>().GetComponent<Rigidbody>().velocity.magnitude, Time.time);
-		GameObject.Find ("Data(Clone)").GetComponent<ThesisData> ().SaveData ();
-		Application.LoadLevel ("thesis_mainmenu");
+
+		GameObject es = Instantiate(Resources.Load<GameObject>("EndScreen"));
+		es.transform.SetParent (GameObject.FindObjectOfType<Canvas> ().gameObject.transform);
+		es.GetComponent<RectTransform> ().anchoredPosition = new Vector2 (-129f, 9f);
+		GameObject.Find ("CollisionCount").GetComponent<Text> ().text = td.collisions.ToString();
+		GameObject.Find ("TimeCount").GetComponent<Text> ().text = level.GetComponent<TTSTimeManager>().GetCurrentTimeString();
 	}
 	
 	public void createNewFinishPanel(GameObject racer, bool visible){

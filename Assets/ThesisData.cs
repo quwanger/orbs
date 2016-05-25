@@ -14,6 +14,8 @@ public class ThesisData : MonoBehaviour {
 
 	public string levelToLoad = "";
 
+	public int collisions = 0;
+
 	public List<myData> currentDataPoints = new List<myData>();
 
 	public class myData{
@@ -145,13 +147,19 @@ public class ThesisData : MonoBehaviour {
 
 	public void LogData(int pId, int track, int trackVar, int scheme, int trial, int eventId, char buttonPressed, bool falseInput, Vector3 racerPosition, int boostLevel, float speed, float timeStamp)
 	{
+		TTSTimeManager tMan = GameObject.FindObjectOfType<TTSTimeManager> ().GetComponent<TTSTimeManager>();
+
+		float _time = 0f;
+
+		if (tMan != null)
+			_time = tMan.timeInMillis;
+		
 		//participantId, track, scheme, trial, event, button pressed, false input?, boost ID, boost level, speed, time
-		myData tempData = new myData(pId, track, trackVar, scheme, trial, eventId, buttonPressed, falseInput, racerPosition, boostLevel, speed, timeStamp);
+		myData tempData = new myData(pId, track, trackVar, scheme, trial, eventId, buttonPressed, falseInput, racerPosition, boostLevel, speed, _time);
 		currentDataPoints.Add (tempData);
 
-		//events: 0=button press, 1=boost pickup, 2=boost use, 3=crash, 4=end of race
-		if (eventId > 0) {
-			Debug.Log ("<color=orange>" + eventId + "</color>");
+		if (eventId == 3) {
+			collisions++;
 		}
 	}
 
@@ -164,5 +172,6 @@ public class ThesisData : MonoBehaviour {
 		}
 		System.IO.File.WriteAllLines (@"C:\Users\CIL-admin\Desktop\" + documentTitle + ".txt", lines.ToArray());
 		currentDataPoints.Clear ();
+		collisions = 0;
 	}
 }
