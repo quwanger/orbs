@@ -118,6 +118,9 @@ public class ArduinoManager : MonoBehaviour {
 	public static string serialName = "COM5";
 	public SerialPort mySPort = new SerialPort(serialName, 9600);
 
+	OneEuroFilter floatFilter;
+	public float filterFrequency = 10.0f;
+
 	public bool lerpMode = false;
 	private float[] previousBendValues = new float[2];
 	
@@ -131,6 +134,13 @@ public class ArduinoManager : MonoBehaviour {
 	public float ltValue = 0f;
 	public float stickValue = 0f;
 	public float previousStickValue = 0f;
+
+	private float maxBendValue1 = 960f;
+	private float minBendValue1 = 340f;
+	private float maxBendValue2 = 800f;
+	private float minBendValue2 = 300f;
+
+	private float sensitivityConstant = 100f;
 
 	public enum CustomGamepadButton
 	{
@@ -155,6 +165,8 @@ public class ArduinoManager : MonoBehaviour {
 		gamepadButtons.Add (new ControllerButton(CustomGamepadButton.DOWN));
 		gamepadButtons.Add (new ControllerButton(CustomGamepadButton.LEFT));
 		gamepadButtons.Add (new ControllerButton(CustomGamepadButton.RIGHT));
+
+		floatFilter = new OneEuroFilter(filterFrequency);
 	}
 
 	void Update()
@@ -170,6 +182,7 @@ public class ArduinoManager : MonoBehaviour {
 			}
 
 			string serialValue = mySPort.ReadLine ();
+			mySPort.ReadTimeout = 25;
 			string[] serialValues = serialValue.Split ('&');
 
 			for (int i = 0; i < (gamepadButtons.Count); i++) {
@@ -197,7 +210,7 @@ public class ArduinoManager : MonoBehaviour {
 
 					if (lerpMode) {
 						float currentVal = float.Parse (bendValues [j]);
-						previousBendValues [j] = Mathf.Lerp (previousBendValues [j], currentVal, 0.9f);
+						previousBendValues [j] = Mathf.Lerp (previousBendValues [j], currentVal, 0.5f);
 					} else {
 						previousBendValues [j] = float.Parse (bendValues [j]);
 					}
@@ -208,22 +221,59 @@ public class ArduinoManager : MonoBehaviour {
 				if(calibrateComplete)
 				{
 					if (((floatBendValues [0] + floatBendValues [1]) / 2) >= (restValues[0] + restValues[1]) / 2) {
-						rtValue = (((floatBendValues [0] - restValues[0]) / (1024f - restValues[0])) + ((floatBendValues [1] - restValues[1]) / (1024f - restValues[1]))) / 2f;
+						rtValue = (((floatBendValues [0] - restValues[0]) / (maxBendValue1 - restValues[0])) + ((floatBendValues [1] - restValues[1]) / (maxBendValue2 - restValues[1]))) / 2f;
+						if (rtValue > 1f)
+							rtValue = 1f;
 						ltValue = 0f;
 					} else {
 						rtValue = 0f;
-						ltValue = (((restValues[0]-floatBendValues[0])/restValues[0])+((restValues[1]-floatBendValues[1])/restValues[1]))/2f;
+						ltValue = (((restValues[0]-floatBendValues[0])/(restValues[0]-minBendValue1))+((restValues[1]-floatBendValues[1])/(restValues[1]-minBendValue2)))/2f;
 						ltValue *= -1f;
+						if (ltValue < -1f)
+							ltValue = -1f;
 					}
 
-					previousStickValue = stickValue;
-					stickValue = -(((floatBendValues [0] / 1024f) - (restValues [0] / 1024f)) - (((floatBendValues [1] / 1024f) - (restValues [1] / 1024f))));
-					stickValue = Mathf.Lerp (previousStickValue, stickValue, Time.deltaTime*100f);
-					//stickValue *= 1.3f;
-					//Debug.Log (stickValue);
+					rtValue *= (1f/0.83f);
+					ltValue *= (1f/0.83f);
 
-					GameObject.Find ("RTValue").GetComponent<Text> ().text = stickValue.ToString ();
-					//GameObject.Find ("LTValue").GetComponent<Text> ().text = ltValue.ToString ();
+					GameObject.Find ("SliderRight").GetComponent<Slider> ().value = (int)floatBendValues [0];
+					GameObject.Find ("SliderLeft").GetComponent<Slider> ().value = (int)floatBendValues [1];
+
+					previousStickValue = stickValue;
+
+					float bValue1 = floatBendValues [0];
+					float sv1 = 0;
+					if (bValue1 - restValues [0] > sensitivityConstant) {
+						sv1 = (bValue1 - restValues [0]) / (maxBendValue1 - restValues [0]);
+					} else if(bValue1 - restValues [0] < -sensitivityConstant){
+						sv1 = (bValue1 - restValues [0]) / (restValues [0] - minBendValue1);
+					}
+
+					//sv1 = floatFilter.Filter(sv1);
+
+					float bValue2 = floatBendValues [1];
+					float sv2 = 0;
+					if (bValue2 - restValues [1] > sensitivityConstant) {
+						sv2 = (bValue2 - restValues [1]) / (maxBendValue2 - restValues [1]);
+					} else if(bValue2 - restValues [1] < -sensitivityConstant){
+						sv2 = (bValue2 - restValues [1]) / (restValues [1] - minBendValue2);
+					}
+
+					//sv2 = floatFilter.Filter(sv2);
+
+					stickValue = (sv2 - sv1);
+					stickValue = floatFilter.Filter(stickValue);
+
+					//stickValue *= 20f;
+
+					if (stickValue > 1f)
+						stickValue = 1f;
+					else if (stickValue < -1f)
+						stickValue = -1f;
+
+					//GameObject.Find ("RTValue").GetComponent<Text> ().text = GameObject.FindObjectOfType<TTSRacer> ().GetComponent<Rigidbody> ().velocity.magnitude.ToString();
+					//GameObject.Find ("LTValue").GetComponent<Text> ().text = stickValue.ToString ();
+					//GameObject.Find ("TriggerValue").GetComponent<Text> ().text = (rtValue + ltValue).ToString ();
 				}
 				else
 				{
@@ -253,7 +303,7 @@ public class ArduinoManager : MonoBehaviour {
 	{
 		currentCalibrationFrame += 1;
 
-		Debug.Log ("<color=blue>Sensor 1: " + floatBendValues [0] + ", Sensor 2: " + floatBendValues [1] + "</color>");
+		//Debug.Log ("<color=blue>Sensor 1: " + floatBendValues [0] + ", Sensor 2: " + floatBendValues [1] + "</color>");
 
 		bend1Av += floatBendValues [0];
 		bend2Av += floatBendValues [1];

@@ -121,7 +121,7 @@ public class TTSPowerup : TTSBehaviour
 				ThesisData td = GameObject.FindObjectOfType<ThesisData> ().GetComponent<ThesisData> ();
 
 				if (level.useKeyboard) {
-					if (td.thesisScheme == 1) {
+					if (td.thesisScheme == 2) {
 						if (Input.GetKeyDown("k") || Input.GetKeyDown("l")) {
 							ConsumePowerup();
 						}

@@ -283,14 +283,19 @@ public class TTSRacer : TTSBehaviour
 		if (player == PlayerType.Player) {
 			if (playerNum == 1) {
 				if(level.useKeyboard) {
-					if (td.thesisScheme == 1) {
-						vInput = (am.rtValue + am.ltValue)*3f;
+					if (td.thesisScheme == 2) {
+						vInput = (am.rtValue + am.ltValue);
 						//vInput = Input.GetAxis ("Key_YAxis");
 						hInput = Input.GetAxis ("Key_XAxis");
-					} else {
+					} else if (td.thesisScheme == 3) {
 						vInput = Input.GetAxis ("Key_YAxis");
 						hInput = am.stickValue;
+					} else {
+						vInput = Input.GetAxis ("Key_YAxis");
+						hInput = Input.GetAxis ("Key_XAxis");
 					}
+						
+					vInput *= 1.00f;
 
 					if(Input.GetKeyDown("/")){
 						DelayedRespawn();

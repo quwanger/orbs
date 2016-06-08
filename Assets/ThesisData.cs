@@ -165,12 +165,12 @@ public class ThesisData : MonoBehaviour {
 
 	public void SaveData()
 	{
-		string documentTitle = "data" + participantId.ToString() + thesisTrack.ToString() + thesisTrackVariation.ToString() + thesisScheme.ToString() + thesisTrial.ToString();
+		string documentTitle = "data" + participantId.ToString() + thesisTrack.ToString() + thesisScheme.ToString();
 		List<string> lines = new List<string> ();
 		foreach (myData md in currentDataPoints) {
 			lines.Add(md.dataToString ());
 		}
-		System.IO.File.WriteAllLines (@"C:\Users\CIL-admin\Desktop\" + documentTitle + ".txt", lines.ToArray());
+		System.IO.File.WriteAllLines (@"C:\Users\CIL-admin\Desktop\Data\0\" + documentTitle + ".txt", lines.ToArray());
 		currentDataPoints.Clear ();
 		collisions = 0;
 	}

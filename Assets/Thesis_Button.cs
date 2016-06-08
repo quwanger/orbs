@@ -5,10 +5,13 @@ using UnityEngine.UI;
 public class Thesis_Button : MonoBehaviour {
 	public int buttonId = 0;
 
-	public bool speed = true;
+	public bool speed = false;
+	public bool precision = false;
+
 	public bool mirrored = false;
 	public bool reversed = false;
 
+	public bool binary = false;
 	public bool action = false;
 	public bool navigation = false;
 
@@ -34,16 +37,19 @@ public class Thesis_Button : MonoBehaviour {
 
 
 		if (buttonId == 1) {
-			ts.menuState = buttonId;
-			if (action) {
+			ts.menuState = buttonId+1;
+			if (binary) {
 				td.thesisScheme = 1;
+				title.text = "Binary";
+			} else if (action) {
+				td.thesisScheme = 2;
 				title.text = "Action";
 			} else if (navigation) {
-				td.thesisScheme = 2;
+				td.thesisScheme = 3;
 				title.text = "Navigation";
 			}
 			schemes.SetActive (false);
-			trials.SetActive (true);
+			tracks.SetActive (true);
 		} else if (buttonId == 2) {
 			ts.menuState = buttonId;
 			td.thesisTrial = trial;
@@ -68,7 +74,7 @@ public class Thesis_Button : MonoBehaviour {
 					td.thesisTrackVariation = 1;
 					td.levelToLoad = "Speed";
 				}
-			} else {
+			} else if (precision) {
 				td.thesisTrack = 2;
 				if (mirrored && reversed) {
 					td.thesisTrackVariation = 4;
@@ -83,7 +89,11 @@ public class Thesis_Button : MonoBehaviour {
 					td.thesisTrackVariation = 1;
 					td.levelToLoad = "Precision";
 				}
+			} else {
+				td.thesisTrackVariation = 1;
+				td.levelToLoad = "Practice";
 			}
+
 			title.text += "-";
 			title.text += td.levelToLoad;
 			tracks.SetActive (false);
@@ -103,23 +113,22 @@ public class Thesis_Button : MonoBehaviour {
 				break;
 			case 2:
 				tracks.SetActive (false);
-				trials.SetActive (true);
+				schemes.SetActive (true);
 				ts.menuState--;
-				if(title.text.Contains("Action"))
-					title.text = "Action";
-				else
-					title.text = "Navigation";
+				title.text = "Scheme";
 				break;
 			case 3:
 				confirmation.SetActive (false);
 				tracks.SetActive (true);
 				ts.menuState--;
-				if (title.text.Contains ("Action")) {
+				if(title.text.Contains("Binary"))
+					title.text = "Binary";
+				else if (title.text.Contains ("Action")) {
 					title.text = "Action-";
 				} else {
 					title.text = "Navigation-";
 				}
-				title.text += td.thesisTrial;
+				//title.text += td.thesisTrial;
 				break;
 			default:
 				break;
