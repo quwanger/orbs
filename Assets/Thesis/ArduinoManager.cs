@@ -135,10 +135,10 @@ public class ArduinoManager : MonoBehaviour {
 	public float stickValue = 0f;
 	public float previousStickValue = 0f;
 
-	private float maxBendValue1 = 960f;
-	private float minBendValue1 = 340f;
-	private float maxBendValue2 = 800f;
-	private float minBendValue2 = 300f;
+	private float maxBendValue1 = 845f;
+	private float minBendValue1 = 250f;
+	private float maxBendValue2 = 845f;
+	private float minBendValue2 = 250f;
 
 	private float sensitivityConstant = 100f;
 

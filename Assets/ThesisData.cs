@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class ThesisData : MonoBehaviour {
 
-	public int participantId = 0;
+	public int participantId = 19;
 	public int thesisTrack = 0;
 	public int thesisTrackVariation = 0;
 	public int thesisScheme = 0;
@@ -170,7 +170,7 @@ public class ThesisData : MonoBehaviour {
 		foreach (myData md in currentDataPoints) {
 			lines.Add(md.dataToString ());
 		}
-		System.IO.File.WriteAllLines (@"C:\Users\CIL-admin\Desktop\Data\0\" + documentTitle + ".txt", lines.ToArray());
+		System.IO.File.WriteAllLines (@"C:\Users\CIL-admin\Dropbox\Paden\Study 2 Info\Data\19\" + documentTitle + ".txt", lines.ToArray());
 		currentDataPoints.Clear ();
 		collisions = 0;
 	}
